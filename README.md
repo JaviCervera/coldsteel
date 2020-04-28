@@ -1,1 +1,3 @@
-# astro
+# ![icon](logo.png) Astro
+
+...

@@ -1,0 +1,631 @@
+# Screen
+int ASSCREEN_WINDOWED 1
+int ASSCREEN_VSYNC 2
+int ASSCREEN_ANTIALIAS 4
+int ASSCREEN_RESIZABLE 8
+int ASSCREEN_SOFTWARE 65536
+
+# Features
+int ASFEATURE_RENDERTOTEXTURE 0
+int ASFEATURE_BILINEARFILTER 1
+int ASFEATURE_HARDWARETNL 2
+int ASFEATURE_MIPMAP 3
+int ASFEATURE_STENCILBUFFER 4
+int ASFEATURE_VERTEXSHADER11 5
+int ASFEATURE_VERTEXSHADER20 6
+int ASFEATURE_VERTEXSHADER30 7
+int ASFEATURE_PIXELSHADER11 8
+int ASFEATURE_PIXELSHADER12 9
+int ASFEATURE_PIXELSHADER13 10
+int ASFEATURE_PIXELSHADER14 11
+int ASFEATURE_PIXELSHADER20 12
+int ASFEATURE_PIXELSHADER30 13
+int ASFEATURE_ARB_VERTEXPROGRAM1 14
+int ASFEATURE_ARB_FRAGMENTPROGRAM1 15
+
+# Control types
+int ASCONTROL_BUTTON 1
+int ASCONTROL_CHECKBOX 2
+int ASCONTROL_COMBOBOX 3
+int ASCONTROL_EDITBOX 4
+int ASCONTROL_IMAGE 5
+int ASCONTROL_LISTBOX 6
+int ASCONTROL_MENU 7
+int ASCONTROL_SCROLLBAR 8
+int ASCONTROL_TABBAR 9
+int ASCONTROL_TEXT 10
+int ASCONTROL_TOOLBAR 11
+int ASCONTROL_WINDOW 12
+
+# Gadget events
+int ASCONTROL_LOSTFOCUS 0
+int ASCONTROL_ENTER 1
+int ASCONTROL_EXIT 2
+int ASCONTROL_ACTION 3
+
+# EditBox types
+int ASEDITBOX_SIMPLE 0
+int ASEDITBOX_PASSWORD 1
+int ASEDITBOX_MULTILINE 2
+
+# Blend modes
+int ASBLEND_SOLID 0
+int ASBLEND_LIGHTMAP 1
+int ASBLEND_LIGHTMAP2X 2
+int ASBLEND_LIGHTMAP4X 3
+int ASBLEND_DETAIL 4
+int ASBLEND_ADD 5
+int ASBLEND_ALPHA 6
+int ASBLEND_VERTEXALPHA 7
+int ASBLEND_MASKED 8
+int ASBLEND_SPHERE 9
+int ASBLEND_REFLECTION 10
+int ASBLEND_NORMAL 11
+int ASBLEND_NORMALADD 12
+int ASBLEND_PARALLAX 13
+int ASBLEND_PARALLAXADD 14
+
+# Render modes
+int ASRENDER_NORMAL 0
+int ASRENDER_WIREFRAME 1
+int ASRENDER_POINTCLOUD 2
+
+# Lighting modes
+int ASLIGHTING_DISABLED 0
+int ASLIGHTING_GOURAUD 1
+int ASLIGHTING_FLAT 2
+
+# Filtering modes
+int ASFILTER_DISABLED 0
+int ASFILTER_BILINEAR 1
+int ASFILTER_TRILINEAR 2
+int ASFILTER_ANISOTROPIC 3
+
+# Light types
+int ASLIGHT_DIRECTIONAL 0
+int ASLIGHT_POINT 1
+int ASLIGHT_SPOT 2
+
+# Collision types
+int ASCOLLISION_NONE 0
+int ASCOLLISION_BOX 1
+int ASCOLLISION_MESH 2
+int ASCOLLISION_OCTREE 3
+
+# Entity types
+int ASENTITY_EMPTY 0
+int ASENTITY_SPRITE 1
+int ASENTITY_CAMERA 2
+int ASENTITY_EMITTER 3
+int ASENTITY_LIGHT 4
+int ASENTITY_MESH 5
+int ASENTITY_MESH_OCTREE 6
+int ASENTITY_TERRAIN 7
+int ASENTITY_WATER 8
+
+# Mouse buttons
+int ASBUTTON_LEFT 1
+int ASBUTTON_RIGHT 2
+int ASBUTTON_MIDDLE 3
+
+# Key codes
+int ASKEY_LBUTTON 0x01
+int ASKEY_RBUTTON 0x02
+int ASKEY_CANCEL 0x03
+int ASKEY_MBUTTON 0x04
+int ASKEY_XBUTTON1 0x05
+int ASKEY_XBUTTON2 0x06
+int ASKEY_BACK 0x08
+int ASKEY_TAB 0x09
+int ASKEY_CLEAR 0x0C
+int ASKEY_RETURN 0x0D
+int ASKEY_ENTER 0x0D
+int ASKEY_SHIFT 0x10
+int ASKEY_CONTROL 0x11
+int ASKEY_MENU 0x12
+int ASKEY_PAUSE 0x13
+int ASKEY_CAPITAL 0x14
+int ASKEY_KANA 0x15
+int ASKEY_HANGUEL 0x15
+int ASKEY_HANGUL 0x15
+int ASKEY_JUNJA 0x17
+int ASKEY_FINAL 0x18
+int ASKEY_HANJA 0x19
+int ASKEY_KANJI 0x19
+int ASKEY_ESC 0x1B
+int ASKEY_ESCAPE 0x1B
+int ASKEY_CONVERT 0x1C
+int ASKEY_NONCONVERT 0x1D
+int ASKEY_ACCEPT 0x1E
+int ASKEY_MODECHANGE 0x1F
+int ASKEY_SPACE 0x20
+int ASKEY_PRIOR 0x21
+int ASKEY_NEXT 0x22
+int ASKEY_END 0x23
+int ASKEY_HOME 0x24
+int ASKEY_LEFT 0x25
+int ASKEY_UP 0x26
+int ASKEY_RIGHT 0x27
+int ASKEY_DOWN 0x28
+int ASKEY_SELECT 0x29
+int ASKEY_PRINT 0x2A
+int ASKEY_EXECUT 0x2B
+int ASKEY_SNAPSHOT 0x2C
+int ASKEY_INSERT 0x2D
+int ASKEY_DELETE 0x2E
+int ASKEY_HELP 0x2F
+int ASKEY_0 0x30
+int ASKEY_1 0x31
+int ASKEY_2 0x32
+int ASKEY_3 0x33
+int ASKEY_4 0x34
+int ASKEY_5 0x35
+int ASKEY_6 0x36
+int ASKEY_7 0x37
+int ASKEY_8 0x38
+int ASKEY_9 0x39
+int ASKEY_A 0x41
+int ASKEY_B 0x42
+int ASKEY_C 0x43
+int ASKEY_D 0x44
+int ASKEY_E 0x45
+int ASKEY_F 0x46
+int ASKEY_G 0x47
+int ASKEY_H 0x48
+int ASKEY_I 0x49
+int ASKEY_J 0x4A
+int ASKEY_K 0x4B
+int ASKEY_L 0x4C
+int ASKEY_M 0x4D
+int ASKEY_N 0x4E
+int ASKEY_O 0x4F
+int ASKEY_P 0x50
+int ASKEY_Q 0x51
+int ASKEY_R 0x52
+int ASKEY_S 0x53
+int ASKEY_T 0x54
+int ASKEY_U 0x55
+int ASKEY_V 0x56
+int ASKEY_W 0x57
+int ASKEY_X 0x58
+int ASKEY_Y 0x59
+int ASKEY_Z 0x5A
+int ASKEY_LWIN 0x5B
+int ASKEY_RWIN 0x5C
+int ASKEY_APPS 0x5D
+int ASKEY_SLEEP 0x5F
+int ASKEY_NUMPAD0 0x60
+int ASKEY_NUMPAD1 0x61
+int ASKEY_NUMPAD2 0x62
+int ASKEY_NUMPAD3 0x63
+int ASKEY_NUMPAD4 0x64
+int ASKEY_NUMPAD5 0x65
+int ASKEY_NUMPAD6 0x66
+int ASKEY_NUMPAD7 0x67
+int ASKEY_NUMPAD8 0x68
+int ASKEY_NUMPAD9 0x69
+int ASKEY_MULTIPLY 0x6A
+int ASKEY_ADD 0x6B
+int ASKEY_SEPARATOR 0x6C
+int ASKEY_SUBTRACT 0x6D
+int ASKEY_DECIMAL 0x6E
+int ASKEY_DIVIDE 0x6F
+int ASKEY_F1 0x70
+int ASKEY_F2 0x71
+int ASKEY_F3 0x72
+int ASKEY_F4 0x73
+int ASKEY_F5 0x74
+int ASKEY_F6 0x75
+int ASKEY_F7 0x76
+int ASKEY_F8 0x77
+int ASKEY_F9 0x78
+int ASKEY_F10 0x79
+int ASKEY_F11 0x7A
+int ASKEY_F12 0x7B
+int ASKEY_F13 0x7C
+int ASKEY_F14 0x7D
+int ASKEY_F15 0x7E
+int ASKEY_F16 0x7F
+int ASKEY_F17 0x80
+int ASKEY_F18 0x81
+int ASKEY_F19 0x82
+int ASKEY_F20 0x83
+int ASKEY_F21 0x84
+int ASKEY_F22 0x85
+int ASKEY_F23 0x86
+int ASKEY_F24 0x87
+int ASKEY_NUMLOCK 0x90
+int ASKEY_SCROLL 0x91
+int ASKEY_LSHIFT 0xA0
+int ASKEY_RSHIFT 0xA1
+int ASKEY_LCONTROL 0xA2
+int ASKEY_RCONTROL 0xA3
+int ASKEY_LMENU 0xA4
+int ASKEY_RMENU 0xA5
+int ASKEY_COMMA 0xBC
+int ASKEY_PLUS 0xBB
+int ASKEY_MINUS 0xBD
+int ASKEY_PERIOD 0xBE
+int ASKEY_ATTN 0xF6
+int ASKEY_CRSEL 0xF7
+int ASKEY_EXSEL 0xF8
+int ASKEY_EREOF 0xF9
+int ASKEY_PLAY 0xFA
+int ASKEY_ZOOM 0xFB
+int ASKEY_PA1 0xFD
+int ASKEY_OEM_CLEAR 0xFE
+
+# Texture flags
+int ASTEXTURE_MIPMAPS 1
+int ASTEXTURE_16BITS 2
+
+# XML node types
+int ASXML_NULL 0
+int ASXML_NODE 1
+int ASXML_NODEEND 2
+int ASXML_TEXT 3
+int ASXML_CDATA 5
+int ASXML_UNKNOWN 6
+
+# Camera
+Camera asCreateCamera()
+void asSetCameraRange(Camera cam, float near_, float far_)
+float asCameraNearRange(Camera cam)
+float asCameraFarRange(Camera cam)
+void asSetCameraFov(Camera cam, float fov)
+float asCameraFov(Camera cam)
+void asSetCameraProjection(Camera cam, float width, float height, float near_, float far_, bool ortho)
+Entity asPickEntity(Camera camera, int x, int y, int group)
+
+# Core
+void asInit()
+bool asRun()
+float asDeltaTime()
+int asMillisecs()
+
+# Dir
+bool asAddZip(string filename)
+string asDirContents(string dir)
+void asChangeDir(string dir)
+string asCurrentDir()
+
+# Entity
+Entity asCreateEntity()
+void asDeleteEntity(Entity entity)
+int asEntityType(Entity entity)
+void asSetEntityName(Entity entity, string name)
+string asEntityName(Entity entity)
+void asSetEntityVisible(Entity entity, bool visible)
+bool asEntityVisible(Entity entity)
+void asSetEntityParent(Entity entity, Entity parent)
+Entity asEntityParent(Entity entity)
+int asEntityNumChildren(Entity entity)
+Entity asEntityChild(Entity entity, int index)
+void asSetEntityPosition(Entity entity, float x, float y, float z)
+void asMoveEntity(Entity entity, float x, float y, float z)
+Entity asSlideEntity(Entity entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group)
+float asEntityX(Entity entity)
+float asEntityY(Entity entity)
+float asEntityZ(Entity entity)
+float asEntityLocalX(Entity entity)
+float asEntityLocalY(Entity entity)
+float asEntityLocalZ(Entity entity)
+void asSetEntityRotation(Entity entity, float pitch, float yaw, float roll)
+void asTurnEntity(Entity entity, float pitch, float yaw, float roll)
+void asPointEntity(Entity entity, float x, float y, float z)
+float asEntityPitch(Entity entity)
+float asEntityYaw(Entity entity)
+float asEntityRoll(Entity entity)
+void asSetEntityScale(Entity entity, float x, float y, float z)
+float asEntityScaleX(Entity entity)
+float asEntityScaleY(Entity entity)
+float asEntityScaleZ(Entity entity)
+float asEntityWidth(Entity entity)
+float asEntityHeight(Entity entity)
+float asEntityDepth(Entity entity)
+int asEntityNumMaterials(Entity entity)
+Material asEntityMaterial(Entity entity, int index)
+void asSetEntityCollision(Entity entity, int type, int group)
+bool asEntityCollision(Entity entity)
+int asEntityGroup(Entity entity)
+
+# Font
+Font asLoadFont(string filename)
+void asDeleteFont(Font font)
+void asDrawText(Font font, string text, int x, int y, int color)
+int asTextWidth(Font font, string text)
+int asTextHeight(Font font, string text)
+
+# Graphics
+int asRGB(int red, int green, int blue)
+int asRGBA(int red, int green, int blue, int alpha)
+int asRedVal(int color)
+int asGreenVal(int color)
+int asBlueVal(int color)
+int asAlphaVal(int color)
+void asBeginDrawing(bool clear, bool clearDepth, int color)
+void asEndDrawing()
+void asSetRenderTarget(Texture tex, bool clear, bool clearDepth, int color)
+void asSetViewport(int x, int y, int width, int height)
+void asDrawLine(int x1, int y1, int x2, int y2, int color)
+void asDrawRect(int x, int y, int width, int height, int color)
+
+# Gui
+Control asCreateButton(int x, int y, int width, int height, string text, Control parent)
+Control asCreateCheckBox(int x, int y, int width, int height, string text, Control parent)
+Control asCreateComboBox(int x, int y, int width, int height, Control parent)
+Control asCreateContextMenu(int x, int y, int width, int height, Control parent)
+Control asCreateEditBox(int x, int y, int width, int height, int type, Control parent)
+Control asCreateImage(int x, int y, int width, int height, Texture texture, Control parent)
+Control asCreateListBox(int x, int y, int width, int height, Control parent)
+Control asCreateMenu(string text, Control parent)
+Control asCreateScrollbar(int x, int y, int width, int height, bool horizontal, int max, int step, Control parent)
+Control asCreateTabbar(int x, int y, int width, int height, Control parent)
+Control asCreateText(int x, int y, int width, int height, string text, bool border, Control parent)
+Control asCreateToolbar(Control parent)
+Control asCreateWindow(int x, int y, int width, int height, bool modal, Control parent)
+void asDeleteControl(Control control)
+int asControlType(Control control)
+void asSetControlEnabled(Control control, bool enabled)
+bool asControlEnabled(Control control)
+void asSetControlVisible(Control control, bool visible)
+bool asControlVisible(Control control)
+Control asControlParent(Control control)
+int asControlNumChildren(Control control)
+Control asControlChild(Control control, int index)
+void asSetControlShape(Control control, int x, int y, int width, int height)
+int asControlX(Control control)
+int asControlY(Control control)
+int asControlWidth(Control control)
+int asControlHeight(Control control)
+void asSetControlText(Control control, string text)
+string asControlText(Control control)
+void asSetControlTooltip(Control control, string tooltip)
+string asControlTooltip(Control control)
+void asSetControlTexture(Control control, Texture texture, bool alpha)
+void asSetControlFont(Control control, Font font)
+Font asControlFont(Control control)
+void asSetControlColor(Control control, int color)
+void asClearControlColor(Control control)
+int asControlColor(Control control)
+void asSetControlChecked(Control control, bool checked)
+bool asControlChecked(Control control)
+void asSetControlValue(Control control, int value)
+int asControlValue(Control control)
+int asAddControlItem(Control control, string text, int id)
+int asControlNumItems(Control control)
+void asSetControlItemEnabled(Control control, int index, bool enable)
+bool asControlItemEnabled(Control control, int index)
+void asSetControlItemChecked(Control control, int index, bool check)
+bool asControlItemChecked(Control control, int index)
+void asSelectControlItem(Control control, int index)
+int asSelectedControlItem(Control control)
+void asSetControlItemText(Control control, int index, string text)
+string asControlItemText(Control control, int index)
+void asRemoveControlItem(Control control, int index)
+void asRemoveControlItems(Control control)
+void asAddMenuSeparator(Control menu)
+void asDrawGUI()
+bool asPrepareNextGUIEvent()
+int asGUIEventType()
+Control asGUIEventControl()
+
+# Input
+void asSetCursorVisible(bool visible)
+void asSetCursorPosition(int x, int y)
+int asCursorX()
+int asCursorY()
+bool asButtonDown(int button)
+bool asKeyDown(int key)
+
+# Light
+Light asCreateLight(int type)
+int asLightType(Light light)
+void asSetLightDiffuse(Light light, int color)
+int asLightDiffuse(Light light)
+void asSetLightAmbient(Light light, int color)
+int asLightAmbient(Light light)
+void asSetLightSpecular(Light light, int color)
+int asLightSpecular(Light light)
+void asSetLightCastShadows(Light light, bool enable)
+bool asLightCastShadows(Light light)
+void asSetLightRadius(Light light, float radius)
+float asLightRadius(Light light)
+void asSetLightAttenuation(Light light, float constant, float linear, float quadratic)
+float asLightConstantAttenuation(Light light)
+float asLightLinearAttenuation(Light light)
+float asLightQuadraticAttenuation(Light light)
+void asSetLightCone(Light light, float inner, float outer)
+float asLightInnerCone(Light light)
+float asLightOuterCone(Light light)
+void asSetLightFalloff(Light light, float falloff)
+float asLightFalloff(Light light)
+
+# Material
+void asSetMaterialTexture(Material material, int index, Texture texture)
+Texture asMaterialTexture(Material material, int index)
+void asSetMaterialBlend(Material material, int blend)
+int asMaterialBlend(Material material)
+void asSetMaterialDiffuse(Material material, int color)
+int asMaterialDiffuse(Material material)
+void asSetMaterialEmissive(Material material, int color)
+int asMaterialEmissive(Material material)
+void asSetMaterialAmbient(Material material, int color)
+int asMaterialAmbient(Material material)
+void asSetMaterialSpecular(Material material, int color)
+int asMaterialSpecular(Material material)
+void asSetMaterialShininess(Material material, float shininess)
+float asMaterialShininess(Material material)
+void asSetMaterialRenderMode(Material material, int mode)
+int asMaterialRenderMode(Material material)
+void asSetMaterialFilterMode(Material material, int mode)
+int asMaterialFilterMode(Material material)
+void asSetMaterialLightingMode(Material material, int mode)
+int asMaterialLightingMode(Material material)
+void asSetMaterialFogEnabled(Material material, bool enabled)
+bool asMaterialFogEnabled(Material material)
+void asSetMaterialDepthWritingEnabled(Material material, bool enabled)
+bool asMaterialDepthWritingEnabled(Material material)
+void asSetMaterialCullingEnabled(Material material, bool enabled)
+bool asMaterialCullingEnabled(Material material)
+
+# Math
+float asFloor(float val)
+float asCeil(float val)
+float asAbs(float val)
+float asSqr(float val)
+float asSin(float val)
+float asCos(float val)
+float asTan(float val)
+float asASin(float val)
+float asACos(float val)
+float asATan(float val)
+float asATan2(float x, float y)
+float asExp(float val)
+float asLog(float val)
+float asLog10(float val)
+int asRand(int min, int max)
+void asRandSeed(int seed)
+float asDeg(float rad)
+float asRad(float deg)
+float asPointX()
+float asPointY()
+float asPointZ()
+float asNormalX()
+float asNormalY()
+float asNormalZ()
+
+# Memblock
+Memblock asCreateMemblock(int size)
+Memblock asLoadMemblock(string filename)
+void asSaveMemblock(Memblock memblock, string filename)
+void asDeleteMemblock(Memblock memblock)
+int asMemblockSize(Memblock memblock)
+void asSetMemblockByte(Memblock memblock, int offset, int val)
+void asSetMemblockShort(Memblock memblock, int offset, int val)
+void asSetMemblockInt(Memblock memblock, int offset, int val)
+void asSetMemblockFloat(Memblock memblock, int offset, float val)
+void asSetMemblockString(Memblock memblock, int offset, string val)
+int asMemblockByte(Memblock memblock, int offset)
+int asMemblockShort(Memblock memblock, int offset)
+int asMemblockInt(Memblock memblock, int offset)
+float asMemblockFloat(Memblock memblock, int offset)
+string asMemblockString(Memblock memblock, int offset)
+
+# Mesh
+Mesh asCreateCone(int segments)
+Mesh asCreateCube()
+Mesh asCreateCylinder(int segments)
+Mesh asCreateSphere(int segments)
+Mesh asLoadMesh(string filename)
+void asDeleteMesh(Mesh mesh)
+void asTranslateMesh(Mesh mesh, float x, float y, float z)
+void asRotateMesh(Mesh mesh, float pitch, float yaw, float roll)
+void asScaleMesh(Mesh mesh, float x, float y, float z)
+void asFlipMesh(Mesh mesh)
+void asSetMeshColor(Mesh mesh, int color)
+void asUpdateMeshNormals(Mesh mesh)
+float asMeshWidth(Mesh mesh)
+float asMeshHeight(Mesh mesh)
+float asMeshDepth(Mesh mesh)
+
+# MeshEntity
+MeshEntity asCreateMeshEntity(Mesh mesh)
+MeshEntity asCreateOctreeMeshEntity(Mesh mesh)
+Mesh asMeshEntityMesh(MeshEntity entity)
+void asSetMeshEntityCastShadows(MeshEntity entity, bool enable)
+bool asMeshEntityCastShadows(MeshEntity entity)
+void asSetMeshEntityLoop(MeshEntity entity, bool loop)
+bool asMeshEntityLoop(MeshEntity entity)
+void asSetMeshEntityFPS(MeshEntity entity, float fps)
+float asMeshEntityFPS(MeshEntity entity)
+void asSetMeshEntityFrame(MeshEntity entity, float frame)
+float asMeshEntityFrame(MeshEntity entity)
+void asSetMeshEntityFrames(MeshEntity entity, int first, int last)
+int asMeshEntityFirstFrame(MeshEntity entity)
+int asMeshEntityLastFrame(MeshEntity entity)
+
+# Screen
+void asOpenScreen(int width, int height, int depth, int flags)
+void asOpenScreenEx(int width, int height, int depth, int flags, void* win)
+void asCloseScreen()
+void asSetScreenTitle(string caption)
+void asSetScreenSize(int width, int height)
+bool asScreenActive()
+int asScreenWidth()
+int asScreenHeight()
+void asSetScreenFPS(int fps)
+int asScreenFPS()
+bool asFeatureSupported(int feature)
+int asScreenNumModes()
+int asScreenModeWidth(int index)
+int asScreenModeHeight(int index)
+int asScreenModeDepth(int index)
+int asDesktopWidth()
+int asDesktopHeight()
+int asDesktopDepth()
+
+# Sprite
+Sprite asCreateSprite(Texture texture, int blend)
+void asSetSpriteSize(Sprite sprite, float width, float height)
+float asSpriteWidth(Sprite sprite)
+float asSpriteHeight(Sprite sprite)
+
+# String
+int asVal(string str)
+float asValF(string str)
+string asStr(int number)
+string asStrF(float number)
+string asLeft(string str, int num)
+string asRight(string str, int num)
+string asMid(string str, int pos, int num)
+string asReplace(string str, string find, string replace)
+int asFind(string str, string find, int offset)
+string asUpper(string str)
+string asLower(string str)
+string asSTrim(string str)
+string asChar(int code)
+int asCode(string str)
+int asLen(string str)
+string asField(string str, string delimiter, int index)
+string asLoadString(string filename)
+void asSaveString(string str, string filename, bool append)
+
+# Texture
+Texture asCreateTexture(int width, int height)
+Texture asCreateRenderTexture(int width, int height)
+Texture asLoadTexture(string filename)
+void asDeleteTexture(Texture tex)
+void asDrawTexture(Texture tex, int x, int y)
+void asDrawTextureEx(Texture tex, int x, int y, int width, int height, int color)
+void* asLockTexture(Texture tex)
+void asUnlockTexture(Texture tex)
+void asSetTextureColorKey(Texture tex, int color)
+void asNormalizeTexture(Texture tex, float amplitude)
+int asTextureWidth(Texture tex)
+int asTextureHeight(Texture tex)
+string asTextureFilename(Texture tex)
+void asSetTextureCreationFlags(int flags)
+
+# World
+void asSetAmbient(int color)
+void asSetShadowColor(int color)
+void asSetFog(int color, float near_, float far_)
+void asSetSkybox(Texture top, Texture bottom, Texture left, Texture right, Texture front, Texture back)
+void asSetSkydome(Texture tex, float texScale, bool fullSphere)
+Material asSkyboxMaterial()
+Material asSkydomeMaterial()
+void asDrawWorld(Camera camera)
+void asWorldToScreen(Camera camera, float x, float y, float z)
+void asScreenToWorld(Camera camera, int x, int y, float depth)
+Entity asRaycast(float x1, float y1, float z1, float x2, float y2, float z2, int group)
+
+# XML
+XML asLoadXML(string filename)
+void asCloseXML(XML xml)
+bool asPrepareNextXMLNode(XML xml)
+int asXMLNodeType(XML xml)
+string asXMLNodeText(XML xml)
+int asXMLNumAttributes(XML xml)
+string asXMLAttributeName(XML xml, int index)
+string asXMLAttributeValue(XML xml, string name)
