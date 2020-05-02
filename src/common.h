@@ -24,10 +24,8 @@ using namespace gui;
 
 // Screen
 #define ASSCREEN_WINDOWED 1
-#define ASSCREEN_VSYNC 2
-#define ASSCREEN_ANTIALIAS 4
-#define ASSCREEN_RESIZABLE 8
-#define ASSCREEN_SOFTWARE 65536
+#define ASSCREEN_RESIZABLE 2
+#define ASSCREEN_VSYNC 4
 
 // Features
 #define ASFEATURE_RENDERTOTEXTURE 0

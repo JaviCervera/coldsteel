@@ -71,12 +71,17 @@ It has been compiled with MinGW-W64-builds-4.3.5, which was configured with the 
 ```
 
 Irrlicht's Code::Blocks project was used to build it. The *Win32 - Release - fast math - static* target has been used.
-In *Project / Build Options...*, the following options were selected:
+In *Project / Build Options...*, the following options were selected for the specified target:
 
 * Static linking [-static]
 * Target x86 (32bit) [-m32]
 * Optimize generated code (for size) [-Os]
 * Strip all symbols from binary (minimizes size) [-s]
+
+In the "Other compiler options" tab of the same panel, the following options we added:
+
+* -fno-exceptions
+* -fno-rtti
 
 
 ### macOS

@@ -95,13 +95,12 @@ EXPORT void CALL asOpenScreen(int width, int height, int depth, int flags) {
 EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, void* win) {
     bool fullscreen = (flags & ASSCREEN_WINDOWED) == 0;
     bool vsync = (flags & ASSCREEN_VSYNC) == ASSCREEN_VSYNC;
-    bool antialias = (flags & ASSCREEN_ANTIALIAS) == ASSCREEN_ANTIALIAS;
-    E_DRIVER_TYPE driver = ((flags & ASSCREEN_SOFTWARE) == ASSCREEN_SOFTWARE) ? EDT_BURNINGSVIDEO : EDT_OPENGL;
+    //bool antialias = (flags & ASSCREEN_ANTIALIAS) == ASSCREEN_ANTIALIAS;
     
     SIrrlichtCreationParameters params;
-    params.AntiAlias = antialias;
+    //params.AntiAlias = antialias;
     params.Bits = depth;
-    params.DriverType = driver;
+    params.DriverType = EDT_OPENGL;
     params.EventReceiver = new csEventReceiver;
     params.LoggingLevel = ELL_NONE;
     params.Fullscreen = fullscreen;
