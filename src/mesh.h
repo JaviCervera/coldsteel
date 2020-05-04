@@ -10,6 +10,7 @@ extern "C" {
 EXPORT IMesh* CALL asCreateCone(int segments);
 EXPORT IMesh* CALL asCreateCube();
 EXPORT IMesh* CALL asCreateCylinder(int segments);
+EXPORT IMesh* CALL asCreateQuad();
 EXPORT IMesh* CALL asCreateSphere(int segments);
 EXPORT IMesh* CALL asLoadMesh(const char* filename);
 EXPORT void CALL asDeleteMesh(IMesh* mesh);

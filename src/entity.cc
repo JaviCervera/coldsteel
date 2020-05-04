@@ -99,7 +99,7 @@ EXPORT ISceneNode* CALL asSlideEntity(ISceneNode* entity, float x, float y, floa
         map<ITriangleSelector*, int>::Node* node = it.getNode();
         ITriangleSelector* selector = node->getKey();
         int selectorGroup = node->getValue();
-        if ((group & selectorGroup) != 0) {
+        if ((group & selectorGroup) != 0 && selector != entity->getTriangleSelector()) {
             const vector3df radius(radiusX, radiusY, radiusZ);
             vector3df direction(x, y, z);
             matrix4()

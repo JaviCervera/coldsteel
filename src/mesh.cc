@@ -20,6 +20,13 @@ EXPORT IMesh* CALL asCreateCylinder(int segments) {
 }
 
 
+EXPORT IMesh* CALL asCreateQuad() {
+    IMesh* quad = _asDevice()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1));
+    asRotateMesh(quad, -90, 0, 0);
+    return quad;
+}
+
+
 EXPORT IMesh* CALL asCreateSphere(int segments) {
     return _asDevice()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments);
 }
