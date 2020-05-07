@@ -250,6 +250,6 @@ def write_file(filename: str, content: str) -> None:
 
 if __name__ == '__main__':
     defs = parse_defs('defs.txt')
-    write_file('_build/wrappers/astro.h', defs.c_header())
-    write_file('_build/wrappers/astro.c', defs.c_impl())
+    write_file('_build/dll/wrappers/astro.h', defs.c_header())
+    write_file('_build/dll/wrappers/astro.c', defs.c_impl())
     write_file('src/as_wrapper.cpp', defs.as_wrapper())
