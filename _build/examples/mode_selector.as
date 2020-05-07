@@ -23,7 +23,7 @@ void Main() {
 
 
 ScreenSettings ShowScreenSettingsDialog() {
-	OpenScreen(400, 190, DesktopDepth(), SCREEN_WINDOWED | SCREEN_SOFTWARE);
+	OpenScreen(400, 190, DesktopDepth(), SCREEN_WINDOWED);
 	SetScreenTitle("Select video settings");
 	if (!AddZip("assets.dat")) ChangeDir("assets");
 	
@@ -71,7 +71,7 @@ ScreenSettings ShowScreenSettingsDialog() {
 		settings.Depth = Val(Field(ControlText(resolutionBox), "x", 2));
 		if (ControlChecked(windowedCheck)) settings.Flags |= SCREEN_WINDOWED;
 		if (ControlChecked(vsyncCheck)) settings.Flags |= SCREEN_VSYNC;
-		if (SelectedControlItem(driverBox) == 1) settings.Flags |= SCREEN_SOFTWARE;
+		//if (SelectedControlItem(driverBox) == 1) settings.Flags |= SCREEN_SOFTWARE;
 	}
 	return settings;
 }
