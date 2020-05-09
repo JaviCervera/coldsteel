@@ -14,7 +14,7 @@ EXPORT void CALL asCloseXML(IXMLReaderUTF8* xml) {
 }
 
 
-EXPORT bool_t CALL asPrepareNextXMLNode(IXMLReaderUTF8* xml) {
+EXPORT bool_t CALL asPrepareNextXMLElement(IXMLReaderUTF8* xml) {
     bool_t valid = xml->read();
     while (valid && xml->getNodeType() == EXN_COMMENT) {
         valid = xml->read();
@@ -23,7 +23,7 @@ EXPORT bool_t CALL asPrepareNextXMLNode(IXMLReaderUTF8* xml) {
 }
 
 
-EXPORT int CALL asXMLNodeType(IXMLReaderUTF8* xml) {
+EXPORT int CALL asXMLElementType(IXMLReaderUTF8* xml) {
     map<EXML_NODE, int> types;
     types[EXN_NONE] = ASXML_NULL;
     types[EXN_ELEMENT] = ASXML_NODE;
@@ -37,7 +37,12 @@ EXPORT int CALL asXMLNodeType(IXMLReaderUTF8* xml) {
 }
 
 
-EXPORT const char* CALL asXMLNodeText(IXMLReaderUTF8* xml) {
+EXPORT bool_t CALL asXMLElementEmpty(IXMLReaderUTF8* xml) {
+    return xml->isEmptyElement();
+}
+
+
+EXPORT const char* CALL asXMLElementText(IXMLReaderUTF8* xml) {
     return xml->getNodeName();
 }
 

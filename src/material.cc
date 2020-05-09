@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "material.h"
+#include "math.h"
 
 extern "C" {
 
@@ -15,6 +16,12 @@ EXPORT void CALL asSetMaterialTexture(SMaterial* material, int index, ITexture* 
 
 EXPORT ITexture* CALL asMaterialTexture(SMaterial* material, int index) {
     return material->getTexture(index);
+}
+
+
+EXPORT void CALL asSetMaterialTextureTransform(SMaterial* material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale) {
+    matrix4 mat = matrix4().buildTextureTransform(asRad(angle), vector2df(0, 0), vector2df(xoffset, yoffset), vector2df(xscale, yscale));
+    material->setTextureMatrix(index, mat);
 }
 
 

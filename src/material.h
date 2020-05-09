@@ -9,6 +9,7 @@ extern "C" {
 
 EXPORT void CALL asSetMaterialTexture(SMaterial* material, int index, ITexture* texture);
 EXPORT ITexture* CALL asMaterialTexture(SMaterial* material, int index);
+EXPORT void CALL asSetMaterialTextureTransform(SMaterial* material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale);
 EXPORT void CALL asSetMaterialBlend(SMaterial* material, int blend);
 EXPORT int CALL asMaterialBlend(SMaterial* material);
 EXPORT void CALL asSetMaterialDiffuse(SMaterial* material, int color);

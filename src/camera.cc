@@ -26,12 +26,12 @@ EXPORT float CALL asCameraFarRange(ICameraSceneNode* cam) {
 }
 
 
-EXPORT void CALL asSetCameraFov(ICameraSceneNode* cam, float fov) {
+EXPORT void CALL asSetCameraFOV(ICameraSceneNode* cam, float fov) {
     cam->setFOV(asRad(fov));
 }
 
 
-EXPORT float CALL asCameraFov(ICameraSceneNode* cam) {
+EXPORT float CALL asCameraFOV(ICameraSceneNode* cam) {
     return asDeg(cam->getFOV());
 }
 
