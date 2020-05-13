@@ -415,6 +415,12 @@ int asCursorX()
 int asCursorY()
 bool asButtonDown(int button)
 bool asKeyDown(int key)
+int asNumJoysticks()
+string asJoystickName(int index)
+int asNumJoystickAxes(int index)
+int asNumJoystickButtons(int index)
+bool asJoystickButtonDown(int index, int button)
+float asJoystickAxis(int index, int axis)
 
 # Light
 Light asCreateLight(int type)

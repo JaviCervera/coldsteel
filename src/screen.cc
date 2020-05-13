@@ -47,6 +47,9 @@ class csEventReceiver : public IEventReceiver {
                         break;
                 }
                 break;
+            case EET_JOYSTICK_INPUT_EVENT:
+                _asSetJoystickEvent(event.JoystickEvent);
+                break;
             case EET_KEY_INPUT_EVENT:
                 _asSetKeyDown(event.KeyInput.Key, event.KeyInput.PressedDown);
                 break;

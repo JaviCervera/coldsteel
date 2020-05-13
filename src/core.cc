@@ -1,4 +1,5 @@
 #include "core.h"
+#include "input.h"
 #include "screen.h"
 
 
@@ -51,6 +52,9 @@ void _asSetDevice(IrrlichtDevice* device) {
         params.LoggingLevel = ELL_NONE;
         _device = createDeviceEx(params);
     }
+    array<SJoystickInfo> joysticks;
+    _device->activateJoysticks(joysticks);
+    _asSetJoysticks(joysticks);
     _initMillisecs = _device->getTimer()->getRealTime();
     _lastMillisecs = 0;
     _delta = 0.0f;
