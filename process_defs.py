@@ -220,7 +220,7 @@ class Defs:
             'MeshEntity': 'IMeshSceneNode*',
             'Sprite': 'IBillboardSceneNode*',
             'Texture': 'ITexture*',
-            'XML': 'IXMLReaderUTF8*',
+            'XMLNode': 'XMLNode*',
         }
         return irr_types[type_] if type_ in irr_types else type_
     

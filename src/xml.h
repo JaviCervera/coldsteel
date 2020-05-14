@@ -7,15 +7,20 @@ extern "C" {
 #endif
 
 
-EXPORT IXMLReaderUTF8* CALL asLoadXML(const char* filename);
-EXPORT void CALL asCloseXML(IXMLReaderUTF8* xml);
-EXPORT bool_t CALL asPrepareNextXMLElement(IXMLReaderUTF8* xml);
-EXPORT int CALL asXMLElementType(IXMLReaderUTF8* xml);
-EXPORT bool_t CALL asXMLElementEmpty(IXMLReaderUTF8* xml);
-EXPORT const char* CALL asXMLElementText(IXMLReaderUTF8* xml);
-EXPORT int CALL asXMLNumAttributes(IXMLReaderUTF8* xml);
-EXPORT const char* CALL asXMLAttributeName(IXMLReaderUTF8* xml, int index);
-EXPORT const char* CALL asXMLAttributeValue(IXMLReaderUTF8* xml, const char* name);
+struct XMLNode;
+
+
+EXPORT XMLNode* CALL asParseXML(const char* filename);
+EXPORT void CALL asDeleteXML(XMLNode* node);
+EXPORT const char* CALL asXMLName(XMLNode* node);
+EXPORT const char* CALL asXMLText(XMLNode* node);
+EXPORT int CALL asXMLNumAttributes(XMLNode* node);
+EXPORT const char* CALL asXMLAttributeName(XMLNode* node, int index);
+EXPORT const char* CALL asXMLAttributeValue(XMLNode* node, const char* name);
+EXPORT int CALL asXMLNumChildren(XMLNode* node);
+EXPORT XMLNode* CALL asXMLChild(XMLNode* node, int index);
+EXPORT int CALL asXMLNumChildrenNamed(XMLNode* node, const char* name);
+EXPORT XMLNode* CALL asXMLChildNamed(XMLNode* node, const char* name, int index);
 
 
 #ifdef __cplusplus
