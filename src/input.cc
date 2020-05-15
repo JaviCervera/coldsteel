@@ -77,7 +77,7 @@ EXPORT bool_t CALL asJoystickButtonDown(int index, int button) {
 EXPORT float CALL asJoystickAxis(int index, int axis) {
     const float value = _joysticks[index].event.Axis[axis] * 1.0f / 32768;
     const float fixedValue =
-        (asAbs(value) <= 0.01f) ? 0.0f :
+        (asAbs(value) <= 0.1f) ? 0.0f :
         (value >= 0.995f) ? 1.0f :
         value;
     return fixedValue;
