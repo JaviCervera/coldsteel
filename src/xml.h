@@ -11,7 +11,7 @@ struct XMLNode;
 
 
 EXPORT XMLNode* CALL asParseXML(const char* filename);
-EXPORT void CALL asDeleteXML(XMLNode* node);
+EXPORT void CALL asFreeXML(XMLNode* node);
 EXPORT const char* CALL asXMLName(XMLNode* node);
 EXPORT const char* CALL asXMLText(XMLNode* node);
 EXPORT int CALL asXMLNumAttributes(XMLNode* node);

@@ -10,7 +10,7 @@ extern "C" {
 EXPORT ITexture* CALL asCreateTexture(int width, int height);
 EXPORT ITexture* CALL asCreateRenderTexture(int width, int height);
 EXPORT ITexture* CALL asLoadTexture(const char* filename);
-EXPORT void CALL asDeleteTexture(ITexture* tex);
+EXPORT void CALL asFreeTexture(ITexture* tex);
 EXPORT void CALL asDrawTexture(ITexture* tex, int x, int y);
 EXPORT void CALL asDrawTextureEx(ITexture* tex, int x, int y, int width, int height, int color);
 EXPORT void* CALL asLockTexture(ITexture* tex);

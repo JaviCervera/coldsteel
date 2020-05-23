@@ -13,7 +13,7 @@ typedef void Memblock;
 EXPORT Memblock* CALL asCreateMemblock(int size);
 EXPORT Memblock* CALL asLoadMemblock(const char* filename);
 EXPORT void CALL asSaveMemblock(Memblock* memblock, const char* filename);
-EXPORT void CALL asDeleteMemblock(Memblock* memblock);
+EXPORT void CALL asFreeMemblock(Memblock* memblock);
 EXPORT int CALL asMemblockSize(const Memblock* memblock);
 EXPORT void CALL asSetMemblockByte(Memblock* memblock, int offset, int val);
 EXPORT void CALL asSetMemblockShort(Memblock* memblock, int offset, int val);

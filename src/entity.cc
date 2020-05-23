@@ -14,7 +14,7 @@ EXPORT ISceneNode* CALL asCreateEntity() {
 }
 
 
-EXPORT void CALL asDeleteEntity(ISceneNode* entity) {
+EXPORT void CALL asFreeEntity(ISceneNode* entity) {
     asSetEntityCollision(entity, ASCOLLISION_NONE, 0);
     entity->remove();
 }

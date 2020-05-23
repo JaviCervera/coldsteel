@@ -86,7 +86,7 @@ EXPORT XMLNode* CALL asParseXML(const char* filename) {
 }
 
 
-EXPORT void CALL asDeleteXML(XMLNode* node) {
+EXPORT void CALL asFreeXML(XMLNode* node) {
     delete node;
 }
 

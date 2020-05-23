@@ -8,7 +8,7 @@ extern "C" {
 
 
 EXPORT ISceneNode* CALL asCreateEntity();
-EXPORT void CALL asDeleteEntity(ISceneNode* entity);
+EXPORT void CALL asFreeEntity(ISceneNode* entity);
 EXPORT int CALL asEntityType(ISceneNode* entity);
 EXPORT void CALL asSetEntityName(ISceneNode* entity, const char* name);
 EXPORT const char* CALL asEntityName(ISceneNode* entity);

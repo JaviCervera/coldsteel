@@ -62,7 +62,7 @@ ScreenSettings ShowScreenSettingsDialog() {
 		EndDrawing();
 	}
 	
-	DeleteFont(font);
+	FreeFont(font);
 	
 	ScreenSettings settings;
 	if (accepted) {

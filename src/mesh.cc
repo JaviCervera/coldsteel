@@ -37,7 +37,7 @@ EXPORT IMesh* CALL asLoadMesh(const char* filename) {
 }
 
 
-EXPORT void CALL asDeleteMesh(IMesh* mesh) {
+EXPORT void CALL asFreeMesh(IMesh* mesh) {
     if (_asDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1) {
         _asDevice()->getSceneManager()->getMeshCache()->removeMesh(mesh);
     } else {

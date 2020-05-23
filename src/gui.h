@@ -20,7 +20,7 @@ EXPORT IGUIElement* CALL asCreateTabbar(int x, int y, int width, int height, IGU
 EXPORT IGUIElement* CALL asCreateText(int x, int y, int width, int height, const char* text, bool_t border, IGUIElement* parent);
 EXPORT IGUIElement* CALL asCreateToolbar(IGUIElement* parent);
 EXPORT IGUIElement* CALL asCreateWindow(int x, int y, int width, int height, bool_t modal, IGUIElement* parent);
-EXPORT void CALL asDeleteControl(IGUIElement* control);
+EXPORT void CALL asFreeControl(IGUIElement* control);
 EXPORT int CALL asControlType(IGUIElement* control);
 EXPORT void CALL asSetControlEnabled(IGUIElement* control, bool_t enabled);
 EXPORT bool_t CALL asControlEnabled(IGUIElement* control);

@@ -10,7 +10,7 @@ EXPORT IGUIFont* CALL asLoadFont(const char* filename) {
 }
 
 
-EXPORT void CALL asDeleteFont(IGUIFont* font) {
+EXPORT void CALL asFreeFont(IGUIFont* font) {
     _asDevice()->getGUIEnvironment()->removeFont(font);
 }
 

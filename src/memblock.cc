@@ -31,7 +31,7 @@ EXPORT void CALL asSaveMemblock(Memblock* memblock, const char* filename) {
 }
 
 
-EXPORT void CALL asDeleteMemblock(Memblock* memblock) {
+EXPORT void CALL asFreeMemblock(Memblock* memblock) {
     free((int*)memblock-1);
 }
 

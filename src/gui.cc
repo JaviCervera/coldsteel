@@ -99,7 +99,7 @@ EXPORT IGUIElement* CALL asCreateWindow(int x, int y, int width, int height, boo
 }
 
 
-EXPORT void CALL asDeleteControl(IGUIElement* control) {
+EXPORT void CALL asFreeControl(IGUIElement* control) {
     control->remove();
 }
 

@@ -26,7 +26,7 @@ EXPORT ITexture* CALL asLoadTexture(const char* filename) {
 }
 
 
-EXPORT void CALL asDeleteTexture(ITexture* tex) {
+EXPORT void CALL asFreeTexture(ITexture* tex) {
     _asDevice()->getVideoDriver()->removeTexture(tex);
 }
 
