@@ -47,21 +47,21 @@ int ASEDITBOX_PASSWORD 1
 int ASEDITBOX_MULTILINE 2
 
 # Blend modes
-int ASBLEND_SOLID 0
-int ASBLEND_LIGHTMAP 1
-int ASBLEND_LIGHTMAP2X 2
-int ASBLEND_LIGHTMAP4X 3
-int ASBLEND_DETAIL 4
-int ASBLEND_ADD 5
-int ASBLEND_ALPHA 6
-int ASBLEND_VERTEXALPHA 7
-int ASBLEND_MASKED 8
-int ASBLEND_SPHERE 9
-int ASBLEND_REFLECTION 10
-int ASBLEND_NORMAL 11
-int ASBLEND_NORMALADD 12
-int ASBLEND_PARALLAX 13
-int ASBLEND_PARALLAXADD 14
+int ASMATERIAL_SOLID 0
+int ASMATERIAL_LIGHTMAP 1
+int ASMATERIAL_LIGHTMAP2X 2
+int ASMATERIAL_LIGHTMAP4X 3
+int ASMATERIAL_DETAIL 4
+int ASMATERIAL_ADD 5
+int ASMATERIAL_ALPHA 6
+int ASMATERIAL_VERTEXALPHA 7
+int ASMATERIAL_MASKED 8
+int ASMATERIAL_SPHERE 9
+int ASMATERIAL_REFLECTION 10
+int ASMATERIAL_NORMAL 11
+int ASMATERIAL_NORMALADD 12
+int ASMATERIAL_PARALLAX 13
+int ASMATERIAL_PARALLAXADD 14
 
 # Render modes
 int ASRENDER_NORMAL 0
@@ -449,8 +449,8 @@ float asLightFalloff(Light light)
 void asSetMaterialTexture(Material material, int index, Texture texture)
 Texture asMaterialTexture(Material material, int index)
 void asSetMaterialTextureTransform(Material material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale)
-void asSetMaterialBlend(Material material, int blend)
-int asMaterialBlend(Material material)
+void asSetMaterialType(Material material, int type)
+int asMaterialType(Material material)
 void asSetMaterialDiffuse(Material material, int color)
 int asMaterialDiffuse(Material material)
 void asSetMaterialEmissive(Material material, int color)

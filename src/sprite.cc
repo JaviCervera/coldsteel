@@ -5,10 +5,10 @@
 extern "C" {
 
 
-EXPORT IBillboardSceneNode* CALL asCreateSprite(ITexture* texture, int blend) {
+EXPORT IBillboardSceneNode* CALL asCreateSprite(ITexture* texture, int materialType) {
     IBillboardSceneNode* spr = _asDevice()->getSceneManager()->addBillboardSceneNode();
     asSetMaterialTexture(&spr->getMaterial(0), 0, texture);
-    asSetMaterialBlend(&spr->getMaterial(0), blend);
+    asSetMaterialType(&spr->getMaterial(0), materialType);
     if (texture) asSetSpriteSize(spr, texture->getOriginalSize().Width, texture->getOriginalSize().Height);
     else asSetSpriteSize(spr, 1, 1);
     return spr;

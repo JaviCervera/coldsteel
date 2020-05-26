@@ -9,7 +9,7 @@ void Main() {
     
     for (int z = -8; z <= 8; z += 2) {
 			for (int x = -8; x <= 8; x += 2) {
-				Sprite@ tree = CreateSprite(tex, BLEND_ALPHA);
+				Sprite@ tree = CreateSprite(tex, MATERIAL_ALPHA);
 				SetEntityPosition(tree, x, 0, z);
 				SetSpriteSize(tree, 1, 1);
 			}
