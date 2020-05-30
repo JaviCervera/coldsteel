@@ -10,7 +10,7 @@ file(GLOB ASTRO_EXE_FILES ${ASTRO_LIB_FILES} "src/runtime.rc" "src/runtime.cpp" 
 
 #Add header and lib directories
 include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/angelscript/include)
-link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht)
+link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl)
 
 #Add executable targets
 add_executable(astro_exe ${ASTRO_EXE_FILES})
@@ -32,8 +32,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-s -static")
 		set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-s -static")
 	endif (MSVC)
-	target_link_libraries(astro_exe Irrlicht.win32 opengl32 winmm ${TARGET_LINK_LIBRARIES})
-	target_link_libraries(astro_lib Irrlicht.win32 opengl32 winmm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(astro_exe Irrlicht.win32 SDL.win32 opengl32 winmm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(astro_lib Irrlicht.win32 SDL.win32 opengl32 winmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	#add_definitions(-std=c++11 -stdlib=libc++)

@@ -5,12 +5,18 @@
 Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
 ```c++
-#define NO_IRR_COMPILE_WITH_SDL_DEVICE_
+#define _IRR_COMPILE_WITH_SDL_DEVICE_
+#define NO_IRR_COMPILE_WITH_WINDOWS_DEVICE_
+#define NO_IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
+#define NO_IRR_COMPILE_WITH_OSX_DEVICE_
+#define NO_IRR_COMPILE_WITH_X11_DEVICE_
+//#define NO_IRR_COMPILE_WITH_CONSOLE_DEVICE
+#define NO_IRR_COMPILE_WITH_FB_DEVICE_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_8_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_9_
 //#define NO_IRR_COMPILE_WITH_OPENGL_
-#define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
 #define NO_IRR_COMPILE_WITH_SOFTWARE_
+#define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
 #define NO_IRR_LINUX_XCURSOR_
 #define NO_IRR_WCHAR_FILESYSTEM
 #define NO_IRR_COMPILE_WITH_CG_
@@ -23,7 +29,7 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO_IRR_COMPILE_WITH_CSM_LOADER_
 #define NO_IRR_COMPILE_WITH_BSP_LOADER_
 #define NO_IRR_COMPILE_WITH_DMF_LOADER_
-#define _IRR_COMPILE_WITH_LMTS_LOADER_
+#define NO_IRR_COMPILE_WITH_LMTS_LOADER_
 #define NO_IRR_COMPILE_WITH_MY3D_LOADER_
 #define NO_IRR_COMPILE_WITH_OCT_LOADER_
 #define NO_IRR_COMPILE_WITH_LWO_LOADER_
@@ -84,6 +90,11 @@ In the "Other compiler options" tab of the same panel, the following options we 
 
 * -fno-exceptions
 * -fno-rtti
+
+
+Irrlicht is being compiled with the SDL device, which uses SDL 1.2.15. You can download the MinGW development libraries
+[here](http://libsdl.org/release/SDL-devel-1.2.15-mingw32.tar.gz). Then, extract the package and copy the *include/SDL*
+folder into the *include* folder of Irrlicht (so it contains the *SDL* folder itself, do not extract the files directly).
 
 
 ### macOS

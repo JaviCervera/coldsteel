@@ -38,3 +38,4 @@ src/as_wrapper.cpp
 
 # Exceptions
 !_build/examples
+!_build/SDL.dll
