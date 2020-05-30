@@ -49,68 +49,6 @@ class Defs:
         self.vars = vars
         self.funcs = funcs
     
-    def c_header(self) -> str:
-        custom = self.custom_types()
-        vars_list = ['#define {} {}'.format(v.name, v.value) for v in self.vars]
-        types_list = ['typedef void {};'.format(t) for t in custom]
-        funcs_list = ['{} {}{};'.format(Defs.c_type(f.type, custom), f.name, Defs.c_params(f.params, custom)) for f in self.funcs]
-        header = \
-            '#ifndef ASTRO_H_INCLUDED\n#define ASTRO_H_INCLUDED\n\n' \
-            '#ifdef __cplusplus\nextern "C" {\n#endif\n\n'
-        vars = '\n'.join(vars_list) + '\n\n'
-        types = '\n'.join(types_list) + '\n\n'
-        funcs = '\n'.join(funcs_list) + '\n\n'
-        footer = \
-            '#ifdef __cplusplus\n}\n#endif\n\n' \
-            '#endif\n'
-        return header + vars + types + funcs + footer
-    
-    def c_impl(self) -> str:
-        custom = self.custom_types()
-        typedefs_list = ['typedef {} (ASCALL* {}_Ptr){};'.format(Defs.c_type(f.type, custom), f.name, Defs.c_params(f.params, custom)) for f in self.funcs]
-        struct_list = ['    {}_Ptr {};'.format(f.name, f.name) for f in self.funcs]
-        init_list = ['    _api.{name} = ({name}_Ptr)_LibFunc(_api.lib, "{name}@{size}");'.format(name=f.name, size=len(f.params) * 4) for f in self.funcs]
-        funcs_list = ['{type} {name}{params} {{ {ret}_api.{name}{args}; }}'.format(
-            name=f.name,
-            type=Defs.c_type(f.type, custom),
-            params=Defs.c_params(f.params, custom),
-            args='({})'.format(', '.join([p.name for p in f.params])),
-            ret='return ' if f.type != 'void' else ''
-        ) for f in self.funcs if f.name != 'csInit']
-        header = \
-            '#ifdef _WIN32\n#define WIN32_LEAN_AND_MEAN\n#include <Windows.h>\n#define ASCALL __stdcall\n' \
-            '#else\n#include <dlfcn.h>\n#define ASCALL\n#endif\n\n' \
-            '#include <stdio.h>\n' \
-            '#include <string.h>\n' \
-            '#include "astro.h"\n\n'
-        typedefs = '\n'.join(typedefs_list) + '\n\n'
-        struct_header = \
-            'static struct {\n' \
-            '    void* lib;\n'
-        struct_body = '\n'.join(struct_list) + '\n'
-        struct_footer = '} _api;\n\n'
-        loadlib = \
-            '#if defined(_WIN32)\n' \
-            'static void* _LoadLib(const char* filename) { char name[256]; sprintf(name, "%s.dll", filename); return (void*)LoadLibraryA(name); }\n' \
-            '#elif defined(__APPLE__)\n' \
-            'static void* _LoadLib(const char* filename) { char name[256]; sprintf(name, "%s.dylib", filename); return (void*)dlopen(name, RTLD_LAZY); }\n' \
-            '#else\n' \
-            'static void* _LoadLib(const char* filename) { char name[256]; sprintf(name, "./%s.so", filename); return (void*)dlopen(name, RTLD_LAZY); }\n' \
-            '#endif\n\n'
-        libfunc = \
-            '#ifdef _WIN32\n' \
-            'static void* _LibFunc(void* lib, const char* funcname) { return GetProcAddress((HINSTANCE)lib, funcname); }\n' \
-            '#else\n' \
-            'static void* _LibFunc(void* lib, const char* funcname) { char name[256]; const char* at; size_t size; at = strchr(funcname, \'@\'); size = at ? (at - funcname) : strlen(funcname); strncpy(name, funcname, size); name[size] = 0; return dlsym(lib, name); }\n' \
-            '#endif\n\n'
-        init_header = \
-            'void csInit() {\n' \
-            '    _api.lib = _LoadLib("astro");\n'
-        init_body = '\n'.join(init_list) + '\n'
-        init_footer = '    _api.csInit();\n}\n\n'
-        funcs = '\n'.join(funcs_list) + '\n'
-        return header + typedefs + struct_header + struct_body + struct_footer + loadlib + libfunc + init_header + init_body + init_footer + funcs
-    
     def as_wrapper(self) -> str:
         custom = self.custom_types()
         vars_list = ['const {} _{} = {};'.format(v.type, v.name, v.value) for v in self.vars]
@@ -147,22 +85,6 @@ class Defs:
         func_types = [f.type for f in self.funcs if f.type not in std_types]
         param_types = [p.type for f in self.funcs for p in f.params if p.type not in std_types]
         return list(set(func_types + param_types))
-    
-    @staticmethod
-    def c_params(params: List[Var], custom_types: List[str]) -> str:
-        params_str = ['{} {}'.format(Defs.c_type(p.type, custom_types), p.name) for p in params]
-        return '({})'.format(', '.join(params_str))
-    
-    @staticmethod
-    def c_type(type_: str, custom_types: List[str]) -> str:
-        if type_ in custom_types:
-            return type_ + '*'
-        elif type_ == 'bool':
-            return 'int'
-        elif type_ == 'string':
-            return 'const char*'
-        else:
-            return type_
 
     @staticmethod
     def as_params(params: List[Var], custom_types: List[str]) -> str:
@@ -250,6 +172,4 @@ def write_file(filename: str, content: str) -> None:
 
 if __name__ == '__main__':
     defs = parse_defs('defs.txt')
-    write_file('_build/dll/wrappers/astro.h', defs.c_header())
-    write_file('_build/dll/wrappers/astro.c', defs.c_impl())
     write_file('src/as_wrapper.cpp', defs.as_wrapper())
