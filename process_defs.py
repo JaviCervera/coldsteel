@@ -141,6 +141,7 @@ class Defs:
             'Mesh': 'IMesh*',
             'MeshEntity': 'IMeshSceneNode*',
             'Sprite': 'IBillboardSceneNode*',
+            'Sound': 'Sound*',
             'Texture': 'ITexture*',
             'XMLNode': 'XMLNode*',
         }

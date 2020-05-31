@@ -275,6 +275,19 @@ float asCameraFOV(Camera cam)
 void asSetCameraProjection(Camera cam, float width, float height, float near_, float far_, bool ortho)
 Entity asPickEntity(Camera camera, int x, int y, int group)
 
+# Channel
+void asStopChannel(int channel)
+void asPauseChannel(int channel)
+void asResumeChannel(int channel)
+void asSetChannelPosition(int channel, float x, float y, float z, float radius)
+float asChannelX(int channel)
+float asChannelY(int channel)
+float asChannelZ(int channel)
+float asChannelRadius(int channel)
+void asSetChannelVolume(int channel, float volume)
+void asSetChannelPan(int channel, float pan)
+bool asChannelPlaying(int channel)
+
 # Core
 void asInit()
 bool asRun()
@@ -445,6 +458,13 @@ float asLightOuterCone(Light light)
 void asSetLightFalloff(Light light, float falloff)
 float asLightFalloff(Light light)
 
+# Listener
+void asSetListener(float x, float y, float z, float yaw)
+float asListenerX()
+float asListenerY()
+float asListenerZ()
+float asListenerYaw()
+
 # Material
 void asSetMaterialTexture(Material material, int index, Texture texture)
 Texture asMaterialTexture(Material material, int index)
@@ -493,6 +513,7 @@ int asRand(int min, int max)
 void asRandSeed(int seed)
 float asDeg(float rad)
 float asRad(float deg)
+float asWrap(float val, float mod)
 float asPointX()
 float asPointY()
 float asPointZ()
@@ -551,6 +572,14 @@ void asSetMeshEntityFrames(MeshEntity entity, int first, int last)
 int asMeshEntityFirstFrame(MeshEntity entity)
 int asMeshEntityLastFrame(MeshEntity entity)
 
+# Music
+bool asPlayMusic(string filename, bool loop)
+void asStopMusic()
+void asPauseMusic()
+void asResumeMusic()
+void asSetMusicVolume(float volume)
+bool asMusicPlaying()
+
 # Screen
 void asOpenScreen(int width, int height, int depth, int flags)
 void asOpenScreenEx(int width, int height, int depth, int flags, void* win)
@@ -570,6 +599,11 @@ int asScreenModeDepth(int index)
 int asDesktopWidth()
 int asDesktopHeight()
 int asDesktopDepth()
+
+# Sound
+Sound asLoadSound(string filename)
+void asFreeSound(Sound sound)
+int asPlaySound(Sound sound, bool loop)
 
 # Sprite
 Sprite asCreateSprite(Texture texture, int blend)

@@ -1,6 +1,9 @@
+#include "../lib/sdl/SDL.h"
+#include "../lib/sdl/SDL_mixer.h"
 #include "core.h"
 #include "gui.h"
 #include "input.h"
+#include "listener.h"
 #include "screen.h"
 
 
@@ -113,10 +116,19 @@ EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, voi
     params.WindowSize.Width = width;
     params.WindowSize.Height = height;
 
+    // Init device
     _asSetDevice(createDeviceEx(params));
     _asDevice()->setResizable((flags & ASSCREEN_RESIZABLE) == ASSCREEN_RESIZABLE);
     _asDevice()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+
+    // Init audio
+    if (SDL_WasInit(SDL_INIT_EVERYTHING) == 0) SDL_Init(SDL_INIT_AUDIO);
+    if (SDL_WasInit(SDL_INIT_AUDIO) == 0) SDL_InitSubSystem(SDL_INIT_AUDIO);
+    Mix_Init(MIX_INIT_OGG);
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+    asSetListener(0, 0, 0, 0);
     
+    // Init gui skin
     IGUISkin* skin = _asDevice()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
     for (int i = 0; i < EGDC_COUNT; ++i) {
         SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
@@ -129,6 +141,7 @@ EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, voi
 
 
 EXPORT void CALL asCloseScreen() {
+    Mix_Quit();
     _asSetDevice(NULL);
 }
 

@@ -102,6 +102,13 @@ EXPORT float CALL asRad(float deg) {
 }
 
 
+EXPORT float CALL asWrap(float val, float mod) {
+    return (mod != 0)
+        ? (val - mod*floor(val/mod))
+        : val;
+}
+
+
 EXPORT float CALL asPointX() {
     return _point.X;
 }

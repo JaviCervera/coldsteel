@@ -1,6 +1,7 @@
 #pragma once
 
 #include "camera.h"
+#include "channel.h"
 #include "core.h"
 #include "dir.h"
 #include "entity.h"
@@ -9,12 +10,15 @@
 #include "gui.h"
 #include "input.h"
 #include "light.h"
+#include "listener.h"
 #include "material.h"
 #include "memblock.h"
 #include "math.h"
 #include "mesh.h"
 #include "mesh_entity.h"
+#include "music.h"
 #include "screen.h"
+#include "sound.h"
 #include "sprite.h"
 #include "string.h"
 #include "texture.h"

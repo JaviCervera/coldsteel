@@ -25,6 +25,7 @@ EXPORT int CALL asRand(int min, int max);
 EXPORT void CALL asRandSeed(int seed);
 EXPORT float CALL asDeg(float rad);
 EXPORT float CALL asRad(float deg);
+EXPORT float CALL asWrap(float val, float mod);
 EXPORT float CALL asPointX();
 EXPORT float CALL asPointY();
 EXPORT float CALL asPointZ();
