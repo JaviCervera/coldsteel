@@ -1,12 +1,19 @@
 #include "../lib/sdl/SDL_mixer.h"
 #include "channel.h"
+#include "filebuffer.h"
 #include "sound.h"
 
 extern "C" {
 
 
 EXPORT Sound* CALL asLoadSound(const char* filename) {
-    return (Sound*)Mix_LoadWAV(filename);
+    FileBuffer buffer(filename);
+    if (buffer.Size() > 0) {
+        SDL_RWops* rw = SDL_RWFromConstMem(buffer.Buffer(), buffer.Size());
+        return (Sound*)Mix_LoadWAV_RW(rw, true);
+    } else {
+        return NULL;
+    }
 }
 
 
