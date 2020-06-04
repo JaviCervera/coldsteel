@@ -40,7 +40,7 @@ EXPORT const char* CALL asLeft(const char* str, int num) {
 EXPORT const char* CALL asRight(const char* str, int num) {
     static stringc retstr;
     retstr = str;
-    retstr = retstr.subString(retstr.size() - num - 1, num);
+    retstr = retstr.subString(retstr.size() - num, num);
     return retstr.c_str();
 }
 
@@ -80,7 +80,7 @@ EXPORT const char* CALL asLower(const char* str) {
 }
 
 
-EXPORT const char* CALL asSTrim(const char* str) {
+EXPORT const char* CALL asTrim(const char* str) {
     static stringc retstr;
     retstr = stringc(str).trim();
     return retstr.c_str();

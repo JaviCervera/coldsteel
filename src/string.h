@@ -18,7 +18,7 @@ EXPORT const char* CALL asReplace(const char* str, const char* find, const char*
 EXPORT int CALL asFind(const char* str, const char* find, int offset);
 EXPORT const char* CALL asUpper(const char* str);
 EXPORT const char* CALL asLower(const char* str);
-EXPORT const char* CALL asSTrim(const char* str);
+EXPORT const char* CALL asTrim(const char* str);
 EXPORT const char* CALL asChar(int code);
 EXPORT int CALL asCode(const char* str);
 EXPORT int CALL asLen(const char* str);
