@@ -124,7 +124,7 @@ EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, voi
     // Init audio
     if (SDL_WasInit(SDL_INIT_EVERYTHING) == 0) SDL_Init(SDL_INIT_AUDIO);
     if (SDL_WasInit(SDL_INIT_AUDIO) == 0) SDL_InitSubSystem(SDL_INIT_AUDIO);
-    Mix_Init(MIX_INIT_OGG);
+    Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
     asSetListener(0, 0, 0, 0);
     
