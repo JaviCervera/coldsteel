@@ -80,7 +80,7 @@ EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame) {
 }
 
 
-EXPORT int CALL asNumMeshSurfaces(IMesh* mesh) {
+EXPORT int CALL asNumSurfaces(IMesh* mesh) {
     return mesh->getMeshBufferCount();
 }
 

@@ -19,7 +19,7 @@ EXPORT void CALL asSetMeshFPS(IMesh* mesh, float fps);
 EXPORT float CALL asMeshFPS(IMesh* mesh);
 EXPORT int CALL asMeshFrames(IMesh* mesh);
 EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame);
-EXPORT int CALL asNumMeshSurfaces(IMesh* mesh);
+EXPORT int CALL asNumSurfaces(IMesh* mesh);
 EXPORT IMeshBuffer* CALL asMeshSurface(IMesh* mesh, int index);
 EXPORT void CALL asUpdateMesh(IMesh* mesh);
 EXPORT void CALL asTranslateMesh(IMesh* mesh, float x, float y, float z);
