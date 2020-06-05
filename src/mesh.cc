@@ -20,6 +20,11 @@ EXPORT IMesh* CALL asCreateCylinder(int segments) {
 }
 
 
+EXPORT IMesh* CALL asCreateMesh() {
+    return new SMesh();
+}
+
+
 EXPORT IMesh* CALL asCreateQuad() {
     IMesh* quad = _asDevice()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1));
     asRotateMesh(quad, -90, 0, 0);
@@ -38,11 +43,40 @@ EXPORT IMesh* CALL asLoadMesh(const char* filename) {
 
 
 EXPORT void CALL asFreeMesh(IMesh* mesh) {
-    if (_asDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1) {
+    if (_asMeshAnimated(mesh)) {
+        // Animated meshes are the only cached ones
         _asDevice()->getSceneManager()->getMeshCache()->removeMesh(mesh);
     } else {
         mesh->drop();
     }
+}
+
+
+EXPORT void CALL asSetMeshFPS(IMesh* mesh, float fps) {
+    if (_asMeshAnimated(mesh)) {
+        ((IAnimatedMesh*)mesh)->setAnimationSpeed(fps);
+    }
+}
+
+
+EXPORT float CALL asMeshFPS(IMesh* mesh) {
+    return (_asMeshAnimated(mesh))
+        ? ((IAnimatedMesh*)mesh)->getAnimationSpeed()
+        : 0;
+}
+
+
+EXPORT int CALL asMeshFrames(IMesh* mesh) {
+    return (_asMeshAnimated(mesh))
+        ? ((IAnimatedMesh*)mesh)->getFrameCount()
+        : 1;
+}
+
+
+EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame) {
+    return (_asMeshAnimated(mesh))
+        ? ((IAnimatedMesh*)mesh)->getMesh(frame)
+        : mesh;
 }
 
 
@@ -92,6 +126,11 @@ EXPORT float CALL asMeshHeight(IMesh* mesh) {
 
 EXPORT float CALL asMeshDepth(IMesh* mesh) {
     return mesh->getBoundingBox().getExtent().Z;
+}
+
+
+bool_t _asMeshAnimated(IMesh* mesh) {
+    return _asDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
 }
 
 

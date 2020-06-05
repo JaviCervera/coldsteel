@@ -1,12 +1,13 @@
 #include "core.h"
 #include "entity.h"
+#include "mesh.h"
 #include "mesh_entity.h"
 
 extern "C" {
 
 
 EXPORT IMeshSceneNode* CALL asCreateMeshEntity(IMesh* mesh) {
-    if (_asDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1) {
+    if (_asMeshAnimated(mesh)) {
         return (IMeshSceneNode*)_asDevice()->getSceneManager()->addAnimatedMeshSceneNode((IAnimatedMesh*)mesh);
     } else {
         return _asDevice()->getSceneManager()->addMeshSceneNode(mesh);
