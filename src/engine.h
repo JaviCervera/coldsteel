@@ -21,6 +21,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "string.h"
+#include "surface.h"
 #include "texture.h"
 #include "world.h"
 #include "xml.h"

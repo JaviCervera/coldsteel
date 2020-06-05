@@ -80,20 +80,12 @@ EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame) {
 }
 
 
-EXPORT IMeshBuffer* CALL asAddMeshBuffer(IMesh* mesh) {
-    IMeshBuffer* buffer = new SMeshBuffer();
-    ((SMesh*)mesh)->addMeshBuffer(buffer);
-    buffer->drop();
-    return buffer;
-}
-
-
-EXPORT int CALL asNumMeshBuffers(IMesh* mesh) {
+EXPORT int CALL asNumMeshSurfaces(IMesh* mesh) {
     return mesh->getMeshBufferCount();
 }
 
 
-EXPORT IMeshBuffer* CALL asMeshBuffer(IMesh* mesh, int index) {
+EXPORT IMeshBuffer* CALL asMeshSurface(IMesh* mesh, int index) {
     return mesh->getMeshBuffer(index);
 }
 
