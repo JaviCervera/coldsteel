@@ -139,6 +139,7 @@ class Defs:
             'Material': 'SMaterial*',
             'Memblock': 'Memblock*',
             'Mesh': 'IMesh*',
+            'MeshBuffer': 'IMeshBuffer*',
             'MeshEntity': 'IMeshSceneNode*',
             'Sprite': 'IBillboardSceneNode*',
             'Sound': 'Sound*',

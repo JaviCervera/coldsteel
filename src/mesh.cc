@@ -80,6 +80,30 @@ EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame) {
 }
 
 
+EXPORT IMeshBuffer* CALL asAddMeshBuffer(IMesh* mesh) {
+    IMeshBuffer* buffer = new SMeshBuffer();
+    ((SMesh*)mesh)->addMeshBuffer(buffer);
+    buffer->drop();
+    return buffer;
+}
+
+
+EXPORT int CALL asNumMeshBuffers(IMesh* mesh) {
+    return mesh->getMeshBufferCount();
+}
+
+
+EXPORT IMeshBuffer* CALL asMeshBuffer(IMesh* mesh, int index) {
+    return mesh->getMeshBuffer(index);
+}
+
+
+EXPORT void CALL asUpdateMesh(IMesh* mesh) {
+    mesh->setDirty();
+    ((SMesh*)mesh)->recalculateBoundingBox();
+}
+
+
 EXPORT void CALL asTranslateMesh(IMesh* mesh, float x, float y, float z) {
     matrix4 m;
     m.setTranslation(vector3df(x, y, z));
