@@ -1,5 +1,5 @@
-#include "core.h"
 #include "graphics.h"
+#include "surface.h"
 
 extern "C" {
 
@@ -33,15 +33,19 @@ EXPORT int CALL asSurfaceIndex(IMeshBuffer* surface, int number) {
 
 EXPORT int CALL asAddVertex(IMeshBuffer* surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v) {
     switch (surface->getVertexType()) {
-        case EVT_STANDARD:
-            surface->append(&S3DVertex(x, y, z, nx, ny, nz, _asColor(color), u, v), 1, NULL, 0);
+        case EVT_STANDARD: {
+            S3DVertex vertex(x, y, z, nx, ny, nz, _asColor(color), u, v);
+            surface->append(&vertex, 1, NULL, 0);
             break;
-        case EVT_2TCOORDS:
-            surface->append(&S3DVertex2TCoords(x, y, z, nx, ny, nz, _asColor(color), u, v), 1, NULL, 0);
+        } case EVT_2TCOORDS: {
+            S3DVertex2TCoords vertex(x, y, z, nx, ny, nz, _asColor(color), u, v);
+            surface->append(&vertex, 1, NULL, 0);
             break;
-        case EVT_TANGENTS:
-            surface->append(&S3DVertexTangents(x, y, z, nx, ny, nz, _asColor(color), u, v), 1, NULL, 0);
+        } case EVT_TANGENTS: {
+            S3DVertexTangents vertex(x, y, z, nx, ny, nz, _asColor(color), u, v);
+            surface->append(&vertex, 1, NULL, 0);
             break;
+        }
     }
     return asNumVertices(surface) - 1;
 }
@@ -91,6 +95,7 @@ EXPORT int CALL asVertexColor(IMeshBuffer* surface, int index) {
         case EVT_TANGENTS:
             return _asIntColor(((S3DVertexTangents*)surface->getVertices())[index].Color);
     }
+    return 0;
 }
 
 
