@@ -13,9 +13,10 @@ EXPORT IMeshBuffer* CALL asAddSurface(IMesh* mesh) {
 
 
 EXPORT int CALL asAddIndex(IMeshBuffer* surface, int index) {
-    u16 sindex = index;
-    surface->append(NULL, 0, (surface->getIndexType() == EIT_16BIT) ? &sindex : (const u16*)&index, 1);
-    return asNumIndices(surface) - 1;
+    int lastIndex = asNumIndices(surface);
+    surface->append(NULL, 0, (const u16*)&index, 1);
+    surface->getIndices()[lastIndex] = index;
+    return lastIndex;
 }
 
 

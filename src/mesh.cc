@@ -91,8 +91,11 @@ EXPORT IMeshBuffer* CALL asMeshSurface(IMesh* mesh, int index) {
 
 
 EXPORT void CALL asUpdateMesh(IMesh* mesh) {
-    mesh->setDirty();
+    for (int i = 0; i < asNumSurfaces(mesh); ++i) {
+        asMeshSurface(mesh, i)->recalculateBoundingBox();
+    }
     ((SMesh*)mesh)->recalculateBoundingBox();
+    mesh->setDirty();
 }
 
 

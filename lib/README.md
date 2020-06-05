@@ -61,6 +61,20 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO__IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_
 ```
 
+Also, a couple of changes have been made in `include/SMaterial.h` to change the default use of vertex colors in lighting.
+
+Change line 235 to:
+
+```c++
+ColorMaterial(ECM_DIFFUSE_AND_AMBIENT), BlendOperation(EBO_NONE),
+```
+
+And line 552 to:
+
+```c++
+ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
+```
+
 ### Windows
 
 It has been compiled with MinGW-W64-builds-4.3.5, which was configured with the following flags:
