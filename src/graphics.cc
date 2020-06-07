@@ -50,7 +50,7 @@ EXPORT void CALL asSetRenderTarget(ITexture* tex, bool_t clear, bool_t clearDept
 
 
 EXPORT void CALL asSetViewport(int x, int y, int width, int height) {
-    _asDevice()->getVideoDriver()->setViewPort(recti(x, y, width, height));
+    _asDevice()->getVideoDriver()->setViewPort(recti(x, y, width + x, height + y));
 }
 
 
@@ -61,6 +61,11 @@ EXPORT void CALL asDrawLine(int x1, int y1, int x2, int y2, int color) {
 
 EXPORT void CALL asDrawRect(int x, int y, int width, int height, int color) {
     _asDevice()->getVideoDriver()->draw2DRectangle(_asColor(color), recti(x, y, x+width, y+height));
+}
+
+
+EXPORT void CALL asDraw3DLine(float x1, float y1, float z1, float x2, float y2, float z2, int color) {
+    _asDevice()->getVideoDriver()->draw3DLine(vector3df(x1, y1, z1), vector3df(x2, y2, z2), _asColor(color));
 }
 
 
