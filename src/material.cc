@@ -135,6 +135,16 @@ EXPORT bool_t CALL asMaterialFogEnabled(SMaterial* material) {
 }
 
 
+EXPORT void CALL asSetMaterialDepthReadingEnabled(SMaterial* material, bool_t enabled) {
+    material->setFlag(EMF_ZBUFFER, enabled);
+}
+
+
+EXPORT bool_t CALL asMaterialDepthReadingEnabled(SMaterial* material) {
+    return material->getFlag(EMF_ZBUFFER);
+}
+
+
 EXPORT void CALL asSetMaterialDepthWritingEnabled(SMaterial* material, bool_t enabled) {
     material->setFlag(EMF_ZWRITE_ENABLE, enabled);
 }
@@ -152,6 +162,16 @@ EXPORT void CALL asSetMaterialCullingEnabled(SMaterial* material, bool_t enabled
 
 EXPORT bool_t CALL asMaterialCullingEnabled(SMaterial* material) {
     return material->getFlag(EMF_BACK_FACE_CULLING);
+}
+
+
+EXPORT void CALL asSetMaterialVertexColorsEnabled(SMaterial* material, bool_t enabled) {
+    material->setFlag(EMF_COLOR_MATERIAL, enabled);
+}
+
+
+EXPORT bool_t CALL asMaterialVertexColorsEnabled(SMaterial* material) {
+    return material->getFlag(EMF_COLOR_MATERIAL);
 }
 
 

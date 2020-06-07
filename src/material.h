@@ -30,10 +30,14 @@ EXPORT void CALL asSetMaterialLightingMode(SMaterial* material, int mode);
 EXPORT int CALL asMaterialLightingMode(SMaterial* material);
 EXPORT void CALL asSetMaterialFogEnabled(SMaterial* material, bool_t enabled);
 EXPORT bool_t CALL asMaterialFogEnabled(SMaterial* material);
+EXPORT void CALL asSetMaterialDepthReadingEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL asMaterialDepthReadingEnabled(SMaterial* material);
 EXPORT void CALL asSetMaterialDepthWritingEnabled(SMaterial* material, bool_t enabled);
 EXPORT bool_t CALL asMaterialDepthWritingEnabled(SMaterial* material);
 EXPORT void CALL asSetMaterialCullingEnabled(SMaterial* material, bool_t enabled);
 EXPORT bool_t CALL asMaterialCullingEnabled(SMaterial* material);
+EXPORT void CALL asSetMaterialVertexColorsEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL asMaterialVertexColorsEnabled(SMaterial* material);
 
 
 #ifdef __cplusplus
