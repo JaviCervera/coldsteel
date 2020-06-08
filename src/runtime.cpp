@@ -4,8 +4,8 @@
 #include "../lib/angelscript/include/angelscript.h"
 #include "../lib/angelscript/add_on/scriptarray/scriptarray.h"
 #include "../lib/angelscript/add_on/scriptbuilder/scriptbuilder.h"
-#include "../lib/angelscript/add_on/scriptstdstring/scriptstdstring.h"
 #include "engine.h"
+#include "script_ext/string.h"
 
 
 enum CompilerMode {
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     CScriptBuilder builder;
     const bool scriptLoaded = LoadScript(&builder, engine, config.sourceFilename.c_str());
     RegisterScriptArray(engine, true);
-    RegisterStdString(engine);
+    RegisterString(engine);
     RegisterAstro(engine);
     if (scriptLoaded) BuildScript(&builder);
     else LoadBytecode(&builder, config.bytecodeFilename.c_str());

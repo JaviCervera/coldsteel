@@ -67,7 +67,7 @@ class Defs:
             Defs.as_params(f.params, custom),
             f.name
         ) for f in self.funcs]
-        includes = '#include <string>\n#include "../lib/angelscript/include/angelscript.h"\n#include "engine.h"\n\n'
+        includes = '#include "../lib/angelscript/include/angelscript.h"\n#include "engine.h"\n\n'
         vars = '\n'.join(vars_list) + '\n\n'
         funcs = '\n\n'.join(funcs_list) + '\n\n'
         cast_func = 'void CastEntity(asIScriptGeneric* gen) { gen->SetReturnAddress(gen->GetObject()); }\n\n'
@@ -96,7 +96,7 @@ class Defs:
         args_str = ['    {type} arg{index} = {cast_type}gen->GetArg{as_type}({index});'.format(
             type=Defs.irr_type(p.type),
             index=i,
-            cast_type= '({})'.format(Defs.irr_type(p.type)) if p.type != 'string' else '*(std::string*)',
+            cast_type= '({})'.format(Defs.irr_type(p.type)) if p.type != 'string' else '*(stringc*)',
             as_type=Defs.as_arg_type(p.type)
         ) for i, p in enumerate(params)]
         return '\n'.join(args_str) + ('\n' if len(params) > 0 else '')
@@ -130,7 +130,7 @@ class Defs:
     @staticmethod
     def irr_type(type_: str) -> str:
         irr_types = {
-            'string': 'std::string',
+            'string': 'stringc',
             'Camera': 'ICameraSceneNode*',
             'Control': 'IGUIElement*',
             'Entity': 'ISceneNode*',
