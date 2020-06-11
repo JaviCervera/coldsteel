@@ -2,4 +2,4 @@
 
 #include "../../lib/angelscript/include/angelscript.h"
 
-void RegisterString(asIScriptEngine *engine);
+void RegisterString(asIScriptEngine* engine);
