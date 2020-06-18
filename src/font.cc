@@ -31,7 +31,7 @@ EXPORT int CALL asTextWidth(IGUIFont* font, const char* text) {
 
 EXPORT int CALL asTextHeight(IGUIFont* font, const char* text) {
     if (!font) font = _asDevice()->getGUIEnvironment()->getBuiltInFont();
-    return font->getDimension(_WSTR(text)).Width;
+    return font->getDimension(_WSTR(text)).Height;
 }
 
 
