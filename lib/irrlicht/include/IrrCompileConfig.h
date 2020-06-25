@@ -16,6 +16,9 @@
 
 #include <stdio.h> // TODO: Although included elsewhere this is required at least for mingw
 
+#define NO_IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
+//#define NO_IRR_COMPILE_WITH_CONSOLE_DEVICE
+#define NO_IRR_COMPILE_WITH_FB_DEVICE_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_8_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_9_
 //#define NO_IRR_COMPILE_WITH_OPENGL_
