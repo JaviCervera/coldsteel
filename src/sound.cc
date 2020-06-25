@@ -1,4 +1,4 @@
-#include "../lib/sdl/SDL_mixer.h"
+#include "../lib/sdl/include/SDL/SDL_mixer.h"
 #include "channel.h"
 #include "filebuffer.h"
 #include "sound.h"

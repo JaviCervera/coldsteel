@@ -1,5 +1,5 @@
-#include "../lib/sdl/SDL.h"
-#include "../lib/sdl/SDL_mixer.h"
+#include "../lib/sdl/include/SDL/SDL.h"
+#include "../lib/sdl/include/SDL/SDL_mixer.h"
 #include "core.h"
 #include "gui.h"
 #include "input.h"

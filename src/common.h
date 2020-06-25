@@ -14,7 +14,7 @@
 #define CALL
 #endif
 
-#include "../lib/irrlicht/irrlicht.h"
+#include "../lib/irrlicht/include/irrlicht.h"
 using namespace irr;
 using namespace core;
 using namespace scene;
