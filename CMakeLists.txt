@@ -8,7 +8,7 @@ project(astro)
 file(GLOB ASTRO_EXE_FILES "src/*.cc" "src/runtime.rc" "src/*.cpp" "src/script_ext/*.cpp" "lib/angelscript/source/*.cpp" "lib/angelscript/add_on/scriptarray/scriptarray.cpp" "lib/angelscript/add_on/scriptbuilder/scriptbuilder.cpp")
 
 #Add header and lib directories
-include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/angelscript/include)
+include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/angelscript/include ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/include)
 link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/lib)
 
 #Add executable targets
