@@ -39,3 +39,4 @@ src/as_wrapper.cpp
 # Exceptions
 !_build/examples
 !_build/*.dll
+!upx.exe
