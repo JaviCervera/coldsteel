@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 #include "../lib/angelscript/include/angelscript.h"
 #include "../lib/angelscript/add_on/scriptarray/scriptarray.h"
 #include "../lib/angelscript/add_on/scriptbuilder/scriptbuilder.h"
@@ -43,7 +47,41 @@ void Run(CScriptBuilder* builder, const stringc& path);
 void RegisterAstro(asIScriptEngine* engine);
 
 
+#ifdef _WIN32
+static void SendEnterKey() {
+    INPUT ip;
+    
+    // Set up a generic keyboard event.
+    ip.type = INPUT_KEYBOARD;
+    ip.ki.wScan = 0; // hardware scan code for key
+    ip.ki.time = 0;
+    ip.ki.dwExtraInfo = 0;
+
+    // Send the "Enter" key
+    ip.ki.wVk = 0x0D; // virtual-key code for the "Enter" key
+    ip.ki.dwFlags = 0; // 0 for key press
+    SendInput(1, &ip, sizeof(INPUT));
+
+    // Release the "Enter" key
+    ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
+    SendInput(1, &ip, sizeof(INPUT));
+}
+
+#endif
+
+
 int main(int argc, char* argv[]) {
+#ifdef _WIN32
+    bool consoleMode = false;
+    if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+        HANDLE consoleHandleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (consoleHandleOut != INVALID_HANDLE_VALUE) {
+            freopen("CONOUT$", "w", stdout);
+            setvbuf(stdout, NULL, _IONBF, 0);
+            consoleMode = true;
+        }
+    }
+#endif
     asInit();
     const CompilerConfig config = ParseCommandLine(argc, argv);
     asIScriptEngine *const engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
@@ -58,6 +96,11 @@ int main(int argc, char* argv[]) {
     if (config.mode == MODE_BUILD) SaveBytecode(&builder, config.bytecodeFilename.c_str());
     else if (config.mode == MODE_RUN) Run(&builder, config.path);
     engine->Release();
+#ifdef _WIN32
+    if (consoleMode && (GetConsoleWindow() == GetForegroundWindow())) {
+        SendEnterKey();
+    }
+#endif
     return 0;
 }
 
@@ -78,6 +121,7 @@ CompilerConfig ParseCommandLine(int argc, char* argv[]) {
             printf(" -build: Build 'code.bcd' bytecode file.\n");
             printf(" -help: Prints this text.\n");
             printf("When called without arguments, the file 'code.bcd' will be executed.\n");
+            exit(-1);
         } else if (strcmp(argv[i], "-run") != 0) {
             printf("Unrecognized argument: %s\n", argv[i]);
             exit(-1);
