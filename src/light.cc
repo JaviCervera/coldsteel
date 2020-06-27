@@ -46,12 +46,12 @@ EXPORT int CALL asLightAmbient(ILightSceneNode* light) {
 
 
 EXPORT void CALL asSetLightSpecular(ILightSceneNode* light, int color) {
-    light->getLightData().DiffuseColor = _asColor(color);
+    light->getLightData().SpecularColor = _asColor(color);
 }
 
 
 EXPORT int CALL asLightSpecular(ILightSceneNode* light) {
-    return _asIntColor(light->getLightData().DiffuseColor.toSColor());
+    return _asIntColor(light->getLightData().SpecularColor.toSColor());
 }
 
 
