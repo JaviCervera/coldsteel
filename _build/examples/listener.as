@@ -1,6 +1,5 @@
 const int MAX_PITCH = 80;
-const int CHARACTER_GROUP = 1;
-const int WORLD_GROUP = 2;
+const int WORLD_GROUP = 1;
 const int ROT_SPEED = 15;
 const int MOVE_SPEED = 16;
 
@@ -9,10 +8,14 @@ void Main() {
     OpenScreen(800, 600, 32, SCREEN_WINDOWED | SCREEN_RESIZABLE);
     SetCursorVisible(false);
     if (!AddZip("assets.dat")) ChangeDir("assets");
+    
+    // Create player entity
+    Entity@ player = CreateEntity();
+    SetEntityPosition(player, 0, 2, 0);
 
     // Create and setup camera
     Camera@ cam = CreateCamera();
-    SetEntityPosition(cam, 0, 2, 0);
+    SetEntityParent(cam, player);
     
     // Setup environment
     Texture@ top = LoadTexture("top.jpg");
@@ -72,18 +75,21 @@ void Main() {
     float mxSpeed = 0, mySpeed = 0;
     SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2);
     while (Run() && !KeyDown(KEY_ESC)) {
-        // Rotate camera
-        TurnEntity(cam, mySpeed * ROT_SPEED * DeltaTime(), mxSpeed * ROT_SPEED * DeltaTime(), 0);
+        // Player yaw
+        TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0);
+        
+        // Camera pitch
+        TurnEntity(cam, mySpeed * ROT_SPEED * DeltaTime(), 0, 0);
         if (EntityPitch(cam) > MAX_PITCH) SetEntityRotation(cam, MAX_PITCH, EntityYaw(cam), 0);
         if (EntityPitch(cam) < -MAX_PITCH) SetEntityRotation(cam, -MAX_PITCH, EntityYaw(cam), 0);
         
-        // Move camera
+        // Move player
         float movX = 0, movZ = 0;
         if (KeyDown(KEY_W)) movZ = MOVE_SPEED * DeltaTime();
         if (KeyDown(KEY_S)) movZ = -MOVE_SPEED * DeltaTime();
         if (KeyDown(KEY_A)) movX = -MOVE_SPEED * DeltaTime();
         if (KeyDown(KEY_D)) movX = MOVE_SPEED * DeltaTime();
-        SlideEntity(cam, movX, 0, movZ, 1, 1, 1, CHARACTER_GROUP);
+        SlideEntity(player, movX, 0, movZ, 1, 1, 1, WORLD_GROUP);
         
         // Move sphere
         SetEntityPosition(sphere, 0, 3, 0);
