@@ -8,4 +8,4 @@ cd ..
 echo # Compiling Astro ...
 mingw32-make
 cd ..
-move "_CMAKE\astro_exe.exe" "_build\astro.exe"
+move "_CMAKE\astro.exe" "_build\astro.exe"
