@@ -78,6 +78,7 @@ CompilerConfig ParseCommandLine(int argc, char* argv[]) {
             printf(" -build: Build 'code.bcd' bytecode file.\n");
             printf(" -help: Prints this text.\n");
             printf("When called without arguments, the file 'code.bcd' will be executed.\n");
+            exit(-1);
         } else if (strcmp(argv[i], "-run") != 0) {
             printf("Unrecognized argument: %s\n", argv[i]);
             exit(-1);
