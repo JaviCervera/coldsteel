@@ -6,9 +6,9 @@
 #include <Windows.h>
 #endif
 #include "../lib/angelscript/include/angelscript.h"
-#include "../lib/angelscript/add_on/scriptarray/scriptarray.h"
 #include "../lib/angelscript/add_on/scriptbuilder/scriptbuilder.h"
 #include "engine.h"
+#include "script_ext/scriptarray.h"
 #include "script_ext/string.h"
 
 
