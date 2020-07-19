@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 project(astro)
 
 #Define file groups
-file(GLOB ASTRO_EXE_FILES "src/*.cc" "src/runtime.rc" "src/*.cpp" "src/script_ext/*.cpp" "lib/angelscript/source/*.cpp" "lib/angelscript/add_on/scriptbuilder/scriptbuilder.cpp")
+file(GLOB ASTRO_EXE_FILES "src/*.cc" "src/runtime.rc" "src/*.cpp" "src/script_ext/*.cpp" "lib/angelscript/source/*.cpp" "lib/angelscript/add_on/scriptbuilder/scriptbuilder.cpp" "lib/tinyfiledialogs/tinyfiledialogs.c")
 
 #Add header and lib directories
 include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/angelscript/include ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/include)

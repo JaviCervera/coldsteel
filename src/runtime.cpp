@@ -1,8 +1,12 @@
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../lib/angelscript/include/angelscript.h"
 #include "../lib/angelscript/add_on/scriptbuilder/scriptbuilder.h"
+#ifdef RUNTIME_ONLY
+#include "../lib/tinyfiledialogs/tinyfiledialogs.h"
+#endif
 #include "engine.h"
 #include "script_ext/scriptarray.h"
 #include "script_ext/string.h"
@@ -33,13 +37,14 @@ struct FileStream : public asIBinaryStream {
 };
 
 
-CompilerConfig ParseCommandLine(int argc, char* argv[]);
-void SetMessageCallback(asIScriptEngine* engine);
-bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const char* filename);
-void BuildScript(CScriptBuilder* builder);
-void LoadBytecode(CScriptBuilder* builder, const char* filename);
-void SaveBytecode(CScriptBuilder* builder, const char* filename);
-void Run(CScriptBuilder* builder, const stringc& path);
+static CompilerConfig ParseCommandLine(int argc, char* argv[]);
+static void Print(const stringc& msg, const stringc& level);
+static void SetMessageCallback(asIScriptEngine* engine);
+static bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const stringc& filename);
+static void BuildScript(CScriptBuilder* builder);
+static void LoadBytecode(CScriptBuilder* builder, const stringc& filename);
+static void SaveBytecode(CScriptBuilder* builder, const stringc& filename);
+static void Run(CScriptBuilder* builder, const stringc& path);
 void RegisterAstro(asIScriptEngine* engine);
 
 
@@ -48,13 +53,17 @@ int main(int argc, char* argv[]) {
     const CompilerConfig config = ParseCommandLine(argc, argv);
     asIScriptEngine *const engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     SetMessageCallback(engine);
-    CScriptBuilder builder;
-    const bool scriptLoaded = LoadScript(&builder, engine, config.sourceFilename.c_str());
     RegisterScriptArray(engine, true);
     RegisterString(engine);
     RegisterAstro(engine);
-    if (scriptLoaded) BuildScript(&builder);
-    else LoadBytecode(&builder, config.bytecodeFilename.c_str());
+    CScriptBuilder builder;
+#ifndef RUNTIME_ONLY
+    const bool scriptLoaded = LoadScript(&builder, engine, config.sourceFilename.c_str());
+    if (scriptLoaded)
+        BuildScript(&builder);
+    else
+#endif
+        LoadBytecode(&builder, config.bytecodeFilename.c_str());
     if (config.mode == MODE_BUILD) SaveBytecode(&builder, config.bytecodeFilename.c_str());
     else if (config.mode == MODE_RUN) Run(&builder, config.path);
     engine->Release();
@@ -62,10 +71,11 @@ int main(int argc, char* argv[]) {
 }
 
 
-CompilerConfig ParseCommandLine(int argc, char* argv[]) {
+static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
     CompilerConfig config;
     config.mode = MODE_RUN;
     for (int i = 1; i < argc-1; ++i) {
+#ifndef RUNTIME_ONLY
         if (strcmp(argv[i], "-check") == 0) {
             config.mode = MODE_CHECK;
         } else if (strcmp(argv[i], "-build") == 0) {
@@ -83,6 +93,13 @@ CompilerConfig ParseCommandLine(int argc, char* argv[]) {
             printf("Unrecognized argument: %s\n", argv[i]);
             exit(-1);
         }
+#else
+        if (strcmp(argv[i], "-run") != 0) {
+            stringc msg = stringc("Unrecognized argument: ") + argv[i];
+            tinyfd_notifyPopup("Astro", msg.c_str(), "info");
+            exit(-1);
+        }
+#endif
     }
     config.sourceFilename = (argc > 1) ? argv[argc-1] : "";
     const int lastPathPos = config.sourceFilename.replace("\\", "/").findLast('/');
@@ -96,36 +113,50 @@ CompilerConfig ParseCommandLine(int argc, char* argv[]) {
 }
 
 
-void MessageCallback(const asSMessageInfo* msg, void*) {
-    const char* type =
+static void MessageCallback(const asSMessageInfo* msg, void*) {
+    stringc type =
         (msg->type == asMSGTYPE_ERROR) ? "ERROR" :
         (msg->type == asMSGTYPE_WARNING) ? "WARNING" :
         "";
-    if (strcmp(type, "") != 0) {
-        printf("%s (%d, %d) %s: %s\n", msg->section, msg->row, msg->col, type, msg->message);
+    if (type != "") {
+        stringc text = stringc(msg->section) + " (" + asStr(msg->row) + ", " + asStr(msg->col) + ") " + type + ": " + msg->message;
+#ifndef RUNTIME_ONLY
+        printf("%s\n", text.c_str());
+#else
+        tinyfd_notifyPopup("Astro", text.c_str(), asLower(type.c_str()));
+#endif
     }
 }
 
 
-void SetMessageCallback(asIScriptEngine* engine) {
+static void Print(const stringc& msg, const stringc& level) {
+#ifndef RUNTIME_ONLY
+    printf("%s: %s\n", asUpper(level.c_str()), msg.c_str());
+#else
+    tinyfd_notifyPopup("Astro", msg.c_str(), level.c_str());
+#endif
+}
+
+
+static void SetMessageCallback(asIScriptEngine* engine) {
     if (engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL) < 0) {
-        printf("ERROR: Could not set message callback.\n");
+        Print("Could not set message callback.", "error");
         engine->Release();
         exit(-1);
     }
 }
 
 
-bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const char* filename) {
+static bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const stringc& filename) {
     if (builder->StartNewModule(engine, "MainModule") < 0) {
-        printf("ERROR: Could not start main module.\n");
+        Print("Could not start main module.", "error");
         engine->Release();
         exit(-1);
     }
-    if (strcmp(filename, "") != 0) {
-        const char* code = asLoadString(filename);
-        if (strcmp(code, "") == 0 || builder->AddSectionFromMemory(filename, code) < 0) {
-            printf("ERROR: Could not load script '%s'.\n", filename);
+    if (filename != "") {
+        const stringc code = asLoadString(filename.c_str());
+        if (code == "" || builder->AddSectionFromMemory(filename.c_str(), code.c_str()) < 0) {
+            Print(stringc("Could not load script '") + filename + "'.", "error");
             engine->Release();
             exit(-1);
         }
@@ -136,7 +167,7 @@ bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const char* fi
 }
 
 
-void BuildScript(CScriptBuilder* builder) {
+static void BuildScript(CScriptBuilder* builder) {
     if (builder->BuildModule() < 0) {
         builder->GetEngine()->Release();
         exit(-1);
@@ -144,19 +175,19 @@ void BuildScript(CScriptBuilder* builder) {
 }
 
 
-void LoadBytecode(CScriptBuilder* builder, const char* filename) {
-    FileStream stream(filename, false);
+static void LoadBytecode(CScriptBuilder* builder, const stringc& filename) {
+    FileStream stream(filename.c_str(), false);
     builder->GetModule()->LoadByteCode(&stream);
 }
 
 
-void SaveBytecode(CScriptBuilder* builder, const char* filename) {
-    FileStream stream(filename, true);
+static void SaveBytecode(CScriptBuilder* builder, const stringc& filename) {
+    FileStream stream(filename.c_str(), true);
     builder->GetModule()->SaveByteCode(&stream, true);
 }
 
 
-void Run(CScriptBuilder* builder, const stringc& path) {
+static void Run(CScriptBuilder* builder, const stringc& path) {
     asChangeDir(path.c_str());
     asIScriptContext* context = builder->GetEngine()->CreateContext();
     asIScriptFunction* main = builder->GetModule()->GetFunctionByDecl("void Main()");
