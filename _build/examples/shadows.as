@@ -8,7 +8,6 @@ void Main() {
 	SetEntityRotation(cam, 30, 30, 0);
 	
 	Light@ light = CreateLight(LIGHT_POINT);
-	SetEntityPosition(light, 0, 150, 0);
 	SetLightDiffuse(light, RGB(255, 155, 180));
 	SetLightRadius(light, 800);
 	
