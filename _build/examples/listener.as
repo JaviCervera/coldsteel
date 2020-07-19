@@ -46,7 +46,7 @@ void Main() {
     ScaleMesh(mesh, 4, 8, 4);
     array<int> xpos = {-10, -10, 10, 10};
     array<int> zpos = {-10, 10, -10, 10};
-    for (int i = 0; i < xpos.length(); ++i) {
+    for (int i = 0; i < xpos.Len(); ++i) {
         MeshEntity@ pillar = CreateMeshEntity(mesh);
         SetMeshEntityCastShadows(pillar, true);
         SetEntityCollision(pillar, COLLISION_BOX, WORLD_GROUP);

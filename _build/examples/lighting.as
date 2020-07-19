@@ -11,18 +11,18 @@ void Main() {
     // Setup lighting
     array<Light@> lights;
     SetAmbient(RGB(0, 0, 0));
-    lights.insertLast(CreateLight(LIGHT_POINT));
-    SetLightAttenuation(lights[lights.length()-1], 1, 0.05, 0);
-    SetLightDiffuse(lights[lights.length()-1], RGB(255, 0, 0));
-    SetEntityRotation(lights[lights.length()-1], 0, 0, 0);
-    lights.insertLast(CreateLight(LIGHT_POINT));
-    SetLightAttenuation(lights[lights.length()-1], 1, 0.05, 0);
-    SetLightDiffuse(lights[lights.length()-1], RGB(0, 255, 0));
-    SetEntityRotation(lights[lights.length()-1], 0, 120, 0);
-    lights.insertLast(CreateLight(LIGHT_POINT));
-    SetLightAttenuation(lights[lights.length()-1], 1, 0.05, 0);
-    SetLightDiffuse(lights[lights.length()-1], RGB(0, 0, 255));
-    SetEntityRotation(lights[lights.length()-1], 0, 240, 0);
+    lights.Add(CreateLight(LIGHT_POINT));
+    SetLightAttenuation(lights[lights.Len()-1], 1, 0.05, 0);
+    SetLightDiffuse(lights[lights.Len()-1], RGB(255, 0, 0));
+    SetEntityRotation(lights[lights.Len()-1], 0, 0, 0);
+    lights.Add(CreateLight(LIGHT_POINT));
+    SetLightAttenuation(lights[lights.Len()-1], 1, 0.05, 0);
+    SetLightDiffuse(lights[lights.Len()-1], RGB(0, 255, 0));
+    SetEntityRotation(lights[lights.Len()-1], 0, 120, 0);
+    lights.Add(CreateLight(LIGHT_POINT));
+    SetLightAttenuation(lights[lights.Len()-1], 1, 0.05, 0);
+    SetLightDiffuse(lights[lights.Len()-1], RGB(0, 0, 255));
+    SetEntityRotation(lights[lights.Len()-1], 0, 240, 0);
     
     // Create spheres
     array<MeshEntity@> spheres;
@@ -34,7 +34,7 @@ void Main() {
         SetEntityPosition(sphere, x, 0, z);
         Material@ mat = EntityMaterial(sphere, 0);
         SetMaterialShininess(mat, 0.15);
-        spheres.insertLast(sphere);
+        spheres.Add(sphere);
         x += 8;
         if (x > 32) {
             x = -32;
@@ -45,7 +45,7 @@ void Main() {
 
     while (Run() && !KeyDown(KEY_ESC)) {
         // Update lights
-        for (int i = 0; i < lights.length(); ++i) {
+        for (int i = 0; i < lights.Len(); ++i) {
             TurnEntity(lights[i], 0, -32 * DeltaTime(), 0);
             SetEntityPosition(lights[i], 0, 0, 0);
             MoveEntity(lights[i], 0, 0, -48);

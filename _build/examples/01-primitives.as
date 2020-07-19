@@ -38,8 +38,8 @@ void Main() {
     array<Primitive> primitives;
     while (Run() && !KeyDown(KEY_ESC)) {
         // If we are below the limit, add a new primitive with random values
-        if (primitives.length() < MAX_PRIMITIVES) {
-            primitives.insertLast(Primitive(
+        if (primitives.Len() < MAX_PRIMITIVES) {
+            primitives.Add(Primitive(
                 Rand(0, 2), // Types
                 RGB(Rand(0, 256), Rand(0, 256), Rand(0, 256)), // Color
                 Rand(0, ScreenWidth()), // Coordinates
@@ -52,13 +52,13 @@ void Main() {
         BeginDrawing(true, false, 0);
         
         // Draw all primitives
-        for (uint i = 0; i < primitives.length(); ++i) {
+        for (int i = 0; i < primitives.Len(); ++i) {
             primitives[i].Draw();
         }
         
         // Draw statistics texts
         DrawText(null, Str(ScreenFPS()) + " FPS", 2, 2, RGB(255, 255, 255));
-        DrawText(null, Str(primitives.length()) + " primitives", 2, 14, RGB(255, 255, 255));
+        DrawText(null, Str(primitives.Len()) + " primitives", 2, 14, RGB(255, 255, 255));
         
         // Finish drawing on screen
         EndDrawing();

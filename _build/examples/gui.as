@@ -36,7 +36,7 @@ void Main() {
 	
 	// Create toolbar
 	Control@ toolbar = CreateToolbar(null);
-	for (uint i = 0; i < icons.length(); ++i) {
+	for (int i = 0; i < icons.Len(); ++i) {
 		AddControlItem(toolbar, "   ", 101 + i);
 		SetControlTexture(ControlChild(toolbar, i), icons[i], true);
 	}

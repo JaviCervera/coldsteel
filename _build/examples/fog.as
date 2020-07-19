@@ -15,8 +15,8 @@ void Main() {
     
     array<MeshEntity@> cubes(16 * 500);
     float x = -7;
-    float z = cubes.length() / 16 * 2 - 2;
-    for (uint i = 0; i < cubes.length(); i += 2) {
+    float z = cubes.Len() / 16 * 2 - 2;
+    for (int i = 0; i < cubes.Len(); i += 2) {
         @cubes[i] = CreateMeshEntity(mesh);
         SetMaterialFogEnabled(EntityMaterial(cubes[i], 0), true);
         SetEntityPosition(cubes[i], x, -1.5, z);
@@ -35,7 +35,7 @@ void Main() {
     while (Run() && !KeyDown(KEY_ESC)) {
         if (KeyDown(KEY_SPACE)) {
             if (!spacePressed) {
-                for (uint i = 0; i < cubes.length(); ++i) {
+                for (int i = 0; i < cubes.Len(); ++i) {
                     Material@ mat = EntityMaterial(cubes[i], 0);
                     SetMaterialFogEnabled(mat, !MaterialFogEnabled(mat));
                 }
@@ -45,7 +45,7 @@ void Main() {
             spacePressed = false;
         }
         
-        for (uint i = 0; i < cubes.length(); ++i) {
+        for (int i = 0; i < cubes.Len(); ++i) {
             TurnEntity(cubes[i], 0, 32 * DeltaTime(), 0);
         }
         BeginDrawing(true, true, RGB(64, 64, 64));
