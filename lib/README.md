@@ -5,6 +5,8 @@
 Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
 ```c++
+
+#define NO_IRR_COMPILE_WITH_PLATFORM_DEVICE_
 #define NO_IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
 //#define NO_IRR_COMPILE_WITH_CONSOLE_DEVICE
 #define NO_IRR_COMPILE_WITH_FB_DEVICE_

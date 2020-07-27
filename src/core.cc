@@ -48,6 +48,7 @@ void _asSetDevice(IrrlichtDevice* device) {
     _device = device;
     if (!_device) {
         SIrrlichtCreationParameters params;
+        params.DeviceType = EIDT_SDL;
         params.DriverType = EDT_NULL;
         params.LoggingLevel = ELL_NONE;
         _device = createDeviceEx(params);

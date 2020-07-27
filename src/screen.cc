@@ -106,9 +106,10 @@ EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, voi
     SIrrlichtCreationParameters params;
     //params.AntiAlias = antialias;
     params.Bits = depth;
+    params.DeviceType = EIDT_SDL;
     params.DriverType = EDT_OPENGL;
     params.EventReceiver = new csEventReceiver;
-    params.LoggingLevel = ELL_NONE;
+    params.LoggingLevel = ELL_DEBUG; //ELL_NONE;
     params.Fullscreen = fullscreen;
     params.Stencilbuffer = true;
     params.Vsync = vsync;
