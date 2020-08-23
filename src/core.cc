@@ -12,38 +12,38 @@ static float _delta = 0.0f;
 extern "C" {
 
 
-EXPORT void CALL asInit() {
-    _asSetDevice(NULL);
+EXPORT void CALL csInit() {
+    _csSetDevice(NULL);
 }
 
 
-EXPORT bool_t CALL asRun() {
-    bool result = _asDevice()->run() && _asDevice()->getVideoDriver() != NULL;
-    const int msecs = asMillisecs();
+EXPORT bool_t CALL csRun() {
+    bool result = _csDevice()->run() && _csDevice()->getVideoDriver() != NULL;
+    const int msecs = csMillisecs();
     const int deltaMsecs = msecs - _lastMillisecs;
-    const int wait = _asScreenFrameMsecs() - deltaMsecs;
+    const int wait = _csScreenFrameMsecs() - deltaMsecs;
     const int fixedWait = (wait > 0) ? wait : 0;
     if (result && fixedWait > 0) {
-        _asDevice()->sleep(fixedWait);
+        _csDevice()->sleep(fixedWait);
     }
-    const int msecsAfterWait = asMillisecs();
+    const int msecsAfterWait = csMillisecs();
     _delta = (msecsAfterWait - _lastMillisecs) / 1000.0f;
     _lastMillisecs = msecsAfterWait;
     return result;
 }
 
 
-EXPORT float CALL asDeltaTime() {
+EXPORT float CALL csDeltaTime() {
     return _delta;
 }
 
 
-EXPORT int CALL asMillisecs() {
-    return _asDevice()->getTimer()->getRealTime() - _initMillisecs;
+EXPORT int CALL csMillisecs() {
+    return _csDevice()->getTimer()->getRealTime() - _initMillisecs;
 }
 
 
-void _asSetDevice(IrrlichtDevice* device) {
+void _csSetDevice(IrrlichtDevice* device) {
     if (_device) _device->drop();
     _device = device;
     if (!_device) {
@@ -55,14 +55,14 @@ void _asSetDevice(IrrlichtDevice* device) {
     }
     array<SJoystickInfo> joysticks;
     _device->activateJoysticks(joysticks);
-    _asSetJoysticks(joysticks);
+    _csSetJoysticks(joysticks);
     _initMillisecs = _device->getTimer()->getRealTime();
     _lastMillisecs = 0;
     _delta = 0.0f;
 }
 
 
-IrrlichtDevice* _asDevice() {
+IrrlichtDevice* _csDevice() {
     return _device;
 }
 

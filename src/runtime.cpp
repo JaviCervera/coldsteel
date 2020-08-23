@@ -45,17 +45,17 @@ static void BuildScript(CScriptBuilder* builder);
 static void LoadBytecode(CScriptBuilder* builder, const stringc& filename);
 static void SaveBytecode(CScriptBuilder* builder, const stringc& filename);
 static void Run(CScriptBuilder* builder, const stringc& path);
-void RegisterAstro(asIScriptEngine* engine);
+void RegisterColdSteel(asIScriptEngine* engine);
 
 
 int main(int argc, char* argv[]) {
-    asInit();
+    csInit();
     const CompilerConfig config = ParseCommandLine(argc, argv);
     asIScriptEngine *const engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     SetMessageCallback(engine);
     RegisterScriptArray(engine, true);
     RegisterString(engine);
-    RegisterAstro(engine);
+    RegisterColdSteel(engine);
     CScriptBuilder builder;
 #ifndef RUNTIME_ONLY
     const bool scriptLoaded = LoadScript(&builder, engine, config.sourceFilename.c_str());
@@ -96,7 +96,7 @@ static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
 #else
         if (strcmp(argv[i], "-run") != 0) {
             stringc msg = stringc("Unrecognized argument: ") + argv[i];
-            tinyfd_notifyPopup("Astro", msg.c_str(), "info");
+            tinyfd_notifyPopup("ColdSteel", msg.c_str(), "info");
             exit(-1);
         }
 #endif
@@ -119,11 +119,11 @@ static void MessageCallback(const asSMessageInfo* msg, void*) {
         (msg->type == asMSGTYPE_WARNING) ? "WARNING" :
         "";
     if (type != "") {
-        stringc text = stringc(msg->section) + " (" + asStr(msg->row) + ", " + asStr(msg->col) + ") " + type + ": " + msg->message;
+        stringc text = stringc(msg->section) + " (" + csStr(msg->row) + ", " + csStr(msg->col) + ") " + type + ": " + msg->message;
 #ifndef RUNTIME_ONLY
         printf("%s\n", text.c_str());
 #else
-        tinyfd_notifyPopup("Astro", text.c_str(), asLower(type.c_str()));
+        tinyfd_notifyPopup("ColdSteel", text.c_str(), csLower(type.c_str()));
 #endif
     }
 }
@@ -131,9 +131,9 @@ static void MessageCallback(const asSMessageInfo* msg, void*) {
 
 static void Print(const stringc& msg, const stringc& level) {
 #ifndef RUNTIME_ONLY
-    printf("%s: %s\n", asUpper(level.c_str()), msg.c_str());
+    printf("%s: %s\n", csUpper(level.c_str()), msg.c_str());
 #else
-    tinyfd_notifyPopup("Astro", msg.c_str(), level.c_str());
+    tinyfd_notifyPopup("ColdSteel", msg.c_str(), level.c_str());
 #endif
 }
 
@@ -154,7 +154,7 @@ static bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const s
         exit(-1);
     }
     if (filename != "") {
-        const stringc code = asLoadString(filename.c_str());
+        const stringc code = csLoadString(filename.c_str());
         if (code == "" || builder->AddSectionFromMemory(filename.c_str(), code.c_str()) < 0) {
             Print(stringc("Could not load script '") + filename + "'.", "error");
             engine->Release();
@@ -188,7 +188,7 @@ static void SaveBytecode(CScriptBuilder* builder, const stringc& filename) {
 
 
 static void Run(CScriptBuilder* builder, const stringc& path) {
-    asChangeDir(path.c_str());
+    csChangeDir(path.c_str());
     asIScriptContext* context = builder->GetEngine()->CreateContext();
     asIScriptFunction* main = builder->GetModule()->GetFunctionByDecl("void Main()");
     if (!main) {

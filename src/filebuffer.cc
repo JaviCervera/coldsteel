@@ -4,7 +4,7 @@
 
 
 FileBuffer::FileBuffer(const char* filename) : buffer(NULL), size(0) {
-    IReadFile* file = _asDevice()->getFileSystem()->createAndOpenFile(filename);
+    IReadFile* file = _csDevice()->getFileSystem()->createAndOpenFile(filename);
     if (file) {
         size = file->getSize();
         buffer = malloc(size);

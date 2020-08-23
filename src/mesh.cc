@@ -5,151 +5,151 @@
 extern "C" {
 
 
-EXPORT IMesh* CALL asCreateCone(int segments) {
-    return _asDevice()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments);
+EXPORT IMesh* CALL csCreateCone(int segments) {
+    return _csDevice()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments);
 }
 
 
-EXPORT IMesh* CALL asCreateCube() {
-    return _asDevice()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1));
+EXPORT IMesh* CALL csCreateCube() {
+    return _csDevice()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1));
 }
 
 
-EXPORT IMesh* CALL asCreateCylinder(int segments) {
-    return _asDevice()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments);
+EXPORT IMesh* CALL csCreateCylinder(int segments) {
+    return _csDevice()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments);
 }
 
 
-EXPORT IMesh* CALL asCreateMesh() {
+EXPORT IMesh* CALL csCreateMesh() {
     return new SMesh();
 }
 
 
-EXPORT IMesh* CALL asCreateQuad() {
-    IMesh* quad = _asDevice()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1));
-    asRotateMesh(quad, -90, 0, 0);
+EXPORT IMesh* CALL csCreateQuad() {
+    IMesh* quad = _csDevice()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1));
+    csRotateMesh(quad, -90, 0, 0);
     return quad;
 }
 
 
-EXPORT IMesh* CALL asCreateSphere(int segments) {
-    return _asDevice()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments);
+EXPORT IMesh* CALL csCreateSphere(int segments) {
+    return _csDevice()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments);
 }
 
 
-EXPORT IMesh* CALL asLoadMesh(const char* filename) {
-    return _asDevice()->getSceneManager()->getMesh(filename);
+EXPORT IMesh* CALL csLoadMesh(const char* filename) {
+    return _csDevice()->getSceneManager()->getMesh(filename);
 }
 
 
-EXPORT void CALL asFreeMesh(IMesh* mesh) {
-    if (_asMeshAnimated(mesh)) {
+EXPORT void CALL csFreeMesh(IMesh* mesh) {
+    if (_csMeshAnimated(mesh)) {
         // Animated meshes are the only cached ones
-        _asDevice()->getSceneManager()->getMeshCache()->removeMesh(mesh);
+        _csDevice()->getSceneManager()->getMeshCache()->removeMesh(mesh);
     } else {
         mesh->drop();
     }
 }
 
 
-EXPORT void CALL asSetMeshFPS(IMesh* mesh, float fps) {
-    if (_asMeshAnimated(mesh)) {
+EXPORT void CALL csSetMeshFPS(IMesh* mesh, float fps) {
+    if (_csMeshAnimated(mesh)) {
         ((IAnimatedMesh*)mesh)->setAnimationSpeed(fps);
     }
 }
 
 
-EXPORT float CALL asMeshFPS(IMesh* mesh) {
-    return (_asMeshAnimated(mesh))
+EXPORT float CALL csMeshFPS(IMesh* mesh) {
+    return (_csMeshAnimated(mesh))
         ? ((IAnimatedMesh*)mesh)->getAnimationSpeed()
         : 0;
 }
 
 
-EXPORT int CALL asMeshFrames(IMesh* mesh) {
-    return (_asMeshAnimated(mesh))
+EXPORT int CALL csMeshFrames(IMesh* mesh) {
+    return (_csMeshAnimated(mesh))
         ? ((IAnimatedMesh*)mesh)->getFrameCount()
         : 1;
 }
 
 
-EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame) {
-    return (_asMeshAnimated(mesh))
+EXPORT IMesh* CALL csMeshForFrame(IMesh* mesh, int frame) {
+    return (_csMeshAnimated(mesh))
         ? ((IAnimatedMesh*)mesh)->getMesh(frame)
         : mesh;
 }
 
 
-EXPORT int CALL asNumSurfaces(IMesh* mesh) {
+EXPORT int CALL csNumSurfaces(IMesh* mesh) {
     return mesh->getMeshBufferCount();
 }
 
 
-EXPORT IMeshBuffer* CALL asMeshSurface(IMesh* mesh, int index) {
+EXPORT IMeshBuffer* CALL csMeshSurface(IMesh* mesh, int index) {
     return mesh->getMeshBuffer(index);
 }
 
 
-EXPORT void CALL asUpdateMesh(IMesh* mesh) {
-    for (int i = 0; i < asNumSurfaces(mesh); ++i) {
-        asMeshSurface(mesh, i)->recalculateBoundingBox();
+EXPORT void CALL csUpdateMesh(IMesh* mesh) {
+    for (int i = 0; i < csNumSurfaces(mesh); ++i) {
+        csMeshSurface(mesh, i)->recalculateBoundingBox();
     }
     ((SMesh*)mesh)->recalculateBoundingBox();
     mesh->setDirty();
 }
 
 
-EXPORT void CALL asTranslateMesh(IMesh* mesh, float x, float y, float z) {
+EXPORT void CALL csTranslateMesh(IMesh* mesh, float x, float y, float z) {
     matrix4 m;
     m.setTranslation(vector3df(x, y, z));
-    _asDevice()->getSceneManager()->getMeshManipulator()->transform(mesh, m);
+    _csDevice()->getSceneManager()->getMeshManipulator()->transform(mesh, m);
 }
 
 
-EXPORT void CALL asRotateMesh(IMesh* mesh, float pitch, float yaw, float roll) {
+EXPORT void CALL csRotateMesh(IMesh* mesh, float pitch, float yaw, float roll) {
     matrix4 m;
     m.setRotationDegrees(vector3df(pitch, yaw, roll));
-    _asDevice()->getSceneManager()->getMeshManipulator()->transform(mesh, m);
+    _csDevice()->getSceneManager()->getMeshManipulator()->transform(mesh, m);
 }
 
 
-EXPORT void CALL asScaleMesh(IMesh* mesh, float x, float y, float z) {
-    _asDevice()->getSceneManager()->getMeshManipulator()->scale(mesh, vector3df(x, y, z));
+EXPORT void CALL csScaleMesh(IMesh* mesh, float x, float y, float z) {
+    _csDevice()->getSceneManager()->getMeshManipulator()->scale(mesh, vector3df(x, y, z));
 }
 
 
-EXPORT void CALL asFlipMesh(IMesh* mesh) {
-    _asDevice()->getSceneManager()->getMeshManipulator()->flipSurfaces(mesh);
+EXPORT void CALL csFlipMesh(IMesh* mesh) {
+    _csDevice()->getSceneManager()->getMeshManipulator()->flipSurfaces(mesh);
 }
 
 
-EXPORT void CALL asSetMeshColor(IMesh* mesh, int color) {
-    _asDevice()->getSceneManager()->getMeshManipulator()->setVertexColors(mesh, _asColor(color));
+EXPORT void CALL csSetMeshColor(IMesh* mesh, int color) {
+    _csDevice()->getSceneManager()->getMeshManipulator()->setVertexColors(mesh, _csColor(color));
 }
 
 
-EXPORT void CALL asUpdateMeshNormals(IMesh* mesh) {
-    _asDevice()->getSceneManager()->getMeshManipulator()->recalculateNormals(mesh);
+EXPORT void CALL csUpdateMeshNormals(IMesh* mesh) {
+    _csDevice()->getSceneManager()->getMeshManipulator()->recalculateNormals(mesh);
 }
 
 
-EXPORT float CALL asMeshWidth(IMesh* mesh) {
+EXPORT float CALL csMeshWidth(IMesh* mesh) {
     return mesh->getBoundingBox().getExtent().X;
 }
 
 
-EXPORT float CALL asMeshHeight(IMesh* mesh) {
+EXPORT float CALL csMeshHeight(IMesh* mesh) {
     return mesh->getBoundingBox().getExtent().Y;
 }
 
 
-EXPORT float CALL asMeshDepth(IMesh* mesh) {
+EXPORT float CALL csMeshDepth(IMesh* mesh) {
     return mesh->getBoundingBox().getExtent().Z;
 }
 
 
-bool_t _asMeshAnimated(IMesh* mesh) {
-    return _asDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
+bool_t _csMeshAnimated(IMesh* mesh) {
+    return _csDevice()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
 }
 
 

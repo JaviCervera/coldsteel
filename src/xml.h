@@ -10,17 +10,17 @@ extern "C" {
 struct XMLNode;
 
 
-EXPORT XMLNode* CALL asParseXML(const char* filename);
-EXPORT void CALL asFreeXML(XMLNode* node);
-EXPORT const char* CALL asXMLName(XMLNode* node);
-EXPORT const char* CALL asXMLText(XMLNode* node);
-EXPORT int CALL asXMLNumAttributes(XMLNode* node);
-EXPORT const char* CALL asXMLAttributeName(XMLNode* node, int index);
-EXPORT const char* CALL asXMLAttributeValue(XMLNode* node, const char* name);
-EXPORT int CALL asXMLNumChildren(XMLNode* node);
-EXPORT XMLNode* CALL asXMLChild(XMLNode* node, int index);
-EXPORT int CALL asXMLNumChildrenNamed(XMLNode* node, const char* name);
-EXPORT XMLNode* CALL asXMLChildNamed(XMLNode* node, const char* name, int index);
+EXPORT XMLNode* CALL csParseXML(const char* filename);
+EXPORT void CALL csFreeXML(XMLNode* node);
+EXPORT const char* CALL csXMLName(XMLNode* node);
+EXPORT const char* CALL csXMLText(XMLNode* node);
+EXPORT int CALL csXMLNumAttributes(XMLNode* node);
+EXPORT const char* CALL csXMLAttributeName(XMLNode* node, int index);
+EXPORT const char* CALL csXMLAttributeValue(XMLNode* node, const char* name);
+EXPORT int CALL csXMLNumChildren(XMLNode* node);
+EXPORT XMLNode* CALL csXMLChild(XMLNode* node, int index);
+EXPORT int CALL csXMLNumChildrenNamed(XMLNode* node, const char* name);
+EXPORT XMLNode* CALL csXMLChildNamed(XMLNode* node, const char* name, int index);
 
 
 #ifdef __cplusplus

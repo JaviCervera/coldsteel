@@ -7,20 +7,20 @@ extern "C" {
 #endif
 
 
-EXPORT ITexture* CALL asCreateTexture(int width, int height);
-EXPORT ITexture* CALL asCreateRenderTexture(int width, int height);
-EXPORT ITexture* CALL asLoadTexture(const char* filename);
-EXPORT void CALL asFreeTexture(ITexture* tex);
-EXPORT void CALL asDrawTexture(ITexture* tex, int x, int y);
-EXPORT void CALL asDrawTextureEx(ITexture* tex, int x, int y, int width, int height, int color);
-EXPORT void* CALL asLockTexture(ITexture* tex);
-EXPORT void CALL asUnlockTexture(ITexture* tex);
-EXPORT void CALL asSetTextureColorKey(ITexture* tex, int color);
-EXPORT void CALL asNormalizeTexture(ITexture* tex, float amplitude);
-EXPORT int CALL asTextureWidth(ITexture* tex);
-EXPORT int CALL asTextureHeight(ITexture* tex);
-EXPORT const char* CALL asTextureFilename(ITexture* tex);
-EXPORT void CALL asSetTextureCreationFlags(int flags);
+EXPORT ITexture* CALL csCreateTexture(int width, int height);
+EXPORT ITexture* CALL csCreateRenderTexture(int width, int height);
+EXPORT ITexture* CALL csLoadTexture(const char* filename);
+EXPORT void CALL csFreeTexture(ITexture* tex);
+EXPORT void CALL csDrawTexture(ITexture* tex, int x, int y);
+EXPORT void CALL csDrawTextureEx(ITexture* tex, int x, int y, int width, int height, int color);
+EXPORT void* CALL csLockTexture(ITexture* tex);
+EXPORT void CALL csUnlockTexture(ITexture* tex);
+EXPORT void CALL csSetTextureColorKey(ITexture* tex, int color);
+EXPORT void CALL csNormalizeTexture(ITexture* tex, float amplitude);
+EXPORT int CALL csTextureWidth(ITexture* tex);
+EXPORT int CALL csTextureHeight(ITexture* tex);
+EXPORT const char* CALL csTextureFilename(ITexture* tex);
+EXPORT void CALL csSetTextureCreationFlags(int flags);
 
 
 #ifdef __cplusplus

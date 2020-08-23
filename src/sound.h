@@ -9,9 +9,9 @@ extern "C" {
 struct Sound;
 
 
-EXPORT Sound* CALL asLoadSound(const char* filename);
-EXPORT void CALL asFreeSound(Sound* sound);
-EXPORT int CALL asPlaySound(Sound* sound, bool_t loop);
+EXPORT Sound* CALL csLoadSound(const char* filename);
+EXPORT void CALL csFreeSound(Sound* sound);
+EXPORT int CALL csPlaySound(Sound* sound, bool_t loop);
 
 
 #ifdef __cplusplus

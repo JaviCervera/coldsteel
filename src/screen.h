@@ -7,27 +7,27 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL asOpenScreen(int width, int height, int depth, int flags);
-EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, void* win);
-EXPORT void CALL asCloseScreen();
-EXPORT void CALL asSetScreenTitle(const char* caption);
-EXPORT void CALL asSetScreenSize(int width, int height);
-EXPORT bool_t CALL asScreenActive();
-EXPORT int CALL asScreenWidth();
-EXPORT int CALL asScreenHeight();
-EXPORT void CALL asSetScreenFPS(int fps);
-EXPORT int CALL asScreenFPS();
-EXPORT bool_t CALL asFeatureSupported(int feature);
-EXPORT int CALL asScreenNumModes();
-EXPORT int CALL asScreenModeWidth(int index);
-EXPORT int CALL asScreenModeHeight(int index);
-EXPORT int CALL asScreenModeDepth(int index);
-EXPORT int CALL asDesktopWidth();
-EXPORT int CALL asDesktopHeight();
-EXPORT int CALL asDesktopDepth();
+EXPORT void CALL csOpenScreen(int width, int height, int depth, int flags);
+EXPORT void CALL csOpenScreenEx(int width, int height, int depth, int flags, void* win);
+EXPORT void CALL csCloseScreen();
+EXPORT void CALL csSetScreenTitle(const char* caption);
+EXPORT void CALL csSetScreenSize(int width, int height);
+EXPORT bool_t CALL csScreenActive();
+EXPORT int CALL csScreenWidth();
+EXPORT int CALL csScreenHeight();
+EXPORT void CALL csSetScreenFPS(int fps);
+EXPORT int CALL csScreenFPS();
+EXPORT bool_t CALL csFeatureSupported(int feature);
+EXPORT int CALL csScreenNumModes();
+EXPORT int CALL csScreenModeWidth(int index);
+EXPORT int CALL csScreenModeHeight(int index);
+EXPORT int CALL csScreenModeDepth(int index);
+EXPORT int CALL csDesktopWidth();
+EXPORT int CALL csDesktopHeight();
+EXPORT int CALL csDesktopDepth();
 
 
-int _asScreenFrameMsecs();
+int _csScreenFrameMsecs();
 
 
 #ifdef __cplusplus

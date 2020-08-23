@@ -7,20 +7,20 @@ extern "C" {
 #endif
 
 
-EXPORT IMeshSceneNode* CALL asCreateMeshEntity(IMesh* mesh);
-EXPORT IMeshSceneNode* CALL asCreateOctreeMeshEntity(IMesh* mesh);
-EXPORT IMesh* CALL asMeshEntityMesh(IMeshSceneNode* entity);
-EXPORT void CALL asSetMeshEntityCastShadows(IMeshSceneNode* entity, bool_t enable);
-EXPORT bool_t CALL asMeshEntityCastShadows(IMeshSceneNode* entity);
-EXPORT void CALL asSetMeshEntityLoop(IMeshSceneNode* entity, bool_t loop);
-EXPORT bool_t CALL asMeshEntityLoop(IMeshSceneNode* entity);
-EXPORT void CALL asSetMeshEntityFPS(IMeshSceneNode* entity, float fps);
-EXPORT float CALL asMeshEntityFPS(IMeshSceneNode* entity);
-EXPORT void CALL asSetMeshEntityFrame(IMeshSceneNode* entity, float frame);
-EXPORT float CALL asMeshEntityFrame(IMeshSceneNode* entity);
-EXPORT void CALL asSetMeshEntityFrames(IMeshSceneNode* entity, int first, int last);
-EXPORT int CALL asMeshEntityFirstFrame(IMeshSceneNode* entity);
-EXPORT int CALL asMeshEntityLastFrame(IMeshSceneNode* entity);
+EXPORT IMeshSceneNode* CALL csCreateMeshEntity(IMesh* mesh);
+EXPORT IMeshSceneNode* CALL csCreateOctreeMeshEntity(IMesh* mesh);
+EXPORT IMesh* CALL csMeshEntityMesh(IMeshSceneNode* entity);
+EXPORT void CALL csSetMeshEntityCastShadows(IMeshSceneNode* entity, bool_t enable);
+EXPORT bool_t CALL csMeshEntityCastShadows(IMeshSceneNode* entity);
+EXPORT void CALL csSetMeshEntityLoop(IMeshSceneNode* entity, bool_t loop);
+EXPORT bool_t CALL csMeshEntityLoop(IMeshSceneNode* entity);
+EXPORT void CALL csSetMeshEntityFPS(IMeshSceneNode* entity, float fps);
+EXPORT float CALL csMeshEntityFPS(IMeshSceneNode* entity);
+EXPORT void CALL csSetMeshEntityFrame(IMeshSceneNode* entity, float frame);
+EXPORT float CALL csMeshEntityFrame(IMeshSceneNode* entity);
+EXPORT void CALL csSetMeshEntityFrames(IMeshSceneNode* entity, int first, int last);
+EXPORT int CALL csMeshEntityFirstFrame(IMeshSceneNode* entity);
+EXPORT int CALL csMeshEntityLastFrame(IMeshSceneNode* entity);
 
 
 #ifdef __cplusplus

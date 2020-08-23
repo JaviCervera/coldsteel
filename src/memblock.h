@@ -10,21 +10,21 @@ extern "C" {
 typedef void Memblock;
 
 
-EXPORT Memblock* CALL asCreateMemblock(int size);
-EXPORT Memblock* CALL asLoadMemblock(const char* filename);
-EXPORT void CALL asSaveMemblock(Memblock* memblock, const char* filename);
-EXPORT void CALL asFreeMemblock(Memblock* memblock);
-EXPORT int CALL asMemblockSize(const Memblock* memblock);
-EXPORT void CALL asSetMemblockByte(Memblock* memblock, int offset, int val);
-EXPORT void CALL asSetMemblockShort(Memblock* memblock, int offset, int val);
-EXPORT void CALL asSetMemblockInt(Memblock* memblock, int offset, int val);
-EXPORT void CALL asSetMemblockFloat(Memblock* memblock, int offset, float val);
-EXPORT void CALL asSetMemblockString(Memblock* memblock, int offset, const char* val);
-EXPORT int CALL asMemblockByte(const Memblock* memblock, int offset);
-EXPORT int CALL asMemblockShort(const Memblock* memblock, int offset);
-EXPORT int CALL asMemblockInt(const Memblock* memblock, int offset);
-EXPORT float CALL asMemblockFloat(const Memblock* memblock, int offset);
-EXPORT const char* CALL asMemblockString(const Memblock* memblock, int offset);
+EXPORT Memblock* CALL csCreateMemblock(int size);
+EXPORT Memblock* CALL csLoadMemblock(const char* filename);
+EXPORT void CALL csSaveMemblock(Memblock* memblock, const char* filename);
+EXPORT void CALL csFreeMemblock(Memblock* memblock);
+EXPORT int CALL csMemblockSize(const Memblock* memblock);
+EXPORT void CALL csSetMemblockByte(Memblock* memblock, int offset, int val);
+EXPORT void CALL csSetMemblockShort(Memblock* memblock, int offset, int val);
+EXPORT void CALL csSetMemblockInt(Memblock* memblock, int offset, int val);
+EXPORT void CALL csSetMemblockFloat(Memblock* memblock, int offset, float val);
+EXPORT void CALL csSetMemblockString(Memblock* memblock, int offset, const char* val);
+EXPORT int CALL csMemblockByte(const Memblock* memblock, int offset);
+EXPORT int CALL csMemblockShort(const Memblock* memblock, int offset);
+EXPORT int CALL csMemblockInt(const Memblock* memblock, int offset);
+EXPORT float CALL csMemblockFloat(const Memblock* memblock, int offset);
+EXPORT const char* CALL csMemblockString(const Memblock* memblock, int offset);
 
 
 #ifdef __cplusplus

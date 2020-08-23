@@ -6,7 +6,7 @@
 extern "C" {
 
 
-EXPORT Sound* CALL asLoadSound(const char* filename) {
+EXPORT Sound* CALL csLoadSound(const char* filename) {
     FileBuffer buffer(filename);
     if (buffer.Size() > 0) {
         SDL_RWops* rw = SDL_RWFromConstMem(buffer.Buffer(), buffer.Size());
@@ -17,14 +17,14 @@ EXPORT Sound* CALL asLoadSound(const char* filename) {
 }
 
 
-EXPORT void CALL asFreeSound(Sound* sound) {
+EXPORT void CALL csFreeSound(Sound* sound) {
     Mix_FreeChunk((Mix_Chunk*)sound);
 }
 
 
-EXPORT int CALL asPlaySound(Sound* sound, bool_t loop) {
+EXPORT int CALL csPlaySound(Sound* sound, bool_t loop) {
     int channel = Mix_PlayChannel(-1, (Mix_Chunk*)sound, loop ? -1 : 0);
-    if (channel != -1) _asInitChannel(channel);
+    if (channel != -1) _csInitChannel(channel);
     return channel;
 }
 

@@ -7,24 +7,24 @@ extern "C" {
 #endif
 
 
-EXPORT int CALL asVal(const char* str);
-EXPORT float CALL asValF(const char* str);
-EXPORT const char* CALL asStr(int number);
-EXPORT const char* CALL asStrF(float number);
-EXPORT const char* CALL asLeft(const char* str, int num);
-EXPORT const char* CALL asRight(const char* str, int num);
-EXPORT const char* CALL asMid(const char* str, int pos, int num);
-EXPORT const char* CALL asReplace(const char* str, const char* find, const char* replace);
-EXPORT int CALL asFind(const char* str, const char* find, int offset);
-EXPORT const char* CALL asUpper(const char* str);
-EXPORT const char* CALL asLower(const char* str);
-EXPORT const char* CALL asTrim(const char* str);
-EXPORT const char* CALL asChar(int code);
-EXPORT int CALL asCode(const char* str);
-EXPORT int CALL asLen(const char* str);
-EXPORT const char* CALL asField(const char* str, const char* delimiter, int index);
-EXPORT const char* CALL asLoadString(const char* filename);
-EXPORT void CALL asSaveString(const char* str, const char* filename, bool_t append);
+EXPORT int CALL csVal(const char* str);
+EXPORT float CALL csValF(const char* str);
+EXPORT const char* CALL csStr(int number);
+EXPORT const char* CALL csStrF(float number);
+EXPORT const char* CALL csLeft(const char* str, int num);
+EXPORT const char* CALL csRight(const char* str, int num);
+EXPORT const char* CALL csMid(const char* str, int pos, int num);
+EXPORT const char* CALL csReplace(const char* str, const char* find, const char* replace);
+EXPORT int CALL csFind(const char* str, const char* find, int offset);
+EXPORT const char* CALL csUpper(const char* str);
+EXPORT const char* CALL csLower(const char* str);
+EXPORT const char* CALL csTrim(const char* str);
+EXPORT const char* CALL csChar(int code);
+EXPORT int CALL csCode(const char* str);
+EXPORT int CALL csLen(const char* str);
+EXPORT const char* CALL csField(const char* str, const char* delimiter, int index);
+EXPORT const char* CALL csLoadString(const char* filename);
+EXPORT void CALL csSaveString(const char* str, const char* filename, bool_t append);
 
 
 #ifdef __cplusplus

@@ -1,704 +1,704 @@
 # Screen
-int ASSCREEN_WINDOWED 1
-int ASSCREEN_RESIZABLE 2
-int ASSCREEN_VSYNC 4
+int CSSCREEN_WINDOWED 1
+int CSSCREEN_RESIZABLE 2
+int CSSCREEN_VSYNC 4
 
 # Features
-int ASFEATURE_RENDERTOTEXTURE 0
-int ASFEATURE_BILINEARFILTER 1
-int ASFEATURE_HARDWARETNL 2
-int ASFEATURE_MIPMAP 3
-int ASFEATURE_STENCILBUFFER 4
-int ASFEATURE_VERTEXSHADER11 5
-int ASFEATURE_VERTEXSHADER20 6
-int ASFEATURE_VERTEXSHADER30 7
-int ASFEATURE_PIXELSHADER11 8
-int ASFEATURE_PIXELSHADER12 9
-int ASFEATURE_PIXELSHADER13 10
-int ASFEATURE_PIXELSHADER14 11
-int ASFEATURE_PIXELSHADER20 12
-int ASFEATURE_PIXELSHADER30 13
-int ASFEATURE_ARB_VERTEXPROGRAM1 14
-int ASFEATURE_ARB_FRAGMENTPROGRAM1 15
+int CSFEATURE_RENDERTOTEXTURE 0
+int CSFEATURE_BILINEARFILTER 1
+int CSFEATURE_HARDWARETNL 2
+int CSFEATURE_MIPMAP 3
+int CSFEATURE_STENCILBUFFER 4
+int CSFEATURE_VERTEXSHADER11 5
+int CSFEATURE_VERTEXSHADER20 6
+int CSFEATURE_VERTEXSHADER30 7
+int CSFEATURE_PIXELSHADER11 8
+int CSFEATURE_PIXELSHADER12 9
+int CSFEATURE_PIXELSHADER13 10
+int CSFEATURE_PIXELSHADER14 11
+int CSFEATURE_PIXELSHADER20 12
+int CSFEATURE_PIXELSHADER30 13
+int CSFEATURE_ARB_VERTEXPROGRAM1 14
+int CSFEATURE_ARB_FRAGMENTPROGRAM1 15
 
 # Control types
-int ASCONTROL_BUTTON 1
-int ASCONTROL_CHECKBOX 2
-int ASCONTROL_COMBOBOX 3
-int ASCONTROL_EDITBOX 4
-int ASCONTROL_IMAGE 5
-int ASCONTROL_LISTBOX 6
-int ASCONTROL_MENU 7
-int ASCONTROL_SCROLLBAR 8
-int ASCONTROL_TABBAR 9
-int ASCONTROL_TEXT 10
-int ASCONTROL_TOOLBAR 11
-int ASCONTROL_WINDOW 12
+int CSCONTROL_BUTTON 1
+int CSCONTROL_CHECKBOX 2
+int CSCONTROL_COMBOBOX 3
+int CSCONTROL_EDITBOX 4
+int CSCONTROL_IMAGE 5
+int CSCONTROL_LISTBOX 6
+int CSCONTROL_MENU 7
+int CSCONTROL_SCROLLBAR 8
+int CSCONTROL_TABBAR 9
+int CSCONTROL_TEXT 10
+int CSCONTROL_TOOLBAR 11
+int CSCONTROL_WINDOW 12
 
 # Gadget events
-int ASCONTROL_LOSTFOCUS 0
-int ASCONTROL_ENTER 1
-int ASCONTROL_EXIT 2
-int ASCONTROL_ACTION 3
+int CSCONTROL_LOSTFOCUS 0
+int CSCONTROL_ENTER 1
+int CSCONTROL_EXIT 2
+int CSCONTROL_ACTION 3
 
 # EditBox types
-int ASEDITBOX_SIMPLE 0
-int ASEDITBOX_PASSWORD 1
-int ASEDITBOX_MULTILINE 2
+int CSEDITBOX_SIMPLE 0
+int CSEDITBOX_PASSWORD 1
+int CSEDITBOX_MULTILINE 2
 
 # Blend modes
-int ASMATERIAL_SOLID 0
-int ASMATERIAL_LIGHTMAP 1
-int ASMATERIAL_LIGHTMAP2X 2
-int ASMATERIAL_LIGHTMAP4X 3
-int ASMATERIAL_DETAIL 4
-int ASMATERIAL_ADD 5
-int ASMATERIAL_ALPHA 6
-int ASMATERIAL_VERTEXALPHA 7
-int ASMATERIAL_MASKED 8
-int ASMATERIAL_SPHERE 9
-int ASMATERIAL_REFLECTION 10
-int ASMATERIAL_NORMAL 11
-int ASMATERIAL_NORMALADD 12
-int ASMATERIAL_PARALLAX 13
-int ASMATERIAL_PARALLAXADD 14
+int CSMATERIAL_SOLID 0
+int CSMATERIAL_LIGHTMAP 1
+int CSMATERIAL_LIGHTMAP2X 2
+int CSMATERIAL_LIGHTMAP4X 3
+int CSMATERIAL_DETAIL 4
+int CSMATERIAL_ADD 5
+int CSMATERIAL_ALPHA 6
+int CSMATERIAL_VERTEXALPHA 7
+int CSMATERIAL_MASKED 8
+int CSMATERIAL_SPHERE 9
+int CSMATERIAL_REFLECTION 10
+int CSMATERIAL_NORMAL 11
+int CSMATERIAL_NORMALADD 12
+int CSMATERIAL_PARALLAX 13
+int CSMATERIAL_PARALLAXADD 14
 
 # Render modes
-int ASRENDER_NORMAL 0
-int ASRENDER_WIREFRAME 1
-int ASRENDER_POINTCLOUD 2
+int CSRENDER_NORMAL 0
+int CSRENDER_WIREFRAME 1
+int CSRENDER_POINTCLOUD 2
 
 # Lighting modes
-int ASLIGHTING_DISABLED 0
-int ASLIGHTING_GOURAUD 1
-int ASLIGHTING_FLAT 2
+int CSLIGHTING_DISABLED 0
+int CSLIGHTING_GOURAUD 1
+int CSLIGHTING_FLAT 2
 
 # Filtering modes
-int ASFILTER_DISABLED 0
-int ASFILTER_BILINEAR 1
-int ASFILTER_TRILINEAR 2
-int ASFILTER_ANISOTROPIC 3
+int CSFILTER_DISABLED 0
+int CSFILTER_BILINEAR 1
+int CSFILTER_TRILINEAR 2
+int CSFILTER_ANISOTROPIC 3
 
 # Light types
-int ASLIGHT_DIRECTIONAL 0
-int ASLIGHT_POINT 1
-int ASLIGHT_SPOT 2
+int CSLIGHT_DIRECTIONAL 0
+int CSLIGHT_POINT 1
+int CSLIGHT_SPOT 2
 
 # Collision types
-int ASCOLLISION_NONE 0
-int ASCOLLISION_BOX 1
-int ASCOLLISION_MESH 2
-int ASCOLLISION_OCTREE 3
+int CSCOLLISION_NONE 0
+int CSCOLLISION_BOX 1
+int CSCOLLISION_MESH 2
+int CSCOLLISION_OCTREE 3
 
 # Entity types
-int ASENTITY_EMPTY 0
-int ASENTITY_SPRITE 1
-int ASENTITY_CAMERA 2
-int ASENTITY_EMITTER 3
-int ASENTITY_LIGHT 4
-int ASENTITY_MESH 5
-int ASENTITY_MESH_OCTREE 6
-int ASENTITY_TERRAIN 7
-int ASENTITY_WATER 8
+int CSENTITY_EMPTY 0
+int CSENTITY_SPRITE 1
+int CSENTITY_CAMERA 2
+int CSENTITY_EMITTER 3
+int CSENTITY_LIGHT 4
+int CSENTITY_MESH 5
+int CSENTITY_MESH_OCTREE 6
+int CSENTITY_TERRAIN 7
+int CSENTITY_WATER 8
 
 # Mouse buttons
-int ASBUTTON_LEFT 1
-int ASBUTTON_RIGHT 2
-int ASBUTTON_MIDDLE 3
+int CSBUTTON_LEFT 1
+int CSBUTTON_RIGHT 2
+int CSBUTTON_MIDDLE 3
 
 # Key codes
-int ASKEY_LBUTTON 0x01
-int ASKEY_RBUTTON 0x02
-int ASKEY_CANCEL 0x03
-int ASKEY_MBUTTON 0x04
-int ASKEY_XBUTTON1 0x05
-int ASKEY_XBUTTON2 0x06
-int ASKEY_BACK 0x08
-int ASKEY_TAB 0x09
-int ASKEY_CLEAR 0x0C
-int ASKEY_RETURN 0x0D
-int ASKEY_ENTER 0x0D
-int ASKEY_SHIFT 0x10
-int ASKEY_CONTROL 0x11
-int ASKEY_MENU 0x12
-int ASKEY_PAUSE 0x13
-int ASKEY_CAPITAL 0x14
-int ASKEY_KANA 0x15
-int ASKEY_HANGUEL 0x15
-int ASKEY_HANGUL 0x15
-int ASKEY_JUNJA 0x17
-int ASKEY_FINAL 0x18
-int ASKEY_HANJA 0x19
-int ASKEY_KANJI 0x19
-int ASKEY_ESC 0x1B
-int ASKEY_ESCAPE 0x1B
-int ASKEY_CONVERT 0x1C
-int ASKEY_NONCONVERT 0x1D
-int ASKEY_ACCEPT 0x1E
-int ASKEY_MODECHANGE 0x1F
-int ASKEY_SPACE 0x20
-int ASKEY_PRIOR 0x21
-int ASKEY_NEXT 0x22
-int ASKEY_END 0x23
-int ASKEY_HOME 0x24
-int ASKEY_LEFT 0x25
-int ASKEY_UP 0x26
-int ASKEY_RIGHT 0x27
-int ASKEY_DOWN 0x28
-int ASKEY_SELECT 0x29
-int ASKEY_PRINT 0x2A
-int ASKEY_EXECUT 0x2B
-int ASKEY_SNAPSHOT 0x2C
-int ASKEY_INSERT 0x2D
-int ASKEY_DELETE 0x2E
-int ASKEY_HELP 0x2F
-int ASKEY_0 0x30
-int ASKEY_1 0x31
-int ASKEY_2 0x32
-int ASKEY_3 0x33
-int ASKEY_4 0x34
-int ASKEY_5 0x35
-int ASKEY_6 0x36
-int ASKEY_7 0x37
-int ASKEY_8 0x38
-int ASKEY_9 0x39
-int ASKEY_A 0x41
-int ASKEY_B 0x42
-int ASKEY_C 0x43
-int ASKEY_D 0x44
-int ASKEY_E 0x45
-int ASKEY_F 0x46
-int ASKEY_G 0x47
-int ASKEY_H 0x48
-int ASKEY_I 0x49
-int ASKEY_J 0x4A
-int ASKEY_K 0x4B
-int ASKEY_L 0x4C
-int ASKEY_M 0x4D
-int ASKEY_N 0x4E
-int ASKEY_O 0x4F
-int ASKEY_P 0x50
-int ASKEY_Q 0x51
-int ASKEY_R 0x52
-int ASKEY_S 0x53
-int ASKEY_T 0x54
-int ASKEY_U 0x55
-int ASKEY_V 0x56
-int ASKEY_W 0x57
-int ASKEY_X 0x58
-int ASKEY_Y 0x59
-int ASKEY_Z 0x5A
-int ASKEY_LWIN 0x5B
-int ASKEY_RWIN 0x5C
-int ASKEY_APPS 0x5D
-int ASKEY_SLEEP 0x5F
-int ASKEY_NUMPAD0 0x60
-int ASKEY_NUMPAD1 0x61
-int ASKEY_NUMPAD2 0x62
-int ASKEY_NUMPAD3 0x63
-int ASKEY_NUMPAD4 0x64
-int ASKEY_NUMPAD5 0x65
-int ASKEY_NUMPAD6 0x66
-int ASKEY_NUMPAD7 0x67
-int ASKEY_NUMPAD8 0x68
-int ASKEY_NUMPAD9 0x69
-int ASKEY_MULTIPLY 0x6A
-int ASKEY_ADD 0x6B
-int ASKEY_SEPARATOR 0x6C
-int ASKEY_SUBTRACT 0x6D
-int ASKEY_DECIMAL 0x6E
-int ASKEY_DIVIDE 0x6F
-int ASKEY_F1 0x70
-int ASKEY_F2 0x71
-int ASKEY_F3 0x72
-int ASKEY_F4 0x73
-int ASKEY_F5 0x74
-int ASKEY_F6 0x75
-int ASKEY_F7 0x76
-int ASKEY_F8 0x77
-int ASKEY_F9 0x78
-int ASKEY_F10 0x79
-int ASKEY_F11 0x7A
-int ASKEY_F12 0x7B
-int ASKEY_F13 0x7C
-int ASKEY_F14 0x7D
-int ASKEY_F15 0x7E
-int ASKEY_F16 0x7F
-int ASKEY_F17 0x80
-int ASKEY_F18 0x81
-int ASKEY_F19 0x82
-int ASKEY_F20 0x83
-int ASKEY_F21 0x84
-int ASKEY_F22 0x85
-int ASKEY_F23 0x86
-int ASKEY_F24 0x87
-int ASKEY_NUMLOCK 0x90
-int ASKEY_SCROLL 0x91
-int ASKEY_LSHIFT 0xA0
-int ASKEY_RSHIFT 0xA1
-int ASKEY_LCONTROL 0xA2
-int ASKEY_RCONTROL 0xA3
-int ASKEY_LMENU 0xA4
-int ASKEY_RMENU 0xA5
-int ASKEY_COMMA 0xBC
-int ASKEY_PLUS 0xBB
-int ASKEY_MINUS 0xBD
-int ASKEY_PERIOD 0xBE
-int ASKEY_ATTN 0xF6
-int ASKEY_CRSEL 0xF7
-int ASKEY_EXSEL 0xF8
-int ASKEY_EREOF 0xF9
-int ASKEY_PLAY 0xFA
-int ASKEY_ZOOM 0xFB
-int ASKEY_PA1 0xFD
-int ASKEY_OEM_CLEAR 0xFE
+int CSKEY_LBUTTON 0x01
+int CSKEY_RBUTTON 0x02
+int CSKEY_CANCEL 0x03
+int CSKEY_MBUTTON 0x04
+int CSKEY_XBUTTON1 0x05
+int CSKEY_XBUTTON2 0x06
+int CSKEY_BACK 0x08
+int CSKEY_TAB 0x09
+int CSKEY_CLEAR 0x0C
+int CSKEY_RETURN 0x0D
+int CSKEY_ENTER 0x0D
+int CSKEY_SHIFT 0x10
+int CSKEY_CONTROL 0x11
+int CSKEY_MENU 0x12
+int CSKEY_PAUSE 0x13
+int CSKEY_CAPITAL 0x14
+int CSKEY_KANA 0x15
+int CSKEY_HANGUEL 0x15
+int CSKEY_HANGUL 0x15
+int CSKEY_JUNJA 0x17
+int CSKEY_FINAL 0x18
+int CSKEY_HANJA 0x19
+int CSKEY_KANJI 0x19
+int CSKEY_ESC 0x1B
+int CSKEY_ESCAPE 0x1B
+int CSKEY_CONVERT 0x1C
+int CSKEY_NONCONVERT 0x1D
+int CSKEY_ACCEPT 0x1E
+int CSKEY_MODECHANGE 0x1F
+int CSKEY_SPACE 0x20
+int CSKEY_PRIOR 0x21
+int CSKEY_NEXT 0x22
+int CSKEY_END 0x23
+int CSKEY_HOME 0x24
+int CSKEY_LEFT 0x25
+int CSKEY_UP 0x26
+int CSKEY_RIGHT 0x27
+int CSKEY_DOWN 0x28
+int CSKEY_SELECT 0x29
+int CSKEY_PRINT 0x2A
+int CSKEY_EXECUT 0x2B
+int CSKEY_SNAPSHOT 0x2C
+int CSKEY_INSERT 0x2D
+int CSKEY_DELETE 0x2E
+int CSKEY_HELP 0x2F
+int CSKEY_0 0x30
+int CSKEY_1 0x31
+int CSKEY_2 0x32
+int CSKEY_3 0x33
+int CSKEY_4 0x34
+int CSKEY_5 0x35
+int CSKEY_6 0x36
+int CSKEY_7 0x37
+int CSKEY_8 0x38
+int CSKEY_9 0x39
+int CSKEY_A 0x41
+int CSKEY_B 0x42
+int CSKEY_C 0x43
+int CSKEY_D 0x44
+int CSKEY_E 0x45
+int CSKEY_F 0x46
+int CSKEY_G 0x47
+int CSKEY_H 0x48
+int CSKEY_I 0x49
+int CSKEY_J 0x4A
+int CSKEY_K 0x4B
+int CSKEY_L 0x4C
+int CSKEY_M 0x4D
+int CSKEY_N 0x4E
+int CSKEY_O 0x4F
+int CSKEY_P 0x50
+int CSKEY_Q 0x51
+int CSKEY_R 0x52
+int CSKEY_S 0x53
+int CSKEY_T 0x54
+int CSKEY_U 0x55
+int CSKEY_V 0x56
+int CSKEY_W 0x57
+int CSKEY_X 0x58
+int CSKEY_Y 0x59
+int CSKEY_Z 0x5A
+int CSKEY_LWIN 0x5B
+int CSKEY_RWIN 0x5C
+int CSKEY_APPS 0x5D
+int CSKEY_SLEEP 0x5F
+int CSKEY_NUMPAD0 0x60
+int CSKEY_NUMPAD1 0x61
+int CSKEY_NUMPAD2 0x62
+int CSKEY_NUMPAD3 0x63
+int CSKEY_NUMPAD4 0x64
+int CSKEY_NUMPAD5 0x65
+int CSKEY_NUMPAD6 0x66
+int CSKEY_NUMPAD7 0x67
+int CSKEY_NUMPAD8 0x68
+int CSKEY_NUMPAD9 0x69
+int CSKEY_MULTIPLY 0x6A
+int CSKEY_ADD 0x6B
+int CSKEY_SEPARATOR 0x6C
+int CSKEY_SUBTRACT 0x6D
+int CSKEY_DECIMAL 0x6E
+int CSKEY_DIVIDE 0x6F
+int CSKEY_F1 0x70
+int CSKEY_F2 0x71
+int CSKEY_F3 0x72
+int CSKEY_F4 0x73
+int CSKEY_F5 0x74
+int CSKEY_F6 0x75
+int CSKEY_F7 0x76
+int CSKEY_F8 0x77
+int CSKEY_F9 0x78
+int CSKEY_F10 0x79
+int CSKEY_F11 0x7A
+int CSKEY_F12 0x7B
+int CSKEY_F13 0x7C
+int CSKEY_F14 0x7D
+int CSKEY_F15 0x7E
+int CSKEY_F16 0x7F
+int CSKEY_F17 0x80
+int CSKEY_F18 0x81
+int CSKEY_F19 0x82
+int CSKEY_F20 0x83
+int CSKEY_F21 0x84
+int CSKEY_F22 0x85
+int CSKEY_F23 0x86
+int CSKEY_F24 0x87
+int CSKEY_NUMLOCK 0x90
+int CSKEY_SCROLL 0x91
+int CSKEY_LSHIFT 0xA0
+int CSKEY_RSHIFT 0xA1
+int CSKEY_LCONTROL 0xA2
+int CSKEY_RCONTROL 0xA3
+int CSKEY_LMENU 0xA4
+int CSKEY_RMENU 0xA5
+int CSKEY_COMMA 0xBC
+int CSKEY_PLUS 0xBB
+int CSKEY_MINUS 0xBD
+int CSKEY_PERIOD 0xBE
+int CSKEY_ATTN 0xF6
+int CSKEY_CRSEL 0xF7
+int CSKEY_EXSEL 0xF8
+int CSKEY_EREOF 0xF9
+int CSKEY_PLAY 0xFA
+int CSKEY_ZOOM 0xFB
+int CSKEY_PA1 0xFD
+int CSKEY_OEM_CLEAR 0xFE
 
 # Texture flags
-int ASTEXTURE_MIPMAPS 1
-int ASTEXTURE_16BITS 2
+int CSTEXTURE_MIPMAPS 1
+int CSTEXTURE_16BITS 2
 
 # XML node types
-int ASXML_NULL 0
-int ASXML_NODE 1
-int ASXML_NODEEND 2
-int ASXML_TEXT 3
-int ASXML_CDATA 5
-int ASXML_UNKNOWN 6
+int CSXML_NULL 0
+int CSXML_NODE 1
+int CSXML_NODEEND 2
+int CSXML_TEXT 3
+int CSXML_CDATA 5
+int CSXML_UNKNOWN 6
 
 # Camera
-Camera asCreateCamera()
-void asSetCameraRange(Camera cam, float near_, float far_)
-float asCameraNearRange(Camera cam)
-float asCameraFarRange(Camera cam)
-void asSetCameraFOV(Camera cam, float fov)
-float asCameraFOV(Camera cam)
-void asSetCameraProjection(Camera cam, float width, float height, float near_, float far_, bool ortho)
-Entity asPickEntity(Camera camera, int x, int y, int group)
+Camera csCreateCamera()
+void csSetCameraRange(Camera cam, float near_, float far_)
+float csCameraNearRange(Camera cam)
+float csCameraFarRange(Camera cam)
+void csSetCameraFOV(Camera cam, float fov)
+float csCameraFOV(Camera cam)
+void csSetCameraProjection(Camera cam, float width, float height, float near_, float far_, bool ortho)
+Entity csPickEntity(Camera camera, int x, int y, int group)
 
 # Channel
-void asStopChannel(int channel)
-void asPauseChannel(int channel)
-void asResumeChannel(int channel)
-void asSetChannelPosition(int channel, float x, float y, float z, float radius)
-float asChannelX(int channel)
-float asChannelY(int channel)
-float asChannelZ(int channel)
-float asChannelRadius(int channel)
-void asSetChannelVolume(int channel, float volume)
-void asSetChannelPan(int channel, float pan)
-bool asChannelPlaying(int channel)
+void csStopChannel(int channel)
+void csPauseChannel(int channel)
+void csResumeChannel(int channel)
+void csSetChannelPosition(int channel, float x, float y, float z, float radius)
+float csChannelX(int channel)
+float csChannelY(int channel)
+float csChannelZ(int channel)
+float csChannelRadius(int channel)
+void csSetChannelVolume(int channel, float volume)
+void csSetChannelPan(int channel, float pan)
+bool csChannelPlaying(int channel)
 
 # Core
-void asInit()
-bool asRun()
-float asDeltaTime()
-int asMillisecs()
+void csInit()
+bool csRun()
+float csDeltaTime()
+int csMillisecs()
 
 # Dir
-bool asAddZip(string filename)
-string asDirContents(string dir)
-void asChangeDir(string dir)
-string asCurrentDir()
+bool csAddZip(string filename)
+string csDirContents(string dir)
+void csChangeDir(string dir)
+string csCurrentDir()
 
 # Entity
-Entity asCreateEntity()
-void asFreeEntity(Entity entity)
-int asEntityType(Entity entity)
-void asSetEntityName(Entity entity, string name)
-string asEntityName(Entity entity)
-void asSetEntityVisible(Entity entity, bool visible)
-bool asEntityVisible(Entity entity)
-void asSetEntityParent(Entity entity, Entity parent)
-Entity asEntityParent(Entity entity)
-int asEntityNumChildren(Entity entity)
-Entity asEntityChild(Entity entity, int index)
-void asSetEntityPosition(Entity entity, float x, float y, float z)
-void asMoveEntity(Entity entity, float x, float y, float z)
-Entity asSlideEntity(Entity entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group)
-float asEntityX(Entity entity)
-float asEntityY(Entity entity)
-float asEntityZ(Entity entity)
-float asEntityLocalX(Entity entity)
-float asEntityLocalY(Entity entity)
-float asEntityLocalZ(Entity entity)
-void asSetEntityRotation(Entity entity, float pitch, float yaw, float roll)
-void asTurnEntity(Entity entity, float pitch, float yaw, float roll)
-void asPointEntity(Entity entity, float x, float y, float z)
-float asEntityPitch(Entity entity)
-float asEntityYaw(Entity entity)
-float asEntityRoll(Entity entity)
-void asSetEntityScale(Entity entity, float x, float y, float z)
-float asEntityScaleX(Entity entity)
-float asEntityScaleY(Entity entity)
-float asEntityScaleZ(Entity entity)
-float asEntityWidth(Entity entity)
-float asEntityHeight(Entity entity)
-float asEntityDepth(Entity entity)
-int asEntityNumMaterials(Entity entity)
-Material asEntityMaterial(Entity entity, int index)
-void asSetEntityCollision(Entity entity, int type, int group)
-bool asEntityCollision(Entity entity)
-int asEntityGroup(Entity entity)
+Entity csCreateEntity()
+void csFreeEntity(Entity entity)
+int csEntityType(Entity entity)
+void csSetEntityName(Entity entity, string name)
+string csEntityName(Entity entity)
+void csSetEntityVisible(Entity entity, bool visible)
+bool csEntityVisible(Entity entity)
+void csSetEntityParent(Entity entity, Entity parent)
+Entity csEntityParent(Entity entity)
+int csEntityNumChildren(Entity entity)
+Entity csEntityChild(Entity entity, int index)
+void csSetEntityPosition(Entity entity, float x, float y, float z)
+void csMoveEntity(Entity entity, float x, float y, float z)
+Entity csSlideEntity(Entity entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group)
+float csEntityX(Entity entity)
+float csEntityY(Entity entity)
+float csEntityZ(Entity entity)
+float csEntityLocalX(Entity entity)
+float csEntityLocalY(Entity entity)
+float csEntityLocalZ(Entity entity)
+void csSetEntityRotation(Entity entity, float pitch, float yaw, float roll)
+void csTurnEntity(Entity entity, float pitch, float yaw, float roll)
+void csPointEntity(Entity entity, float x, float y, float z)
+float csEntityPitch(Entity entity)
+float csEntityYaw(Entity entity)
+float csEntityRoll(Entity entity)
+void csSetEntityScale(Entity entity, float x, float y, float z)
+float csEntityScaleX(Entity entity)
+float csEntityScaleY(Entity entity)
+float csEntityScaleZ(Entity entity)
+float csEntityWidth(Entity entity)
+float csEntityHeight(Entity entity)
+float csEntityDepth(Entity entity)
+int csEntityNumMaterials(Entity entity)
+Material csEntityMaterial(Entity entity, int index)
+void csSetEntityCollision(Entity entity, int type, int group)
+bool csEntityCollision(Entity entity)
+int csEntityGroup(Entity entity)
 
 # Font
-Font asLoadFont(string filename)
-void asFreeFont(Font font)
-void asDrawText(Font font, string text, int x, int y, int color)
-int asTextWidth(Font font, string text)
-int asTextHeight(Font font, string text)
+Font csLoadFont(string filename)
+void csFreeFont(Font font)
+void csDrawText(Font font, string text, int x, int y, int color)
+int csTextWidth(Font font, string text)
+int csTextHeight(Font font, string text)
 
 # Graphics
-int asRGB(int red, int green, int blue)
-int asRGBA(int red, int green, int blue, int alpha)
-int asRedVal(int color)
-int asGreenVal(int color)
-int asBlueVal(int color)
-int asAlphaVal(int color)
-void asBeginDrawing(bool clear, bool clearDepth, int color)
-void asEndDrawing()
-void asSetRenderTarget(Texture tex, bool clear, bool clearDepth, int color)
-void asSetViewport(int x, int y, int width, int height)
-void asDrawLine(int x1, int y1, int x2, int y2, int color)
-void asDrawRect(int x, int y, int width, int height, int color)
-void asDraw3DLine(float x1, float y1, float z1, float x2, float y2, float z2, int color)
+int csRGB(int red, int green, int blue)
+int csRGBA(int red, int green, int blue, int alpha)
+int csRedVal(int color)
+int csGreenVal(int color)
+int csBlueVal(int color)
+int csAlphaVal(int color)
+void csBeginDrawing(bool clear, bool clearDepth, int color)
+void csEndDrawing()
+void csSetRenderTarget(Texture tex, bool clear, bool clearDepth, int color)
+void csSetViewport(int x, int y, int width, int height)
+void csDrawLine(int x1, int y1, int x2, int y2, int color)
+void csDrawRect(int x, int y, int width, int height, int color)
+void csDraw3DLine(float x1, float y1, float z1, float x2, float y2, float z2, int color)
 
 # Gui
-Control asCreateButton(int x, int y, int width, int height, string text, Control parent)
-Control asCreateCheckBox(int x, int y, int width, int height, string text, Control parent)
-Control asCreateComboBox(int x, int y, int width, int height, Control parent)
-Control asCreateContextMenu(int x, int y, int width, int height, Control parent)
-Control asCreateEditBox(int x, int y, int width, int height, int type, Control parent)
-Control asCreateImage(int x, int y, int width, int height, Texture texture, Control parent)
-Control asCreateListBox(int x, int y, int width, int height, Control parent)
-Control asCreateMenu(string text, Control parent)
-Control asCreateScrollbar(int x, int y, int width, int height, bool horizontal, int max, int step, Control parent)
-Control asCreateTabbar(int x, int y, int width, int height, Control parent)
-Control asCreateText(int x, int y, int width, int height, string text, bool border, Control parent)
-Control asCreateToolbar(Control parent)
-Control asCreateWindow(int x, int y, int width, int height, bool modal, Control parent)
-void asFreeControl(Control control)
-int asControlType(Control control)
-void asSetControlEnabled(Control control, bool enabled)
-bool asControlEnabled(Control control)
-void asSetControlVisible(Control control, bool visible)
-bool asControlVisible(Control control)
-Control asControlParent(Control control)
-int asControlNumChildren(Control control)
-Control asControlChild(Control control, int index)
-void asSetControlShape(Control control, int x, int y, int width, int height)
-int asControlX(Control control)
-int asControlY(Control control)
-int asControlWidth(Control control)
-int asControlHeight(Control control)
-void asSetControlText(Control control, string text)
-string asControlText(Control control)
-void asSetControlTooltip(Control control, string tooltip)
-string asControlTooltip(Control control)
-void asSetControlTexture(Control control, Texture texture, bool alpha)
-void asSetControlFont(Control control, Font font)
-Font asControlFont(Control control)
-void asSetControlColor(Control control, int color)
-void asClearControlColor(Control control)
-int asControlColor(Control control)
-void asSetControlChecked(Control control, bool checked)
-bool asControlChecked(Control control)
-void asSetControlValue(Control control, int value)
-int asControlValue(Control control)
-int asAddControlItem(Control control, string text, int id)
-int asControlNumItems(Control control)
-void asSetControlItemEnabled(Control control, int index, bool enable)
-bool asControlItemEnabled(Control control, int index)
-void asSetControlItemChecked(Control control, int index, bool check)
-bool asControlItemChecked(Control control, int index)
-void asSelectControlItem(Control control, int index)
-int asSelectedControlItem(Control control)
-void asSetControlItemText(Control control, int index, string text)
-string asControlItemText(Control control, int index)
-void asRemoveControlItem(Control control, int index)
-void asRemoveControlItems(Control control)
-void asAddMenuSeparator(Control menu)
-void asDrawGUI()
-bool asPrepareNextGUIEvent()
-int asGUIEventType()
-Control asGUIEventControl()
+Control csCreateButton(int x, int y, int width, int height, string text, Control parent)
+Control csCreateCheckBox(int x, int y, int width, int height, string text, Control parent)
+Control csCreateComboBox(int x, int y, int width, int height, Control parent)
+Control csCreateContextMenu(int x, int y, int width, int height, Control parent)
+Control csCreateEditBox(int x, int y, int width, int height, int type, Control parent)
+Control csCreateImage(int x, int y, int width, int height, Texture texture, Control parent)
+Control csCreateListBox(int x, int y, int width, int height, Control parent)
+Control csCreateMenu(string text, Control parent)
+Control csCreateScrollbar(int x, int y, int width, int height, bool horizontal, int max, int step, Control parent)
+Control csCreateTabbar(int x, int y, int width, int height, Control parent)
+Control csCreateText(int x, int y, int width, int height, string text, bool border, Control parent)
+Control csCreateToolbar(Control parent)
+Control csCreateWindow(int x, int y, int width, int height, bool modal, Control parent)
+void csFreeControl(Control control)
+int csControlType(Control control)
+void csSetControlEnabled(Control control, bool enabled)
+bool csControlEnabled(Control control)
+void csSetControlVisible(Control control, bool visible)
+bool csControlVisible(Control control)
+Control csControlParent(Control control)
+int csControlNumChildren(Control control)
+Control csControlChild(Control control, int index)
+void csSetControlShape(Control control, int x, int y, int width, int height)
+int csControlX(Control control)
+int csControlY(Control control)
+int csControlWidth(Control control)
+int csControlHeight(Control control)
+void csSetControlText(Control control, string text)
+string csControlText(Control control)
+void csSetControlTooltip(Control control, string tooltip)
+string csControlTooltip(Control control)
+void csSetControlTexture(Control control, Texture texture, bool alpha)
+void csSetControlFont(Control control, Font font)
+Font csControlFont(Control control)
+void csSetControlColor(Control control, int color)
+void csClearControlColor(Control control)
+int csControlColor(Control control)
+void csSetControlChecked(Control control, bool checked)
+bool csControlChecked(Control control)
+void csSetControlValue(Control control, int value)
+int csControlValue(Control control)
+int csAddControlItem(Control control, string text, int id)
+int csControlNumItems(Control control)
+void csSetControlItemEnabled(Control control, int index, bool enable)
+bool csControlItemEnabled(Control control, int index)
+void csSetControlItemChecked(Control control, int index, bool check)
+bool csControlItemChecked(Control control, int index)
+void csSelectControlItem(Control control, int index)
+int csSelectedControlItem(Control control)
+void csSetControlItemText(Control control, int index, string text)
+string csControlItemText(Control control, int index)
+void csRemoveControlItem(Control control, int index)
+void csRemoveControlItems(Control control)
+void csAddMenuSeparator(Control menu)
+void csDrawGUI()
+bool csPrepareNextGUIEvent()
+int csGUIEventType()
+Control csGUIEventControl()
 
 # Input
-void asSetCursorVisible(bool visible)
-void asSetCursorPosition(int x, int y)
-int asCursorX()
-int asCursorY()
-bool asButtonDown(int button)
-bool asKeyDown(int key)
-int asNumJoysticks()
-string asJoystickName(int index)
-int asNumJoystickAxes(int index)
-int asNumJoystickButtons(int index)
-bool asJoystickButtonDown(int index, int button)
-float asJoystickAxis(int index, int axis)
+void csSetCursorVisible(bool visible)
+void csSetCursorPosition(int x, int y)
+int csCursorX()
+int csCursorY()
+bool csButtonDown(int button)
+bool csKeyDown(int key)
+int csNumJoysticks()
+string csJoystickName(int index)
+int csNumJoystickAxes(int index)
+int csNumJoystickButtons(int index)
+bool csJoystickButtonDown(int index, int button)
+float csJoystickAxis(int index, int axis)
 
 # Light
-Light asCreateLight(int type)
-int asLightType(Light light)
-void asSetLightDiffuse(Light light, int color)
-int asLightDiffuse(Light light)
-void asSetLightAmbient(Light light, int color)
-int asLightAmbient(Light light)
-void asSetLightSpecular(Light light, int color)
-int asLightSpecular(Light light)
-void asSetLightCastShadows(Light light, bool enable)
-bool asLightCastShadows(Light light)
-void asSetLightRadius(Light light, float radius)
-float asLightRadius(Light light)
-void asSetLightAttenuation(Light light, float constant, float linear, float quadratic)
-float asLightConstantAttenuation(Light light)
-float asLightLinearAttenuation(Light light)
-float asLightQuadraticAttenuation(Light light)
-void asSetLightCone(Light light, float inner, float outer)
-float asLightInnerCone(Light light)
-float asLightOuterCone(Light light)
-void asSetLightFalloff(Light light, float falloff)
-float asLightFalloff(Light light)
+Light csCreateLight(int type)
+int csLightType(Light light)
+void csSetLightDiffuse(Light light, int color)
+int csLightDiffuse(Light light)
+void csSetLightAmbient(Light light, int color)
+int csLightAmbient(Light light)
+void csSetLightSpecular(Light light, int color)
+int csLightSpecular(Light light)
+void csSetLightCastShadows(Light light, bool enable)
+bool csLightCastShadows(Light light)
+void csSetLightRadius(Light light, float radius)
+float csLightRadius(Light light)
+void csSetLightAttenuation(Light light, float constant, float linear, float quadratic)
+float csLightConstantAttenuation(Light light)
+float csLightLinearAttenuation(Light light)
+float csLightQuadraticAttenuation(Light light)
+void csSetLightCone(Light light, float inner, float outer)
+float csLightInnerCone(Light light)
+float csLightOuterCone(Light light)
+void csSetLightFalloff(Light light, float falloff)
+float csLightFalloff(Light light)
 
 # Listener
-void asSetListener(float x, float y, float z, float yaw)
-float asListenerX()
-float asListenerY()
-float asListenerZ()
-float asListenerYaw()
+void csSetListener(float x, float y, float z, float yaw)
+float csListenerX()
+float csListenerY()
+float csListenerZ()
+float csListenerYaw()
 
 # Material
-void asSetMaterialTexture(Material material, int index, Texture texture)
-Texture asMaterialTexture(Material material, int index)
-void asSetMaterialTextureTransform(Material material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale)
-void asSetMaterialType(Material material, int type)
-int asMaterialType(Material material)
-void asSetMaterialDiffuse(Material material, int color)
-int asMaterialDiffuse(Material material)
-void asSetMaterialEmissive(Material material, int color)
-int asMaterialEmissive(Material material)
-void asSetMaterialAmbient(Material material, int color)
-int asMaterialAmbient(Material material)
-void asSetMaterialSpecular(Material material, int color)
-int asMaterialSpecular(Material material)
-void asSetMaterialShininess(Material material, float shininess)
-float asMaterialShininess(Material material)
-void asSetMaterialRenderMode(Material material, int mode)
-int asMaterialRenderMode(Material material)
-void asSetMaterialFilterMode(Material material, int mode)
-int asMaterialFilterMode(Material material)
-void asSetMaterialLightingMode(Material material, int mode)
-int asMaterialLightingMode(Material material)
-void asSetMaterialFogEnabled(Material material, bool enabled)
-bool asMaterialFogEnabled(Material material)
-void asSetMaterialDepthReadingEnabled(Material material, bool enabled)
-bool asMaterialDepthReadingEnabled(Material material)
-void asSetMaterialDepthWritingEnabled(Material material, bool enabled)
-bool asMaterialDepthWritingEnabled(Material material)
-void asSetMaterialCullingEnabled(Material material, bool enabled)
-bool asMaterialCullingEnabled(Material material)
-void asSetMaterialVertexColorsEnabled(Material material, bool enabled)
-bool asMaterialVertexColorsEnabled(Material material)
+void csSetMaterialTexture(Material material, int index, Texture texture)
+Texture csMaterialTexture(Material material, int index)
+void csSetMaterialTextureTransform(Material material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale)
+void csSetMaterialType(Material material, int type)
+int csMaterialType(Material material)
+void csSetMaterialDiffuse(Material material, int color)
+int csMaterialDiffuse(Material material)
+void csSetMaterialEmissive(Material material, int color)
+int csMaterialEmissive(Material material)
+void csSetMaterialAmbient(Material material, int color)
+int csMaterialAmbient(Material material)
+void csSetMaterialSpecular(Material material, int color)
+int csMaterialSpecular(Material material)
+void csSetMaterialShininess(Material material, float shininess)
+float csMaterialShininess(Material material)
+void csSetMaterialRenderMode(Material material, int mode)
+int csMaterialRenderMode(Material material)
+void csSetMaterialFilterMode(Material material, int mode)
+int csMaterialFilterMode(Material material)
+void csSetMaterialLightingMode(Material material, int mode)
+int csMaterialLightingMode(Material material)
+void csSetMaterialFogEnabled(Material material, bool enabled)
+bool csMaterialFogEnabled(Material material)
+void csSetMaterialDepthReadingEnabled(Material material, bool enabled)
+bool csMaterialDepthReadingEnabled(Material material)
+void csSetMaterialDepthWritingEnabled(Material material, bool enabled)
+bool csMaterialDepthWritingEnabled(Material material)
+void csSetMaterialCullingEnabled(Material material, bool enabled)
+bool csMaterialCullingEnabled(Material material)
+void csSetMaterialVertexColorsEnabled(Material material, bool enabled)
+bool csMaterialVertexColorsEnabled(Material material)
 
 # Math
-float asFloor(float val)
-float asCeil(float val)
-float asAbs(float val)
-float asSqr(float val)
-float asSin(float val)
-float asCos(float val)
-float asTan(float val)
-float asASin(float val)
-float asACos(float val)
-float asATan(float val)
-float asATan2(float x, float y)
-float asExp(float val)
-float asLog(float val)
-float asLog10(float val)
-int asRand(int min, int max)
-void asRandSeed(int seed)
-float asDeg(float rad)
-float asRad(float deg)
-float asWrap(float val, float mod)
-float asPointX()
-float asPointY()
-float asPointZ()
-float asNormalX()
-float asNormalY()
-float asNormalZ()
+float csFloor(float val)
+float csCeil(float val)
+float csAbs(float val)
+float csSqr(float val)
+float csSin(float val)
+float csCos(float val)
+float csTan(float val)
+float csASin(float val)
+float csACos(float val)
+float csATan(float val)
+float csATan2(float x, float y)
+float csExp(float val)
+float csLog(float val)
+float csLog10(float val)
+int csRand(int min, int max)
+void csRandSeed(int seed)
+float csDeg(float rad)
+float csRad(float deg)
+float csWrap(float val, float mod)
+float csPointX()
+float csPointY()
+float csPointZ()
+float csNormalX()
+float csNormalY()
+float csNormalZ()
 
 # Memblock
-Memblock asCreateMemblock(int size)
-Memblock asLoadMemblock(string filename)
-void asSaveMemblock(Memblock memblock, string filename)
-void asFreeMemblock(Memblock memblock)
-int asMemblockSize(Memblock memblock)
-void asSetMemblockByte(Memblock memblock, int offset, int val)
-void asSetMemblockShort(Memblock memblock, int offset, int val)
-void asSetMemblockInt(Memblock memblock, int offset, int val)
-void asSetMemblockFloat(Memblock memblock, int offset, float val)
-void asSetMemblockString(Memblock memblock, int offset, string val)
-int asMemblockByte(Memblock memblock, int offset)
-int asMemblockShort(Memblock memblock, int offset)
-int asMemblockInt(Memblock memblock, int offset)
-float asMemblockFloat(Memblock memblock, int offset)
-string asMemblockString(Memblock memblock, int offset)
+Memblock csCreateMemblock(int size)
+Memblock csLoadMemblock(string filename)
+void csSaveMemblock(Memblock memblock, string filename)
+void csFreeMemblock(Memblock memblock)
+int csMemblockSize(Memblock memblock)
+void csSetMemblockByte(Memblock memblock, int offset, int val)
+void csSetMemblockShort(Memblock memblock, int offset, int val)
+void csSetMemblockInt(Memblock memblock, int offset, int val)
+void csSetMemblockFloat(Memblock memblock, int offset, float val)
+void csSetMemblockString(Memblock memblock, int offset, string val)
+int csMemblockByte(Memblock memblock, int offset)
+int csMemblockShort(Memblock memblock, int offset)
+int csMemblockInt(Memblock memblock, int offset)
+float csMemblockFloat(Memblock memblock, int offset)
+string csMemblockString(Memblock memblock, int offset)
 
 # Mesh
-Mesh asCreateCone(int segments)
-Mesh asCreateCube()
-Mesh asCreateCylinder(int segments)
-Mesh asCreateMesh()
-Mesh asCreateQuad()
-Mesh asCreateSphere(int segments)
-Mesh asLoadMesh(string filename)
-void asFreeMesh(Mesh mesh)
-void asSetMeshFPS(Mesh mesh, float fps)
-float asMeshFPS(Mesh mesh)
-int asMeshFrames(Mesh mesh)
-Mesh asMeshForFrame(Mesh mesh, int frame)
-int asNumSurfaces(Mesh mesh)
-Surface asMeshSurface(Mesh mesh, int index)
-void asUpdateMesh(Mesh mesh)
-void asTranslateMesh(Mesh mesh, float x, float y, float z)
-void asRotateMesh(Mesh mesh, float pitch, float yaw, float roll)
-void asScaleMesh(Mesh mesh, float x, float y, float z)
-void asFlipMesh(Mesh mesh)
-void asSetMeshColor(Mesh mesh, int color)
-void asUpdateMeshNormals(Mesh mesh)
-float asMeshWidth(Mesh mesh)
-float asMeshHeight(Mesh mesh)
-float asMeshDepth(Mesh mesh)
+Mesh csCreateCone(int segments)
+Mesh csCreateCube()
+Mesh csCreateCylinder(int segments)
+Mesh csCreateMesh()
+Mesh csCreateQuad()
+Mesh csCreateSphere(int segments)
+Mesh csLoadMesh(string filename)
+void csFreeMesh(Mesh mesh)
+void csSetMeshFPS(Mesh mesh, float fps)
+float csMeshFPS(Mesh mesh)
+int csMeshFrames(Mesh mesh)
+Mesh csMeshForFrame(Mesh mesh, int frame)
+int csNumSurfaces(Mesh mesh)
+Surface csMeshSurface(Mesh mesh, int index)
+void csUpdateMesh(Mesh mesh)
+void csTranslateMesh(Mesh mesh, float x, float y, float z)
+void csRotateMesh(Mesh mesh, float pitch, float yaw, float roll)
+void csScaleMesh(Mesh mesh, float x, float y, float z)
+void csFlipMesh(Mesh mesh)
+void csSetMeshColor(Mesh mesh, int color)
+void csUpdateMeshNormals(Mesh mesh)
+float csMeshWidth(Mesh mesh)
+float csMeshHeight(Mesh mesh)
+float csMeshDepth(Mesh mesh)
 
 # MeshEntity
-MeshEntity asCreateMeshEntity(Mesh mesh)
-MeshEntity asCreateOctreeMeshEntity(Mesh mesh)
-Mesh asMeshEntityMesh(MeshEntity entity)
-void asSetMeshEntityCastShadows(MeshEntity entity, bool enable)
-bool asMeshEntityCastShadows(MeshEntity entity)
-void asSetMeshEntityLoop(MeshEntity entity, bool loop)
-bool asMeshEntityLoop(MeshEntity entity)
-void asSetMeshEntityFPS(MeshEntity entity, float fps)
-float asMeshEntityFPS(MeshEntity entity)
-void asSetMeshEntityFrame(MeshEntity entity, float frame)
-float asMeshEntityFrame(MeshEntity entity)
-void asSetMeshEntityFrames(MeshEntity entity, int first, int last)
-int asMeshEntityFirstFrame(MeshEntity entity)
-int asMeshEntityLastFrame(MeshEntity entity)
+MeshEntity csCreateMeshEntity(Mesh mesh)
+MeshEntity csCreateOctreeMeshEntity(Mesh mesh)
+Mesh csMeshEntityMesh(MeshEntity entity)
+void csSetMeshEntityCastShadows(MeshEntity entity, bool enable)
+bool csMeshEntityCastShadows(MeshEntity entity)
+void csSetMeshEntityLoop(MeshEntity entity, bool loop)
+bool csMeshEntityLoop(MeshEntity entity)
+void csSetMeshEntityFPS(MeshEntity entity, float fps)
+float csMeshEntityFPS(MeshEntity entity)
+void csSetMeshEntityFrame(MeshEntity entity, float frame)
+float csMeshEntityFrame(MeshEntity entity)
+void csSetMeshEntityFrames(MeshEntity entity, int first, int last)
+int csMeshEntityFirstFrame(MeshEntity entity)
+int csMeshEntityLastFrame(MeshEntity entity)
 
 # Music
-bool asPlayMusic(string filename, bool loop)
-void asStopMusic()
-void asPauseMusic()
-void asResumeMusic()
-void asSetMusicVolume(float volume)
-bool asMusicPlaying()
+bool csPlayMusic(string filename, bool loop)
+void csStopMusic()
+void csPauseMusic()
+void csResumeMusic()
+void csSetMusicVolume(float volume)
+bool csMusicPlaying()
 
 # Screen
-void asOpenScreen(int width, int height, int depth, int flags)
-void asOpenScreenEx(int width, int height, int depth, int flags, void* win)
-void asCloseScreen()
-void asSetScreenTitle(string caption)
-void asSetScreenSize(int width, int height)
-bool asScreenActive()
-int asScreenWidth()
-int asScreenHeight()
-void asSetScreenFPS(int fps)
-int asScreenFPS()
-bool asFeatureSupported(int feature)
-int asScreenNumModes()
-int asScreenModeWidth(int index)
-int asScreenModeHeight(int index)
-int asScreenModeDepth(int index)
-int asDesktopWidth()
-int asDesktopHeight()
-int asDesktopDepth()
+void csOpenScreen(int width, int height, int depth, int flags)
+void csOpenScreenEx(int width, int height, int depth, int flags, void* win)
+void csCloseScreen()
+void csSetScreenTitle(string caption)
+void csSetScreenSize(int width, int height)
+bool csScreenActive()
+int csScreenWidth()
+int csScreenHeight()
+void csSetScreenFPS(int fps)
+int csScreenFPS()
+bool csFeatureSupported(int feature)
+int csScreenNumModes()
+int csScreenModeWidth(int index)
+int csScreenModeHeight(int index)
+int csScreenModeDepth(int index)
+int csDesktopWidth()
+int csDesktopHeight()
+int csDesktopDepth()
 
 # Sound
-Sound asLoadSound(string filename)
-void asFreeSound(Sound sound)
-int asPlaySound(Sound sound, bool loop)
+Sound csLoadSound(string filename)
+void csFreeSound(Sound sound)
+int csPlaySound(Sound sound, bool loop)
 
 # Sprite
-Sprite asCreateSprite(Texture texture, int blend)
-void asSetSpriteSize(Sprite sprite, float width, float height)
-float asSpriteWidth(Sprite sprite)
-float asSpriteHeight(Sprite sprite)
+Sprite csCreateSprite(Texture texture, int blend)
+void csSetSpriteSize(Sprite sprite, float width, float height)
+float csSpriteWidth(Sprite sprite)
+float csSpriteHeight(Sprite sprite)
 
 # String
-int asVal(string str)
-float asValF(string str)
-string asStr(int number)
-string asStrF(float number)
-string asLeft(string str, int num)
-string asRight(string str, int num)
-string asMid(string str, int pos, int num)
-string asReplace(string str, string find, string replace)
-int asFind(string str, string find, int offset)
-string asUpper(string str)
-string asLower(string str)
-string asTrim(string str)
-string asChar(int code)
-int asCode(string str)
-int asLen(string str)
-string asField(string str, string delimiter, int index)
-string asLoadString(string filename)
-void asSaveString(string str, string filename, bool append)
+int csVal(string str)
+float csValF(string str)
+string csStr(int number)
+string csStrF(float number)
+string csLeft(string str, int num)
+string csRight(string str, int num)
+string csMid(string str, int pos, int num)
+string csReplace(string str, string find, string replace)
+int csFind(string str, string find, int offset)
+string csUpper(string str)
+string csLower(string str)
+string csTrim(string str)
+string csChar(int code)
+int csCode(string str)
+int csLen(string str)
+string csField(string str, string delimiter, int index)
+string csLoadString(string filename)
+void csSaveString(string str, string filename, bool append)
 
 # Surface
-Surface asAddSurface(Mesh mesh)
-int asAddIndex(Surface surface, int index)
-int asNumIndices(Surface surface)
-int asSurfaceIndex(Surface surface, int number)
-int asAddVertex(Surface surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v)
-int asNumVertices(Surface surface)
-float asVertexX(Surface surface, int index)
-float asVertexY(Surface surface, int index)
-float asVertexZ(Surface surface, int index)
-float asVertexNX(Surface surface, int index)
-float asVertexNY(Surface surface, int index)
-float asVertexNZ(Surface surface, int index)
-int asVertexColor(Surface surface, int index)
-float asVertexU(Surface surface, int index)
-float asVertexV(Surface surface, int index)
+Surface csAddSurface(Mesh mesh)
+int csAddIndex(Surface surface, int index)
+int csNumIndices(Surface surface)
+int csSurfaceIndex(Surface surface, int number)
+int csAddVertex(Surface surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v)
+int csNumVertices(Surface surface)
+float csVertexX(Surface surface, int index)
+float csVertexY(Surface surface, int index)
+float csVertexZ(Surface surface, int index)
+float csVertexNX(Surface surface, int index)
+float csVertexNY(Surface surface, int index)
+float csVertexNZ(Surface surface, int index)
+int csVertexColor(Surface surface, int index)
+float csVertexU(Surface surface, int index)
+float csVertexV(Surface surface, int index)
 
 # Texture
-Texture asCreateTexture(int width, int height)
-Texture asCreateRenderTexture(int width, int height)
-Texture asLoadTexture(string filename)
-void asFreeTexture(Texture tex)
-void asDrawTexture(Texture tex, int x, int y)
-void asDrawTextureEx(Texture tex, int x, int y, int width, int height, int color)
-void* asLockTexture(Texture tex)
-void asUnlockTexture(Texture tex)
-void asSetTextureColorKey(Texture tex, int color)
-void asNormalizeTexture(Texture tex, float amplitude)
-int asTextureWidth(Texture tex)
-int asTextureHeight(Texture tex)
-string asTextureFilename(Texture tex)
-void asSetTextureCreationFlags(int flags)
+Texture csCreateTexture(int width, int height)
+Texture csCreateRenderTexture(int width, int height)
+Texture csLoadTexture(string filename)
+void csFreeTexture(Texture tex)
+void csDrawTexture(Texture tex, int x, int y)
+void csDrawTextureEx(Texture tex, int x, int y, int width, int height, int color)
+void* csLockTexture(Texture tex)
+void csUnlockTexture(Texture tex)
+void csSetTextureColorKey(Texture tex, int color)
+void csNormalizeTexture(Texture tex, float amplitude)
+int csTextureWidth(Texture tex)
+int csTextureHeight(Texture tex)
+string csTextureFilename(Texture tex)
+void csSetTextureCreationFlags(int flags)
 
 # World
-void asSetAmbient(int color)
-void asSetShadowColor(int color)
-void asSetFog(int color, float near_, float far_)
-void asSetSkybox(Texture top, Texture bottom, Texture left, Texture right, Texture front, Texture back)
-void asSetSkydome(Texture tex, float texScale, bool fullSphere)
-Material asSkyboxMaterial()
-Material asSkydomeMaterial()
-void asDrawWorld(Camera camera)
-void asWorldToScreen(Camera camera, float x, float y, float z)
-void asScreenToWorld(Camera camera, int x, int y, float depth)
-Entity asRaycast(float x1, float y1, float z1, float x2, float y2, float z2, int group)
+void csSetAmbient(int color)
+void csSetShadowColor(int color)
+void csSetFog(int color, float near_, float far_)
+void csSetSkybox(Texture top, Texture bottom, Texture left, Texture right, Texture front, Texture back)
+void csSetSkydome(Texture tex, float texScale, bool fullSphere)
+Material csSkyboxMaterial()
+Material csSkydomeMaterial()
+void csDrawWorld(Camera camera)
+void csWorldToScreen(Camera camera, float x, float y, float z)
+void csScreenToWorld(Camera camera, int x, int y, float depth)
+Entity csRaycast(float x1, float y1, float z1, float x2, float y2, float z2, int group)
 
 # XML
-XMLNode asParseXML(string filename)
-void asFreeXML(XMLNode node)
-string asXMLName(XMLNode node)
-string asXMLText(XMLNode node)
-int asXMLNumAttributes(XMLNode node)
-string asXMLAttributeName(XMLNode node, int index)
-string asXMLAttributeValue(XMLNode node, string name)
-int asXMLNumChildren(XMLNode node)
-XMLNode asXMLChild(XMLNode node, int index)
-int asXMLNumChildrenNamed(XMLNode node, string name)
-XMLNode asXMLChildNamed(XMLNode node, string name, int index)
+XMLNode csParseXML(string filename)
+void csFreeXML(XMLNode node)
+string csXMLName(XMLNode node)
+string csXMLText(XMLNode node)
+int csXMLNumAttributes(XMLNode node)
+string csXMLAttributeName(XMLNode node, int index)
+string csXMLAttributeValue(XMLNode node, string name)
+int csXMLNumChildren(XMLNode node)
+XMLNode csXMLChild(XMLNode node, int index)
+int csXMLNumChildrenNamed(XMLNode node, string name)
+XMLNode csXMLChildNamed(XMLNode node, string name, int index)

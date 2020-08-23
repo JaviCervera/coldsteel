@@ -5,26 +5,26 @@
 extern "C" {
 
 
-EXPORT IBillboardSceneNode* CALL asCreateSprite(ITexture* texture, int materialType) {
-    IBillboardSceneNode* spr = _asDevice()->getSceneManager()->addBillboardSceneNode();
-    asSetMaterialTexture(&spr->getMaterial(0), 0, texture);
-    asSetMaterialType(&spr->getMaterial(0), materialType);
-    if (texture) asSetSpriteSize(spr, texture->getOriginalSize().Width, texture->getOriginalSize().Height);
-    else asSetSpriteSize(spr, 1, 1);
+EXPORT IBillboardSceneNode* CALL csCreateSprite(ITexture* texture, int materialType) {
+    IBillboardSceneNode* spr = _csDevice()->getSceneManager()->addBillboardSceneNode();
+    csSetMaterialTexture(&spr->getMaterial(0), 0, texture);
+    csSetMaterialType(&spr->getMaterial(0), materialType);
+    if (texture) csSetSpriteSize(spr, texture->getOriginalSize().Width, texture->getOriginalSize().Height);
+    else csSetSpriteSize(spr, 1, 1);
     return spr;
 }
 
 
-EXPORT void CALL asSetSpriteSize(IBillboardSceneNode* sprite, float width, float height) {
+EXPORT void CALL csSetSpriteSize(IBillboardSceneNode* sprite, float width, float height) {
     sprite->setSize(dimension2df(width, height));
 }
 
 
-EXPORT float CALL asSpriteWidth(IBillboardSceneNode* sprite) {
+EXPORT float CALL csSpriteWidth(IBillboardSceneNode* sprite) {
     return sprite->getSize().Width;
 }
 
-EXPORT float CALL asSpriteHeight(IBillboardSceneNode* sprite) {
+EXPORT float CALL csSpriteHeight(IBillboardSceneNode* sprite) {
     return sprite->getSize().Height;
 }
 
