@@ -5,14 +5,14 @@ cd _CMAKE\_IRRLICHT
 mingw32-make
 cd ..\..
 
-echo # Compiling Astro ...
-cd _CMAKE\_ASTRO
+echo # Compiling ColdSteel ...
+cd _CMAKE\_COLDSTEEL
 mingw32-make
 cd ..\..
-move "_CMAKE\_ASTRO\astro.exe" "_build\astro.exe"
+move "_CMAKE\_COLDSTEEL\coldsteel.exe" "_build\coldsteel.exe"
 
-echo # Compiling Astro (runtime only version) ...
-cd _CMAKE\_ASTRO_RT
+echo # Compiling ColdSteel (runtime only version) ...
+cd _CMAKE\_COLDSTEEL_RT
 mingw32-make
 cd ..\..
-move "_CMAKE\_ASTRO_RT\astro.exe" "_build\astro_rt.exe"
+move "_CMAKE\_COLDSTEEL_RT\coldsteel.exe" "_build\coldsteel_rt.exe"

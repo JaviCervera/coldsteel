@@ -13,71 +13,71 @@ class csEventReceiver : public IEventReceiver {
             case EET_GUI_EVENT:
                 switch (event.GUIEvent.EventType) {
                     case EGET_ELEMENT_FOCUS_LOST:
-                        _asPostEvent(ASCONTROL_LOSTFOCUS, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_LOSTFOCUS, event.GUIEvent.Caller);
                         break;
                     case EGET_ELEMENT_HOVERED:
-                        _asPostEvent(ASCONTROL_ENTER, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ENTER, event.GUIEvent.Caller);
                         break;
                     case EGET_ELEMENT_LEFT:
-                        _asPostEvent(ASCONTROL_EXIT, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_EXIT, event.GUIEvent.Caller);
                         break;
                     case EGET_BUTTON_CLICKED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_SCROLL_BAR_CHANGED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_CHECKBOX_CHANGED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_LISTBOX_CHANGED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_LISTBOX_SELECTED_AGAIN:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_TAB_CHANGED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_EDITBOX_ENTER:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_MENU_ITEM_SELECTED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                     case EGET_COMBO_BOX_CHANGED:
-                        _asPostEvent(ASCONTROL_ACTION, event.GUIEvent.Caller);
+                        _csPostEvent(CSCONTROL_ACTION, event.GUIEvent.Caller);
                         break;
                 }
                 break;
             case EET_JOYSTICK_INPUT_EVENT:
-                _asSetJoystickEvent(event.JoystickEvent);
+                _csSetJoystickEvent(event.JoystickEvent);
                 break;
             case EET_KEY_INPUT_EVENT:
-                _asSetKeyDown(event.KeyInput.Key, event.KeyInput.PressedDown);
+                _csSetKeyDown(event.KeyInput.Key, event.KeyInput.PressedDown);
                 break;
             case EET_MOUSE_INPUT_EVENT:
                 switch ( event.MouseInput.Event ) {
                     case EMIE_MOUSE_MOVED:
-                        _asSetCursorMoved();
+                        _csSetCursorMoved();
                         break;
                     case EMIE_LMOUSE_PRESSED_DOWN:
-                        _asSetButtonDown(ASBUTTON_LEFT, true);
+                        _csSetButtonDown(CSBUTTON_LEFT, true);
                         break;
                     case EMIE_RMOUSE_PRESSED_DOWN:
-                        _asSetButtonDown(ASBUTTON_RIGHT, true);
+                        _csSetButtonDown(CSBUTTON_RIGHT, true);
                         break;
                     case EMIE_MMOUSE_PRESSED_DOWN:
-                        _asSetButtonDown(ASBUTTON_MIDDLE, true);
+                        _csSetButtonDown(CSBUTTON_MIDDLE, true);
                         break;
                     case EMIE_LMOUSE_LEFT_UP:
-                        _asSetButtonDown(ASBUTTON_LEFT, false);
+                        _csSetButtonDown(CSBUTTON_LEFT, false);
                         break;
                     case EMIE_RMOUSE_LEFT_UP:
-                        _asSetButtonDown(ASBUTTON_RIGHT, false);
+                        _csSetButtonDown(CSBUTTON_RIGHT, false);
                         break;
                     case EMIE_MMOUSE_LEFT_UP:
-                        _asSetButtonDown(ASBUTTON_MIDDLE, false);
+                        _csSetButtonDown(CSBUTTON_MIDDLE, false);
                         break;
                 }
                 break;
@@ -93,15 +93,15 @@ extern "C" {
 static int _screenFrameMsecs = 0;
 
 
-EXPORT void CALL asOpenScreen(int width, int height, int depth, int flags) {
-    asOpenScreenEx(width, height, depth, flags, NULL);
+EXPORT void CALL csOpenScreen(int width, int height, int depth, int flags) {
+    csOpenScreenEx(width, height, depth, flags, NULL);
 }
 
 
-EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, void* win) {
-    bool fullscreen = (flags & ASSCREEN_WINDOWED) == 0;
-    bool vsync = (flags & ASSCREEN_VSYNC) == ASSCREEN_VSYNC;
-    //bool antialias = (flags & ASSCREEN_ANTIALIAS) == ASSCREEN_ANTIALIAS;
+EXPORT void CALL csOpenScreenEx(int width, int height, int depth, int flags, void* win) {
+    bool fullscreen = (flags & CSSCREEN_WINDOWED) == 0;
+    bool vsync = (flags & CSSCREEN_VSYNC) == CSSCREEN_VSYNC;
+    //bool antialias = (flags & CSSCREEN_ANTIALIAS) == CSSCREEN_ANTIALIAS;
     
     SIrrlichtCreationParameters params;
     //params.AntiAlias = antialias;
@@ -117,113 +117,113 @@ EXPORT void CALL asOpenScreenEx(int width, int height, int depth, int flags, voi
     params.WindowSize.Height = height;
 
     // Init device
-    _asSetDevice(createDeviceEx(params));
-    _asDevice()->setResizable((flags & ASSCREEN_RESIZABLE) == ASSCREEN_RESIZABLE);
-    _asDevice()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+    _csSetDevice(createDeviceEx(params));
+    _csDevice()->setResizable((flags & CSSCREEN_RESIZABLE) == CSSCREEN_RESIZABLE);
+    _csDevice()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
 
     // Init audio
     if (SDL_WasInit(SDL_INIT_EVERYTHING) == 0) SDL_Init(SDL_INIT_AUDIO);
     if (SDL_WasInit(SDL_INIT_AUDIO) == 0) SDL_InitSubSystem(SDL_INIT_AUDIO);
     Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
-    asSetListener(0, 0, 0, 0);
+    csSetListener(0, 0, 0, 0);
     
     // Init gui skin
-    IGUISkin* skin = _asDevice()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
+    IGUISkin* skin = _csDevice()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
     for (int i = 0; i < EGDC_COUNT; ++i) {
         SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
         col.setAlpha(255);
         skin->setColor((EGUI_DEFAULT_COLOR)i, col);
     }
-    _asDevice()->getGUIEnvironment()->setSkin(skin);
+    _csDevice()->getGUIEnvironment()->setSkin(skin);
     skin->drop();
 }
 
 
-EXPORT void CALL asCloseScreen() {
+EXPORT void CALL csCloseScreen() {
     Mix_Quit();
-    _asSetDevice(NULL);
+    _csSetDevice(NULL);
 }
 
 
-EXPORT void CALL asSetScreenTitle(const char* caption) {
-    _asDevice()->setWindowCaption(_WSTR(caption));
+EXPORT void CALL csSetScreenTitle(const char* caption) {
+    _csDevice()->setWindowCaption(_WSTR(caption));
 }
 
 
-EXPORT void CALL asSetScreenSize(int width, int height) {
-    _asDevice()->getVideoDriver()->OnResize(dimension2du(width, height));
+EXPORT void CALL csSetScreenSize(int width, int height) {
+    _csDevice()->getVideoDriver()->OnResize(dimension2du(width, height));
 }
 
 
-EXPORT bool_t CALL asScreenActive() {
-    return _asDevice()->isWindowActive();
+EXPORT bool_t CALL csScreenActive() {
+    return _csDevice()->isWindowActive();
 }
 
 
-EXPORT int CALL asScreenWidth() {
-    return _asDevice()->getVideoDriver()->getScreenSize().Width;
+EXPORT int CALL csScreenWidth() {
+    return _csDevice()->getVideoDriver()->getScreenSize().Width;
 }
 
 
-EXPORT int CALL asScreenHeight() {
-    return _asDevice()->getVideoDriver()->getScreenSize().Height;
+EXPORT int CALL csScreenHeight() {
+    return _csDevice()->getVideoDriver()->getScreenSize().Height;
 }
 
 
-EXPORT void CALL asSetScreenFPS(int fps) {
+EXPORT void CALL csSetScreenFPS(int fps) {
     _screenFrameMsecs = (fps > 0)
         ? (1000 / fps)
         : 0;
 }
 
 
-EXPORT int CALL asScreenFPS() {
-    return _asDevice()->getVideoDriver()->getFPS();
+EXPORT int CALL csScreenFPS() {
+    return _csDevice()->getVideoDriver()->getFPS();
 }
 
 
-EXPORT bool_t CALL asFeatureSupported(int feature) {
-    return _asDevice()->getVideoDriver()->queryFeature((E_VIDEO_DRIVER_FEATURE)feature);
+EXPORT bool_t CALL csFeatureSupported(int feature) {
+    return _csDevice()->getVideoDriver()->queryFeature((E_VIDEO_DRIVER_FEATURE)feature);
 }
 
 
-EXPORT int CALL asScreenNumModes() {
-    return _asDevice()->getVideoModeList()->getVideoModeCount();
+EXPORT int CALL csScreenNumModes() {
+    return _csDevice()->getVideoModeList()->getVideoModeCount();
 }
 
 
-EXPORT int CALL asScreenModeWidth(int index) {
-    return _asDevice()->getVideoModeList()->getVideoModeResolution(index).Width;
+EXPORT int CALL csScreenModeWidth(int index) {
+    return _csDevice()->getVideoModeList()->getVideoModeResolution(index).Width;
 }
 
 
-EXPORT int CALL asScreenModeHeight(int index) {
-    return _asDevice()->getVideoModeList()->getVideoModeResolution(index).Height;
+EXPORT int CALL csScreenModeHeight(int index) {
+    return _csDevice()->getVideoModeList()->getVideoModeResolution(index).Height;
 }
 
 
-EXPORT int CALL asScreenModeDepth(int index) {
-    return _asDevice()->getVideoModeList()->getVideoModeDepth(index);
+EXPORT int CALL csScreenModeDepth(int index) {
+    return _csDevice()->getVideoModeList()->getVideoModeDepth(index);
 }
 
 
-EXPORT int CALL asDesktopWidth() {
-    return _asDevice()->getVideoModeList()->getDesktopResolution().Width;
+EXPORT int CALL csDesktopWidth() {
+    return _csDevice()->getVideoModeList()->getDesktopResolution().Width;
 }
 
 
-EXPORT int CALL asDesktopHeight() {
-    return _asDevice()->getVideoModeList()->getDesktopResolution().Height;
+EXPORT int CALL csDesktopHeight() {
+    return _csDevice()->getVideoModeList()->getDesktopResolution().Height;
 }
 
 
-EXPORT int CALL asDesktopDepth() {
-    return _asDevice()->getVideoModeList()->getDesktopDepth();
+EXPORT int CALL csDesktopDepth() {
+    return _csDevice()->getVideoModeList()->getDesktopDepth();
 }
 
 
-int _asScreenFrameMsecs() {
+int _csScreenFrameMsecs() {
     return _screenFrameMsecs;
 }
 

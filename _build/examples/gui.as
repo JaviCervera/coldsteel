@@ -1,6 +1,6 @@
 void Main() {
 	OpenScreen(800, 600, 32, SCREEN_WINDOWED | SCREEN_RESIZABLE);
-	SetScreenTitle("Astro - <untitled>");
+	SetScreenTitle("ColdSteel - <untitled>");
 	if (!AddZip("assets.dat")) ChangeDir("assets");
 	
 	Font@ liberationSans = LoadFont("segoe_ui.xml");

@@ -1,3 +1,3 @@
-# ![icon](logo.png) Astro
+# ![icon](logo.png) ColdSteel
 
 ...

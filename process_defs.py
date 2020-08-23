@@ -71,7 +71,7 @@ class Defs:
         vars = '\n'.join(vars_list) + '\n\n'
         funcs = '\n\n'.join(funcs_list) + '\n\n'
         cast_func = 'void CastEntity(asIScriptGeneric* gen) { gen->SetReturnAddress(gen->GetObject()); }\n\n'
-        func_header = 'void RegisterAstro(asIScriptEngine* engine) {\n'
+        func_header = 'void RegisterColdSteel(asIScriptEngine* engine) {\n'
         reg_types = '\n'.join(regtypes_list) + '\n'
         reg_downcast = '\n'.join(regdowncast_list) + '\n'
         reg_upcast = '\n'.join(regupcast_list) + '\n'

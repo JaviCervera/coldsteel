@@ -5,32 +5,32 @@
 extern "C" {
 
 
-EXPORT IGUIFont* CALL asLoadFont(const char* filename) {
-    return _asDevice()->getGUIEnvironment()->getFont(filename);
+EXPORT IGUIFont* CALL csLoadFont(const char* filename) {
+    return _csDevice()->getGUIEnvironment()->getFont(filename);
 }
 
 
-EXPORT void CALL asFreeFont(IGUIFont* font) {
-    _asDevice()->getGUIEnvironment()->removeFont(font);
+EXPORT void CALL csFreeFont(IGUIFont* font) {
+    _csDevice()->getGUIEnvironment()->removeFont(font);
 }
 
 
-EXPORT void CALL asDrawText(IGUIFont* font, const char* text, int x, int y, int color) {
-    if (!font) font = _asDevice()->getGUIEnvironment()->getBuiltInFont();
+EXPORT void CALL csDrawText(IGUIFont* font, const char* text, int x, int y, int color) {
+    if (!font) font = _csDevice()->getGUIEnvironment()->getBuiltInFont();
     const wchar_t* wtext = _WSTR(text);
     recti rect(vector2di(x, y), font->getDimension(wtext));
-    font->draw(wtext, rect, _asColor(color));
+    font->draw(wtext, rect, _csColor(color));
 }
 
 
-EXPORT int CALL asTextWidth(IGUIFont* font, const char* text) {
-    if (!font) font = _asDevice()->getGUIEnvironment()->getBuiltInFont();
+EXPORT int CALL csTextWidth(IGUIFont* font, const char* text) {
+    if (!font) font = _csDevice()->getGUIEnvironment()->getBuiltInFont();
     return font->getDimension(_WSTR(text)).Width;
 }
 
 
-EXPORT int CALL asTextHeight(IGUIFont* font, const char* text) {
-    if (!font) font = _asDevice()->getGUIEnvironment()->getBuiltInFont();
+EXPORT int CALL csTextHeight(IGUIFont* font, const char* text) {
+    if (!font) font = _csDevice()->getGUIEnvironment()->getBuiltInFont();
     return font->getDimension(_WSTR(text)).Height;
 }
 

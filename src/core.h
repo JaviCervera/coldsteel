@@ -7,13 +7,13 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL asInit();
-EXPORT bool_t CALL asRun();
-EXPORT float CALL asDeltaTime();
-EXPORT int CALL asMillisecs();
+EXPORT void CALL csInit();
+EXPORT bool_t CALL csRun();
+EXPORT float CALL csDeltaTime();
+EXPORT int CALL csMillisecs();
 
-void _asSetDevice(IrrlichtDevice* device);
-IrrlichtDevice* _asDevice();
+void _csSetDevice(IrrlichtDevice* device);
+IrrlichtDevice* _csDevice();
 
 
 #ifdef __cplusplus

@@ -6,38 +6,38 @@
 extern "C" {
 
 
-EXPORT int CALL asVal(const char* str) {
+EXPORT int CALL csVal(const char* str) {
     return atoi(str);
 }
 
 
-EXPORT float CALL asValF(const char* str) {
+EXPORT float CALL csValF(const char* str) {
     return atof(str);
 }
 
 
-EXPORT const char* CALL asStr(int number) {
+EXPORT const char* CALL csStr(int number) {
     static char str[32];
     sprintf(str, "%i", number);
     return str;
 }
 
 
-EXPORT const char* CALL asStrF(float number) {
+EXPORT const char* CALL csStrF(float number) {
     static char str[32];
     sprintf(str, "%f", number);
     return str;
 }
 
 
-EXPORT const char* CALL asLeft(const char* str, int num) {
+EXPORT const char* CALL csLeft(const char* str, int num) {
     static stringc retstr;
     retstr = stringc(str).subString(0, num);
     return retstr.c_str();
 }
 
 
-EXPORT const char* CALL asRight(const char* str, int num) {
+EXPORT const char* CALL csRight(const char* str, int num) {
     static stringc retstr;
     retstr = str;
     retstr = retstr.subString(retstr.size() - num, num);
@@ -45,26 +45,26 @@ EXPORT const char* CALL asRight(const char* str, int num) {
 }
 
 
-EXPORT const char* CALL asMid(const char* str, int pos, int num) {
+EXPORT const char* CALL csMid(const char* str, int pos, int num) {
     static stringc retstr;
     retstr = stringc(str).subString(pos, num);
     return retstr.c_str();
 }
 
 
-EXPORT const char* CALL asReplace(const char* str, const char* find, const char* replace) {
+EXPORT const char* CALL csReplace(const char* str, const char* find, const char* replace) {
     static stringc retstr;
     retstr = stringc(str).replace(find, replace);
     return retstr.c_str();
 }
 
 
-EXPORT int CALL asFind(const char* str, const char* find, int offset) {
+EXPORT int CALL csFind(const char* str, const char* find, int offset) {
     return stringc(str).find(find, offset);
 }
 
 
-EXPORT const char* CALL asUpper(const char* str) {
+EXPORT const char* CALL csUpper(const char* str) {
     static stringc retstr;
     retstr = str;
     for (u32 i = 0; i < retstr.size(); ++i) retstr[i] = toupper(retstr[i]);
@@ -72,7 +72,7 @@ EXPORT const char* CALL asUpper(const char* str) {
 }
 
 
-EXPORT const char* CALL asLower(const char* str) {
+EXPORT const char* CALL csLower(const char* str) {
     static stringc retstr;
     retstr = str;
     for (u32 i = 0; i < retstr.size(); ++i) retstr[i] = tolower(retstr[i]);
@@ -80,14 +80,14 @@ EXPORT const char* CALL asLower(const char* str) {
 }
 
 
-EXPORT const char* CALL asTrim(const char* str) {
+EXPORT const char* CALL csTrim(const char* str) {
     static stringc retstr;
     retstr = stringc(str).trim();
     return retstr.c_str();
 }
 
 
-EXPORT const char* CALL asChar(int code) {
+EXPORT const char* CALL csChar(int code) {
     static stringc retstr;
     retstr = " ";
     retstr[0] = (char)code;
@@ -95,17 +95,17 @@ EXPORT const char* CALL asChar(int code) {
 }
 
 
-EXPORT int CALL asCode(const char* str) {
+EXPORT int CALL csCode(const char* str) {
     return (int)str[0];
 }
 
 
-EXPORT int CALL asLen(const char* str) {
+EXPORT int CALL csLen(const char* str) {
     return (int)strlen(str);
 }
 
 
-EXPORT const char* CALL asField(const char* str, const char* delimiter, int index) {
+EXPORT const char* CALL csField(const char* str, const char* delimiter, int index) {
     static stringc retstr;
     array<stringc> split;
     stringc(str).split(split, delimiter, 1, false);
@@ -114,9 +114,9 @@ EXPORT const char* CALL asField(const char* str, const char* delimiter, int inde
 }
 
 
-EXPORT const char* CALL asLoadString(const char* filename) {
+EXPORT const char* CALL csLoadString(const char* filename) {
     static stringc retstr;
-    IReadFile* file = _asDevice()->getFileSystem()->createAndOpenFile(filename);
+    IReadFile* file = _csDevice()->getFileSystem()->createAndOpenFile(filename);
     if (file) {
         long size = file->getSize();
         char* str = (char*)malloc(size + 1);
@@ -132,8 +132,8 @@ EXPORT const char* CALL asLoadString(const char* filename) {
 }
 
 
-EXPORT void CALL asSaveString(const char* str, const char* filename, bool_t append) {
-    IWriteFile* file = _asDevice()->getFileSystem()->createAndWriteFile(filename, append);
+EXPORT void CALL csSaveString(const char* str, const char* filename, bool_t append) {
+    IWriteFile* file = _csDevice()->getFileSystem()->createAndWriteFile(filename, append);
     file->write(str, strlen(str));
     file->drop();
 }

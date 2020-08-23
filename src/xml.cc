@@ -36,9 +36,9 @@ struct XMLNode {
 
     const stringc& getAttributeValue(const stringc& name) const {
         static const stringc empty = "";
-        const stringc lower = asLower(name.c_str());
+        const stringc lower = csLower(name.c_str());
         for (int i = 0; i < getNumAttributes(); ++i) {
-            if (lower == asLower(attributes[i].getName().c_str())) {
+            if (lower == csLower(attributes[i].getName().c_str())) {
                 return attributes[i].getValue();
             }
         }
@@ -53,10 +53,10 @@ struct XMLNode {
 
 
     array<XMLNode*> findChildren(const stringc& name) {
-        const stringc lower = asLower(name.c_str());
+        const stringc lower = csLower(name.c_str());
         array<XMLNode*> arr;
         for (int i = 0; i < getNumChildren(); ++i) {
-            if (lower == asLower(children[i].getName().c_str())) {
+            if (lower == csLower(children[i].getName().c_str())) {
                 arr.push_back(&children[i]);
             }
         }
@@ -77,8 +77,8 @@ bool_t _asPrepareNextXMLElement(IXMLReaderUTF8* xml);
 XMLNode* _asParseXMLNode(IXMLReaderUTF8* xml);
 
 
-EXPORT XMLNode* CALL asParseXML(const char* filename) {
-    IXMLReaderUTF8* reader = _asDevice()->getFileSystem()->createXMLReaderUTF8(filename);
+EXPORT XMLNode* CALL csParseXML(const char* filename) {
+    IXMLReaderUTF8* reader = _csDevice()->getFileSystem()->createXMLReaderUTF8(filename);
     while (_asPrepareNextXMLElement(reader) && reader->getNodeType() != EXN_ELEMENT) {}
     return (reader->getNodeType() == EXN_ELEMENT)
         ? _asParseXMLNode(reader)
@@ -86,52 +86,52 @@ EXPORT XMLNode* CALL asParseXML(const char* filename) {
 }
 
 
-EXPORT void CALL asFreeXML(XMLNode* node) {
+EXPORT void CALL csFreeXML(XMLNode* node) {
     delete node;
 }
 
 
-EXPORT const char* CALL asXMLName(XMLNode* node) {
+EXPORT const char* CALL csXMLName(XMLNode* node) {
     return node->getName().c_str();
 }
 
 
-EXPORT const char* CALL asXMLText(XMLNode* node) {
+EXPORT const char* CALL csXMLText(XMLNode* node) {
     return node->getText().c_str();
 }
 
 
-EXPORT int CALL asXMLNumAttributes(XMLNode* node) {
+EXPORT int CALL csXMLNumAttributes(XMLNode* node) {
     return node->getNumAttributes();
 }
 
 
-EXPORT const char* CALL asXMLAttributeName(XMLNode* node, int index) {
+EXPORT const char* CALL csXMLAttributeName(XMLNode* node, int index) {
     return node->getAttributeName(index).c_str();
 }
 
 
-EXPORT const char* CALL asXMLAttributeValue(XMLNode* node, const char* name) {
+EXPORT const char* CALL csXMLAttributeValue(XMLNode* node, const char* name) {
     return node->getAttributeValue(name).c_str();
 }
 
 
-EXPORT int CALL asXMLNumChildren(XMLNode* node) {
+EXPORT int CALL csXMLNumChildren(XMLNode* node) {
     return node->getNumChildren();
 }
 
 
-EXPORT XMLNode* CALL asXMLChild(XMLNode* node, int index) {
+EXPORT XMLNode* CALL csXMLChild(XMLNode* node, int index) {
     return node->getChild(index);
 }
 
 
-EXPORT int CALL asXMLNumChildrenNamed(XMLNode* node, const char* name) {
+EXPORT int CALL csXMLNumChildrenNamed(XMLNode* node, const char* name) {
     return node->findChildren(name).size();
 }
 
 
-EXPORT XMLNode* CALL asXMLChildNamed(XMLNode* node, const char* name, int index) {
+EXPORT XMLNode* CALL csXMLChildNamed(XMLNode* node, const char* name, int index) {
     return node->findChildren(name)[index];
 }
 

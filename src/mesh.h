@@ -7,33 +7,33 @@ extern "C" {
 #endif
 
 
-EXPORT IMesh* CALL asCreateCone(int segments);
-EXPORT IMesh* CALL asCreateCube();
-EXPORT IMesh* CALL asCreateCylinder(int segments);
-EXPORT IMesh* CALL asCreateMesh();
-EXPORT IMesh* CALL asCreateQuad();
-EXPORT IMesh* CALL asCreateSphere(int segments);
-EXPORT IMesh* CALL asLoadMesh(const char* filename);
-EXPORT void CALL asFreeMesh(IMesh* mesh);
-EXPORT void CALL asSetMeshFPS(IMesh* mesh, float fps);
-EXPORT float CALL asMeshFPS(IMesh* mesh);
-EXPORT int CALL asMeshFrames(IMesh* mesh);
-EXPORT IMesh* CALL asMeshForFrame(IMesh* mesh, int frame);
-EXPORT int CALL asNumSurfaces(IMesh* mesh);
-EXPORT IMeshBuffer* CALL asMeshSurface(IMesh* mesh, int index);
-EXPORT void CALL asUpdateMesh(IMesh* mesh);
-EXPORT void CALL asTranslateMesh(IMesh* mesh, float x, float y, float z);
-EXPORT void CALL asRotateMesh(IMesh* mesh, float pitch, float yaw, float roll);
-EXPORT void CALL asScaleMesh(IMesh* mesh, float x, float y, float z);
-EXPORT void CALL asFlipMesh(IMesh* mesh);
-EXPORT void CALL asSetMeshColor(IMesh* mesh, int color);
-EXPORT void CALL asUpdateMeshNormals(IMesh* mesh);
-EXPORT float CALL asMeshWidth(IMesh* mesh);
-EXPORT float CALL asMeshHeight(IMesh* mesh);
-EXPORT float CALL asMeshDepth(IMesh* mesh);
+EXPORT IMesh* CALL csCreateCone(int segments);
+EXPORT IMesh* CALL csCreateCube();
+EXPORT IMesh* CALL csCreateCylinder(int segments);
+EXPORT IMesh* CALL csCreateMesh();
+EXPORT IMesh* CALL csCreateQuad();
+EXPORT IMesh* CALL csCreateSphere(int segments);
+EXPORT IMesh* CALL csLoadMesh(const char* filename);
+EXPORT void CALL csFreeMesh(IMesh* mesh);
+EXPORT void CALL csSetMeshFPS(IMesh* mesh, float fps);
+EXPORT float CALL csMeshFPS(IMesh* mesh);
+EXPORT int CALL csMeshFrames(IMesh* mesh);
+EXPORT IMesh* CALL csMeshForFrame(IMesh* mesh, int frame);
+EXPORT int CALL csNumSurfaces(IMesh* mesh);
+EXPORT IMeshBuffer* CALL csMeshSurface(IMesh* mesh, int index);
+EXPORT void CALL csUpdateMesh(IMesh* mesh);
+EXPORT void CALL csTranslateMesh(IMesh* mesh, float x, float y, float z);
+EXPORT void CALL csRotateMesh(IMesh* mesh, float pitch, float yaw, float roll);
+EXPORT void CALL csScaleMesh(IMesh* mesh, float x, float y, float z);
+EXPORT void CALL csFlipMesh(IMesh* mesh);
+EXPORT void CALL csSetMeshColor(IMesh* mesh, int color);
+EXPORT void CALL csUpdateMeshNormals(IMesh* mesh);
+EXPORT float CALL csMeshWidth(IMesh* mesh);
+EXPORT float CALL csMeshHeight(IMesh* mesh);
+EXPORT float CALL csMeshDepth(IMesh* mesh);
 
 
-bool_t _asMeshAnimated(IMesh* mesh);
+bool_t _csMeshAnimated(IMesh* mesh);
 
 
 #ifdef __cplusplus

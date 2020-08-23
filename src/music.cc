@@ -13,8 +13,8 @@ extern "C" {
 static Mix_MusicType _asMusicType(const char* filename);
 
 
-EXPORT bool_t CALL asPlayMusic(const char* filename, bool_t loop) {
-    if (_music != NULL) asStopMusic();
+EXPORT bool_t CALL csPlayMusic(const char* filename, bool_t loop) {
+    if (_music != NULL) csStopMusic();
     _filebuffer = new FileBuffer(filename);
     if (_filebuffer->Size() > 0) {
         SDL_RWops* rw = SDL_RWFromConstMem(_filebuffer->Buffer(), _filebuffer->Size());
@@ -31,7 +31,7 @@ EXPORT bool_t CALL asPlayMusic(const char* filename, bool_t loop) {
 }
 
 
-EXPORT void CALL asStopMusic() {
+EXPORT void CALL csStopMusic() {
     if (_music != NULL) {
         Mix_HaltMusic();
         Mix_FreeMusic(_music);
@@ -42,31 +42,31 @@ EXPORT void CALL asStopMusic() {
 }
 
 
-EXPORT void CALL asPauseMusic() {
+EXPORT void CALL csPauseMusic() {
     Mix_PauseMusic();
 }
 
 
-EXPORT void CALL asResumeMusic() {
+EXPORT void CALL csResumeMusic() {
     Mix_ResumeMusic();
 }
 
 
-EXPORT void CALL asSetMusicVolume(float volume) {
+EXPORT void CALL csSetMusicVolume(float volume) {
     Mix_VolumeMusic(int(volume*128));
 }
 
 
-EXPORT bool_t CALL asMusicPlaying() {
+EXPORT bool_t CALL csMusicPlaying() {
     return Mix_PlayingMusic();
 }
 
 
 static Mix_MusicType _asMusicType(const char* filename) {
-    const int len = asLen(filename);
-    const stringc lower = asLower(filename);
-    const stringc last5 = (len >= 5) ? asRight(lower.c_str(), 5) : "";
-    const stringc last4 = (len >= 4) ? asRight(lower.c_str(), 4) : "";
+    const int len = csLen(filename);
+    const stringc lower = csLower(filename);
+    const stringc last5 = (len >= 5) ? csRight(lower.c_str(), 5) : "";
+    const stringc last4 = (len >= 4) ? csRight(lower.c_str(), 4) : "";
     if (last4 == ".wav") return MUS_WAV;
     if (last4 == ".mid") return MUS_MID;
     if (last5 == ".midi") return MUS_MID;

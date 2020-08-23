@@ -7,24 +7,24 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL asSetCursorVisible(bool_t visible);
-EXPORT void CALL asSetCursorPosition(int x, int y);
-EXPORT int CALL asCursorX();
-EXPORT int CALL asCursorY();
-EXPORT bool_t CALL asButtonDown(int button);
-EXPORT bool_t CALL asKeyDown(int key);
-EXPORT int CALL asNumJoysticks();
-EXPORT const char* CALL asJoystickName(int index);
-EXPORT int CALL asNumJoystickAxes(int index);
-EXPORT int CALL asNumJoystickButtons(int index);
-EXPORT bool_t CALL asJoystickButtonDown(int index, int button);
-EXPORT float CALL asJoystickAxis(int index, int axis);
+EXPORT void CALL csSetCursorVisible(bool_t visible);
+EXPORT void CALL csSetCursorPosition(int x, int y);
+EXPORT int CALL csCursorX();
+EXPORT int CALL csCursorY();
+EXPORT bool_t CALL csButtonDown(int button);
+EXPORT bool_t CALL csKeyDown(int key);
+EXPORT int CALL csNumJoysticks();
+EXPORT const char* CALL csJoystickName(int index);
+EXPORT int CALL csNumJoystickAxes(int index);
+EXPORT int CALL csNumJoystickButtons(int index);
+EXPORT bool_t CALL csJoystickButtonDown(int index, int button);
+EXPORT float CALL csJoystickAxis(int index, int axis);
 
-void _asSetCursorMoved();
-void _asSetButtonDown(int button, bool down);
-void _asSetKeyDown(int key, bool down);
-void _asSetJoysticks(const array<SJoystickInfo>& joysticks);
-void _asSetJoystickEvent(const SEvent::SJoystickEvent& event);
+void _csSetCursorMoved();
+void _csSetButtonDown(int button, bool down);
+void _csSetKeyDown(int key, bool down);
+void _csSetJoysticks(const array<SJoystickInfo>& joysticks);
+void _csSetJoystickEvent(const SEvent::SJoystickEvent& event);
 
 
 #ifdef __cplusplus

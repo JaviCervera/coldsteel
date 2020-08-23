@@ -7,27 +7,27 @@ extern "C" {
 #endif
 
 
-EXPORT ILightSceneNode* CALL asCreateLight(int type);
-EXPORT int CALL asLightType(ILightSceneNode* light);
-EXPORT void CALL asSetLightDiffuse(ILightSceneNode* light, int color);
-EXPORT int CALL asLightDiffuse(ILightSceneNode* light);
-EXPORT void CALL asSetLightAmbient(ILightSceneNode* light, int color);
-EXPORT int CALL asLightAmbient(ILightSceneNode* light);
-EXPORT void CALL asSetLightSpecular(ILightSceneNode* light, int color);
-EXPORT int CALL asLightSpecular(ILightSceneNode* light);
-EXPORT void CALL asSetLightCastShadows(ILightSceneNode* light, bool_t enable);
-EXPORT bool_t CALL asLightCastShadows(ILightSceneNode* light);
-EXPORT void CALL asSetLightRadius(ILightSceneNode* light, float radius);
-EXPORT float CALL asLightRadius(ILightSceneNode* light);
-EXPORT void CALL asSetLightAttenuation(ILightSceneNode* light, float constant, float linear, float quadratic);
-EXPORT float CALL asLightConstantAttenuation(ILightSceneNode* light);
-EXPORT float CALL asLightLinearAttenuation(ILightSceneNode* light);
-EXPORT float CALL asLightQuadraticAttenuation(ILightSceneNode* light);
-EXPORT void CALL asSetLightCone(ILightSceneNode* light, float inner, float outer);
-EXPORT float CALL asLightInnerCone(ILightSceneNode* light);
-EXPORT float CALL asLightOuterCone(ILightSceneNode* light);
-EXPORT void CALL asSetLightFalloff(ILightSceneNode* light, float falloff);
-EXPORT float CALL asLightFalloff(ILightSceneNode* light);
+EXPORT ILightSceneNode* CALL csCreateLight(int type);
+EXPORT int CALL csLightType(ILightSceneNode* light);
+EXPORT void CALL csSetLightDiffuse(ILightSceneNode* light, int color);
+EXPORT int CALL csLightDiffuse(ILightSceneNode* light);
+EXPORT void CALL csSetLightAmbient(ILightSceneNode* light, int color);
+EXPORT int CALL csLightAmbient(ILightSceneNode* light);
+EXPORT void CALL csSetLightSpecular(ILightSceneNode* light, int color);
+EXPORT int CALL csLightSpecular(ILightSceneNode* light);
+EXPORT void CALL csSetLightCastShadows(ILightSceneNode* light, bool_t enable);
+EXPORT bool_t CALL csLightCastShadows(ILightSceneNode* light);
+EXPORT void CALL csSetLightRadius(ILightSceneNode* light, float radius);
+EXPORT float CALL csLightRadius(ILightSceneNode* light);
+EXPORT void CALL csSetLightAttenuation(ILightSceneNode* light, float constant, float linear, float quadratic);
+EXPORT float CALL csLightConstantAttenuation(ILightSceneNode* light);
+EXPORT float CALL csLightLinearAttenuation(ILightSceneNode* light);
+EXPORT float CALL csLightQuadraticAttenuation(ILightSceneNode* light);
+EXPORT void CALL csSetLightCone(ILightSceneNode* light, float inner, float outer);
+EXPORT float CALL csLightInnerCone(ILightSceneNode* light);
+EXPORT float CALL csLightOuterCone(ILightSceneNode* light);
+EXPORT void CALL csSetLightFalloff(ILightSceneNode* light, float falloff);
+EXPORT float CALL csLightFalloff(ILightSceneNode* light);
 
 
 #ifdef __cplusplus
