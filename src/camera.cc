@@ -5,38 +5,38 @@
 extern "C" {
 
 
-EXPORT ICameraSceneNode* CALL csCreateCamera() {
-    return _csDevice()->getSceneManager()->addCameraSceneNode();
+EXPORT ICameraSceneNode* CALL CreateCamera() {
+    return _Device()->getSceneManager()->addCameraSceneNode();
 }
 
 
-EXPORT void CALL csSetCameraRange(ICameraSceneNode* cam, float near_, float far_) {
+EXPORT void CALL SetCameraRange(ICameraSceneNode* cam, float near_, float far_) {
     cam->setNearValue(near_);
     cam->setFarValue(far_);
 }
 
 
-EXPORT float CALL csCameraNearRange(ICameraSceneNode* cam) {
+EXPORT float CALL CameraNearRange(ICameraSceneNode* cam) {
     return cam->getNearValue();
 }
 
 
-EXPORT float CALL csCameraFarRange(ICameraSceneNode* cam) {
+EXPORT float CALL CameraFarRange(ICameraSceneNode* cam) {
     return cam->getFarValue();
 }
 
 
-EXPORT void CALL csSetCameraFOV(ICameraSceneNode* cam, float fov) {
-    cam->setFOV(csRad(fov));
+EXPORT void CALL SetCameraFOV(ICameraSceneNode* cam, float fov) {
+    cam->setFOV(Rad(fov));
 }
 
 
-EXPORT float CALL csCameraFOV(ICameraSceneNode* cam) {
-    return csDeg(cam->getFOV());
+EXPORT float CALL CameraFOV(ICameraSceneNode* cam) {
+    return Deg(cam->getFOV());
 }
 
 
-EXPORT void CALL csSetCameraProjection(ICameraSceneNode* cam, float width, float height, float near_, float far_, bool_t ortho) {
+EXPORT void CALL SetCameraProjection(ICameraSceneNode* cam, float width, float height, float near_, float far_, bool_t ortho) {
     const matrix4 mat = (ortho)
         ? matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_)
         : matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_);
@@ -44,11 +44,11 @@ EXPORT void CALL csSetCameraProjection(ICameraSceneNode* cam, float width, float
 }
 
 
-EXPORT ISceneNode* CALL csPickEntity(ICameraSceneNode* camera, int x, int y, int group) {
-    ICameraSceneNode* activeCam = _csDevice()->getSceneManager()->getActiveCamera();
-    _csDevice()->getSceneManager()->setActiveCamera(camera);
-    ISceneNode* picked = _csDevice()->getSceneManager()->getSceneCollisionManager()->getSceneNodeFromScreenCoordinatesBB(vector2di(x, y), group);
-    _csDevice()->getSceneManager()->setActiveCamera(activeCam);
+EXPORT ISceneNode* CALL PickEntity(ICameraSceneNode* camera, int x, int y, int group) {
+    ICameraSceneNode* activeCam = _Device()->getSceneManager()->getActiveCamera();
+    _Device()->getSceneManager()->setActiveCamera(camera);
+    ISceneNode* picked = _Device()->getSceneManager()->getSceneCollisionManager()->getSceneNodeFromScreenCoordinatesBB(vector2di(x, y), group);
+    _Device()->getSceneManager()->setActiveCamera(activeCam);
     return picked;
 }
 

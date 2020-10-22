@@ -7,21 +7,21 @@ extern "C" {
 #endif
 
 
-EXPORT IMeshBuffer* CALL csAddSurface(IMesh* mesh);
-EXPORT int CALL csAddIndex(IMeshBuffer* surface, int index);
-EXPORT int CALL csNumIndices(IMeshBuffer* surface);
-EXPORT int CALL csSurfaceIndex(IMeshBuffer* surface, int number);
-EXPORT int CALL csAddVertex(IMeshBuffer* surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v);
-EXPORT int CALL csNumVertices(IMeshBuffer* surface);
-EXPORT float CALL csVertexX(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexY(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexZ(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexNX(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexNY(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexNZ(IMeshBuffer* surface, int index);
-EXPORT int CALL csVertexColor(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexU(IMeshBuffer* surface, int index);
-EXPORT float CALL csVertexV(IMeshBuffer* surface, int index);
+EXPORT IMeshBuffer* CALL AddSurface(IMesh* mesh);
+EXPORT int CALL AddIndex(IMeshBuffer* surface, int index);
+EXPORT int CALL NumIndices(IMeshBuffer* surface);
+EXPORT int CALL SurfaceIndex(IMeshBuffer* surface, int number);
+EXPORT int CALL AddVertex(IMeshBuffer* surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v);
+EXPORT int CALL NumVertices(IMeshBuffer* surface);
+EXPORT float CALL VertexX(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexY(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexZ(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexNX(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexNY(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexNZ(IMeshBuffer* surface, int index);
+EXPORT int CALL VertexColor(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexU(IMeshBuffer* surface, int index);
+EXPORT float CALL VertexV(IMeshBuffer* surface, int index);
 
 
 #ifdef __cplusplus

@@ -6,21 +6,21 @@
 extern "C" {
 #endif
 
-EXPORT void CALL csStopChannel(int channel);
-EXPORT void CALL csPauseChannel(int channel);
-EXPORT void CALL csResumeChannel(int channel);
-EXPORT void CALL csSetChannelPosition(int channel, float x, float y, float z, float radius);
-EXPORT float CALL csChannelX(int channel);
-EXPORT float CALL csChannelY(int channel);
-EXPORT float CALL csChannelZ(int channel);
-EXPORT float CALL csChannelRadius(int channel);
-EXPORT void CALL csSetChannelVolume(int channel, float volume);
-EXPORT void CALL csSetChannelPan(int channel, float pan);
-EXPORT bool_t CALL csChannelPlaying(int channel);
+EXPORT void CALL StopChannel(int channel);
+EXPORT void CALL PauseChannel(int channel);
+EXPORT void CALL ResumeChannel(int channel);
+EXPORT void CALL SetChannelPosition(int channel, float x, float y, float z, float radius);
+EXPORT float CALL ChannelX(int channel);
+EXPORT float CALL ChannelY(int channel);
+EXPORT float CALL ChannelZ(int channel);
+EXPORT float CALL ChannelRadius(int channel);
+EXPORT void CALL SetChannelVolume(int channel, float volume);
+EXPORT void CALL SetChannelPan(int channel, float pan);
+EXPORT bool_t CALL ChannelPlaying(int channel);
 
 
-void _csInitChannel(int channel);
-void _csUpdateChannels();
+void _InitChannel(int channel);
+void _UpdateChannels();
 
 #ifdef __cplusplus
 } /* extern "C" */

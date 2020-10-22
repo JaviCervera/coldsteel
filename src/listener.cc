@@ -8,28 +8,28 @@ static float _yaw;
 extern "C" {
 
 
-EXPORT void CALL csSetListener(float x, float y, float z, float yaw) {
+EXPORT void CALL SetListener(float x, float y, float z, float yaw) {
     _position.set(x, y, z);
     _yaw = yaw;
-    _csUpdateChannels();
+    _UpdateChannels();
 }
 
-EXPORT float CALL csListenerX() {
+EXPORT float CALL ListenerX() {
     return _position.X;
 }
 
 
-EXPORT float CALL csListenerY() {
+EXPORT float CALL ListenerY() {
     return _position.Y;
 }
 
 
-EXPORT float CALL csListenerZ() {
+EXPORT float CALL ListenerZ() {
     return _position.Z;
 }
 
 
-EXPORT float CALL csListenerYaw() {
+EXPORT float CALL ListenerYaw() {
     return _yaw;
 }
 

@@ -3,18 +3,18 @@
 #include "memblock.h"
 
 
-EXPORT Memblock* CALL csCreateMemblock(int size) {
+EXPORT Memblock* CALL CreateMemblock(int size) {
     char* memblock = (char*)calloc(1, size + 4);
     ((int*)memblock)[0] = (int)size;
     return (Memblock*)((int*)memblock+1);
 }
 
 
-EXPORT Memblock* CALL csLoadMemblock(const char* filename) {
+EXPORT Memblock* CALL LoadMemblock(const char* filename) {
     Memblock* memblock = NULL;
-    IReadFile* file = _csDevice()->getFileSystem()->createAndOpenFile(filename);
+    IReadFile* file = _Device()->getFileSystem()->createAndOpenFile(filename);
     if (file) {
-        memblock = csCreateMemblock(file->getSize());
+        memblock = CreateMemblock(file->getSize());
         file->read(memblock, file->getSize());
         file->drop();
     }
@@ -22,89 +22,89 @@ EXPORT Memblock* CALL csLoadMemblock(const char* filename) {
 }
 
 
-EXPORT void CALL csSaveMemblock(Memblock* memblock, const char* filename) {
-    IWriteFile* file = _csDevice()->getFileSystem()->createAndWriteFile(filename);
+EXPORT void CALL SaveMemblock(Memblock* memblock, const char* filename) {
+    IWriteFile* file = _Device()->getFileSystem()->createAndWriteFile(filename);
     if (file) {
-        file->write(memblock, csMemblockSize(memblock));
+        file->write(memblock, MemblockSize(memblock));
         file->drop();
     }
 }
 
 
-EXPORT void CALL csFreeMemblock(Memblock* memblock) {
+EXPORT void CALL FreeMemblock(Memblock* memblock) {
     free((int*)memblock-1);
 }
 
 
-EXPORT int CALL csMemblockSize(const Memblock* memblock) {
+EXPORT int CALL MemblockSize(const Memblock* memblock) {
     return ((const int*)memblock-1)[0];
 }
 
 
-EXPORT void CALL csSetMemblockByte(Memblock* memblock, int offset, int val) {
+EXPORT void CALL SetMemblockByte(Memblock* memblock, int offset, int val) {
     memcpy((char*)memblock+offset, (((char*)&val)+3), sizeof(unsigned char));
 }
 
 
-EXPORT void CALL csSetMemblockShort(Memblock* memblock, int offset, int val) {
+EXPORT void CALL SetMemblockShort(Memblock* memblock, int offset, int val) {
     memcpy((char*)memblock+offset, (((char*)&val)+2), sizeof(unsigned short));
 }
 
 
-EXPORT void CALL csSetMemblockInt(Memblock* memblock, int offset, int val) {
+EXPORT void CALL SetMemblockInt(Memblock* memblock, int offset, int val) {
     memcpy((char*)memblock+offset, &val, sizeof(val));
 }
 
 
-EXPORT void CALL csSetMemblockFloat(Memblock* memblock, int offset, float val) {
+EXPORT void CALL SetMemblockFloat(Memblock* memblock, int offset, float val) {
     memcpy((char*)memblock+offset, &val, sizeof(val));
 }
 
 
-EXPORT void CALL csSetMemblockString(Memblock* memblock, int offset, const char* val) {
+EXPORT void CALL SetMemblockString(Memblock* memblock, int offset, const char* val) {
     const int len = (int)strlen(val);
-    csSetMemblockInt(memblock, offset, len);
+    SetMemblockInt(memblock, offset, len);
     for (int i = 0; i < len; ++i) {
-        csSetMemblockByte(memblock, offset + 4 + i, val[i]);
+        SetMemblockByte(memblock, offset + 4 + i, val[i]);
     }
 }
 
 
-EXPORT int CALL csMemblockByte(const Memblock* memblock, int offset) {
+EXPORT int CALL MemblockByte(const Memblock* memblock, int offset) {
     unsigned char val;
     memcpy(&val, (const char*)memblock+offset, sizeof(val));
     return val;
 }
 
 
-EXPORT int CALL csMemblockShort(const Memblock* memblock, int offset) {
+EXPORT int CALL MemblockShort(const Memblock* memblock, int offset) {
     unsigned short val;
     memcpy(&val, (const char*)memblock+offset, sizeof(val));
     return val;
 }
 
 
-EXPORT int CALL csMemblockInt(const Memblock* memblock, int offset) {
+EXPORT int CALL MemblockInt(const Memblock* memblock, int offset) {
     int val;
     memcpy(&val, (const char*)memblock+offset, sizeof(val));
     return val;
 }
 
 
-EXPORT float CALL csMemblockFloat(const Memblock* memblock, int offset) {
+EXPORT float CALL MemblockFloat(const Memblock* memblock, int offset) {
     float val;
     memcpy(&val, (const char*)memblock+offset, sizeof(val));
     return val;
 }
 
 
-EXPORT const char* CALL csMemblockString(const Memblock* memblock, int offset) {
+EXPORT const char* CALL MemblockString(const Memblock* memblock, int offset) {
     static stringc result;
-    const int len = csMemblockInt(memblock, offset);
+    const int len = MemblockInt(memblock, offset);
     result = "";
     for (int i = 0; i < len; ++i) {
         char c;
-        int i_ = csMemblockInt(memblock, offset + 4 + i);
+        int i_ = MemblockInt(memblock, offset + 4 + i);
         memcpy(&c, ((char*)&i_) + 3, sizeof(c));
         result += c;
     }

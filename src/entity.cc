@@ -9,80 +9,80 @@ static map<ITriangleSelector*, int> _colliders;
 extern "C" {
 
 
-EXPORT ISceneNode* CALL csCreateEntity() {
-    return _csDevice()->getSceneManager()->addEmptySceneNode();
+EXPORT ISceneNode* CALL CreateEntity() {
+    return _Device()->getSceneManager()->addEmptySceneNode();
 }
 
 
-EXPORT void CALL csFreeEntity(ISceneNode* entity) {
-    csSetEntityCollision(entity, CSCOLLISION_NONE, 0);
+EXPORT void CALL FreeEntity(ISceneNode* entity) {
+    SetEntityCollision(entity, COLLISION_NONE, 0);
     entity->remove();
 }
 
 
-EXPORT int CALL csEntityType(ISceneNode* entity) {
+EXPORT int CALL EntityType(ISceneNode* entity) {
     map<ESCENE_NODE_TYPE, int> types;
-    types.set(ESNT_EMPTY, CSENTITY_EMPTY);
-    types.set(ESNT_BILLBOARD, CSENTITY_SPRITE);
-    types.set(ESNT_CAMERA, CSENTITY_CAMERA);
-    types.set(ESNT_PARTICLE_SYSTEM, CSENTITY_EMITTER);
-    types.set(ESNT_LIGHT, CSENTITY_LIGHT);
-    types.set(ESNT_MESH, CSENTITY_MESH);
-    types.set(ESNT_ANIMATED_MESH, CSENTITY_MESH);
-    types.set(ESNT_OCTREE, CSENTITY_MESH_OCTREE);
-    types.set(ESNT_TERRAIN, CSENTITY_TERRAIN);
-    types.set(ESNT_WATER_SURFACE, CSENTITY_WATER);
+    types.set(ESNT_EMPTY, ENTITY_EMPTY);
+    types.set(ESNT_BILLBOARD, ENTITY_SPRITE);
+    types.set(ESNT_CAMERA, ENTITY_CAMERA);
+    types.set(ESNT_PARTICLE_SYSTEM, ENTITY_EMITTER);
+    types.set(ESNT_LIGHT, ENTITY_LIGHT);
+    types.set(ESNT_MESH, ENTITY_MESH);
+    types.set(ESNT_ANIMATED_MESH, ENTITY_MESH);
+    types.set(ESNT_OCTREE, ENTITY_MESH_OCTREE);
+    types.set(ESNT_TERRAIN, ENTITY_TERRAIN);
+    types.set(ESNT_WATER_SURFACE, ENTITY_WATER);
     return types[entity->getType()];
 }
 
 
-EXPORT void CALL csSetEntityName(ISceneNode* entity, const char* name) {
+EXPORT void CALL SetEntityName(ISceneNode* entity, const char* name) {
     entity->setName(name);
 }
 
 
-EXPORT const char* CALL csEntityName(ISceneNode* entity) {
+EXPORT const char* CALL EntityName(ISceneNode* entity) {
     return entity->getName();
 }
 
 
-EXPORT void CALL csSetEntityVisible(ISceneNode* entity, bool_t visible) {
+EXPORT void CALL SetEntityVisible(ISceneNode* entity, bool_t visible) {
     entity->setVisible(visible);
 }
 
 
-EXPORT bool_t CALL csEntityVisible(ISceneNode* entity) {
+EXPORT bool_t CALL EntityVisible(ISceneNode* entity) {
     return entity->isVisible();
 }
 
 
-EXPORT void CALL csSetEntityParent(ISceneNode* entity, ISceneNode* parent) {
+EXPORT void CALL SetEntityParent(ISceneNode* entity, ISceneNode* parent) {
     entity->setParent(parent);
 }
 
 
-EXPORT ISceneNode* CALL csEntityParent(ISceneNode* entity) {
+EXPORT ISceneNode* CALL EntityParent(ISceneNode* entity) {
     return entity->getParent();
 }
 
 
-EXPORT int CALL csEntityNumChildren(ISceneNode* entity) {
+EXPORT int CALL EntityNumChildren(ISceneNode* entity) {
     return entity->getChildren().size();
 }
 
 
-EXPORT ISceneNode* CALL csEntityChild(ISceneNode* entity, int index) {
+EXPORT ISceneNode* CALL EntityChild(ISceneNode* entity, int index) {
     return *(entity->getChildren().begin() + index);
 }
 
 
-EXPORT void CALL csSetEntityPosition(ISceneNode* entity, float x, float y, float z) {
+EXPORT void CALL SetEntityPosition(ISceneNode* entity, float x, float y, float z) {
     entity->setPosition(vector3df(x, y, z));
     entity->updateAbsolutePosition();
 }
 
 
-EXPORT void CALL csMoveEntity(ISceneNode* entity, float x, float y, float z) {
+EXPORT void CALL MoveEntity(ISceneNode* entity, float x, float y, float z) {
     vector3df dest(x, y, z);
     entity->getRelativeTransformation().transformVect(dest);
     entity->setPosition(dest);
@@ -90,8 +90,8 @@ EXPORT void CALL csMoveEntity(ISceneNode* entity, float x, float y, float z) {
 }
 
 
-EXPORT ISceneNode* CALL csSlideEntity(ISceneNode* entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group) {
-    ISceneCollisionManager* manager = _csDevice()->getSceneManager()->getSceneCollisionManager();
+EXPORT ISceneNode* CALL SlideEntity(ISceneNode* entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group) {
+    ISceneCollisionManager* manager = _Device()->getSceneManager()->getSceneCollisionManager();
     vector3df attempted(x, y, z);
     entity->getAbsoluteTransformation().transformVect(attempted);
     ISceneNode* collidedEntity = NULL;
@@ -118,130 +118,130 @@ EXPORT ISceneNode* CALL csSlideEntity(ISceneNode* entity, float x, float y, floa
                 collidedEntity);
             if (collidedEntity != NULL) {
                 const vector3df normal = collisionTriangle.getNormal();
-                csSetEntityPosition(entity, result.X, result.Y, result.Z);
-                _csSetPoint(collisionPoint.X, collisionPoint.Y, collisionPoint.Z);
-                _csSetNormal(normal.X, normal.Y, normal.Z);
+                SetEntityPosition(entity, result.X, result.Y, result.Z);
+                _SetPoint(collisionPoint.X, collisionPoint.Y, collisionPoint.Z);
+                _SetNormal(normal.X, normal.Y, normal.Z);
                 break;
             }
         }
     }
-    if (collidedEntity == NULL) csMoveEntity(entity, x, y, z);
+    if (collidedEntity == NULL) MoveEntity(entity, x, y, z);
     return collidedEntity;
 }
 
 
-EXPORT float CALL csEntityX(ISceneNode* entity) {
+EXPORT float CALL EntityX(ISceneNode* entity) {
     return entity->getAbsolutePosition().X;
 }
 
 
-EXPORT float CALL csEntityY(ISceneNode* entity) {
+EXPORT float CALL EntityY(ISceneNode* entity) {
     return entity->getAbsolutePosition().Y;
 }
 
 
-EXPORT float CALL csEntityZ(ISceneNode* entity) {
+EXPORT float CALL EntityZ(ISceneNode* entity) {
     return entity->getAbsolutePosition().Z;
 }
 
 
-EXPORT float CALL csEntityLocalX(ISceneNode* entity) {
+EXPORT float CALL EntityLocalX(ISceneNode* entity) {
     return entity->getPosition().X;
 }
 
 
-EXPORT float CALL csEntityLocalY(ISceneNode* entity) {
+EXPORT float CALL EntityLocalY(ISceneNode* entity) {
     return entity->getPosition().Y;
 }
 
 
-EXPORT float CALL csEntityLocalZ(ISceneNode* entity) {
+EXPORT float CALL EntityLocalZ(ISceneNode* entity) {
     return entity->getPosition().Z;
 }
 
 
-EXPORT void CALL csSetEntityRotation(ISceneNode* entity, float pitch, float yaw, float roll) {
+EXPORT void CALL SetEntityRotation(ISceneNode* entity, float pitch, float yaw, float roll) {
     entity->setRotation(vector3df(pitch, yaw, roll));
 }
 
 
-EXPORT void CALL csTurnEntity(ISceneNode* entity, float pitch, float yaw, float roll) {
+EXPORT void CALL TurnEntity(ISceneNode* entity, float pitch, float yaw, float roll) {
     entity->setRotation(entity->getRotation() + vector3df(pitch, yaw, roll));
 }
 
 
-EXPORT void CALL csPointEntity(ISceneNode* entity, float x, float y, float z) {
-    const float xdiff = csEntityX(entity) - x;
-    const float ydiff = csEntityY(entity) - y;
-    const float zdiff = csEntityZ(entity) - z;
-    const float sqdist = csSqr(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
-    const float pitch = csATan2(ydiff, sqdist);
-    const float yaw = csATan2(xdiff, -zdiff);
-    csSetEntityRotation(entity, pitch, yaw, csEntityRoll(entity));
+EXPORT void CALL PointEntity(ISceneNode* entity, float x, float y, float z) {
+    const float xdiff = EntityX(entity) - x;
+    const float ydiff = EntityY(entity) - y;
+    const float zdiff = EntityZ(entity) - z;
+    const float sqdist = Sqr(xdiff*xdiff + ydiff*ydiff + zdiff*zdiff);
+    const float pitch = ATan2(ydiff, sqdist);
+    const float yaw = ATan2(xdiff, -zdiff);
+    SetEntityRotation(entity, pitch, yaw, EntityRoll(entity));
 }
 
 
-EXPORT float CALL csEntityPitch(ISceneNode* entity) {
+EXPORT float CALL EntityPitch(ISceneNode* entity) {
     return entity->getRotation().X;
 }
 
 
-EXPORT float CALL csEntityYaw(ISceneNode* entity) {
+EXPORT float CALL EntityYaw(ISceneNode* entity) {
     return entity->getRotation().Y;
 }
 
 
-EXPORT float CALL csEntityRoll(ISceneNode* entity) {
+EXPORT float CALL EntityRoll(ISceneNode* entity) {
     return entity->getRotation().Z;
 }
 
 
-EXPORT void CALL csSetEntityScale(ISceneNode* entity, float x, float y, float z) {
+EXPORT void CALL SetEntityScale(ISceneNode* entity, float x, float y, float z) {
     entity->setScale(vector3df(x, y, z));
 }
 
 
-EXPORT float CALL csEntityScaleX(ISceneNode* entity) {
+EXPORT float CALL EntityScaleX(ISceneNode* entity) {
     return entity->getScale().X;
 }
 
 
-EXPORT float CALL csEntityScaleY(ISceneNode* entity) {
+EXPORT float CALL EntityScaleY(ISceneNode* entity) {
     return entity->getScale().Y;
 }
 
 
-EXPORT float CALL csEntityScaleZ(ISceneNode* entity) {
+EXPORT float CALL EntityScaleZ(ISceneNode* entity) {
     return entity->getScale().Z;
 }
 
 
-EXPORT float CALL csEntityWidth(ISceneNode* entity) {
+EXPORT float CALL EntityWidth(ISceneNode* entity) {
     return entity->getBoundingBox().getExtent().X;
 }
 
 
-EXPORT float CALL csEntityHeight(ISceneNode* entity) {
+EXPORT float CALL EntityHeight(ISceneNode* entity) {
     return entity->getBoundingBox().getExtent().Y;
 }
 
 
-EXPORT float CALL csEntityDepth(ISceneNode* entity) {
+EXPORT float CALL EntityDepth(ISceneNode* entity) {
     return entity->getBoundingBox().getExtent().Z;
 }
 
 
-EXPORT int CALL csEntityNumMaterials(ISceneNode* entity) {
+EXPORT int CALL EntityNumMaterials(ISceneNode* entity) {
     return entity->getMaterialCount();
 }
 
 
-EXPORT SMaterial* CALL csEntityMaterial(ISceneNode* entity, int index) {
+EXPORT SMaterial* CALL EntityMaterial(ISceneNode* entity, int index) {
     return &entity->getMaterial(index);
 }
 
 
-EXPORT void CALL csSetEntityCollision(ISceneNode* entity, int type, int group) {
+EXPORT void CALL SetEntityCollision(ISceneNode* entity, int type, int group) {
     ITriangleSelector* selector = NULL;
     IAnimatedMeshSceneNode* animNode = (entity->getType() == ESNT_ANIMATED_MESH)
         ? (IAnimatedMeshSceneNode*)entity
@@ -254,19 +254,19 @@ EXPORT void CALL csSetEntityCollision(ISceneNode* entity, int type, int group) {
         entity->setTriangleSelector(NULL);
     }
     switch (type) {
-        case CSCOLLISION_BOX:
-            selector = _csDevice()->getSceneManager()->createTriangleSelectorFromBoundingBox(entity);
+        case COLLISION_BOX:
+            selector = _Device()->getSceneManager()->createTriangleSelectorFromBoundingBox(entity);
             break;
-        case CSCOLLISION_MESH:
+        case COLLISION_MESH:
             selector =
-                animNode ? _csDevice()->getSceneManager()->createTriangleSelector(animNode) : 
-                meshNode ? _csDevice()->getSceneManager()->createTriangleSelector(meshNode->getMesh(), meshNode) :
+                animNode ? _Device()->getSceneManager()->createTriangleSelector(animNode) : 
+                meshNode ? _Device()->getSceneManager()->createTriangleSelector(meshNode->getMesh(), meshNode) :
                 NULL;
             break;
-        case CSCOLLISION_OCTREE:
+        case COLLISION_OCTREE:
             selector =
-                animNode ? _csDevice()->getSceneManager()->createOctreeTriangleSelector(animNode->getMesh()->getMesh(0), animNode) :
-                meshNode ? _csDevice()->getSceneManager()->createOctreeTriangleSelector(meshNode->getMesh(), meshNode) :
+                animNode ? _Device()->getSceneManager()->createOctreeTriangleSelector(animNode->getMesh()->getMesh(0), animNode) :
+                meshNode ? _Device()->getSceneManager()->createOctreeTriangleSelector(meshNode->getMesh(), meshNode) :
                 NULL;
     }
     if (selector != NULL) {
@@ -278,12 +278,12 @@ EXPORT void CALL csSetEntityCollision(ISceneNode* entity, int type, int group) {
 }
 
 
-EXPORT bool_t CALL csEntityCollision(ISceneNode* entity) {
+EXPORT bool_t CALL EntityCollision(ISceneNode* entity) {
     return entity->getTriangleSelector() != NULL;
 }
 
 
-EXPORT int CALL csEntityGroup(ISceneNode* entity) {
+EXPORT int CALL EntityGroup(ISceneNode* entity) {
     return entity->getID();
 }
 

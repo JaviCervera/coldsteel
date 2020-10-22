@@ -1,25 +1,22 @@
-// Max number of primitives to draw
-const int MAX_PRIMITIVES = 1000;
+-- Max number of primitives to draw
+MAX_PRIMITIVES = 1000
 
-// Types of primitives supported
-const int PRIM_LINE = 0;
-const int PRIM_RECT = 1;
+-- Types of primitives supported
+PRIM_LINE = 0
+PRIM_RECT = 1
 
-// This class represents a primitive on the screen
-class Primitive {
-    // This constructor is required to be able to declare and array of Primitive objects
-    Primitive() {}
+-- This table represents a primitive on the screen
+Primitive = {
+    function New(self, type, color, x, y, z, w)
+        self.type = type
+        self.color = color
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+    end
     
-    Primitive(int type, int color, int x, int y, int z, int w) {
-        this.type = type;
-        this.color = color;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-    }
-    
-    void Draw() {
+    function Draw() {
         if (type == PRIM_LINE) {
             DrawLine(x, y, w, z, color);
         } else {

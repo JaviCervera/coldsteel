@@ -24,9 +24,9 @@ static CompilerConfig ParseCommandLine(int argc, char* argv[]);
 
 
 int main(int argc, char* argv[]) {
-    csInit();
+    Init();
     const CompilerConfig config = ParseCommandLine(argc, argv);
-    //if (config.path != "") csChangeDir(config.path.c_str());
+    //if (config.path != "") ChangeDir(config.path.c_str());
     Script script;
     if (!script.Load(config.sourceFilename)) {
         printf("%s\n", script.Error().c_str());

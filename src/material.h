@@ -7,37 +7,37 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL csSetMaterialTexture(SMaterial* material, int index, ITexture* texture);
-EXPORT ITexture* CALL csMaterialTexture(SMaterial* material, int index);
-EXPORT void CALL csSetMaterialTextureTransform(SMaterial* material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale);
-EXPORT void CALL csSetMaterialType(SMaterial* material, int type);
-EXPORT int CALL csMaterialType(SMaterial* material);
-EXPORT void CALL csSetMaterialDiffuse(SMaterial* material, int color);
-EXPORT int CALL csMaterialDiffuse(SMaterial* material);
-EXPORT void CALL csSetMaterialEmissive(SMaterial* material, int color);
-EXPORT int CALL csMaterialEmissive(SMaterial* material);
-EXPORT void CALL csSetMaterialAmbient(SMaterial* material, int color);
-EXPORT int CALL csMaterialAmbient(SMaterial* material);
-EXPORT void CALL csSetMaterialSpecular(SMaterial* material, int color);
-EXPORT int CALL csMaterialSpecular(SMaterial* material);
-EXPORT void CALL csSetMaterialShininess(SMaterial* material, float shininess);
-EXPORT float CALL csMaterialShininess(SMaterial* material);
-EXPORT void CALL csSetMaterialRenderMode(SMaterial* material, int mode);
-EXPORT int CALL csMaterialRenderMode(SMaterial* material);
-EXPORT void CALL csSetMaterialFilterMode(SMaterial* material, int mode);
-EXPORT int CALL csMaterialFilterMode(SMaterial* material);
-EXPORT void CALL csSetMaterialLightingMode(SMaterial* material, int mode);
-EXPORT int CALL csMaterialLightingMode(SMaterial* material);
-EXPORT void CALL csSetMaterialFogEnabled(SMaterial* material, bool_t enabled);
-EXPORT bool_t CALL csMaterialFogEnabled(SMaterial* material);
-EXPORT void CALL csSetMaterialDepthReadingEnabled(SMaterial* material, bool_t enabled);
-EXPORT bool_t CALL csMaterialDepthReadingEnabled(SMaterial* material);
-EXPORT void CALL csSetMaterialDepthWritingEnabled(SMaterial* material, bool_t enabled);
-EXPORT bool_t CALL csMaterialDepthWritingEnabled(SMaterial* material);
-EXPORT void CALL csSetMaterialCullingEnabled(SMaterial* material, bool_t enabled);
-EXPORT bool_t CALL csMaterialCullingEnabled(SMaterial* material);
-EXPORT void CALL csSetMaterialVertexColorsEnabled(SMaterial* material, bool_t enabled);
-EXPORT bool_t CALL csMaterialVertexColorsEnabled(SMaterial* material);
+EXPORT void CALL SetMaterialTexture(SMaterial* material, int index, ITexture* texture);
+EXPORT ITexture* CALL MaterialTexture(SMaterial* material, int index);
+EXPORT void CALL SetMaterialTextureTransform(SMaterial* material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale);
+EXPORT void CALL SetMaterialType(SMaterial* material, int type);
+EXPORT int CALL MaterialType(SMaterial* material);
+EXPORT void CALL SetMaterialDiffuse(SMaterial* material, int color);
+EXPORT int CALL MaterialDiffuse(SMaterial* material);
+EXPORT void CALL SetMaterialEmissive(SMaterial* material, int color);
+EXPORT int CALL MaterialEmissive(SMaterial* material);
+EXPORT void CALL SetMaterialAmbient(SMaterial* material, int color);
+EXPORT int CALL MaterialAmbient(SMaterial* material);
+EXPORT void CALL SetMaterialSpecular(SMaterial* material, int color);
+EXPORT int CALL MaterialSpecular(SMaterial* material);
+EXPORT void CALL SetMaterialShininess(SMaterial* material, float shininess);
+EXPORT float CALL MaterialShininess(SMaterial* material);
+EXPORT void CALL SetMaterialRenderMode(SMaterial* material, int mode);
+EXPORT int CALL MaterialRenderMode(SMaterial* material);
+EXPORT void CALL SetMaterialFilterMode(SMaterial* material, int mode);
+EXPORT int CALL MaterialFilterMode(SMaterial* material);
+EXPORT void CALL SetMaterialLightingMode(SMaterial* material, int mode);
+EXPORT int CALL MaterialLightingMode(SMaterial* material);
+EXPORT void CALL SetMaterialFogEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL MaterialFogEnabled(SMaterial* material);
+EXPORT void CALL SetMaterialDepthReadingEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL MaterialDepthReadingEnabled(SMaterial* material);
+EXPORT void CALL SetMaterialDepthWritingEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL MaterialDepthWritingEnabled(SMaterial* material);
+EXPORT void CALL SetMaterialCullingEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL MaterialCullingEnabled(SMaterial* material);
+EXPORT void CALL SetMaterialVertexColorsEnabled(SMaterial* material, bool_t enabled);
+EXPORT bool_t CALL MaterialVertexColorsEnabled(SMaterial* material);
 
 
 #ifdef __cplusplus

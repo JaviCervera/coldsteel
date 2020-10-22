@@ -7,10 +7,10 @@ extern "C" {
 #endif
 
 
-EXPORT bool_t CALL csAddZip(const char* filename);
-EXPORT const char* CALL csDirContents(const char* dir);
-EXPORT void CALL csChangeDir(const char* dir);
-EXPORT const char* CALL csCurrentDir();
+EXPORT bool_t CALL AddZip(const char* filename);
+EXPORT const char* CALL DirContents(const char* dir);
+EXPORT void CALL ChangeDir(const char* dir);
+EXPORT const char* CALL CurrentDir();
 
 
 #ifdef __cplusplus

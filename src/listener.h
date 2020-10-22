@@ -7,11 +7,11 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL csSetListener(float x, float y, float z, float yaw);
-EXPORT float CALL csListenerX();
-EXPORT float CALL csListenerY();
-EXPORT float CALL csListenerZ();
-EXPORT float CALL csListenerYaw();
+EXPORT void CALL SetListener(float x, float y, float z, float yaw);
+EXPORT float CALL ListenerX();
+EXPORT float CALL ListenerY();
+EXPORT float CALL ListenerZ();
+EXPORT float CALL ListenerYaw();
 
 
 #ifdef __cplusplus

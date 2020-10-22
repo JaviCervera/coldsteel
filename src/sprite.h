@@ -7,10 +7,10 @@ extern "C" {
 #endif
 
 
-EXPORT IBillboardSceneNode* CALL csCreateSprite(ITexture* texture, int materialType);
-EXPORT void CALL csSetSpriteSize(IBillboardSceneNode* sprite, float width, float height);
-EXPORT float CALL csSpriteWidth(IBillboardSceneNode* sprite);
-EXPORT float CALL csSpriteHeight(IBillboardSceneNode* sprite);
+EXPORT IBillboardSceneNode* CALL CreateSprite(ITexture* texture, int materialType);
+EXPORT void CALL SetSpriteSize(IBillboardSceneNode* sprite, float width, float height);
+EXPORT float CALL SpriteWidth(IBillboardSceneNode* sprite);
+EXPORT float CALL SpriteHeight(IBillboardSceneNode* sprite);
 
 
 #ifdef __cplusplus

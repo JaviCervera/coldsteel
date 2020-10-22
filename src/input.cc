@@ -16,93 +16,93 @@ static bool _key[irr::KEY_KEY_CODES_COUNT];
 static array<Joystick> _joysticks;
 
 
-static int _csFindJoystickIndex(u8 id);
+static int _FindJoystickIndex(u8 id);
 
 
-EXPORT void CALL csSetCursorVisible(bool_t visible) {
-    _csDevice()->getCursorControl()->setVisible(visible);
+EXPORT void CALL SetCursorVisible(bool_t visible) {
+    _Device()->getCursorControl()->setVisible(visible);
 }
 
 
-EXPORT void CALL csSetCursorPosition(int x, int y) {
-    _csDevice()->getCursorControl()->setPosition(x, y);
+EXPORT void CALL SetCursorPosition(int x, int y) {
+    _Device()->getCursorControl()->setPosition(x, y);
 }
 
 
-EXPORT int CALL csCursorX() {
-    return _csDevice()->getCursorControl()->getPosition().X;
+EXPORT int CALL CursorX() {
+    return _Device()->getCursorControl()->getPosition().X;
 }
 
 
-EXPORT int CALL csCursorY() {
-    return _csDevice()->getCursorControl()->getPosition().Y;
+EXPORT int CALL CursorY() {
+    return _Device()->getCursorControl()->getPosition().Y;
 }
 
 
-EXPORT bool_t CALL csButtonDown(int button) {
+EXPORT bool_t CALL ButtonDown(int button) {
     return _mouseButton[button];
 }
 
 
-EXPORT bool_t CALL csKeyDown(int key) {
+EXPORT bool_t CALL KeyDown(int key) {
     return _key[key];
 }
 
 
-EXPORT int CALL csNumJoysticks() {
+EXPORT int CALL NumJoysticks() {
     return _joysticks.size();
 }
 
 
-EXPORT const char* CALL csJoystickName(int index) {
+EXPORT const char* CALL JoystickName(int index) {
     return _joysticks[index].info.Name.c_str();
 }
 
 
-EXPORT int CALL csNumJoystickAxes(int index) {
+EXPORT int CALL NumJoystickAxes(int index) {
     return _joysticks[index].info.Axes;
 }
 
 
-EXPORT int CALL csNumJoystickButtons(int index) {
+EXPORT int CALL NumJoystickButtons(int index) {
     return _joysticks[index].info.Buttons;
 }
 
 
-EXPORT bool_t CALL csJoystickButtonDown(int index, int button) {
+EXPORT bool_t CALL JoystickButtonDown(int index, int button) {
     return _joysticks[index].event.IsButtonPressed(button);
 }
 
 
-EXPORT float CALL csJoystickAxis(int index, int axis) {
+EXPORT float CALL JoystickAxis(int index, int axis) {
     const float value = _joysticks[index].event.Axis[axis] * 1.0f / 32768;
     const float fixedValue =
-        (csAbs(value) <= 0.1f) ? 0.0f :
+        (Abs(value) <= 0.1f) ? 0.0f :
         (value >= 0.995f) ? 1.0f :
         value;
     return fixedValue;
 }
 
 
-void _csSetCursorMoved() {
-    _mouseXSpeed = csCursorX() - _lastMouseX;
-    _mouseYSpeed = csCursorY() - _lastMouseY;
-    _lastMouseX = csCursorX();
-    _lastMouseY = csCursorY();
+void _SetCursorMoved() {
+    _mouseXSpeed = CursorX() - _lastMouseX;
+    _mouseYSpeed = CursorY() - _lastMouseY;
+    _lastMouseX = CursorX();
+    _lastMouseY = CursorY();
 }
 
 
-void _csSetButtonDown(int button, bool down) {
+void _SetButtonDown(int button, bool down) {
     _mouseButton[button] = down;
 }
 
 
-void _csSetKeyDown(int key, bool down) {
+void _SetKeyDown(int key, bool down) {
     _key[key] = down;
 }
 
 
-void _csSetJoysticks(const array<SJoystickInfo>& joysticks) {
+void _SetJoysticks(const array<SJoystickInfo>& joysticks) {
     _joysticks.clear();
     for (u32 i = 0; i < joysticks.size(); ++i) {
         _joysticks.push_back(Joystick());
@@ -111,13 +111,13 @@ void _csSetJoysticks(const array<SJoystickInfo>& joysticks) {
 }
 
 
-void _csSetJoystickEvent(const SEvent::SJoystickEvent& event) {
-    int index = _csFindJoystickIndex(event.Joystick);
+void _SetJoystickEvent(const SEvent::SJoystickEvent& event) {
+    int index = _FindJoystickIndex(event.Joystick);
     if (index != -1) _joysticks[index].event = event;
 }
 
 
-static int _csFindJoystickIndex(u8 id) {
+static int _FindJoystickIndex(u8 id) {
     for (u32 i = 0; i < _joysticks.size(); ++i)
         if (_joysticks[i].info.Joystick == id)
             return i;

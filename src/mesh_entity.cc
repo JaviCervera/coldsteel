@@ -6,21 +6,21 @@
 extern "C" {
 
 
-EXPORT IMeshSceneNode* CALL csCreateMeshEntity(IMesh* mesh) {
-    if (_csMeshAnimated(mesh)) {
-        return (IMeshSceneNode*)_csDevice()->getSceneManager()->addAnimatedMeshSceneNode((IAnimatedMesh*)mesh);
+EXPORT IMeshSceneNode* CALL CreateMeshEntity(IMesh* mesh) {
+    if (_MeshAnimated(mesh)) {
+        return (IMeshSceneNode*)_Device()->getSceneManager()->addAnimatedMeshSceneNode((IAnimatedMesh*)mesh);
     } else {
-        return _csDevice()->getSceneManager()->addMeshSceneNode(mesh);
+        return _Device()->getSceneManager()->addMeshSceneNode(mesh);
     }
 }
 
 
-EXPORT IMeshSceneNode* CALL csCreateOctreeMeshEntity(IMesh* mesh) {
-    return _csDevice()->getSceneManager()->addOctreeSceneNode(mesh);
+EXPORT IMeshSceneNode* CALL CreateOctreeMeshEntity(IMesh* mesh) {
+    return _Device()->getSceneManager()->addOctreeSceneNode(mesh);
 }
 
 
-EXPORT IMesh* CALL csMeshEntityMesh(IMeshSceneNode* entity) {
+EXPORT IMesh* CALL MeshEntityMesh(IMeshSceneNode* entity) {
     if (entity->getType() == ESNT_ANIMATED_MESH) {
         return ((IAnimatedMeshSceneNode*)entity)->getMesh();
     } else {
@@ -29,11 +29,11 @@ EXPORT IMesh* CALL csMeshEntityMesh(IMeshSceneNode* entity) {
 }
 
 
-EXPORT void CALL csSetMeshEntityCastShadows(IMeshSceneNode* entity, bool_t enable) {
-    int num = csEntityNumChildren(entity);
+EXPORT void CALL SetMeshEntityCastShadows(IMeshSceneNode* entity, bool_t enable) {
+    int num = EntityNumChildren(entity);
     ISceneNode* shadowNode = NULL;
     for (int i = 0; i < num; ++i) {
-        ISceneNode* child = csEntityChild(entity, i);
+        ISceneNode* child = EntityChild(entity, i);
         if (child->getType() == ESNT_SHADOW_VOLUME) {
             shadowNode = child;
             break;
@@ -50,10 +50,10 @@ EXPORT void CALL csSetMeshEntityCastShadows(IMeshSceneNode* entity, bool_t enabl
 }
 
 
-EXPORT bool_t CALL csMeshEntityCastShadows(IMeshSceneNode* entity) {
-    int num = csEntityNumChildren(entity);
+EXPORT bool_t CALL MeshEntityCastShadows(IMeshSceneNode* entity) {
+    int num = EntityNumChildren(entity);
     for (int i = 0; i < num; ++i) {
-        if (csEntityChild(entity, i)->getType() == ESNT_SHADOW_VOLUME) {
+        if (EntityChild(entity, i)->getType() == ESNT_SHADOW_VOLUME) {
             return true;
         }
     }
@@ -61,55 +61,55 @@ EXPORT bool_t CALL csMeshEntityCastShadows(IMeshSceneNode* entity) {
 }
 
 
-EXPORT void CALL csSetMeshEntityLoop(IMeshSceneNode* entity, bool_t loop) {
+EXPORT void CALL SetMeshEntityLoop(IMeshSceneNode* entity, bool_t loop) {
     if (entity->getType() == ESNT_ANIMATED_MESH ) ((IAnimatedMeshSceneNode*)entity)->setLoopMode(loop);
 }
 
 
-EXPORT bool_t CALL csMeshEntityLoop(IMeshSceneNode* entity) {
+EXPORT bool_t CALL MeshEntityLoop(IMeshSceneNode* entity) {
     return (entity->getType() == ESNT_ANIMATED_MESH)
         ? ((IAnimatedMeshSceneNode*)entity)->getLoopMode()
         : false;
 }
 
 
-EXPORT void CALL csSetMeshEntityFPS(IMeshSceneNode* entity, float fps) {
+EXPORT void CALL SetMeshEntityFPS(IMeshSceneNode* entity, float fps) {
     if (entity->getType() == ESNT_ANIMATED_MESH) ((IAnimatedMeshSceneNode*)entity)->setAnimationSpeed(fps);
 }
 
 
-EXPORT float CALL csMeshEntityFPS(IMeshSceneNode* entity) {
+EXPORT float CALL MeshEntityFPS(IMeshSceneNode* entity) {
   return (entity->getType() == ESNT_ANIMATED_MESH)
     ? ((IAnimatedMeshSceneNode*)entity)->getAnimationSpeed()
     : 0;
 }
 
 
-EXPORT void CALL csSetMeshEntityFrame(IMeshSceneNode* entity, float frame) {
+EXPORT void CALL SetMeshEntityFrame(IMeshSceneNode* entity, float frame) {
     if (entity->getType() == ESNT_ANIMATED_MESH) ((IAnimatedMeshSceneNode*)entity)->setCurrentFrame(frame);
 }
 
 
-EXPORT float CALL csMeshEntityFrame(IMeshSceneNode* entity) {
+EXPORT float CALL MeshEntityFrame(IMeshSceneNode* entity) {
     return (entity->getType() == ESNT_ANIMATED_MESH)
         ? ((IAnimatedMeshSceneNode*)entity)->getFrameNr()
         : -1;
 }
 
 
-EXPORT void CALL csSetMeshEntityFrames(IMeshSceneNode* entity, int first, int last) {
+EXPORT void CALL SetMeshEntityFrames(IMeshSceneNode* entity, int first, int last) {
     if (entity->getType() == ESNT_ANIMATED_MESH) ((IAnimatedMeshSceneNode*)entity)->setFrameLoop(first, last);
 }
 
 
-EXPORT int CALL csMeshEntityFirstFrame(IMeshSceneNode* entity) {
+EXPORT int CALL MeshEntityFirstFrame(IMeshSceneNode* entity) {
     return (entity->getType() == ESNT_ANIMATED_MESH)
         ? ((IAnimatedMeshSceneNode*)entity)->getStartFrame()
         : -1;
 }
 
 
-EXPORT int CALL csMeshEntityLastFrame(IMeshSceneNode* entity) {
+EXPORT int CALL MeshEntityLastFrame(IMeshSceneNode* entity) {
     return (entity->getType() == ESNT_ANIMATED_MESH)
         ? ((IAnimatedMeshSceneNode*)entity)->getEndFrame()
         : -1;

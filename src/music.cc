@@ -10,15 +10,15 @@ static Mix_Music* _music = NULL;
 extern "C" {
 
 
-static Mix_MusicType _asMusicType(const char* filename);
+static Mix_MusicType _MusicType(const char* filename);
 
 
-EXPORT bool_t CALL csPlayMusic(const char* filename, bool_t loop) {
-    if (_music != NULL) csStopMusic();
+EXPORT bool_t CALL PlayMusic(const char* filename, bool_t loop) {
+    if (_music != NULL) StopMusic();
     _filebuffer = new FileBuffer(filename);
     if (_filebuffer->Size() > 0) {
         SDL_RWops* rw = SDL_RWFromConstMem(_filebuffer->Buffer(), _filebuffer->Size());
-        _music = Mix_LoadMUSType_RW(rw, _asMusicType(filename), true);
+        _music = Mix_LoadMUSType_RW(rw, _MusicType(filename), true);
         if (_music != NULL) {
             Mix_PlayMusic(_music, loop ? -1 : 1);
             return TRUE;
@@ -31,7 +31,7 @@ EXPORT bool_t CALL csPlayMusic(const char* filename, bool_t loop) {
 }
 
 
-EXPORT void CALL csStopMusic() {
+EXPORT void CALL StopMusic() {
     if (_music != NULL) {
         Mix_HaltMusic();
         Mix_FreeMusic(_music);
@@ -42,31 +42,31 @@ EXPORT void CALL csStopMusic() {
 }
 
 
-EXPORT void CALL csPauseMusic() {
+EXPORT void CALL PauseMusic() {
     Mix_PauseMusic();
 }
 
 
-EXPORT void CALL csResumeMusic() {
+EXPORT void CALL ResumeMusic() {
     Mix_ResumeMusic();
 }
 
 
-EXPORT void CALL csSetMusicVolume(float volume) {
+EXPORT void CALL SetMusicVolume(float volume) {
     Mix_VolumeMusic(int(volume*128));
 }
 
 
-EXPORT bool_t CALL csMusicPlaying() {
+EXPORT bool_t CALL MusicPlaying() {
     return Mix_PlayingMusic();
 }
 
 
-static Mix_MusicType _asMusicType(const char* filename) {
-    const int len = csLen(filename);
-    const stringc lower = csLower(filename);
-    const stringc last5 = (len >= 5) ? csRight(lower.c_str(), 5) : "";
-    const stringc last4 = (len >= 4) ? csRight(lower.c_str(), 4) : "";
+static Mix_MusicType _MusicType(const char* filename) {
+    const int len = Len(filename);
+    const stringc lower = Lower(filename);
+    const stringc last5 = (len >= 5) ? Right(lower.c_str(), 5) : "";
+    const stringc last4 = (len >= 4) ? Right(lower.c_str(), 4) : "";
     if (last4 == ".wav") return MUS_WAV;
     if (last4 == ".mid") return MUS_MID;
     if (last5 == ".midi") return MUS_MID;

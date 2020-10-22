@@ -7,24 +7,24 @@ extern "C" {
 #endif
 
 
-EXPORT int CALL csVal(const char* str);
-EXPORT float CALL csValF(const char* str);
-EXPORT const char* CALL csStr(int number);
-EXPORT const char* CALL csStrF(float number);
-EXPORT const char* CALL csLeft(const char* str, int num);
-EXPORT const char* CALL csRight(const char* str, int num);
-EXPORT const char* CALL csMid(const char* str, int pos, int num);
-EXPORT const char* CALL csReplace(const char* str, const char* find, const char* replace);
-EXPORT int CALL csFind(const char* str, const char* find, int offset);
-EXPORT const char* CALL csUpper(const char* str);
-EXPORT const char* CALL csLower(const char* str);
-EXPORT const char* CALL csTrim(const char* str);
-EXPORT const char* CALL csChar(int code);
-EXPORT int CALL csCode(const char* str);
-EXPORT int CALL csLen(const char* str);
-EXPORT const char* CALL csField(const char* str, const char* delimiter, int index);
-EXPORT const char* CALL csLoadString(const char* filename);
-EXPORT void CALL csSaveString(const char* str, const char* filename, bool_t append);
+EXPORT int CALL Val(const char* str);
+EXPORT float CALL ValF(const char* str);
+EXPORT const char* CALL Str(int number);
+EXPORT const char* CALL StrF(float number);
+EXPORT const char* CALL Left(const char* str, int num);
+EXPORT const char* CALL Right(const char* str, int num);
+EXPORT const char* CALL Mid(const char* str, int pos, int num);
+EXPORT const char* CALL Replace(const char* str, const char* find, const char* replace);
+EXPORT int CALL Find(const char* str, const char* find, int offset);
+EXPORT const char* CALL Upper(const char* str);
+EXPORT const char* CALL Lower(const char* str);
+EXPORT const char* CALL Trim(const char* str);
+EXPORT const char* CALL Char(int code);
+EXPORT int CALL Code(const char* str);
+EXPORT int CALL Len(const char* str);
+EXPORT const char* CALL Field(const char* str, const char* delimiter, int index);
+EXPORT const char* CALL LoadString(const char* filename);
+EXPORT void CALL SaveString(const char* str, const char* filename, bool_t append);
 
 
 #ifdef __cplusplus

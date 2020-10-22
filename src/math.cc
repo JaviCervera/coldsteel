@@ -12,139 +12,139 @@ static vector3df _normal;
 extern "C" {
 
 
-EXPORT float CALL csFloor(float val) {
+EXPORT float CALL Floor(float val) {
     return floor(val);
 }
 
 
-EXPORT float CALL csCeil(float val) {
+EXPORT float CALL Ceil(float val) {
     return ceil(val);
 }
 
 
-EXPORT float CALL csAbs(float val) {
+EXPORT float CALL Abs(float val) {
     return abs(val);
 }
 
 
-EXPORT float CALL csSqr(float val) {
+EXPORT float CALL Sqr(float val) {
     return sqrt(val);
 }
 
 
-EXPORT float CALL csSin(float val) {
+EXPORT float CALL Sin(float val) {
     return sin(val * DEG2RAD);
 }
 
 
-EXPORT float CALL csCos(float val) {
+EXPORT float CALL Cos(float val) {
     return cos(val * DEG2RAD);
 }
 
 
-EXPORT float CALL csTan(float val) {
+EXPORT float CALL Tan(float val) {
     return tan(val * DEG2RAD);
 }
 
 
-EXPORT float CALL csASin(float val) {
+EXPORT float CALL ASin(float val) {
     return asin(val * RAD2DEG);
 }
 
 
-EXPORT float CALL csACos(float val) {
+EXPORT float CALL ACos(float val) {
     return acos(val * RAD2DEG);
 }
 
 
-EXPORT float CALL csATan(float val) {
+EXPORT float CALL ATan(float val) {
     return atan(val * RAD2DEG);
 }
 
 
-EXPORT float CALL csATan2(float x, float y) {
+EXPORT float CALL ATan2(float x, float y) {
     return atan2(x, y) * RAD2DEG;
 }
 
 
-EXPORT float CALL csExp(float val) {
+EXPORT float CALL Exp(float val) {
     return exp(val);
 }
 
 
-EXPORT float CALL csLog(float val) {
+EXPORT float CALL Log(float val) {
     return log(val);
 }
 
 
-EXPORT float CALL csLog10(float val) {
+EXPORT float CALL Log10(float val) {
     return log10(val);
 }
 
 
-EXPORT int CALL csRand(int min, int max) {
+EXPORT int CALL Rand(int min, int max) {
     return (rand() % (max - min)) + min;
 }
 
 
-EXPORT void CALL csRandSeed(int seed) {
+EXPORT void CALL RandSeed(int seed) {
     return srand(seed);
 }
 
 
-EXPORT float CALL csDeg(float rad) {
+EXPORT float CALL Deg(float rad) {
     return rad * RAD2DEG;
 }
 
 
-EXPORT float CALL csRad(float deg) {
+EXPORT float CALL Rad(float deg) {
     return deg * DEG2RAD;
 }
 
 
-EXPORT float CALL csWrap(float val, float mod) {
+EXPORT float CALL Wrap(float val, float mod) {
     return (mod != 0)
         ? (val - mod*floor(val/mod))
         : val;
 }
 
 
-EXPORT float CALL csPointX() {
+EXPORT float CALL PointX() {
     return _point.X;
 }
 
 
-EXPORT float CALL csPointY() {
+EXPORT float CALL PointY() {
     return _point.Y;
 }
 
 
-EXPORT float CALL csPointZ() {
+EXPORT float CALL PointZ() {
     return _point.Z;
 }
 
 
-EXPORT float CALL csNormalX() {
+EXPORT float CALL NormalX() {
     return _normal.X;
 }
 
 
-EXPORT float CALL csNormalY() {
+EXPORT float CALL NormalY() {
     return _normal.Y;
 }
 
 
-EXPORT float CALL csNormalZ() {
+EXPORT float CALL NormalZ() {
     return _normal.Z;
 }
 
 
-void _csSetPoint(float x, float y, float z) {
+void _SetPoint(float x, float y, float z) {
     _point.set(x, y, z);
 }
 
 
-void _csSetNormal(float x, float y, float z) {
+void _SetNormal(float x, float y, float z) {
     _normal.set(x, y, z);
 }
 
