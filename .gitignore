@@ -1,7 +1,7 @@
 _build/*
 _build/examples/*.bcd
 _CMAKE
-src/as_wrapper.cpp
+src/lua_wrapper.cpp
 
 # Prerequisites
 *.d

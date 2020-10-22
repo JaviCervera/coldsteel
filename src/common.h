@@ -14,6 +14,7 @@
 #define CALL
 #endif
 
+#ifndef SWIG
 #include "../lib/irrlicht/include/irrlicht.h"
 using namespace irr;
 using namespace core;
@@ -21,6 +22,7 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
+#endif
 
 // Screen
 #define CSSCREEN_WINDOWED 1
@@ -292,6 +294,8 @@ using namespace gui;
 #define TRUE 1
 #define FALSE 0
 
+#ifndef SWIG
+
 typedef int bool_t;
 
 
@@ -307,3 +311,5 @@ inline const char* _CSTR(const wchar_t* wstring) {
     wcstombs(string, wstring, 1024);
     return string;
 }
+
+#endif

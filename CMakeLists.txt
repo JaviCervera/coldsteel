@@ -5,10 +5,10 @@ cmake_minimum_required(VERSION 3.0)
 project(coldsteel)
 
 #Define file groups
-file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/runtime.rc" "src/*.cpp" "src/script_ext/*.cpp" "lib/angelscript/source/*.cpp" "lib/angelscript/add_on/scriptbuilder/scriptbuilder.cpp" "lib/tinyfiledialogs/tinyfiledialogs.c")
+file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/*.cpp" "src/runtime.rc" "lib/lua/*.c")
 
 #Add header and lib directories
-include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/angelscript/include ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/include)
+include_directories(${INCLUDE_DIRECTORIES}${CMAKE_CURRENT_SOURCE_DIR}/lib/lua ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/include)
 link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT ${CMAKE_CURRENT_SOURCE_DIR}/lib/sdl/lib)
 
 #Add executable targets
@@ -16,7 +16,6 @@ add_executable(coldsteel ${COLDSTEEL_EXE_FILES})
 
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
-target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DAS_MAX_PORTABILITY -DAS_NO_EXCEPTIONS -DAS_NO_THREADS -DAS_PROCESS_METADATA=0)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DWIN32)
 	if (MSVC)

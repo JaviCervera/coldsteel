@@ -2,14 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../lib/angelscript/include/angelscript.h"
-#include "../lib/angelscript/add_on/scriptbuilder/scriptbuilder.h"
-#ifdef RUNTIME_ONLY
-#include "../lib/tinyfiledialogs/tinyfiledialogs.h"
-#endif
 #include "engine.h"
-#include "script_ext/scriptarray.h"
-#include "script_ext/string.h"
+#include "script.h"
 
 
 enum CompilerMode {
@@ -22,51 +16,21 @@ enum CompilerMode {
 struct CompilerConfig {
     CompilerMode mode;
     stringc sourceFilename;
-    stringc bytecodeFilename;
     stringc path;
 };
 
 
-struct FileStream : public asIBinaryStream {
-    FILE* f;
-
-    FileStream(const char* filename, bool write = false) { f = fopen(filename, write ? "wb" : "rb"); }
-    ~FileStream() { fclose(f); }
-    virtual int Write(const void* ptr, asUINT size) { return fwrite(ptr, size, 1, f); }
-    virtual int Read(void* ptr, asUINT size) { return fread(ptr, size, 1, f); }
-};
-
-
 static CompilerConfig ParseCommandLine(int argc, char* argv[]);
-static void Print(const stringc& msg, const stringc& level);
-static void SetMessageCallback(asIScriptEngine* engine);
-static bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const stringc& filename);
-static void BuildScript(CScriptBuilder* builder);
-static void LoadBytecode(CScriptBuilder* builder, const stringc& filename);
-static void SaveBytecode(CScriptBuilder* builder, const stringc& filename);
-static void Run(CScriptBuilder* builder, const stringc& path);
-void RegisterColdSteel(asIScriptEngine* engine);
 
 
 int main(int argc, char* argv[]) {
     csInit();
     const CompilerConfig config = ParseCommandLine(argc, argv);
-    asIScriptEngine *const engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-    SetMessageCallback(engine);
-    RegisterScriptArray(engine, true);
-    RegisterString(engine);
-    RegisterColdSteel(engine);
-    CScriptBuilder builder;
-#ifndef RUNTIME_ONLY
-    const bool scriptLoaded = LoadScript(&builder, engine, config.sourceFilename.c_str());
-    if (scriptLoaded)
-        BuildScript(&builder);
-    else
-#endif
-        LoadBytecode(&builder, config.bytecodeFilename.c_str());
-    if (config.mode == MODE_BUILD) SaveBytecode(&builder, config.bytecodeFilename.c_str());
-    else if (config.mode == MODE_RUN) Run(&builder, config.path);
-    engine->Release();
+    //if (config.path != "") csChangeDir(config.path.c_str());
+    Script script;
+    if (!script.Load(config.sourceFilename)) {
+        printf("%s\n", script.Error().c_str());
+    }
     return 0;
 }
 
@@ -75,7 +39,6 @@ static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
     CompilerConfig config;
     config.mode = MODE_RUN;
     for (int i = 1; i < argc-1; ++i) {
-#ifndef RUNTIME_ONLY
         if (strcmp(argv[i], "-check") == 0) {
             config.mode = MODE_CHECK;
         } else if (strcmp(argv[i], "-build") == 0) {
@@ -93,115 +56,11 @@ static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
             printf("Unrecognized argument: %s\n", argv[i]);
             exit(-1);
         }
-#else
-        if (strcmp(argv[i], "-run") != 0) {
-            stringc msg = stringc("Unrecognized argument: ") + argv[i];
-            tinyfd_notifyPopup("ColdSteel", msg.c_str(), "info");
-            exit(-1);
-        }
-#endif
     }
     config.sourceFilename = (argc > 1) ? argv[argc-1] : "";
     const int lastPathPos = config.sourceFilename.replace("\\", "/").findLast('/');
     config.path = (lastPathPos != -1)
         ? config.sourceFilename.subString(0, lastPathPos)
         : "";
-    config.bytecodeFilename = (config.path != "")
-        ? (config.path + "/code.bcd")
-        : "code.bcd";
     return config;
-}
-
-
-static void MessageCallback(const asSMessageInfo* msg, void*) {
-    stringc type =
-        (msg->type == asMSGTYPE_ERROR) ? "ERROR" :
-        (msg->type == asMSGTYPE_WARNING) ? "WARNING" :
-        "";
-    if (type != "") {
-        stringc text = stringc(msg->section) + " (" + csStr(msg->row) + ", " + csStr(msg->col) + ") " + type + ": " + msg->message;
-#ifndef RUNTIME_ONLY
-        printf("%s\n", text.c_str());
-#else
-        tinyfd_notifyPopup("ColdSteel", text.c_str(), csLower(type.c_str()));
-#endif
-    }
-}
-
-
-static void Print(const stringc& msg, const stringc& level) {
-#ifndef RUNTIME_ONLY
-    printf("%s: %s\n", csUpper(level.c_str()), msg.c_str());
-#else
-    tinyfd_notifyPopup("ColdSteel", msg.c_str(), level.c_str());
-#endif
-}
-
-
-static void SetMessageCallback(asIScriptEngine* engine) {
-    if (engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL) < 0) {
-        Print("Could not set message callback.", "error");
-        engine->Release();
-        exit(-1);
-    }
-}
-
-
-static bool LoadScript(CScriptBuilder* builder, asIScriptEngine* engine, const stringc& filename) {
-    if (builder->StartNewModule(engine, "MainModule") < 0) {
-        Print("Could not start main module.", "error");
-        engine->Release();
-        exit(-1);
-    }
-    if (filename != "") {
-        const stringc code = csLoadString(filename.c_str());
-        if (code == "" || builder->AddSectionFromMemory(filename.c_str(), code.c_str()) < 0) {
-            Print(stringc("Could not load script '") + filename + "'.", "error");
-            engine->Release();
-            exit(-1);
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-static void BuildScript(CScriptBuilder* builder) {
-    if (builder->BuildModule() < 0) {
-        builder->GetEngine()->Release();
-        exit(-1);
-    }
-}
-
-
-static void LoadBytecode(CScriptBuilder* builder, const stringc& filename) {
-    FileStream stream(filename.c_str(), false);
-    builder->GetModule()->LoadByteCode(&stream);
-}
-
-
-static void SaveBytecode(CScriptBuilder* builder, const stringc& filename) {
-    FileStream stream(filename.c_str(), true);
-    builder->GetModule()->SaveByteCode(&stream, true);
-}
-
-
-static void Run(CScriptBuilder* builder, const stringc& path) {
-    csChangeDir(path.c_str());
-    asIScriptContext* context = builder->GetEngine()->CreateContext();
-    asIScriptFunction* main = builder->GetModule()->GetFunctionByDecl("void Main()");
-    if (!main) {
-        printf("ERROR: 'void Main()' function is not defined in the script.");
-        exit(-1);
-    }
-    context->Prepare(main);
-    int ret = context->Execute();
-    if ( ret != asEXECUTION_FINISHED ) {
-        if ( ret == asEXECUTION_EXCEPTION ) {
-            printf("ERROR: Uncaught exception \"%s\"\n", context->GetExceptionString());
-            exit(-1);
-        }
-    }
-    context->Release();
 }
