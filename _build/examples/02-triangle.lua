@@ -1,27 +1,27 @@
-csOpenScreen(800, 600, 32, CSSCREEN_WINDOWED | CSSCREEN_RESIZABLE)
-csSetAmbient(csRGB(255, 255, 255))
+OpenScreen(800, 600, 32, SCREEN_WINDOWED | SCREEN_RESIZABLE)
+SetAmbient(RGB(255, 255, 255))
 
-local cam = csCreateCamera()
-csSetEntityPosition(cam, 0, 0, -2)
+local cam = CreateCamera()
+SetEntityPosition(cam, 0, 0, -2)
     
-local mesh = csCreateMesh()
-local surf = csAddSurface(mesh)
-csAddVertex(surf, 0, 0.5, 0, 0, 0, -1, csRGB(255, 0, 0), 0, 0)
-csAddVertex(surf, 0.5, -0.5, 0, 0, 0, -1, csRGB(0, 255, 0), 0, 0)
-csAddVertex(surf, -0.5, -0.5, 0, 0, 0, -1, csRGB(0, 0, 255), 0, 0)
-csAddIndex(surf, 0)
-csAddIndex(surf, 1)
-csAddIndex(surf, 2)
-csUpdateMesh(mesh)
+local mesh = CreateMesh()
+local surf = AddSurface(mesh)
+AddVertex(surf, 0, 0.5, 0, 0, 0, -1, RGB(255, 0, 0), 0, 0)
+AddVertex(surf, 0.5, -0.5, 0, 0, 0, -1, RGB(0, 255, 0), 0, 0)
+AddVertex(surf, -0.5, -0.5, 0, 0, 0, -1, RGB(0, 0, 255), 0, 0)
+AddIndex(surf, 0)
+AddIndex(surf, 1)
+AddIndex(surf, 2)
+UpdateMesh(mesh)
 
-local triangle = csCreateMeshEntity(mesh)
-csSetMaterialCullingEnabled(csEntityMaterial(triangle, 0), false)
+local triangle = CreateMeshEntity(mesh)
+SetMaterialCullingEnabled(EntityMaterial(triangle, 0), false)
 
-while csRun() and not csKeyDown(CSKEY_ESC) do
-    csTurnEntity(triangle, 0, 64 * csDeltaTime(), 0)
+while Run() and not KeyDown(KEY_ESC) do
+    TurnEntity(triangle, 0, 64 * DeltaTime(), 0)
 
-    csBeginDrawing(true, true, csRGB(255, 255, 255))
-    csDrawWorld(cam)
-    csDrawText(nil, csStr(csScreenFPS()) .. " FPS", 2, 2, csRGB(0, 0, 0))
-    csEndDrawing()
+    BeginDrawing(true, true, RGB(255, 255, 255))
+    DrawWorld(cam)
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(0, 0, 0))
+    EndDrawing()
 end
