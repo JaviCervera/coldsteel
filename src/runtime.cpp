@@ -31,6 +31,15 @@ int main(int argc, char* argv[]) {
     if (!script.Load(config.sourceFilename)) {
         printf("%s\n", script.Error().c_str());
     }
+    if (script.FunctionExists("Loop")) {
+        bool ok = true;
+        while (Run() && ok) {
+            ok = script.CallVoidFunction("Loop");
+        }
+        if (!ok) printf("%s\n", script.Error().c_str());
+    } else {
+        Run();
+    }
     return 0;
 }
 

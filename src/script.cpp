@@ -30,3 +30,25 @@ bool Script::Load(const stringc& filename) {
         return true;
     }
 }
+
+bool Script::FunctionExists(const stringc& name) const {
+    bool exists = false;
+    lua_getglobal(mState, name.c_str());
+    if (lua_isfunction(mState, -1)) exists = true;
+    lua_pop(mState, 1);
+    return exists;
+}
+
+
+bool Script::CallVoidFunction(const stringc& name) {
+    mError = "";
+    lua_getglobal(mState, name.c_str());
+    if (lua_isfunction(mState, -1)) {
+        if (lua_pcall(mState, 0, 1, 0)) mError = lua_tostring(mState, -1);
+        else if (!lua_isnil(mState, -1)) mError = stringc("'") + name + "' function cannot return a value";
+    } else {
+        mError = stringc("'") + name + "' function does not exist";
+    }
+    lua_pop(mState, 1);
+    return mError == "";
+}

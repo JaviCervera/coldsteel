@@ -17,7 +17,7 @@ UpdateMesh(mesh)
 local triangle = CreateMeshEntity(mesh)
 SetMaterialCullingEnabled(EntityMaterial(triangle, 0), false)
 
-while Run() and not KeyDown(KEY_ESC) do
+function Loop()
     TurnEntity(triangle, 0, 64 * DeltaTime(), 0)
 
     BeginDrawing(true, true, RGB(255, 255, 255))
