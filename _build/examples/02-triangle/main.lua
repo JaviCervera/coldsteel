@@ -1,4 +1,3 @@
-OpenScreen(800, 600, 32, SCREEN_WINDOWED | SCREEN_RESIZABLE)
 SetAmbient(RGB(255, 255, 255))
 
 local cam = CreateCamera()

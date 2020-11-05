@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "engine.h"
+#include "core.h"
+#include "dir.h"
+#include "screen.h"
 #include "script.h"
 
 
@@ -26,6 +28,7 @@ static CompilerConfig InitConfig();
 
 int main(int argc, char* argv[]) {
     Init();
+    OpenScreen(640, 480, 32, 0);
     const CompilerConfig config = InitConfig();
     //const CompilerConfig config = ParseCommandLine(argc, argv);
     //if (config.path != "") ChangeDir(config.path.c_str());
