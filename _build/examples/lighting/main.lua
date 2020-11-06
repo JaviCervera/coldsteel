@@ -31,6 +31,7 @@ for i = 1, 81 do
     SetEntityPosition(sphere, x, 0, z)
     local mat = EntityMaterial(sphere, 0)
     SetMaterialShininess(mat, 0.15)
+    SetMaterialSpecular(mat, RGB(255, 255, 255))
     spheres[i] = sphere
     x = x + 8
     if x > 32 then

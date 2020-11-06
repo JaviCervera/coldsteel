@@ -5,18 +5,21 @@
 extern "C" {
 
 
+IMesh* FixMeshSpecular(IMesh* mesh);
+
+
 EXPORT IMesh* CALL CreateCone(int segments) {
-    return _Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments);
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
 }
 
 
 EXPORT IMesh* CALL CreateCube() {
-    return _Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1));
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1)));
 }
 
 
 EXPORT IMesh* CALL CreateCylinder(int segments) {
-    return _Device()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments);
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments));
 }
 
 
@@ -26,14 +29,14 @@ EXPORT IMesh* CALL CreateMesh() {
 
 
 EXPORT IMesh* CALL CreateQuad() {
-    IMesh* quad = _Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1));
+    IMesh* quad = FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1)));
     RotateMesh(quad, -90, 0, 0);
     return quad;
 }
 
 
 EXPORT IMesh* CALL CreateSphere(int segments) {
-    return _Device()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments);
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments));
 }
 
 
@@ -150,6 +153,14 @@ EXPORT float CALL MeshDepth(IMesh* mesh) {
 
 bool_t _MeshAnimated(IMesh* mesh) {
     return _Device()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
+}
+
+
+IMesh* FixMeshSpecular(IMesh* mesh) {
+    for (u32 i = 0; i < mesh->getMeshBufferCount(); ++i) {
+        mesh->getMeshBuffer(i)->getMaterial().SpecularColor = SColor(255, 0, 0, 0);
+    }
+    return mesh;
 }
 
 
