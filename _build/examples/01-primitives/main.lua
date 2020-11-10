@@ -5,13 +5,11 @@ MAX_PRIMITIVES = 1000
 PRIM_LINE = 0
 PRIM_RECT = 1
 
--- This table represents a primitive on the screen
-Primitive = {}
-Primitive.__index = Primitive
+-- This class represents a primitive on the screen
+Primitive = class()
 
 function Primitive:New(type, color, x, y, z, w)
-    local self = {}
-    setmetatable(self, Primitive)
+    local self = self:new()
     self.type = type
     self.color = color
     self.x = x

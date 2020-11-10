@@ -2,6 +2,7 @@
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
 #include "script.h"
+#include "string.h"
 
 extern "C" int luaopen_coldsteel(lua_State* l);
 
@@ -14,6 +15,24 @@ Script::Script() {
 
     // Move definitions into global namespace
     luaL_dostring(mState, "for k,v in pairs(coldsteel) do _G[k]=v end");
+
+    // Define __class table
+    if (luaL_dostring(mState,   "__class = {} "
+                                "function __class:new() local obj = {} setmetatable(obj, self) return obj end "
+                                "__class.__index = __class")) {
+        mError = lua_tostring(mState, -1);
+    }
+
+    // Define class function
+    if (luaL_dostring(mState,   "function class(parent) "
+                                "if parent == nil then parent = __class end "
+                                "local c = {} "
+                                "setmetatable(c, parent) "
+                                "c.__index = c "
+                                "return c "
+                                "end")) {
+        mError = lua_tostring(mState, -1);
+    }
 }
 
 Script::~Script() {
