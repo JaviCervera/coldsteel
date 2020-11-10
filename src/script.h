@@ -16,4 +16,6 @@ public:
 private:
     lua_State* mState;
     stringc mError;
+    
+    static int Import(lua_State* L);
 };

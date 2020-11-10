@@ -9,10 +9,8 @@ Script::Script() {
     // Create lua state and register libs
     mState = luaL_newstate();
     luaL_requiref(mState, "_G", luaopen_base, true); lua_pop(mState, 1);
-    //luaL_requiref(mState, "string", luaopen_string, true); lua_pop(mState, 1);
-    //luaL_requiref(mState, "table", luaopen_table, true); lua_pop(mState, 1);
-    //luaL_requiref(mState, "math", luaopen_math, true); lua_pop(mState, 1);
     luaopen_coldsteel(mState);
+    lua_register(mState, "import", Import);
 
     // Move definitions into global namespace
     luaL_dostring(mState, "for k,v in pairs(coldsteel) do _G[k]=v end");
@@ -51,4 +49,26 @@ bool Script::CallVoidFunction(const stringc& name) {
     }
     lua_pop(mState, 1);
     return mError == "";
+}
+
+
+int Script::Import(lua_State* L) {
+    if (lua_gettop(L) > 0) {
+        const stringc filename = lua_tostring(L, 1);
+        const stringc buffer = LoadString(filename.c_str());
+        if (buffer == "") {
+            lua_pushstring(L, (stringc("File '") + filename + "' does not exist or is empty.").c_str());
+            lua_error(L);
+            return 0;
+        }
+        if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), filename.c_str()) == 0) {
+            lua_pcall(L, 0, LUA_MULTRET, 0);
+        } else {
+            lua_error(L);
+        }
+    } else {
+        lua_pushstring(L, "import requires filename argument.");
+        lua_error(L);
+    }
+    return 0;
 }
