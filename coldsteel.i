@@ -22,6 +22,7 @@ class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode()
 %include "src/input.h"
 %include "src/light.h"
 %include "src/listener.h"
+%include "src/log.h"
 %include "src/material.h"
 %include "src/math.h"
 %include "src/memblock.h"

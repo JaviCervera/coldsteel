@@ -79,10 +79,14 @@ XMLNode* _asParseXMLNode(IXMLReaderUTF8* xml);
 
 EXPORT XMLNode* CALL ParseXML(const char* filename) {
     IXMLReaderUTF8* reader = _Device()->getFileSystem()->createXMLReaderUTF8(filename);
-    while (_asPrepareNextXMLElement(reader) && reader->getNodeType() != EXN_ELEMENT) {}
-    return (reader->getNodeType() == EXN_ELEMENT)
-        ? _asParseXMLNode(reader)
-        : NULL;
+    if (reader != NULL) {
+        while (_asPrepareNextXMLElement(reader) && reader->getNodeType() != EXN_ELEMENT) {}
+        return (reader->getNodeType() == EXN_ELEMENT)
+            ? _asParseXMLNode(reader)
+            : NULL;
+    } else {
+        return NULL;
+    }
 }
 
 

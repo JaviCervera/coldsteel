@@ -105,11 +105,43 @@ EXPORT int CALL Len(const char* str) {
 }
 
 
-EXPORT const char* CALL Field(const char* str, const char* delimiter, int index) {
+static array<int> _DelimiterIndices(const stringc& str, const char* delimiter) {
+    array<int> indices;
+    int pos = 0;
+    const int size = strlen(delimiter);
+    while (pos != -1) {
+        pos = str.find(delimiter, pos);
+        if (pos != -1) {
+			indices.push_back(pos);
+			pos += size;
+		}
+    }
+    return indices;
+}
+
+
+EXPORT int CALL SplitCount(const char* str, const char* delimiter) {
+    return _DelimiterIndices(str, delimiter).size() + 1;
+}
+
+
+EXPORT const char* CALL SplitIndex(const char* str, const char* delimiter, int index) {
     static stringc retstr;
-    array<stringc> split;
-    stringc(str).split(split, delimiter, 1, false);
-    retstr = (split.size() >= index) ? split[index] : "";
+    const stringc s = str;
+    const array<int> indices = _DelimiterIndices(s, delimiter);
+    if (index == 0 && indices.size() == 0) {
+        retstr = s;
+    } else if (index == 0) {
+        retstr = s.subString(0, indices[0]);
+    } else if (index == indices.size()) {
+		const int size = strlen(delimiter);
+        retstr = s.subString(indices[index-1] + size, s.size() - indices[index-1] - size);
+    } else if (index > indices.size()) {
+        retstr = "";
+    } else {
+		const int size = strlen(delimiter);
+        retstr = s.subString(indices[index-1] + size, indices[index] - indices[index-1] - size);
+    }
     return retstr.c_str();
 }
 

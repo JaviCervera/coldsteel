@@ -11,6 +11,7 @@
 #include "input.h"
 #include "light.h"
 #include "listener.h"
+#include "log.h"
 #include "material.h"
 #include "memblock.h"
 #include "math.h"
