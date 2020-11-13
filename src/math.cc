@@ -82,6 +82,11 @@ EXPORT float CALL Log10(float val) {
 }
 
 
+EXPORT int CALL Int(float val) {
+    return (int)val;
+}
+
+
 EXPORT int CALL Rand(int min, int max) {
     return (rand() % (max - min)) + min;
 }

@@ -21,6 +21,7 @@ EXPORT float CALL ATan2(float x, float y);
 EXPORT float CALL Exp(float val);
 EXPORT float CALL Log(float val);
 EXPORT float CALL Log10(float val);
+EXPORT int CALL Int(float val);
 EXPORT int CALL Rand(int min, int max);
 EXPORT void CALL RandSeed(int seed);
 EXPORT float CALL Deg(float rad);
