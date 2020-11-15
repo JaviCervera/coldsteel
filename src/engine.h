@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bitwise.h"
 #include "camera.h"
 #include "channel.h"
 #include "core.h"

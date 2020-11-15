@@ -11,6 +11,7 @@ class IMeshSceneNode : public ISceneNode { protected: IMeshSceneNode(); };
 class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode(); };
 
 %include "src/common.h"
+%include "src/bitwise.h"
 %include "src/camera.h"
 %include "src/channel.h"
 %include "src/core.h"
