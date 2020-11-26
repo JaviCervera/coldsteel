@@ -1,5 +1,6 @@
 #include "core.h"
 #include "graphics.h"
+#include "math.h"
 
 extern "C" {
 
@@ -51,6 +52,11 @@ EXPORT void CALL SetRenderTarget(ITexture* tex, bool_t clear, bool_t clearDepth,
 
 EXPORT void CALL SetViewport(int x, int y, int width, int height) {
     _Device()->getVideoDriver()->setViewPort(recti(x, y, width + x, height + y));
+}
+
+
+EXPORT void CALL DrawPoint(int x, int y, int color) {
+    DrawLine(x, y, x, y, color);
 }
 
 
