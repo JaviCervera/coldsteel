@@ -36,11 +36,9 @@ EXPORT float CALL CameraFOV(ICameraSceneNode* cam) {
 }
 
 
-EXPORT void CALL SetCameraProjection(ICameraSceneNode* cam, float width, float height, float near_, float far_, bool_t ortho) {
-    const matrix4 mat = (ortho)
-        ? matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_)
-        : matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_);
-    cam->setProjectionMatrix(mat);
+EXPORT void CALL SetCameraOrtho(ICameraSceneNode* cam, float width, float height, float near_, float far_) {
+    const matrix4 mat = matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_);
+    cam->setProjectionMatrix(mat, true);
 }
 
 

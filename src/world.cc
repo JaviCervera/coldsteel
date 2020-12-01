@@ -67,7 +67,7 @@ EXPORT void CALL DrawWorld(ICameraSceneNode* camera) {
     matrix4 matrix = camera->getAbsoluteTransformation();
     matrix.transformVect(dest);
     camera->setTarget(dest);
-    camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
+    if (!camera->isOrthogonal()) camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
     _Device()->getSceneManager()->setActiveCamera(camera);
     _Device()->getSceneManager()->drawAll();
 }
