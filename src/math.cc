@@ -82,6 +82,21 @@ EXPORT float CALL Log10(float val) {
 }
 
 
+EXPORT float CALL Min(float a, float b) {
+    return (a < b) ? a : b;
+}
+
+
+EXPORT float CALL Max(float a, float b) {
+    return (a > b) ? a : b;
+}
+
+
+EXPORT float CALL Clamp(float val, float min, float max) {
+    return Min(Max(val, min), max);
+}
+
+
 EXPORT int CALL Int(float val) {
     return (int)val;
 }
