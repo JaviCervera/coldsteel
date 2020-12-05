@@ -97,6 +97,11 @@ EXPORT float CALL Clamp(float val, float min, float max) {
 }
 
 
+EXPORT int CALL BoolToInt(bool_t val) {
+    return val ? 1 : 0;
+}
+
+
 EXPORT int CALL Int(float val) {
     return (int)val;
 }

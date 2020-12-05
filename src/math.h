@@ -24,6 +24,7 @@ EXPORT float CALL Log10(float val);
 EXPORT float CALL Min(float a, float b);
 EXPORT float CALL Max(float a, float b);
 EXPORT float CALL Clamp(float val, float min, float max);
+EXPORT int CALL BoolToInt(bool_t val);
 EXPORT int CALL Int(float val);
 EXPORT int CALL Rand(int min, int max);
 EXPORT void CALL RandSeed(int seed);
