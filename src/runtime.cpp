@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
     } else {
         Run();
     }
+    CloseScreen();
     return 0;
 }
 
