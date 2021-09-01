@@ -28,7 +28,7 @@ static CompilerConfig InitConfig();
 
 int main(int argc, char* argv[]) {
     Init();
-    OpenScreen(640, 480, 32, 0);
+    OpenScreen(640, 480, 32, SCREEN_WINDOWED);
     const CompilerConfig config = InitConfig();
     //const CompilerConfig config = ParseCommandLine(argc, argv);
     //if (config.path != "") ChangeDir(config.path.c_str());
