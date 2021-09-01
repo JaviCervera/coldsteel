@@ -20,12 +20,14 @@ struct CompilerConfig {
 };
 
 
-static CompilerConfig ParseCommandLine(int argc, char* argv[]);
+static CompilerConfig InitConfig();
+//static CompilerConfig ParseCommandLine(int argc, char* argv[]);
 
 
 int main(int argc, char* argv[]) {
     Init();
-    const CompilerConfig config = ParseCommandLine(argc, argv);
+    const CompilerConfig config = InitConfig();
+    //const CompilerConfig config = ParseCommandLine(argc, argv);
     //if (config.path != "") ChangeDir(config.path.c_str());
     Script script;
     if (!script.Load(config.sourceFilename)) {
@@ -44,6 +46,16 @@ int main(int argc, char* argv[]) {
 }
 
 
+static CompilerConfig InitConfig() {
+    CompilerConfig config;
+    config.mode = MODE_RUN;
+    config.sourceFilename = "main.lua";
+    config.path = "";
+    return config;
+}
+
+
+/*
 static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
     CompilerConfig config;
     config.mode = MODE_RUN;
@@ -73,3 +85,4 @@ static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
         : "";
     return config;
 }
+*/
