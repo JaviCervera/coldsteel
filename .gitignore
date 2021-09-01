@@ -1,4 +1,5 @@
 _build/*
+!_build/geany
 _build/examples/*.bcd
 _CMAKE
 src/lua_wrapper.cpp
