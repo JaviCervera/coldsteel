@@ -22,16 +22,16 @@ struct CompilerConfig {
 };
 
 
-static CompilerConfig InitConfig();
+static CompilerConfig InitConfig(int argc, char* argv[]);
 //static CompilerConfig ParseCommandLine(int argc, char* argv[]);
 
 
 int main(int argc, char* argv[]) {
     Init();
-    OpenScreen(640, 480, 32, SCREEN_WINDOWED);
-    const CompilerConfig config = InitConfig();
+    const CompilerConfig config = InitConfig(argc, argv);
     //const CompilerConfig config = ParseCommandLine(argc, argv);
-    //if (config.path != "") ChangeDir(config.path.c_str());
+    if (config.path != "") ChangeDir(config.path.c_str());
+    OpenScreen(640, 480, 32, SCREEN_WINDOWED);
     Script script;
     if (!script.Load(config.sourceFilename)) {
         printf("%s\n", script.Error().c_str());
@@ -50,11 +50,11 @@ int main(int argc, char* argv[]) {
 }
 
 
-static CompilerConfig InitConfig() {
+static CompilerConfig InitConfig(int argc, char* argv[]) {
     CompilerConfig config;
     config.mode = MODE_RUN;
     config.sourceFilename = "main.lua";
-    config.path = "";
+    config.path = (argc > 1) ? (stringc(argv[1]) + "/") : "";
     return config;
 }
 
