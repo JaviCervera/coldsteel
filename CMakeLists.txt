@@ -5,11 +5,15 @@ cmake_minimum_required(VERSION 3.0)
 project(coldsteel)
 
 #Define file groups
-file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/*.cpp" "src/runtime.rc" "lib/lua/*.c")
+file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/*.cpp" "src/runtime.rc" "lib/lua/*.c" "lib/stb/stb_vorbis.c")
 
 #Add header and lib directories
 include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
 link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/openal)
+	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/openal)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 #Add executable targets
 add_executable(coldsteel ${COLDSTEEL_EXE_FILES})
@@ -28,7 +32,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
 	endif (MSVC)
-	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(coldsteel -lIrrlicht -lOpenAL32 -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	#add_definitions(-std=c++11 -stdlib=libc++)

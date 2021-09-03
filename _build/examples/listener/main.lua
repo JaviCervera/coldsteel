@@ -65,7 +65,7 @@ SetMaterialVertexColorsEnabled(mat, false)
 FreeMesh(mesh)
 
 -- Play sound
-local sound = LoadSound("heli.wav")
+local sound = LoadSound("heli.ogg")
 local channel = PlaySound(sound, true)
 
 local mxSpeed = 0

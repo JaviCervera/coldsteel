@@ -8,6 +8,7 @@ extern "C" {
 
 
 EXPORT void CALL Init();
+EXPORT void CALL Finish();
 EXPORT bool_t CALL Run();
 EXPORT float CALL DeltaTime();
 EXPORT int CALL Millisecs();
