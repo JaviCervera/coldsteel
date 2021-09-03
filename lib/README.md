@@ -1,6 +1,6 @@
 # Libraries used
 
-## Irrlicht 1.8.4
+## Modified Irrlicht 1.8.4 (from sdl-device branch of [this repo](https://github.com/JaviCervera/irrlicht-mod))
 
 Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
