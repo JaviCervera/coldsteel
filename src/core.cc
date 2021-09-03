@@ -1,4 +1,5 @@
 #include "core.h"
+#include "dir.h"
 #include "input.h"
 #include "screen.h"
 
@@ -58,6 +59,7 @@ void _SetDevice(IrrlichtDevice* device) {
     _initMillisecs = _device->getTimer()->getRealTime();
     _lastMillisecs = 0;
     _delta = 0.0f;
+    AddZip("package.dat");
 }
 
 

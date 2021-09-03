@@ -6,6 +6,7 @@
 
 extern "C" int luaopen_coldsteel(lua_State* l);
 
+
 Script::Script() {
     // Create lua state and register libs
     mState = luaL_newstate();
@@ -35,18 +36,23 @@ Script::Script() {
     }
 }
 
+
 Script::~Script() {
     lua_close(mState);
 }
 
+
 bool Script::Load(const stringc& filename) {
-    if (luaL_dofile(mState, filename.c_str())) {
+    const stringc buffer = LoadString(filename.c_str());
+    if (luaL_loadbuffer(mState, buffer.c_str(), buffer.size(), filename.c_str())
+            || lua_pcall(mState, 0, LUA_MULTRET, 0)) {
         mError = lua_tostring(mState, -1);
         return false;
     } else {
         return true;
     }
 }
+
 
 bool Script::FunctionExists(const stringc& name) const {
     bool exists = false;
