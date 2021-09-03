@@ -1,4 +1,3 @@
-#include "channel.h"
 #include "listener.h"
 
 static vector3df _position;
@@ -11,7 +10,6 @@ extern "C" {
 EXPORT void CALL SetListener(float x, float y, float z, float yaw) {
     _position.set(x, y, z);
     _yaw = yaw;
-    _UpdateChannels();
 }
 
 EXPORT float CALL ListenerX() {

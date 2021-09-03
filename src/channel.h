@@ -19,9 +19,6 @@ EXPORT void CALL SetChannelPan(int channel, float pan);
 EXPORT bool_t CALL ChannelPlaying(int channel);
 
 
-void _InitChannel(int channel);
-void _UpdateChannels();
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
