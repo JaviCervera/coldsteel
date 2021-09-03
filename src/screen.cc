@@ -48,6 +48,8 @@ class EventReceiver : public IEventReceiver {
                     case EGET_COMBO_BOX_CHANGED:
                         _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
                         break;
+                    default:
+                        break;
                 }
                 break;
             case EET_JOYSTICK_INPUT_EVENT:
@@ -79,7 +81,11 @@ class EventReceiver : public IEventReceiver {
                     case EMIE_MMOUSE_LEFT_UP:
                         _SetButtonDown(BUTTON_MIDDLE, false);
                         break;
+                    default:
+                        break;
                 }
+                break;
+            default:
                 break;
         }
         return false;

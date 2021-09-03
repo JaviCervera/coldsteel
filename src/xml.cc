@@ -172,6 +172,8 @@ XMLNode* _asParseXMLNode(IXMLReaderUTF8* xml) {
                 case EXN_TEXT:
                     text += xml->getNodeData();
                     break;
+                default:
+                    break;
             }
         }
     }
