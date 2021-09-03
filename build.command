@@ -11,12 +11,12 @@ mkdir _CMAKE/_IRRLICHT
 
 echo "# Configuring Irrlicht ..."
 cd _CMAKE/_IRRLICHT
-cmake -G "Unix Makefiles" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DCMAKE_CXX_FLAGS="-DNO_IRR_COMPILE_WITH_SOFTWARE_ -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht
+cmake -G "Unix Makefiles" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_CXX_FLAGS="-DNO_IRR_COMPILE_WITH_SOFTWARE_ -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht
 cd ../..
 
 echo "# Configuring ColdSteel ..."
 cd _CMAKE/_COLDSTEEL
-cmake -G "Unix Makefiles" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DCMAKE_BUILD_TYPE=MinSizeRel ../..
+cmake -G "Unix Makefiles" -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 -DCMAKE_BUILD_TYPE=MinSizeRel ../..
 cd ../..
 
 echo "# Compiling Irrlicht ..."

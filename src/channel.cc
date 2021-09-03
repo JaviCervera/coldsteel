@@ -1,4 +1,8 @@
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#else
 #include <AL/al.h>
+#endif
 #define STB_VORBIS_HEADER_ONLY
 #include "../lib/stb/stb_vorbis.c"
 #include "channel.h"
