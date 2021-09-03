@@ -75,6 +75,9 @@ EXPORT void CALL Draw3DLine(float x1, float y1, float z1, float x2, float y2, fl
 }
 
 
+} // extern "C"
+
+
 SColor _Color(int color) {
     return SColor(AlphaVal(color), RedVal(color), GreenVal(color), BlueVal(color));
 }
@@ -83,6 +86,3 @@ SColor _Color(int color) {
 int _IntColor(const SColor& color) {
     return RGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 }
-
-
-} // extern "C"
