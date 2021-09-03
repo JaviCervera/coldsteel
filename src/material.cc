@@ -94,7 +94,7 @@ EXPORT void CALL SetMaterialRenderMode(SMaterial* material, int mode) {
 EXPORT int CALL MaterialRenderMode(SMaterial* material) {
     if (material->getFlag(EMF_POINTCLOUD)) return RENDER_POINTCLOUD;
     else if (material->getFlag(EMF_WIREFRAME)) return RENDER_WIREFRAME;
-    else return RENDER_NORMAL;
+    else return RENDER_FILLED;
 }
 
 

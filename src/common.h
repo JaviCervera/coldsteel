@@ -90,7 +90,7 @@ using namespace gui;
 #define MATERIAL_PARALLAXADD 14
 
 // Render modes
-#define RENDER_NORMAL 0
+#define RENDER_FILLED 0
 #define RENDER_WIREFRAME 1
 #define RENDER_POINTCLOUD 2
 
