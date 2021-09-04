@@ -1,83 +1,134 @@
-#include <SDL/SDL_mixer.h>
-#include "filebuffer.h"
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#else
+#include <AL/al.h>
+#endif
+#define STB_VORBIS_HEADER_ONLY
+#include "../lib/stb/stb_vorbis.c"
 #include "music.h"
-#include "string.h"
-
-static FileBuffer* _filebuffer = NULL;
-static Mix_Music* _music = NULL;
-
 
 extern "C" {
 
 
-static Mix_MusicType _MusicType(const char* filename);
+struct AudioStream {
+    ALuint source;
+    stb_vorbis* stream;
+    stb_vorbis_info info;
+    ALuint buffers[2];
+    size_t samplesLeft;
+    bool_t loop;
+
+    AudioStream(ALuint source, stb_vorbis* stream, bool_t loop) : stream(stream), samplesLeft(0), loop(loop) {
+        memset(&info, 0, sizeof(stb_vorbis_info));
+        buffers[0] = 0;
+        buffers[1] = 0;
+    }
+};
+
+
+static bool_t _UpdateStream(AudioStream* stream, size_t bufferIndex);
+
+static AudioStream* _music = NULL;
 
 
 EXPORT bool_t CALL PlayMusic(const char* filename, bool_t loop) {
-    if (_music != NULL) StopMusic();
-    _filebuffer = new FileBuffer(filename);
-    if (_filebuffer->Size() > 0) {
-        SDL_RWops* rw = SDL_RWFromConstMem(_filebuffer->Buffer(), _filebuffer->Size());
-        _music = Mix_LoadMUSType_RW(rw, _MusicType(filename), true);
-        if (_music != NULL) {
-            Mix_PlayMusic(_music, loop ? -1 : 1);
-            return TRUE;
-        }
-    } else {
-        delete _filebuffer;
-        _filebuffer = NULL;
-    }
-    return FALSE;
+    StopMusic();
+
+    stb_vorbis* oggStream = stb_vorbis_open_filename(filename, NULL, NULL);
+    if (!oggStream) return false;
+
+    ALuint source;
+    alGenSources(1, &source);
+
+    _music = new AudioStream(source, oggStream, loop);
+    _music->info = stb_vorbis_get_info(oggStream);
+    _music->samplesLeft = stb_vorbis_stream_length_in_samples(oggStream) * _music->info.channels;
+
+    alGenBuffers(2, _music->buffers);
+    if (!_UpdateStream(_music, 0)) { StopMusic(); return false; }
+    if (!_UpdateStream(_music, 1)) { StopMusic(); return false; }
+    alSourceQueueBuffers(_music->source, 2, _music->buffers);
+
+    return true;
 }
 
 
 EXPORT void CALL StopMusic() {
-    if (_music != NULL) {
-        Mix_HaltMusic();
-        Mix_FreeMusic(_music);
-        delete _filebuffer;
-        _music = NULL;
-        _filebuffer = NULL;
+    if (_music) {
+        alDeleteSources(1, &_music->source);
+        alDeleteBuffers(2, _music->buffers);
+        stb_vorbis_close(_music->stream);
+        delete _music;
     }
+    _music = NULL;
 }
 
 
 EXPORT void CALL PauseMusic() {
-    Mix_PauseMusic();
+    if (_music) {
+        alSourcePause(_music->source);
+    }
 }
 
 
 EXPORT void CALL ResumeMusic() {
-    Mix_ResumeMusic();
+    if (_music) {
+        alSourcePlay(_music->source);
+    }
 }
 
 
 EXPORT void CALL SetMusicVolume(float volume) {
-    Mix_VolumeMusic(int(volume*128));
+    if (_music) {
+        alSourcef(_music->source, AL_GAIN, volume);
+    }
 }
 
 
 EXPORT bool_t CALL MusicPlaying() {
-    return Mix_PlayingMusic();
+    if (_music) {
+        int state;
+        alGetSourcei(_music->source, AL_SOURCE_STATE, &state);
+        return state == AL_PLAYING;
+    } else {
+        return false;
+    }
+}
+
+void _UpdateMusic() {
+    if (_music) {
+        ALint processed = 0;
+        alGetSourcei(_music->source, AL_BUFFERS_PROCESSED, &processed);
+        while (processed--) {
+            ALuint buffer;
+            alSourceUnqueueBuffers(_music->source, 1, &buffer);
+            bool streamOk = _UpdateStream(_music, buffer);
+            if (streamOk) {
+                alSourceQueueBuffers(_music->source, 1, &buffer);
+            } else if (_music->loop) {
+                stb_vorbis_seek_start(_music->stream);
+                _music->samplesLeft = stb_vorbis_stream_length_in_samples(_music->stream) * _music->info.channels;
+                if ( _UpdateStream(_music, buffer) ) alSourceQueueBuffers(_music->source, 1, &buffer);
+            }
+        }
+    }
 }
 
 
-static Mix_MusicType _MusicType(const char* filename) {
-    const int len = Len(filename);
-    const stringc lower = Lower(filename);
-    const stringc last5 = (len >= 5) ? Right(lower.c_str(), 5) : "";
-    const stringc last4 = (len >= 4) ? Right(lower.c_str(), 4) : "";
-    if (last4 == ".wav") return MUS_WAV;
-    if (last4 == ".mid") return MUS_MID;
-    if (last5 == ".midi") return MUS_MID;
-    if (last4 == ".kar") return MUS_MID;
-    if (last4 == ".ogg") return MUS_OGG;
-    if (last5 == ".flac") return MUS_FLAC;
-    if (last4 == ".mp3") return MUS_MP3;
-    if (last4 == ".mpg") return MUS_MP3;
-    if (last5 == ".mpeg") return MUS_MP3;
-    if (last4 == ".mad") return MUS_MP3;
-    return MUS_WAV;
+#define BUFFER_SIZE 4096*8
+
+
+static bool_t _UpdateStream(AudioStream* stream, size_t bufferIndex) {
+    ALshort pcm[BUFFER_SIZE];
+    int size = stb_vorbis_get_samples_short_interleaved(stream->stream, stream->info.channels, pcm, BUFFER_SIZE);
+    if (size == 0) return false;
+    alBufferData(
+        stream->buffers[bufferIndex],
+        stream->info.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
+        pcm,
+        size * stream->info.channels * sizeof(ALshort), stream->info.sample_rate);
+    stream->samplesLeft -= size;
+    return true;
 }
 
 

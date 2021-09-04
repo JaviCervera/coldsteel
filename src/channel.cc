@@ -1,108 +1,107 @@
-#include <SDL/SDL_mixer.h>
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#else
+#include <AL/al.h>
+#endif
+#define STB_VORBIS_HEADER_ONLY
+#include "../lib/stb/stb_vorbis.c"
 #include "channel.h"
 #include "listener.h"
 #include "math.h"
 
-struct ChannelInfo {
-    float radius;
-    vector3df position;
-
-    ChannelInfo() : radius(-1), position(0, 0, 0) {}
-};
-
-static ChannelInfo _channels[MIX_CHANNELS];
-
-
 extern "C" {
 
 
-static void _UpdateChannel(int channel);
+struct Channel {
+    ALuint id;
+    vector3df position;
+    float radius;
+    Channel(ALuint id, float radius) : id(id), position(0, 0, 0), radius(radius) {}
+};
 
 
-EXPORT void CALL StopChannel(int channel) {
-    Mix_HaltChannel(channel);
+Channel* _PlayChannel(Sound* sound, bool_t loop) {
+    ALuint source;
+    alGenSources(1, &source);
+    alSourcei(source, AL_BUFFER, *((ALuint*)sound));
+    alSourcei(source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+
+    Channel* channel = new Channel(source, 100);
+    SetChannelPitch(channel, 1);
+    SetChannelVolume(channel, 1);
+    SetChannelPosition(channel, channel->position.X, channel->position.Y, channel->position.Z, channel->radius);
+    alSourcePlay(source);
+    return channel;
 }
 
 
-EXPORT void CALL PauseChannel(int channel) {
-    Mix_Pause(channel);
-}
-
-
-EXPORT void CALL ResumeChannel(int channel) {
-    Mix_Resume(channel);
-}
-
-
-EXPORT void CALL SetChannelPosition(int channel, float x, float y, float z, float radius) {
-    _channels[channel].position = vector3df(x, y, z);
-    _channels[channel].radius = radius;
-    _UpdateChannel(channel);
-}
-
-
-EXPORT float CALL ChannelX(int channel) {
-    return _channels[channel].position.X;
-}
-
-
-EXPORT float CALL ChannelY(int channel) {
-    return _channels[channel].position.Y;
-}
-
-
-EXPORT float CALL ChannelZ(int channel) {
-    return _channels[channel].position.Z;
-}
-
-
-EXPORT float CALL ChannelRadius(int channel) {
-    return _channels[channel].radius;
-}
-
-
-EXPORT void CALL SetChannelVolume(int channel, float volume) {
-    Mix_Volume(channel, (int)(volume*128));
-}
-
-
-EXPORT void CALL SetChannelPan(int channel, float pan) {
-    Uint8 left = 255, right = 255;
-    if (pan < 0) right = 255 - (Uint8)(pan * -255);
-    else if (pan > 0) left = 255 - (Uint8)(pan * 255);
-    Mix_SetPanning(channel, left, right);
-}
-
-
-EXPORT bool_t CALL ChannelPlaying(int channel) {
-    return Mix_Playing(channel);
-}
-
-
-void _UpdateChannels() {
-    for (int i = 0; i < MIX_CHANNELS; ++i) {
-        if (ChannelPlaying(i) && _channels[i].radius > -1) {
-            _UpdateChannel(i);
-        }
+EXPORT void CALL StopChannel(Channel* channel) {
+    if (channel) {
+        alSourceStop(channel->id);
+        alDeleteSources(1, &channel->id);
+        delete channel;
     }
 }
 
 
-
-void _InitChannel(int channel) {
-    _channels[channel] = ChannelInfo();
+EXPORT void CALL PauseChannel(Channel* channel) {
+    alSourcePause(channel->id);
 }
 
 
-static void _UpdateChannel(int channel) {
-    float distx = ListenerX() - ChannelX(channel);
-    float disty = ListenerY() - ChannelY(channel);
-    float distz = ListenerZ() - ChannelZ(channel);
-    float angle = Wrap((-ATan2(distz, distx) - 90) - ListenerYaw(), 360);
-    float dist = (float)sqrt(distx*distx + disty*disty + distz*distz);
-    dist = dist * 255 / ChannelRadius(channel);
-    if (dist > 255) dist = 255; // Wrap in 0 .. 255
-    Mix_SetPosition(channel, (Sint16)angle, (Uint8)dist);
+EXPORT void CALL ResumeChannel(Channel* channel) {
+    alSourcePlay(channel->id);
+}
+
+
+EXPORT void CALL SetChannelPosition(Channel* channel, float x, float y, float z, float radius) {
+    alSource3f(channel->id, AL_POSITION, x, y, z);
+    alSourcef(channel->id, AL_REFERENCE_DISTANCE, radius);
+    // TODO Set velocity
+    channel->position = vector3df(x, y, z);
+    channel->radius = radius;
+}
+
+
+EXPORT float CALL ChannelX(Channel* channel) {
+    return channel->position.X;
+}
+
+
+EXPORT float CALL ChannelY(Channel* channel) {
+    return channel->position.Y;
+}
+
+
+EXPORT float CALL ChannelZ(Channel* channel) {
+    return channel->position.Z;
+}
+
+
+EXPORT float CALL ChannelRadius(Channel* channel) {
+    return channel->radius;
+}
+
+
+EXPORT void CALL SetChannelPitch(Channel* channel, float pitch) {
+    alSourcef(channel->id, AL_PITCH, pitch);
+}
+
+
+EXPORT void CALL SetChannelVolume(Channel* channel, float volume) {
+    alSourcef(channel->id, AL_GAIN, volume);
+}
+
+
+EXPORT void CALL SetChannelPan(Channel* channel, float pan) {
+    // TODO: Set radius to 2 and disable attenuation
+}
+
+
+EXPORT bool_t CALL ChannelPlaying(Channel* channel) {
+    int state;
+    alGetSourcei(channel->id, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING;
 }
 
 

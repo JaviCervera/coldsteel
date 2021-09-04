@@ -1,5 +1,3 @@
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
 #include "core.h"
 #include "gui.h"
 #include "input.h"
@@ -126,13 +124,6 @@ EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, void*
     _SetDevice(createDeviceEx(params));
     _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
     _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
-
-    // Init audio
-    if (SDL_WasInit(SDL_INIT_EVERYTHING) == 0) SDL_Init(SDL_INIT_AUDIO);
-    if (SDL_WasInit(SDL_INIT_AUDIO) == 0) SDL_InitSubSystem(SDL_INIT_AUDIO);
-    Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG);
-    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
-    SetListener(0, 0, 0, 0);
     
     // Init gui skin
     IGUISkin* skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
@@ -147,7 +138,6 @@ EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, void*
 
 
 EXPORT void CALL CloseScreen() {
-    Mix_Quit();
     _SetDevice(NULL);
 }
 

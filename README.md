@@ -1,6 +1,6 @@
 # ![icon](logo.png) ColdSteel
 
-A 3D game engine for Windows, macOS and Linux released under the GPL3 license.
+A 3D game engine for Windows and Linux released under the GPL3 license.
 
 ## Setting up Geany
 

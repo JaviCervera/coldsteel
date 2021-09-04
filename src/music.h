@@ -14,6 +14,10 @@ EXPORT void CALL ResumeMusic();
 EXPORT void CALL SetMusicVolume(float volume);
 EXPORT bool_t CALL MusicPlaying();
 
+#ifndef SWIG
+void _UpdateMusic();
+#endif
+
 
 #ifdef __cplusplus
 } /* extern "C" */

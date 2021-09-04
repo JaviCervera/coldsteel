@@ -6,21 +6,26 @@
 extern "C" {
 #endif
 
-EXPORT void CALL StopChannel(int channel);
-EXPORT void CALL PauseChannel(int channel);
-EXPORT void CALL ResumeChannel(int channel);
-EXPORT void CALL SetChannelPosition(int channel, float x, float y, float z, float radius);
-EXPORT float CALL ChannelX(int channel);
-EXPORT float CALL ChannelY(int channel);
-EXPORT float CALL ChannelZ(int channel);
-EXPORT float CALL ChannelRadius(int channel);
-EXPORT void CALL SetChannelVolume(int channel, float volume);
-EXPORT void CALL SetChannelPan(int channel, float pan);
-EXPORT bool_t CALL ChannelPlaying(int channel);
+struct Channel;
+struct Sound;
 
+#ifndef SWIG
+Channel* _PlayChannel(Sound* sound, bool_t loop);
+#endif
 
-void _InitChannel(int channel);
-void _UpdateChannels();
+EXPORT void CALL StopChannel(Channel* channel);
+EXPORT void CALL PauseChannel(Channel* channel);
+EXPORT void CALL ResumeChannel(Channel* channel);
+EXPORT void CALL SetChannelPosition(Channel* channel, float x, float y, float z, float radius);
+EXPORT float CALL ChannelX(Channel* channel);
+EXPORT float CALL ChannelY(Channel* channel);
+EXPORT float CALL ChannelZ(Channel* channel);
+EXPORT float CALL ChannelRadius(Channel* channel);
+EXPORT void CALL SetChannelPitch(Channel* channel, float pitch);
+EXPORT void CALL SetChannelVolume(Channel* channel, float volume);
+EXPORT void CALL SetChannelPan(Channel* channel, float pan);
+EXPORT bool_t CALL ChannelPlaying(Channel* channel);
+
 
 #ifdef __cplusplus
 } /* extern "C" */
