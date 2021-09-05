@@ -41,4 +41,5 @@ src/lua_wrapper.cpp
 # Exceptions
 !_build/examples
 !_build/*.dll
+!lib/openal/OpenAL32.lib
 !upx.exe
