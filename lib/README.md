@@ -1,6 +1,14 @@
 # Libraries used
 
-## Modified Irrlicht 1.8.4 (from sdl-device branch of [this repo](https://github.com/JaviCervera/irrlicht-mod))
+## Irrlicht
+
+Desktop version uses a modified version of Irrlicht 1.8.4, taken from [this repo](https://github.com/JaviCervera/irrlicht-mod)).
+
+Emscripten version uses a modified version of Irrlicht 1.9.0 from the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
+
+The modifications made to the engine are described here:
+
+### Common
 
 Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
@@ -59,55 +67,38 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
 Also, a couple of changes have been made in `include/SMaterial.h` to change the default use of vertex colors in lighting.
 
-Change line 235 to:
+Search for `ColorMaterial(ECM_DIFFUSE), BlendOperation(EBO_NONE),` and replace with:
 
 ```c++
 ColorMaterial(ECM_DIFFUSE_AND_AMBIENT), BlendOperation(EBO_NONE),
 ```
 
-And line 552 to:
+Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with:
 
 ```c++
 ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
 ```
 
-### Windows
+### Emscripten (Irrlicht 1.9.0 only)
 
-It has been compiled with MinGW-W64-builds-4.3.5, which was configured with the following flags:
+To have a compressed data package added by default to the filesystem, add the following as line 11
+of file `source/Irrlicht/CIrrDeviceSDL.cpp`:
 
-```bash
---mode=gcc-8.1.0
---buildroot=/c/mingw810
---jobs=2
---rev=0
---rt-version=trunk
---bootstrap
---threads=win32
---exceptions=sjlj
---arch=i686
---bin-compress
+```c++
+#include "IFileSystem.h"
 ```
 
-Irrlicht's Code::Blocks project was used to build it. The *Win32 - Release - fast math - static* target has been used.
-In *Project / Build Options...*, the following options were selected for the specified target:
+And the following right before line 271:
 
-* Static linking [-static]
-* Target x86 (32bit) [-m32]
-* Optimize generated code (for size) [-Os]
-* Strip all symbols from binary (minimizes size) [-s]
-
-In the "Other compiler options" tab of the same panel, the following options we added:
-
-* -fno-exceptions
-* -fno-rtti
-
-
-Irrlicht is being compiled with the SDL device, which uses SDL 1.2.15. You can download the MinGW development libraries
-[here](http://libsdl.org/release/SDL-devel-1.2.15-mingw32.tar.gz). Then, extract the package and copy the *include/SDL*
-folder into the *include* folder of Irrlicht (so it contains the *SDL* folder itself, do not extract the files directly).
-
+```c++
+#ifdef EMSCRIPTEN
+FileSystem->addFileArchive("package.dat", true, false, io::EFAT_ZIP);
+#endif
+```
 
 ### macOS
+
+**NOTE: This is already done in the branch used for Irrlicht 1.8.4. Need to check whether it is required on 1.9.0.**
 
 Architecture has been changed to *Universal (32/64-bit Intel)*. On *macOS Deployment Target*, it has been set to *10.6*.
 On the top of the file `CIrrDeviceMacOSX.mm`, the following needed to be added:

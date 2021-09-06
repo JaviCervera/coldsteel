@@ -1,3 +1,6 @@
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +9,8 @@
 #include "dir.h"
 #include "screen.h"
 #include "script.h"
+#include "string.h"
+#include "xml.h"
 
 
 enum CompilerMode {
@@ -19,10 +24,18 @@ struct CompilerConfig {
     CompilerMode mode;
     stringc sourceFilename;
     stringc path;
+    int screenWidth;
+    int screenHeight;
+    int screenFps;
 };
 
 
+static Script gScript;
+
+
 static CompilerConfig InitConfig(int argc, char* argv[]);
+static void MainLoop();
+static void EmscriptenMainLoop();
 //static CompilerConfig ParseCommandLine(int argc, char* argv[]);
 
 
@@ -31,17 +44,16 @@ int main(int argc, char* argv[]) {
     const CompilerConfig config = InitConfig(argc, argv);
     //const CompilerConfig config = ParseCommandLine(argc, argv);
     if (config.path != "") ChangeDir(config.path.c_str());
-    OpenScreen(640, 480, 32, SCREEN_WINDOWED);
-    Script script;
-    if (!script.Load(config.sourceFilename)) {
-        printf("%s\n", script.Error().c_str());
+    OpenScreen(config.screenWidth, config.screenHeight, 32, SCREEN_WINDOWED);
+    if (!gScript.Load(config.sourceFilename)) {
+        _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
     }
-    if (script.FunctionExists("Loop")) {
-        bool ok = true;
-        while (Run() && ok) {
-            ok = script.CallVoidFunction("Loop");
-        }
-        if (!ok) printf("%s\n", script.Error().c_str());
+    if (gScript.FunctionExists("Loop")) {
+#ifdef __EMSCRIPTEN__
+        emscripten_set_main_loop(EmscriptenMainLoop, config.screenFps, true);
+#else
+        MainLoop();
+#endif
     } else {
         Run();
     }
@@ -56,8 +68,41 @@ static CompilerConfig InitConfig(int argc, char* argv[]) {
     config.mode = MODE_RUN;
     config.sourceFilename = "main.lua";
     config.path = (argc > 1) ? (stringc(argv[1]) + "/") : "";
+    config.screenWidth = 640;
+    config.screenHeight = 480;
+    config.screenFps = 0;
+    XMLNode* xml = ParseXML("config.xml");
+    XMLNode* screenWidth = xml ? XMLChildNamed(xml, "screen_width", 0) : NULL;
+    XMLNode* screenHeight = xml ? XMLChildNamed(xml, "screen_height", 0) : NULL;
+    XMLNode* screenFps = xml ? XMLChildNamed(xml, "screen_fps", 0) : NULL;
+    if (screenWidth) config.screenWidth = Val(XMLText(screenWidth));
+    if (screenHeight) config.screenHeight = Val(XMLText(screenHeight));
+    if (screenFps) config.screenFps = Val(XMLText(screenFps));
+    if (xml) FreeXML(xml);
     return config;
 }
+
+
+static void MainLoop() {
+    bool ok = true;
+    while (Run() && ok) {
+        ok = gScript.CallVoidFunction("Loop");
+    }
+    if (!ok) _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
+}
+
+
+#ifdef EMSCRIPTEN
+static void EmscriptenMainLoop() {
+    if (Run()) {
+        if (!gScript.CallVoidFunction("Loop")) {
+            _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
+        }
+    } else {
+        emscripten_cancel_main_loop();
+    }
+}
+#endif
 
 
 /*

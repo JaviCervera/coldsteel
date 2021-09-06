@@ -71,7 +71,7 @@ void _SetDevice(IrrlichtDevice* device) {
     if (!_device) {
         SIrrlichtCreationParameters params;
         params.DriverType = EDT_NULL;
-        params.LoggingLevel = ELL_NONE;
+        params.LoggingLevel = ELL_ERROR;
         _device = createDeviceEx(params);
     }
     array<SJoystickInfo> joysticks;
@@ -80,7 +80,9 @@ void _SetDevice(IrrlichtDevice* device) {
     _initMillisecs = _device->getTimer()->getRealTime();
     _lastMillisecs = 0;
     _delta = 0.0f;
+#ifndef EMSCRIPTEN
     AddZip("package.dat");
+#endif
 }
 
 

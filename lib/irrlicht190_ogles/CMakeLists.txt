@@ -1,0 +1,82 @@
+#Minimum version
+cmake_minimum_required(VERSION 3.0)
+
+#Define project
+project(Irrlicht)
+
+#Options
+option(IRRLICHT_M32 "Pass the -m32 flag to the compiler to build 32 bit application" OFF)
+option(IRRLICHT_SHARED "Compile Irrlicht as a shared library" OFF)
+option(SDL_ENABLED "Use SDL platform" OFF)
+set(SDL_PATH "SDL" CACHE PATH "Path to SDL folder (must contain include and lib subfolders)")
+
+#Define file groups
+file(GLOB COMMON_FILES "source/Irrlicht/*.cpp" "source/Irrlicht/aesGladman/*.cpp" "source/Irrlicht/bzip2/*.c" "source/Irrlicht/jpeglib/*.c" "source/Irrlicht/libpng/*.c" "source/Irrlicht/lzma/*.c" "source/Irrlicht/zlib/*.c")
+file(GLOB MAC_FILES "source/Irrlicht/*.mm")
+
+#Add header and lib directories
+include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/source/Irrlicht ${CMAKE_CURRENT_SOURCE_DIR}/source/Irrlicht/zlib)
+if (SDL_ENABLED)
+	include_directories(${INCLUDE_DIRECTORIES} ${SDL_PATH}/include)
+	link_directories(${LINK_DIRECTORIES} ${SDL_PATH}/lib)
+	add_definitions(-D_IRR_COMPILE_WITH_SDL_DEVICE_ -DNO_IRR_COMPILE_WITH_WINDOWS_DEVICE_ -DNO_IRR_COMPILE_WITH_OSX_DEVICE_ -DNO_IRR_COMPILE_WITH_X11_DEVICE_)
+endif (SDL_ENABLED)
+
+#Add executable targets
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	if (IRRLICHT_SHARED)
+		add_library(Irrlicht SHARED ${COMMON_FILES} ${MAC_FILES})
+	else (IRRLICHT_SHARED)
+		add_library(Irrlicht STATIC ${COMMON_FILES} ${MAC_FILES})
+	endif (IRRLICHT_SHARED)
+else (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	if (IRRLICHT_SHARED)
+		add_library(Irrlicht SHARED ${COMMON_FILES})
+	else (IRRLICHT_SHARED)
+		add_library(Irrlicht STATIC ${COMMON_FILES})
+	endif (IRRLICHT_SHARED)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+#Add common options
+if (IRRLICHT_SHARED)
+	target_compile_definitions(Irrlicht PRIVATE ${COMPILE_DEFINITIONS} -D_USRDLL -DIRRLICHT_EXPORTS)
+else (IRRLICHT_SHARED)
+	target_compile_definitions(Irrlicht PRIVATE ${COMPILE_DEFINITIONS} -D_IRR_STATIC_LIB_)
+endif (IRRLICHT_SHARED)
+add_definitions(-U__STRICT_ANSI__)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-rtti -ffast-math -Wno-unused-parameter")
+if (IRRLICHT_M32)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+endif (IRRLICHT_M32)
+
+#Add platform specific options
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	message("Platform is Windows")
+	add_definitions(-D__GNUWIN32__ -DWIN32 -D_WINDOWS -DNDEBUG -D_MBCS -D_CRT_SECURE_NO_DEPRECATE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+	if (IRRLICHT_SHARED)
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
+		target_link_libraries(Irrlicht -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lwinmm -lopengl32 ${TARGET_LINK_LIBRARIES})
+	endif (IRRLICHT_SHARED)
+	if (SDL_ENABLED AND IRRLICHT_SHARED)
+		target_link_libraries(Irrlicht -lSDL.dll ${TARGET_LINK_LIBRARIES})
+	endif (SDL_ENABLED AND IRRLICHT_SHARED)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	message("Platform is macOS")
+	if (IRRLICHT_SHARED)
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
+		target_link_libraries(Irrlicht "-framework AppKit" "-framework Carbon" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
+	endif (IRRLICHT_SHARED)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	message("Platform is Linux")
+	if (IRRLICHT_SHARED)
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
+		target_link_libraries(Irrlicht -lGL -lXxf86vm ${TARGET_LINK_LIBRARIES})
+	endif (IRRLICHT_SHARED)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	message("Platform is Emscripten")
+else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+	message("Unrecognized platform " ${CMAKE_SYSTEM_NAME})
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
