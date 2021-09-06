@@ -15,7 +15,7 @@
 #endif
 
 #ifndef SWIG
-#include "../lib/irrlicht/include/irrlicht.h"
+#include <irrlicht.h>
 using namespace irr;
 using namespace core;
 using namespace scene;

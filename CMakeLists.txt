@@ -8,7 +8,7 @@ project(coldsteel)
 file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/*.cpp" "src/runtime.rc" "lib/lua/*.c" "lib/stb/stb_vorbis.c")
 
 #Add header and lib directories
-include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
+include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua ${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht184/include)
 link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	include_directories(${INCLUDE_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/lib/openal)
