@@ -6,6 +6,8 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
+      - name: Define VERSION 📝
+        run: echo `date +"%y.%m.%d"` >> $GITHUB_ENV
       - name: Install Emscripten 📥
         run: |
           wget https://github.com/emscripten-core/emsdk/archive/refs/heads/main.zip
@@ -17,3 +19,13 @@ jobs:
         run: |
           source ./emsdk-main/emsdk_env.sh
           ./build_emscripten.sh
+      - name: Delete unnecesary files from _build ❌
+        run: rm _build/OpenAL32.dll
+      - name: Create release 🚀
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: v${{ env.VERSION }}
+          files: |
+            _build/*
