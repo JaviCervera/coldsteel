@@ -7,7 +7,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
       - name: Define VERSION 📝
-        run: echo `date +"%y.%m.%d"` >> $GITHUB_ENV
+        run: echo VERSION=`date +"%y.%m.%d"` >> $GITHUB_ENV
       - name: Install Emscripten 📥
         run: |
           wget https://github.com/emscripten-core/emsdk/archive/refs/heads/main.zip
