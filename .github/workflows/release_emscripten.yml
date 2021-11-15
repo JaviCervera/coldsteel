@@ -1,0 +1,19 @@
+name: release_emscripten
+on: [workflow_dispatch]
+jobs:
+  release_emscripten:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Install Emscripten 📥
+        run: |
+          wget https://github.com/emscripten-core/emsdk/archive/refs/heads/main.zip
+          unzip main.zip
+          cd emsdk-main
+          ./emsdk install latest
+          ./emsdk activate latest
+      - name: Build with Emscripten 🔧
+        run: |
+          source ./emsdk-main/emsdk_env.sh
+          ./build_emscripten.sh
