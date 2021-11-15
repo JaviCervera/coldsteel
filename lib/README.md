@@ -88,7 +88,7 @@ of file `source/Irrlicht/CIrrDeviceSDL.cpp`:
 #include "IFileSystem.h"
 ```
 
-And the following right before line 271:
+And the following right before line 278 (before the call to `createDriver()`):
 
 ```c++
 #ifdef EMSCRIPTEN

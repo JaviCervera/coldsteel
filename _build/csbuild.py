@@ -5,8 +5,8 @@ import sys
 import zipfile
 
 
-JS_SIZE_TPL = '[{"filename":"/package.dat","start":0,"end":0,"audio":0}],"remote_package_size":0'
-JS_SIZE_REP = '[{"filename":"/package.dat","start":0,"end":$SIZE,"audio":0}],"remote_package_size":$SIZE'
+JS_SIZE_TPL = '[{"filename":"/package.dat","start":0,"end":0}],"remote_package_size":0'
+JS_SIZE_REP = '[{"filename":"/package.dat","start":0,"end":$SIZE}],"remote_package_size":$SIZE'
 
 
 def main() -> None:
