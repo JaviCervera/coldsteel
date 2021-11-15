@@ -15,4 +15,4 @@ def write_zip(path: str, zip_filename: str) -> None:
 
 
 if __name__ == '__main__':
-  write_zip('_build', f'coldsteel-v{os.getenv("VERSION")}.zip')
+  write_zip('_build', f'coldsteel-emscripten.zip')

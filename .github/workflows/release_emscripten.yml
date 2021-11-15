@@ -31,4 +31,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           automatic_release_tag: v${{ env.VERSION }}
-          files: coldsteel-v${{ env.VERSION }}.zip
+          files: coldsteel-emscripten.zip
