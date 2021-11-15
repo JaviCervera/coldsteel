@@ -8,8 +8,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Define VERSION 📝
         run: |
-          echo VERSION=`date +"%y.%m.%d"` >> $GITHUB_ENV
-          echo v${{ env.VERSION }} > _build/VERSION
+          echo `date +"%y.%m.%d"` > _build/VERSION
+          echo VERSION=$(cat _build/VERSION) >> $GITHUB_ENV
       - name: Install Emscripten 📥
         run: |
           wget https://github.com/emscripten-core/emsdk/archive/refs/heads/main.zip
