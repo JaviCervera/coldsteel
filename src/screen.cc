@@ -110,9 +110,13 @@ EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, void*
     SIrrlichtCreationParameters params;
     //params.AntiAlias = antialias;
     params.Bits = depth;
-    params.DriverType = EDT_OPENGL;
+#ifdef EMSCRIPTEN
+    params.DriverType = EDT_WEBGL1;
+#else
+    params.DriverType = EDT_OPENGL; // EDT_OGLES2
+#endif
     params.EventReceiver = new EventReceiver;
-    params.LoggingLevel = ELL_NONE;
+    params.LoggingLevel = ELL_ERROR;
     params.Fullscreen = fullscreen;
     params.Stencilbuffer = true;
     params.Vsync = vsync;

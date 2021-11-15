@@ -1,7 +1,15 @@
 .DS_Store
+.vscode
 _build/*
+!_build/LICENSE
+!_build/README.md
+!_build/coldsteel.html
+!_build/csbuild*
+!_build/csserver*
 !_build/geany
-_build/examples/*.bcd
+!_build/examples
+!_build/media
+_build/examples/*.build
 _CMAKE
 src/lua_wrapper.cpp
 
@@ -39,7 +47,6 @@ src/lua_wrapper.cpp
 *.app
 
 # Exceptions
-!_build/examples
-!_build/*.dll
+!_build/OpenAL32.dll
 !lib/openal/OpenAL32.lib
 !upx.exe
