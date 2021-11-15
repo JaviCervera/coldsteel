@@ -270,7 +270,9 @@ CIrrDeviceSDL::CIrrDeviceSDL(const SIrrlichtCreationParameters& param)
 	// create cursor control
 	CursorControl = new CCursorControl(this);
 
+#ifdef EMSCRIPTEN
 	FileSystem->addFileArchive("package.dat", true, false, io::EFAT_ZIP);
+#endif
 
 	// create driver
 	createDriver();
