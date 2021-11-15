@@ -1,0 +1,10 @@
+name: build_emscripten
+on: [push]
+jobs:
+  build_emscripten:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Build with Emscripten 🔧
+        run: ./build_emscripten.sh
