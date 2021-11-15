@@ -23,11 +23,12 @@ jobs:
         run: |
           rm _build/coldsteel.data
           rm _build/OpenAL32.dll
+      - name: Package build 📦
+        run: python3 ./.github/scripts/zip_build_dir.py
       - name: Create release 🚀
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           automatic_release_tag: v${{ env.VERSION }}
-          files: |
-            _build/*
+          files: coldsteel-v${{ env.VERSION }}.zip
