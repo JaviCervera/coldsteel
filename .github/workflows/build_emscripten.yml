@@ -14,4 +14,6 @@ jobs:
           ./emsdk install latest
           ./emsdk activate latest
       - name: Build with Emscripten 🔧
-        run: ./build_emscripten.sh
+        run: |
+          source ./emsdk-main/emsdk_env.sh
+          ./build_emscripten.sh
