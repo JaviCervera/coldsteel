@@ -19,8 +19,10 @@ jobs:
         run: |
           source ./emsdk-main/emsdk_env.sh
           ./build_emscripten.sh
-      - name: Delete unnecesary files from _build ❌
-        run: rm _build/OpenAL32.dll
+      - name: Delete unnecesary files from build ❌
+        run: |
+          rm _build/coldsteel.data
+          rm _build/OpenAL32.dll
       - name: Create release 🚀
         uses: marvinpinto/action-automatic-releases@latest
         with:
