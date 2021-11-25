@@ -72,6 +72,11 @@ EXPORT float CALL Exp(float val) {
 }
 
 
+EXPORT float CALL Pow(float base, float exp) {
+    return pow(base, exp);
+}
+
+
 EXPORT float CALL Log(float val) {
     return log(val);
 }

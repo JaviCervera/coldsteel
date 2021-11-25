@@ -19,6 +19,7 @@ EXPORT float CALL ACos(float val);
 EXPORT float CALL ATan(float val);
 EXPORT float CALL ATan2(float x, float y);
 EXPORT float CALL Exp(float val);
+EXPORT float CALL Pow(float base, float exp);
 EXPORT float CALL Log(float val);
 EXPORT float CALL Log10(float val);
 EXPORT float CALL Min(float a, float b);
