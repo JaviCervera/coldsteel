@@ -5,25 +5,22 @@ MAX_PRIMITIVES = 1000
 PRIM_LINE = 0
 PRIM_RECT = 1
 
--- This class represents a primitive on the screen
-Primitive = class()
-
-function Primitive:New(type, color, x, y, z, w)
-    local self = self:new()
-    self.type = type
-    self.color = color
-    self.x = x
-    self.y = y
-    self.z = z
-    self.w = w
-    return self
+function CreatePrimitive(type, color, x, y, z, w)
+    return {
+        type = type,
+        color = color,
+        x = x,
+        y = y,
+        z = z,
+        w = w
+    }
 end
 
-function Primitive:Draw()
-    if self.type == PRIM_LINE then
-        DrawLine(self.x, self.y, self.w, self.z, self.color)
+function DrawPrimitive(prim)
+    if prim.type == PRIM_LINE then
+        DrawLine(prim.x, prim.y, prim.w, prim.z, prim.color)
     else
-        DrawRect(self.x, self.y, self.w, self.z, self.color)
+        DrawRect(prim.x, prim.y, prim.w, prim.z, prim.color)
     end
 end
 
@@ -32,7 +29,7 @@ local primitives = {}
 function Loop()
     -- If we are below the limit, add a new primitive with random values
     if #primitives < MAX_PRIMITIVES then
-        primitives[#primitives+1] = Primitive:New(
+        primitives[#primitives+1] = CreatePrimitive(
             Rand(0, 2), -- Type
             RGB(Rand(0, 256), Rand(0, 256), Rand(0, 256)), -- Color
             Rand(0, ScreenWidth()), -- Coords
@@ -47,7 +44,7 @@ function Loop()
     
     -- Draw all primitives
     for _, primitive in ipairs(primitives) do
-        primitive:Draw()
+        DrawPrimitive(primitive)
     end
     
     -- Draw statistics texts
