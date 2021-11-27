@@ -97,55 +97,6 @@ extern "C" {
 static int _screenFrameMsecs = 0;
 
 
-EXPORT void CALL OpenScreen(int width, int height, int depth, int flags) {
-    OpenScreenEx(width, height, depth, flags, NULL);
-}
-
-
-EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, void* win) {
-    bool fullscreen = (flags & SCREEN_WINDOWED) == 0;
-    bool vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
-    //bool antialias = (flags & SCREEN_ANTIALIAS) == SCREEN_ANTIALIAS;
-    
-    SIrrlichtCreationParameters params;
-    //params.AntiAlias = antialias;
-    params.Bits = depth;
-#ifdef EMSCRIPTEN
-    params.DriverType = EDT_WEBGL1;
-#else
-    params.DriverType = EDT_OPENGL; // EDT_OGLES2
-#endif
-    params.EventReceiver = new EventReceiver;
-    params.LoggingLevel = ELL_ERROR;
-    params.Fullscreen = fullscreen;
-    params.Stencilbuffer = true;
-    params.Vsync = vsync;
-    params.WindowId = win;
-    params.WindowSize.Width = width;
-    params.WindowSize.Height = height;
-
-    // Init device
-    _SetDevice(createDeviceEx(params));
-    _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
-    _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
-    
-    // Init gui skin
-    IGUISkin* skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
-    for (int i = 0; i < EGDC_COUNT; ++i) {
-        SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
-        col.setAlpha(255);
-        skin->setColor((EGUI_DEFAULT_COLOR)i, col);
-    }
-    _Device()->getGUIEnvironment()->setSkin(skin);
-    skin->drop();
-}
-
-
-EXPORT void CALL CloseScreen() {
-    _SetDevice(NULL);
-}
-
-
 EXPORT void CALL SetScreenTitle(const char* caption) {
     _Device()->setWindowCaption(_WSTR(caption));
 }
@@ -188,37 +139,86 @@ EXPORT bool_t CALL FeatureSupported(int feature) {
 }
 
 
-EXPORT int CALL ScreenNumModes() {
+void _OpenScreen(int width, int height, int depth, int flags) {
+    _OpenScreenEx(width, height, depth, flags, NULL);
+}
+
+
+void _OpenScreenEx(int width, int height, int depth, int flags, void* win) {
+    bool fullscreen = (flags & SCREEN_WINDOWED) == 0;
+    bool vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
+    //bool antialias = (flags & SCREEN_ANTIALIAS) == SCREEN_ANTIALIAS;
+    
+    SIrrlichtCreationParameters params;
+    //params.AntiAlias = antialias;
+    params.Bits = depth;
+#ifdef EMSCRIPTEN
+    params.DriverType = EDT_WEBGL1;
+#else
+    params.DriverType = EDT_OPENGL; // EDT_OGLES2
+#endif
+    params.EventReceiver = new EventReceiver;
+    params.LoggingLevel = ELL_ERROR;
+    params.Fullscreen = fullscreen;
+    params.Stencilbuffer = true;
+    params.Vsync = vsync;
+    params.WindowId = win;
+    params.WindowSize.Width = width;
+    params.WindowSize.Height = height;
+
+    // Init device
+    _SetDevice(createDeviceEx(params));
+    _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
+    _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+    
+    // Init gui skin
+    IGUISkin* skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
+    for (int i = 0; i < EGDC_COUNT; ++i) {
+        SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
+        col.setAlpha(255);
+        skin->setColor((EGUI_DEFAULT_COLOR)i, col);
+    }
+    _Device()->getGUIEnvironment()->setSkin(skin);
+    skin->drop();
+}
+
+
+void _CloseScreen() {
+    _SetDevice(NULL);
+}
+
+
+int _ScreenNumModes() {
     return _Device()->getVideoModeList()->getVideoModeCount();
 }
 
 
-EXPORT int CALL ScreenModeWidth(int index) {
+int _ScreenModeWidth(int index) {
     return _Device()->getVideoModeList()->getVideoModeResolution(index).Width;
 }
 
 
-EXPORT int CALL ScreenModeHeight(int index) {
+int _ScreenModeHeight(int index) {
     return _Device()->getVideoModeList()->getVideoModeResolution(index).Height;
 }
 
 
-EXPORT int CALL ScreenModeDepth(int index) {
+int _ScreenModeDepth(int index) {
     return _Device()->getVideoModeList()->getVideoModeDepth(index);
 }
 
 
-EXPORT int CALL DesktopWidth() {
+int _DesktopWidth() {
     return _Device()->getVideoModeList()->getDesktopResolution().Width;
 }
 
 
-EXPORT int CALL DesktopHeight() {
+int _DesktopHeight() {
     return _Device()->getVideoModeList()->getDesktopResolution().Height;
 }
 
 
-EXPORT int CALL DesktopDepth() {
+int _DesktopDepth() {
     return _Device()->getVideoModeList()->getDesktopDepth();
 }
 

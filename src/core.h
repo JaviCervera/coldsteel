@@ -7,14 +7,17 @@ extern "C" {
 #endif
 
 
-EXPORT void CALL Init();
-EXPORT void CALL Finish();
-EXPORT bool_t CALL Run();
 EXPORT float CALL DeltaTime();
 EXPORT int CALL Millisecs();
+EXPORT void CALL Exit(int code);
 
+#ifndef SWIG
+void _Init();
+void _Finish();
+bool_t _Run();
 void _SetDevice(IrrlichtDevice* device);
 IrrlichtDevice* _Device();
+#endif
 
 
 #ifdef __cplusplus

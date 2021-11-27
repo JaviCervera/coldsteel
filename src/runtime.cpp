@@ -27,6 +27,7 @@ struct CompilerConfig {
     int screenWidth;
     int screenHeight;
     int screenFps;
+    int screenFlags;
 };
 
 
@@ -40,11 +41,11 @@ static void EmscriptenMainLoop();
 
 
 int main(int argc, char* argv[]) {
-    Init();
+    _Init();
     const CompilerConfig config = InitConfig(argc, argv);
     //const CompilerConfig config = ParseCommandLine(argc, argv);
     if (config.path != "") ChangeDir(config.path.c_str());
-    OpenScreen(config.screenWidth, config.screenHeight, 32, SCREEN_WINDOWED);
+    _OpenScreen(config.screenWidth, config.screenHeight, _DesktopDepth(), config.screenFlags);
     if (!gScript.Load(config.sourceFilename)) {
         _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
     }
@@ -55,10 +56,10 @@ int main(int argc, char* argv[]) {
         MainLoop();
 #endif
     } else {
-        Run();
+        _Run();
     }
-    CloseScreen();
-    Finish();
+    _CloseScreen();
+    _Finish();
     return 0;
 }
 
@@ -72,12 +73,43 @@ static CompilerConfig InitConfig(int argc, char* argv[]) {
     config.screenHeight = 480;
     config.screenFps = 0;
     XMLNode* xml = ParseXML("config.xml");
-    XMLNode* screenWidth = xml ? XMLChildNamed(xml, "screen_width", 0) : NULL;
-    XMLNode* screenHeight = xml ? XMLChildNamed(xml, "screen_height", 0) : NULL;
-    XMLNode* screenFps = xml ? XMLChildNamed(xml, "screen_fps", 0) : NULL;
+    XMLNode* screenWidth = xml
+        ? XMLChildNamed(xml, "screen_width", 0)
+        : NULL;
+    XMLNode* screenHeight = xml
+        ? XMLChildNamed(xml, "screen_height", 0)
+        : NULL;
+    XMLNode* screenFps = xml
+        ? XMLChildNamed(xml, "screen_fps", 0)
+        : NULL;
+    XMLNode* screenWindowed = xml
+        ? XMLChildNamed(xml, "screen_windowed", 0)
+        : NULL;
+    XMLNode* screenResizable = xml
+        ? XMLChildNamed(xml, "screen_resizable", 0)
+        : NULL;
+    XMLNode* screenVsync = xml
+        ? XMLChildNamed(xml, "screen_vsync", 0)
+        : NULL;
     if (screenWidth) config.screenWidth = Val(XMLText(screenWidth));
     if (screenHeight) config.screenHeight = Val(XMLText(screenHeight));
     if (screenFps) config.screenFps = Val(XMLText(screenFps));
+    int flags = 0;
+    if (screenWindowed) {
+        if (stringc(XMLText(screenWindowed)) == "true") flags |= SCREEN_WINDOWED;
+    } else {
+        flags |= SCREEN_WINDOWED;
+    }
+    if (screenResizable && stringc(XMLText(screenResizable)) == "true") flags |= SCREEN_RESIZABLE;
+    if (screenVsync && stringc(XMLText(screenVsync)) == "true") flags |= SCREEN_VSYNC;
+    config.screenFlags = flags;
+#ifndef EMSCRIPTEN
+    if (config.screenWidth == 0) config.screenWidth = _DesktopWidth();
+    if (config.screenHeight == 0) config.screenHeight = _DesktopHeight();
+#else
+    if (config.screenWidth == 0) config.screenWidth = 640;
+    if (config.screenHeight == 0) config.screenHeight = 480;
+#endif
     if (xml) FreeXML(xml);
     return config;
 }
@@ -85,7 +117,7 @@ static CompilerConfig InitConfig(int argc, char* argv[]) {
 
 static void MainLoop() {
     bool ok = true;
-    while (Run() && ok) {
+    while (_Run() && ok) {
         ok = gScript.CallVoidFunction("Loop");
     }
     if (!ok) _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
@@ -94,7 +126,7 @@ static void MainLoop() {
 
 #ifdef EMSCRIPTEN
 static void EmscriptenMainLoop() {
-    if (Run()) {
+    if (_Run()) {
         if (!gScript.CallVoidFunction("Loop")) {
             _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
         }

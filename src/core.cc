@@ -21,7 +21,22 @@ static ALCcontext* _alContext = NULL;
 extern "C" {
 
 
-EXPORT void CALL Init() {
+EXPORT float CALL DeltaTime() {
+    return _delta;
+}
+
+
+EXPORT int CALL Millisecs() {
+    return _Device()->getTimer()->getRealTime() - _initMillisecs;
+}
+
+
+EXPORT void CALL Exit(int code) {
+    exit(code);
+}
+
+
+void _Init() {
     _SetDevice(NULL);
 
     // Create OpenAL context
@@ -30,7 +45,7 @@ EXPORT void CALL Init() {
     if (_alContext) alcMakeContextCurrent(_alContext);
 }
 
-EXPORT void CALL Finish() {
+void _Finish() {
     if (_alContext) alcDestroyContext(_alContext);
     if (_alDevice) alcCloseDevice(_alDevice);
     _alDevice = NULL;
@@ -38,7 +53,7 @@ EXPORT void CALL Finish() {
 }
 
 
-EXPORT bool_t CALL Run() {
+bool_t _Run() {
     _UpdateMusic();
     bool result = _Device()->run() && _Device()->getVideoDriver() != NULL;
     const int msecs = Millisecs();
@@ -52,16 +67,6 @@ EXPORT bool_t CALL Run() {
     _delta = (msecsAfterWait - _lastMillisecs) / 1000.0f;
     _lastMillisecs = msecsAfterWait;
     return result;
-}
-
-
-EXPORT float CALL DeltaTime() {
-    return _delta;
-}
-
-
-EXPORT int CALL Millisecs() {
-    return _Device()->getTimer()->getRealTime() - _initMillisecs;
 }
 
 
