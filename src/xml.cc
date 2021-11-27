@@ -48,7 +48,11 @@ struct XMLNode {
     int getNumChildren() const { return children.size(); }
     
     XMLNode* getChild(int index) {
-        return &children[index];
+        if (index >= 0 && index < children.size()) {
+            return &children[index];
+        } else {
+            return NULL;
+        }
     }
 
 
@@ -136,7 +140,12 @@ EXPORT int CALL XMLNumChildrenNamed(XMLNode* node, const char* name) {
 
 
 EXPORT XMLNode* CALL XMLChildNamed(XMLNode* node, const char* name, int index) {
-    return node->findChildren(name)[index];
+    array<XMLNode*> children = node->findChildren(name);
+    if (index >= 0 && index < children.size()) {
+        return children[index];
+    } else {
+        return NULL;
+    }
 }
 
 
