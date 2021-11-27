@@ -32,6 +32,8 @@ EXPORT int CALL Millisecs() {
 
 
 EXPORT void CALL Exit(int code) {
+    _CloseScreen();
+    _Finish();
     exit(code);
 }
 
