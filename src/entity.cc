@@ -288,4 +288,14 @@ EXPORT int CALL EntityGroup(ISceneNode* entity) {
 }
 
 
+EXPORT float CALL EntityDistance(ISceneNode* entity, float x, float y, float z) {
+    return entity->getAbsolutePosition().getDistanceFrom(vector3df(x, y, z));
+}
+
+
+EXPORT float CALL EntityDistanceSquare(ISceneNode* entity, float x, float y, float z) {
+    return entity->getAbsolutePosition().getDistanceFromSQ(vector3df(x, y, z));
+}
+
+
 } // extern "C"

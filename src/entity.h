@@ -45,6 +45,8 @@ EXPORT SMaterial* CALL EntityMaterial(ISceneNode* entity, int index);
 EXPORT void CALL SetEntityCollision(ISceneNode* entity, int type, int group);
 EXPORT bool_t CALL EntityCollision(ISceneNode* entity);
 EXPORT int CALL EntityGroup(ISceneNode* entity);
+EXPORT float CALL EntityDistance(ISceneNode* entity, float x, float y, float z);
+EXPORT float CALL EntityDistanceSquare(ISceneNode* entity, float x, float y, float z);
 
 
 #ifdef __cplusplus
