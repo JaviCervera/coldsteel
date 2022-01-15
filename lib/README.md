@@ -2,7 +2,7 @@
 
 ## Irrlicht
 
-Desktop version uses a modified version of Irrlicht 1.8.4, taken from [this repo](https://github.com/JaviCervera/irrlicht-mod)).
+Desktop version uses a modified version of Irrlicht 1.8.5, taken from [this repo](https://github.com/JaviCervera/irrlicht-mod)).
 
 Emscripten version uses a modified version of Irrlicht 1.9.0 from the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
 
@@ -98,7 +98,7 @@ FileSystem->addFileArchive("package.dat", true, false, io::EFAT_ZIP);
 
 ### macOS
 
-**NOTE: This is already done in the branch used for Irrlicht 1.8.4. Need to check whether it is required on 1.9.0.**
+**NOTE: This is already done in the branch used for Irrlicht 1.8.5. Need to check whether it is required on 1.9.0.**
 
 Architecture has been changed to *Universal (32/64-bit Intel)*. On *macOS Deployment Target*, it has been set to *10.6*.
 On the top of the file `CIrrDeviceMacOSX.mm`, the following needed to be added:
