@@ -34,6 +34,12 @@ namespace irr
 		in by defining the IRR_USE_SDL_DEVICE macro in IrrCompileConfig.h */
 		EIDT_SDL,
 
+		//! A device which uses Simple DirectMedia Layer 2
+		/** The SDL2 device works under all platforms supported by SDL2 but first must be compiled
+		in by defining the IRR_USE_SDL2_DEVICE macro in IrrCompileConfig.h */
+
+		EIDT_SDL2,
+
 		//! A device for raw framebuffer access
 		/** Best used with embedded devices and mobile systems.
 		Does not need X11 or other graphical subsystems.
@@ -48,7 +54,7 @@ namespace irr
 
 		//! This selection allows Irrlicht to choose the best device from the ones available.
 		/** If this selection is chosen then Irrlicht will try to use the IrrlichtDevice native
-		to your operating system. If this is unavailable then the X11, SDL and then console device
+		to your operating system. If this is unavailable then the X11, SDL, SDL2 and then console device
 		will be tried. This ensures that Irrlicht will run even if your platform is unsupported,
 		although it may not be able to render anything. */
 		EIDT_BEST

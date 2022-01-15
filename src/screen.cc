@@ -155,6 +155,7 @@ void _OpenScreenEx(int width, int height, int depth, int flags, void* win) {
 #ifdef EMSCRIPTEN
     params.DriverType = EDT_WEBGL1;
 #else
+    params.DeviceType = EIDT_SDL2;
     params.DriverType = EDT_OPENGL; // EDT_OGLES2
 #endif
     params.EventReceiver = new EventReceiver;

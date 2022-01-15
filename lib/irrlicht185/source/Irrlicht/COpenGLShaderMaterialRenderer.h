@@ -23,6 +23,10 @@
 	#define NO_SDL_GLEXT
 	#include <SDL/SDL_video.h>
 	#include <SDL/SDL_opengl.h>
+#elif defined(_IRR_COMPILE_WITH_SDL2_DEVICE_)
+	#define NO_SDL_GLEXT
+	#include <SDL2/SDL_video.h>
+	#include <SDL2/SDL_opengl.h>
 #else
 	#include <GL/gl.h>
 #endif
