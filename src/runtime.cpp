@@ -1,6 +1,14 @@
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#else
+#include <unistd.h>
+#endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +42,7 @@ struct CompilerConfig {
 static Script gScript;
 
 
+static stringc GetBinDir();
 static CompilerConfig InitConfig(int argc, char* argv[]);
 static void MainLoop();
 static void EmscriptenMainLoop();
@@ -44,6 +53,9 @@ int main(int argc, char* argv[]) {
     _Init();
     const CompilerConfig config = InitConfig(argc, argv);
     //const CompilerConfig config = ParseCommandLine(argc, argv);
+#ifdef __APPLE__
+    ChangeDir(GetBinDir().c_str());
+#endif
     if (config.path != "") ChangeDir(config.path.c_str());
     _OpenScreen(config.screenWidth, config.screenHeight, _DesktopDepth(), config.screenFlags);
     if (!gScript.Load(config.sourceFilename)) {
@@ -61,6 +73,30 @@ int main(int argc, char* argv[]) {
     _CloseScreen();
     _Finish();
     return 0;
+}
+
+
+static stringc ExtractDir(const char* filename) {
+    const char* fendp = strrchr(filename, '/');
+    const char* bendp = strrchr(filename, '\\');
+    const char* endp = (fendp >= bendp) ? fendp : bendp;
+    if (!endp) return "";
+    const size_t size = endp - filename;
+    return Mid(filename, 0, size);
+}
+
+
+static stringc GetBinDir() {
+    char path[FILENAME_MAX];
+#if defined(_WIN32)
+    path[GetModuleFileNameA(NULL, path, FILENAME_MAX)] = 0;
+#elif defined(__APPLE__)
+    unsigned int size = FILENAME_MAX;
+    _NSGetExecutablePath(path, &size);
+#else
+    path[readlink("/proc/self/exe", path, FILENAME_MAX)] = 0;
+#endif
+    return ExtractDir(path);
 }
 
 
