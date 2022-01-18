@@ -4,6 +4,7 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#undef LoadString
 #elif defined(__APPLE__)
 #include <mach-o/dyld.h>
 #else
