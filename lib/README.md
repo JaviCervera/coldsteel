@@ -2,9 +2,7 @@
 
 ## Irrlicht
 
-Desktop version uses a modified version of Irrlicht 1.8.4, taken from [this repo](https://github.com/JaviCervera/irrlicht-mod)).
-
-Emscripten version uses a modified version of Irrlicht 1.9.0 from the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
+Desktop version uses Irrlicht 1.8.5. Emscripten version uses Irrlicht 1.9.0 from the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
 
 The modifications made to the engine are described here:
 
@@ -19,8 +17,8 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO_IRR_COMPILE_WITH_DIRECT3D_8_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_9_
 //#define NO_IRR_COMPILE_WITH_OPENGL_
-//#define NO_IRR_COMPILE_WITH_SOFTWARE_
-//#define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
+#define NO_IRR_COMPILE_WITH_SOFTWARE_
+#define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
 #define NO_IRR_LINUX_XCURSOR_
 #define NO_IRR_WCHAR_FILESYSTEM
 #define NO_IRR_COMPILE_WITH_CG_
@@ -79,6 +77,10 @@ Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with
 ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
 ```
 
+### macOS (Irrlicht 1.8.5 only)
+
+On file `CIrrDeviceMacOSX.mm`, search for `[NSBundle loadNibNamed:@"MainMenu" owner:[NSApp delegate]];` and comment the line.
+
 ### Emscripten (Irrlicht 1.9.0 only)
 
 To have a compressed data package added by default to the filesystem, add the following as line 11
@@ -95,34 +97,3 @@ And the following right before line 278 (before the call to `createDriver()`):
 FileSystem->addFileArchive("package.dat", true, false, io::EFAT_ZIP);
 #endif
 ```
-
-### macOS
-
-**NOTE: This is already done in the branch used for Irrlicht 1.8.4. Need to check whether it is required on 1.9.0.**
-
-Architecture has been changed to *Universal (32/64-bit Intel)*. On *macOS Deployment Target*, it has been set to *10.6*.
-On the top of the file `CIrrDeviceMacOSX.mm`, the following needed to be added:
-
-```objective-c
-#include <Carbon/Carbon.h>
-```
-
-On that same file, the line 499
-
-```objective-c
-[NSApp setDelegate:(id<NSFileManagerDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-```
-
-was changed to
-
-```objective-c
-[NSApp setDelegate:(id<NSApplicationDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-```
-
-and the line 500
-
-```objective-c
-[NSBundle loadNibNamed:@"MainMenu" owner:[NSApp delegate]];
-```
-
-was commented.
