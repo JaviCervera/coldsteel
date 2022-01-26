@@ -11,13 +11,13 @@ mkdir _CMAKE/_IRRLICHT_EMSCRIPTEN
 
 echo "# Building Irrlicht (Emscripten) ..."
 cd lib/irrlicht190_ogles
-emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
 cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
 emmake make NDEBUG=1
 cd ../..
 
 echo "# Building ColdSteel (Emscripten) ..."
-emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 emmake make NDEBUG=1
 mv coldsteel.js ../../_build/coldsteel.js
