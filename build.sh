@@ -10,7 +10,7 @@ mkdir _CMAKE/_COLDSTEEL
 mkdir _CMAKE/_IRRLICHT
 
 echo "# Building Irrlicht (Desktop) ..."
-cd lib/irrlicht185
+cd lib/irrlicht190
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 make

@@ -13,7 +13,7 @@ mkdir _IRRLICHT_EMSCRIPTEN
 cd ..
 
 echo # Building Irrlicht (Desktop) ...
-cd lib/irrlicht185
+cd lib/irrlicht190
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make

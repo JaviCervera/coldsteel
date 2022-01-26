@@ -2,7 +2,7 @@
 
 ## Irrlicht
 
-Desktop version uses Irrlicht 1.8.5. Emscripten version uses Irrlicht 1.9.0 from the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
+Desktop version uses Irrlicht 1.9.0 commit **r6297**. Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
 
 The modifications made to the engine are described here:
 
@@ -77,11 +77,17 @@ Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with
 ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
 ```
 
-### macOS (Irrlicht 1.8.5 only)
+### macOS (irrlicht190 only)
 
-On file `CIrrDeviceMacOSX.mm`, search for `[NSBundle loadNibNamed:@"MainMenu" owner:[NSApp delegate]];` and comment the line.
+On file `CIrrDeviceMacOSX.mm`, search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:
 
-### Emscripten (Irrlicht 1.9.0 only)
+```c++
+if (bundleName) {
+```
+
+Belowthat, after the line that contains `[NSApp setMainMenu:mainMenu];`, close the block with a new line containing `}`.
+
+### Emscripten (irrlicht190_ogles only)
 
 To have a compressed data package added by default to the filesystem, add the following as line 11
 of file `source/Irrlicht/CIrrDeviceSDL.cpp`:
