@@ -1,6 +1,6 @@
 # ColdSteel
 
-A 3D game engine for Windows, Linux and the web (using Emscripten) released under the GPL3 license. Based on Irrlicht, OpenAL and Lua.
+A 3D game engine for Windows, macOS, Linux and the web (using Emscripten) released under the GPL3 license. Based on Irrlicht, OpenAL and Lua.
 
 ## Setting up Geany
 
