@@ -87,6 +87,12 @@ if (bundleName) {
 
 Belowthat, after the line that contains `[NSApp setMainMenu:mainMenu];`, close the block with a new line containing `}`.
 
+Also, search for the line `Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSResizableWindowMask backing:type defer:FALSE];` and replace with:
+
+```c++
+Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask backing:type defer:FALSE];
+```
+
 ### Emscripten (irrlicht190_ogles only)
 
 To have a compressed data package added by default to the filesystem, add the following as line 11
