@@ -5,8 +5,8 @@ _build/*
 !_build/README.md
 !_build/coldsteel.html
 !_build/coldsteel.icns
-!_build/csbuild*
-!_build/csserver*
+!_build/csrun*
+!_build/csserve*
 !_build/geany
 !_build/examples
 !_build/Info.plist
