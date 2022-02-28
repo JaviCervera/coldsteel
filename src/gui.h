@@ -65,9 +65,10 @@ EXPORT void CALL DrawGUI();
 EXPORT bool_t CALL PrepareNextGUIEvent();
 EXPORT int CALL GUIEventType();
 EXPORT IGUIElement* CALL GUIEventControl();
+EXPORT int CALL GUIEventMenuId();
 
 
-void _PostEvent(int type, IGUIElement* control);
+void _PostEvent(int type, IGUIElement* control, int menuId);
 
 
 #ifdef __cplusplus

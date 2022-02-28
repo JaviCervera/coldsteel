@@ -11,40 +11,43 @@ class EventReceiver : public IEventReceiver {
             case EET_GUI_EVENT:
                 switch (event.GUIEvent.EventType) {
                     case EGET_ELEMENT_FOCUS_LOST:
-                        _PostEvent(CONTROL_LOSTFOCUS, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_LOSTFOCUS, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_ELEMENT_HOVERED:
-                        _PostEvent(CONTROL_ENTER, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ENTER, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_ELEMENT_LEFT:
-                        _PostEvent(CONTROL_EXIT, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_EXIT, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_BUTTON_CLICKED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_SCROLL_BAR_CHANGED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_CHECKBOX_CHANGED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_LISTBOX_CHANGED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_LISTBOX_SELECTED_AGAIN:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_TAB_CHANGED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_EDITBOX_ENTER:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     case EGET_MENU_ITEM_SELECTED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(
+                            CONTROL_ACTION,
+                            event.GUIEvent.Caller,
+                            ((IGUIContextMenu*)event.GUIEvent.Caller)->getItemCommandId(((IGUIContextMenu*)event.GUIEvent.Caller)->getSelectedItem()));
                         break;
                     case EGET_COMBO_BOX_CHANGED:
-                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller);
+                        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
                         break;
                     default:
                         break;

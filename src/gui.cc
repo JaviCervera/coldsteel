@@ -8,12 +8,13 @@ extern "C" {
 struct Event {
     int type;
     IGUIElement* control;
-    Event(int type, IGUIElement* control) : type(type), control(control) {}
+    int menuId;
+    Event(int type, IGUIElement* control, int menuId) : type(type), control(control), menuId(menuId) {}
 };
 
 
 static array<Event> _events;
-static Event _currentEvent(0, NULL);
+static Event _currentEvent(0, NULL, -1);
 
 
 IGUIEnvironment* _asGUI();
@@ -419,6 +420,8 @@ EXPORT void CALL SelectControlItem(IGUIElement* control, int index) {
 
 EXPORT int CALL SelectedControlItem(IGUIElement* control) {
     switch (ControlType(control)) {
+        case CONTROL_MENU:
+            return ((IGUIContextMenu*)control)->getSelectedItem();
         case CONTROL_COMBOBOX:
             return ((IGUIComboBox*)control)->getSelected();
         case CONTROL_LISTBOX:
@@ -515,6 +518,11 @@ EXPORT IGUIElement* CALL GUIEventControl() {
 }
 
 
+EXPORT int CALL GUIEventMenuId() {
+    return _currentEvent.menuId;
+}
+
+
 IGUIEnvironment* _asGUI() {
     return _Device()->getGUIEnvironment();
 }
@@ -525,8 +533,8 @@ IGUIElement* _asResolveParent(IGUIElement* parent) {
 }
 
 
-void _PostEvent(int type, IGUIElement* control) {
-    _events.push_back(Event(type, control));
+void _PostEvent(int type, IGUIElement* control, int menuId) {
+    _events.push_back(Event(type, control, menuId));
 }
 
 
