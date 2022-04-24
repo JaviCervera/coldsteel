@@ -102,6 +102,7 @@ EXPORT void CALL SetMaterialFilterMode(SMaterial* material, int mode) {
     material->setFlag(EMF_ANISOTROPIC_FILTER, mode == FILTER_ANISOTROPIC);
     material->setFlag(EMF_TRILINEAR_FILTER, mode >= FILTER_TRILINEAR);
     material->setFlag(EMF_BILINEAR_FILTER, mode >= FILTER_BILINEAR);
+    material->setFlag(EMF_USE_MIP_MAPS, mode >= FILTER_BILINEAR);
 }
 
 
