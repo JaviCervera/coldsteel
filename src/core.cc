@@ -62,9 +62,11 @@ bool_t _Run() {
     const int deltaMsecs = msecs - _lastMillisecs;
     const int wait = _ScreenFrameMsecs() - deltaMsecs;
     const int fixedWait = (wait > 0) ? wait : 0;
+#ifndef __EMSCRIPTEN__
     if (result && fixedWait > 0) {
         _Device()->sleep(fixedWait);
     }
+#endif
     const int msecsAfterWait = Millisecs();
     _delta = (msecsAfterWait - _lastMillisecs) / 1000.0f;
     _lastMillisecs = msecsAfterWait;

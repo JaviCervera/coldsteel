@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
 #ifdef __EMSCRIPTEN__
         emscripten_set_main_loop(EmscriptenMainLoop, config.screenFps, true);
 #else
+        SetScreenFPS(config.screenFps);
         MainLoop();
 #endif
     } else {
