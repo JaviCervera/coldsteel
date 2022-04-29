@@ -73,6 +73,7 @@ EXPORT void CALL DrawRect(int x, int y, int width, int height, int color) {
 EXPORT void CALL Draw3DLine(float x1, float y1, float z1, float x2, float y2, float z2, int color) {
     SMaterial mat;
     mat.setFlag(EMF_LIGHTING, false);
+    _Device()->getVideoDriver()->setTransform(ETS_WORLD, IdentityMatrix);
     _Device()->getVideoDriver()->setMaterial(mat);
     _Device()->getVideoDriver()->draw3DLine(vector3df(x1, y1, z1), vector3df(x2, y2, z2), _Color(color));
 }
