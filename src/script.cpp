@@ -72,13 +72,16 @@ bool Script::CallVoidFunction(const stringc& name) {
 int Script::LuaImport(lua_State* L) {
     if (lua_gettop(L) > 0) {
         const stringc filename = lua_tostring(L, 1);
-        const stringc buffer = LoadString(filename.c_str());
+        const stringc fixedFilename = (Find(filename.c_str(), ".", 0) == -1)
+            ? (filename + ".lua")
+            : filename;
+        const stringc buffer = LoadString(fixedFilename.c_str());
         if (buffer == "") {
-            lua_pushstring(L, (stringc("File '") + filename + "' does not exist or is empty.").c_str());
+            lua_pushstring(L, (stringc("File '") + fixedFilename + "' does not exist or is empty.").c_str());
             lua_error(L);
             return 0;
         }
-        if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), filename.c_str()) == 0) {
+        if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), fixedFilename.c_str()) == 0) {
             lua_pcall(L, 0, LUA_MULTRET, 0);
         } else {
             lua_error(L);
