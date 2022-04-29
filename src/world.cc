@@ -97,7 +97,7 @@ EXPORT ISceneNode* CALL Raycast(float x1, float y1, float z1, float x2, float y2
             position,
             triangle,
             group);
-    const vector3df normal = triangle.getNormal();
+    const vector3df normal = triangle.getNormal().normalize();
     _SetPoint(position.X, position.Y, position.Z);
     _SetNormal(normal.X, normal.Y, normal.Z);
     return entity;

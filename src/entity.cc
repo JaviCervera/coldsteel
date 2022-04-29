@@ -117,7 +117,7 @@ EXPORT ISceneNode* CALL SlideEntity(ISceneNode* entity, float x, float y, float 
                 collisionFalling,
                 collidedEntity);
             if (collidedEntity != NULL) {
-                const vector3df normal = collisionTriangle.getNormal();
+                const vector3df normal = collisionTriangle.getNormal().normalize();
                 SetEntityPosition(entity, result.X, result.Y, result.Z);
                 _SetPoint(collisionPoint.X, collisionPoint.Y, collisionPoint.Z);
                 _SetNormal(normal.X, normal.Y, normal.Z);
