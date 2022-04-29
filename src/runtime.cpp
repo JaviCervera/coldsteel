@@ -40,11 +40,9 @@ struct CompilerConfig {
 };
 
 
-static Script gScript;
-
-
 static stringc GetBinDir();
 static CompilerConfig InitConfig(int argc, char* argv[]);
+static void PrintError();
 static void MainLoop();
 static void EmscriptenMainLoop();
 //static CompilerConfig ParseCommandLine(int argc, char* argv[]);
@@ -59,10 +57,11 @@ int main(int argc, char* argv[]) {
 #endif
     if (config.path != "") ChangeDir(config.path.c_str());
     _OpenScreen(config.screenWidth, config.screenHeight, _DesktopDepth(), config.screenFlags);
-    if (!gScript.Load(config.sourceFilename)) {
-        _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
+    if (!Script::Get().Load(config.sourceFilename)) {
+        PrintError();
+        return -1;
     }
-    if (gScript.FunctionExists("Loop")) {
+    if (Script::Get().FunctionExists("Loop")) {
 #ifdef __EMSCRIPTEN__
         emscripten_set_main_loop(EmscriptenMainLoop, config.screenFps, true);
 #else
@@ -153,21 +152,27 @@ static CompilerConfig InitConfig(int argc, char* argv[]) {
 }
 
 
+static void PrintError() {
+    _Device()->getLogger()->log(Script::Get().Error().c_str(), ELL_ERROR);
+#ifdef _WIN32
+    MessageBoxA(NULL, Script::Get().Error().c_str(), "Error", MB_OK | MB_ICONERROR);
+#endif
+}
+
+
 static void MainLoop() {
     bool ok = true;
     while (_Run() && ok) {
-        ok = gScript.CallVoidFunction("Loop");
+        ok = Script::Get().CallVoidFunction("Loop");
     }
-    if (!ok) _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
+    if (!ok) PrintError();
 }
 
 
 #ifdef EMSCRIPTEN
 static void EmscriptenMainLoop() {
     if (_Run()) {
-        if (!gScript.CallVoidFunction("Loop")) {
-            _Device()->getLogger()->log(gScript.Error().c_str(), ELL_ERROR);
-        }
+        if (!Script::Get().CallVoidFunction("Loop")) PrintError();
     } else {
         emscripten_cancel_main_loop();
     }

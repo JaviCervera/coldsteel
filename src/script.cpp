@@ -7,8 +7,14 @@
 extern "C" int luaopen_coldsteel(lua_State* l);
 
 
+Script& Script::Get() {
+    static Script* instance = new Script();
+    return *instance;
+}
+
+
 Script::Script() {
-    // Create lua state and register libs
+    // Create Lua state and register libs
     mState = luaL_newstate();
     luaL_requiref(mState, "_G", luaopen_base, true); lua_pop(mState, 1);
     luaopen_coldsteel(mState);
