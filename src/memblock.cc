@@ -42,12 +42,14 @@ EXPORT int CALL MemblockSize(const Memblock* memblock) {
 
 
 EXPORT void CALL SetMemblockByte(Memblock* memblock, int offset, int val) {
-    memcpy((char*)memblock+offset, (((char*)&val)+3), sizeof(unsigned char));
+    unsigned char b = (unsigned char)val;
+    memcpy((char*)memblock+offset, &b, sizeof(unsigned char));
 }
 
 
 EXPORT void CALL SetMemblockShort(Memblock* memblock, int offset, int val) {
-    memcpy((char*)memblock+offset, (((char*)&val)+2), sizeof(unsigned short));
+    unsigned short s = (unsigned short)val;
+    memcpy((char*)memblock+offset, &s, sizeof(unsigned short));
 }
 
 
