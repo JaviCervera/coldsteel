@@ -24,6 +24,10 @@ EXPORT int CALL Code(const char* str);
 EXPORT int CALL Len(const char* str);
 EXPORT int CALL SplitCount(const char* str, const char* delimiter);
 EXPORT const char* CALL SplitIndex(const char* str, const char* delimiter, int index);
+EXPORT const char* CALL StripExt(const char* filename);
+EXPORT const char* CALL StripDir(const char* filename);
+EXPORT const char* CALL ExtractExt(const char* filename);
+EXPORT const char* CALL ExtractDir(const char* filename);
 EXPORT const char* CALL LoadString(const char* filename);
 EXPORT void CALL SaveString(const char* str, const char* filename, bool_t append);
 

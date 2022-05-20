@@ -77,16 +77,6 @@ int main(int argc, char* argv[]) {
 }
 
 
-static stringc ExtractDir(const char* filename) {
-    const char* fendp = strrchr(filename, '/');
-    const char* bendp = strrchr(filename, '\\');
-    const char* endp = (fendp >= bendp) ? fendp : bendp;
-    if (!endp) return "";
-    const size_t size = endp - filename;
-    return Mid(filename, 0, size);
-}
-
-
 static stringc GetBinDir() {
     char path[FILENAME_MAX];
 #if defined(_WIN32)

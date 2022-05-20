@@ -146,6 +146,61 @@ EXPORT const char* CALL SplitIndex(const char* str, const char* delimiter, int i
 }
 
 
+EXPORT const char* CALL StripExt(const char* filename) {
+    static stringc retstr;
+    const char* endp = strrchr(filename, '.');
+    if (!endp) {
+        retstr = filename;
+    } else {
+        retstr = Mid(filename, 0, endp - filename);
+    }
+    return retstr.c_str();
+}
+
+
+EXPORT const char* CALL StripDir(const char* filename) {
+    static stringc retstr;
+    const char* fendp = strrchr(filename, '/');
+    const char* bendp = strrchr(filename, '\\');
+    const char* endp = (fendp >= bendp) ? fendp : bendp;
+    if (!endp) {
+        retstr = filename;
+    } else {
+        const size_t offset = endp - filename + 1;
+        retstr = Mid(filename, offset, strlen(filename) - offset);
+    }
+    return retstr.c_str();
+}
+
+
+EXPORT const char* CALL ExtractExt(const char* filename) {
+    static stringc retstr;
+    const char* endp = strrchr(filename, '.');
+    if (!endp) {
+        retstr = "";
+    } else {
+        const size_t offset = endp - filename + 1;
+        retstr = Mid(filename, offset, strlen(filename) - offset);
+    }
+    return retstr.c_str();
+}
+
+
+EXPORT const char* CALL ExtractDir(const char* filename) {
+    static stringc retstr;
+    const char* fendp = strrchr(filename, '/');
+    const char* bendp = strrchr(filename, '\\');
+    const char* endp = (fendp >= bendp) ? fendp : bendp;
+    if (!endp) {
+        retstr = "";
+    } else {
+        const size_t size = endp - filename;
+        retstr = Mid(filename, 0, size);
+    }
+    return retstr.c_str();
+}
+
+
 EXPORT const char* CALL LoadString(const char* filename) {
     static stringc retstr;
     IReadFile* file = _Device()->getFileSystem()->createAndOpenFile(filename);
