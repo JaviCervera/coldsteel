@@ -100,13 +100,21 @@ EXPORT int CALL VertexColor(IMeshBuffer* surface, int index) {
 }
 
 
-EXPORT float CALL VertexU(IMeshBuffer* surface, int index) {
-    return surface->getTCoords(index).X;
+EXPORT float CALL VertexU(IMeshBuffer* surface, int index, int set) {
+    if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS)) {
+        return surface->getTCoords(index).X;
+    } else {
+        return ((S3DVertex2TCoords*)surface->getVertices())[index].TCoords2.X;
+    }
 }
 
 
-EXPORT float CALL VertexV(IMeshBuffer* surface, int index) {
-    return surface->getTCoords(index).Y;
+EXPORT float CALL VertexV(IMeshBuffer* surface, int index, int set) {
+    if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS)) {
+        return surface->getTCoords(index).Y;
+    } else {
+        return ((S3DVertex2TCoords*)surface->getVertices())[index].TCoords2.Y;
+    }
 }
 
 
