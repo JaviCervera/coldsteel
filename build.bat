@@ -14,13 +14,13 @@ cd ..
 
 echo # Building Irrlicht (Desktop) ...
 cd lib/irrlicht190
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make
 cd ../..
 
 echo # Building ColdSteel (Desktop) ...
-cmake -G "MinGW Makefiles" -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL
+cmake -G "MinGW Makefiles" -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
 mingw32-make
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
