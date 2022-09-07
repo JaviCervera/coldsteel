@@ -16,6 +16,7 @@ EXPORT int CALL AddIndex(IMeshBuffer* surface, int index) {
     int lastIndex = NumIndices(surface);
     surface->append(NULL, 0, (const u16*)&index, 1);
     surface->getIndices()[lastIndex] = index;
+    surface->setDirty(EBT_VERTEX_AND_INDEX);
     return lastIndex;
 }
 
@@ -48,6 +49,7 @@ EXPORT int CALL AddVertex(IMeshBuffer* surface, float x, float y, float z, float
             break;
         }
     }
+    surface->setDirty(EBT_VERTEX_AND_INDEX);
     return NumVertices(surface) - 1;
 }
 
@@ -115,6 +117,10 @@ EXPORT float CALL VertexV(IMeshBuffer* surface, int index, int set) {
     } else {
         return ((S3DVertex2TCoords*)surface->getVertices())[index].TCoords2.Y;
     }
+}
+
+EXPORT SMaterial* CALL SurfaceMaterial(IMeshBuffer* surface) {
+    return &surface->getMaterial();
 }
 
 

@@ -22,6 +22,7 @@ EXPORT float CALL VertexNZ(IMeshBuffer* surface, int index);
 EXPORT int CALL VertexColor(IMeshBuffer* surface, int index);
 EXPORT float CALL VertexU(IMeshBuffer* surface, int index, int set);
 EXPORT float CALL VertexV(IMeshBuffer* surface, int index, int set);
+EXPORT SMaterial* CALL SurfaceMaterial(IMeshBuffer* surface);
 
 
 #ifdef __cplusplus
