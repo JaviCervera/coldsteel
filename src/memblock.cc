@@ -102,13 +102,10 @@ EXPORT float CALL MemblockFloat(const Memblock* memblock, int offset) {
 
 EXPORT const char* CALL MemblockString(const Memblock* memblock, int offset) {
     static stringc result;
-    const int len = MemblockInt(memblock, offset);
     result = "";
+    const int len = MemblockInt(memblock, offset);
     for (int i = 0; i < len; ++i) {
-        char c;
-        int i_ = MemblockInt(memblock, offset + 4 + i);
-        memcpy(&c, ((char*)&i_) + 3, sizeof(c));
-        result += c;
+        result += (char)MemblockByte(memblock, offset + 4 + i);
     }
     return result.c_str();
 }
