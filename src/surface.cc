@@ -5,7 +5,7 @@ extern "C" {
 
 
 EXPORT IMeshBuffer* CALL AddSurface(IMesh* mesh) {
-    IMeshBuffer* buffer = new SMeshBuffer();
+    IMeshBuffer* buffer = new SMeshBufferLightMap();
     ((SMesh*)mesh)->addMeshBuffer(buffer);
     buffer->drop();
     return buffer;
@@ -16,7 +16,6 @@ EXPORT int CALL AddIndex(IMeshBuffer* surface, int index) {
     int lastIndex = NumIndices(surface);
     surface->append(NULL, 0, (const u16*)&index, 1);
     surface->getIndices()[lastIndex] = index;
-    surface->setDirty(EBT_VERTEX_AND_INDEX);
     return lastIndex;
 }
 
@@ -49,7 +48,6 @@ EXPORT int CALL AddVertex(IMeshBuffer* surface, float x, float y, float z, float
             break;
         }
     }
-    surface->setDirty(EBT_VERTEX_AND_INDEX);
     return NumVertices(surface) - 1;
 }
 
@@ -99,6 +97,15 @@ EXPORT int CALL VertexColor(IMeshBuffer* surface, int index) {
             return _IntColor(((S3DVertexTangents*)surface->getVertices())[index].Color);
     }
     return 0;
+}
+
+
+EXPORT void CALL SetVertexTexCoords(IMeshBuffer* surface, int index, float u, float v, int set) {
+    if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS)) {
+        surface->getTCoords(index) = vector2df(u, v);
+    } else {
+        ((S3DVertex2TCoords*)surface->getVertices())[index].TCoords2 = vector2df(u, v);
+    }
 }
 
 
