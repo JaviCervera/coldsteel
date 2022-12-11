@@ -17,7 +17,7 @@ Script& Script::Get() {
 Script::Script() {
     // Create Lua state and register libs
     mState = luaL_newstate();
-    luaL_requiref(mState, "_G", luaopen_base, true); lua_pop(mState, 1);
+    luaL_openlibs(mState);
     luaopen_coldsteel(mState);
     lua_register(mState, "import", LuaImport);
     lua_register(mState, "load", LuaLoad);
