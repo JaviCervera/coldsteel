@@ -17,7 +17,13 @@ class HaxeWrapperBuilder {
   }
 
   private static function getHaxeClasses(classes: Iterable<String>): String {
-    return classes.map(c -> 'extern class $c {}\n').join('');
+    return classes.map(c -> 'extern class $c${getHaxeExtends(c)} {}\n').join('');
+  }
+
+  private static function getHaxeExtends(className: String): String {
+    return (className.endsWith('SceneNode') && className != 'ISceneNode')
+      ? ' extends ISceneNode'
+      : '';
   }
 
   private static function getHaxeCsClass(constants: Iterable<Constant>, functions: Iterable<Function>): String {
@@ -29,7 +35,18 @@ class HaxeWrapperBuilder {
   }
 
   private static function getHaxeMethods(functions: Iterable<Function>): String {
-    return functions.map(f -> '\tpublic static function $f;\n').join('');
+    return functions.map(f -> '\t@:native("${f.name}") public static function ${getHaxeMethod(f)};\n').join('');
+  }
+
+  private static function getHaxeMethod(func: Function): String {
+    final funcName = Std.string(func);
+    if (funcName.startsWith('RGBA'))
+      return funcName.substr(0, 4).toLowerCase() + funcName.substr(4);
+    if (funcName.startsWith('RGB'))
+      return funcName.substr(0, 3).toLowerCase() + funcName.substr(3);
+    if (funcName.startsWith('GUI') || funcName.startsWith('XML'))
+      return funcName.substr(0, 3).toLowerCase() + funcName.substr(3);
+    return funcName.substr(0, 1).toLowerCase() + funcName.substr(1);
   }
 
   private static function getClasses(functions: Iterable<Function>): Iterable<String> {
