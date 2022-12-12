@@ -11,13 +11,13 @@ mkdir _CMAKE/_IRRLICHT
 
 echo "# Building Irrlicht (Desktop) ..."
 cd lib/irrlicht190
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 make
 cd ../..
 
 echo "# Building ColdSteel (Desktop) ..."
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
 make
 mv coldsteel ../../_build/coldsteel
