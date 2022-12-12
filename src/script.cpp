@@ -1,6 +1,7 @@
 #include "../lib/lua/lua.hpp"
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
+#include "memblock.h"
 #include "script.h"
 #include "sharedlib.h"
 #include "string.h"
@@ -35,12 +36,15 @@ Script::~Script() {
 
 
 bool Script::Load(const stringc& filename) {
-    const stringc buffer = LoadString(filename.c_str());
-    if (luaL_loadbuffer(mState, buffer.c_str(), buffer.size(), filename.c_str())
+    Memblock* memblock = LoadMemblock(filename.c_str());
+    if (!memblock) return false;
+    if (luaL_loadbuffer(mState, (const char*)memblock, MemblockSize(memblock), filename.c_str())
             || lua_pcall(mState, 0, LUA_MULTRET, 0)) {
         mError = lua_tostring(mState, -1);
+        FreeMemblock(memblock);
         return false;
     } else {
+        FreeMemblock(memblock);
         return true;
     }
 }
