@@ -109,7 +109,7 @@ def write_zip(path: str, out_dir: str, out_name: str) -> int:
     os.chdir(path)
     for root, dirs, files in os.walk('.'):
         for file_ in files:
-            if not file_.startswith('.'):
+            if not file_.startswith('.') and not file_.endswith('.hx') and not file_.endswith('.hxml'):
                 zip_.write(os.path.join(root, file_))
     os.chdir(prevcwd)
     os.chdir(script_path())
