@@ -5,7 +5,11 @@ extern "C" {
 
 
 EXPORT bool_t CALL AddZip(const char* filename) {
-    return _Device()->getFileSystem()->addFileArchive(filename, true, false, EFAT_ZIP);
+    if (_Device()->getFileSystem()->existFile(filename)) {
+        return _Device()->getFileSystem()->addFileArchive(filename, true, false, EFAT_ZIP);
+    } else {
+        return false;
+    }
 }
 
 
