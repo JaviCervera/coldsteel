@@ -99,7 +99,7 @@ static CompilerConfig InitConfig(int argc, char* argv[]) {
     config.screenWidth = 640;
     config.screenHeight = 480;
     config.screenFps = 0;
-    XMLNode* xml = ParseXML("config.xml");
+    XMLNode* xml = ParseXML((config.path + "config.xml").c_str());
     XMLNode* screenWidth = xml
         ? XMLChildNamed(xml, "screen_width", 0)
         : NULL;
