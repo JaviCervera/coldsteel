@@ -30,9 +30,9 @@ inline sharedlib_t::sharedlib_t(const char* libname)
 #if defined(_WIN32)
   handle = LoadLibraryA((libname + std::string(".dll")).c_str());
 #elif defined(__APPLE__)
-  handle = dlopen((libname + std::string(".dylib")).c_str(), RTLD_LAZY);
+  handle = dlopen((std::string("./") + libname + ".dylib").c_str(), RTLD_LAZY);
 #elif defined(__linux__)
-  handle = dlopen((libname + std::string(".so")).c_str(), RTLD_LAZY);
+  handle = dlopen((std::string("./") + libname + ".so").c_str(), RTLD_LAZY);
 #endif
 }
 
