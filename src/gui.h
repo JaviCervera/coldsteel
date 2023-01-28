@@ -48,6 +48,7 @@ EXPORT void CALL SetControlChecked(IGUIElement* control, bool_t checked);
 EXPORT bool_t CALL ControlChecked(IGUIElement* control);
 EXPORT void CALL SetControlValue(IGUIElement* control, int value);
 EXPORT int CALL ControlValue(IGUIElement* control);
+EXPORT int CALL ControlId(IGUIElement* control);
 EXPORT int CALL AddControlItem(IGUIElement* control, const char* text, int id);
 EXPORT int CALL ControlNumItems(IGUIElement* control);
 EXPORT void CALL SetControlItemEnabled(IGUIElement* control, int index, bool_t enable);

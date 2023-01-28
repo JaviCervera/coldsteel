@@ -324,6 +324,11 @@ EXPORT int CALL ControlValue(IGUIElement* control) {
 }
 
 
+EXPORT int CALL ControlId(IGUIElement* control) {
+    return control->getID();
+}
+
+
 EXPORT int CALL AddControlItem(IGUIElement* control, const char* text, int id) {
     switch (ControlType(control)) {
         case CONTROL_COMBOBOX:
