@@ -38,6 +38,11 @@ EXPORT void CALL Exit(int code) {
 }
 
 
+EXPORT int CALL System(const char* command) {
+    return system(command);
+}
+
+
 void _Init() {
     _SetDevice(NULL);
 
