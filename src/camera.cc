@@ -6,7 +6,9 @@ extern "C" {
 
 
 EXPORT ICameraSceneNode* CALL CreateCamera() {
-    return _Device()->getSceneManager()->addCameraSceneNode();
+    ICameraSceneNode* cam = _Device()->getSceneManager()->addCameraSceneNode();
+    cam->bindTargetAndRotation(true);
+    return cam;
 }
 
 
