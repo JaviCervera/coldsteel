@@ -63,6 +63,10 @@ EXPORT SMaterial* CALL SkydomeMaterial() {
 
 EXPORT void CALL DrawWorld(ICameraSceneNode* camera) {
     const recti& viewport = _Device()->getVideoDriver()->getViewPort();
+    vector3df dest(0, 0, 100);
+    matrix4 matrix = camera->getAbsoluteTransformation();
+    matrix.transformVect(dest);
+    camera->setTarget(dest);
     if (!camera->isOrthogonal()) camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
     _Device()->getSceneManager()->setActiveCamera(camera);
     _Device()->getSceneManager()->drawAll();
