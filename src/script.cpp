@@ -1,21 +1,24 @@
-#include "../lib/lua/lua.hpp"
+extern "C"
+{
+#include "../lib/lua/lua.h"
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
+}
 #include "memblock.h"
 #include "script.h"
 #include "sharedlib.h"
 #include "string.h"
 
-extern "C" int luaopen_coldsteel(lua_State* l);
+extern "C" int luaopen_coldsteel(lua_State *l);
 
-
-Script& Script::Get() {
-    static Script* instance = new Script();
+Script &Script::Get()
+{
+    static Script *instance = new Script();
     return *instance;
 }
 
-
-Script::Script() {
+Script::Script()
+{
     // Create Lua state and register libs
     mState = luaL_newstate();
     luaL_openlibs(mState);
@@ -29,97 +32,119 @@ Script::Script() {
     mSDK = GetSDK();
 }
 
-
-Script::~Script() {
+Script::~Script()
+{
     lua_close(mState);
 }
 
-
-bool Script::Load(const stringc& filename) {
-    Memblock* memblock = LoadMemblock(filename.c_str());
-    if (!memblock) return false;
-    if (luaL_loadbuffer(mState, (const char*)memblock, MemblockSize(memblock), filename.c_str())
-            || lua_pcall(mState, 0, LUA_MULTRET, 0)) {
+bool Script::Load(const stringc &filename)
+{
+    Memblock *memblock = LoadMemblock(filename.c_str());
+    if (!memblock)
+        return false;
+    if (luaL_loadbuffer(mState, (const char *)memblock, MemblockSize(memblock), filename.c_str()) || lua_pcall(mState, 0, LUA_MULTRET, 0))
+    {
         mError = lua_tostring(mState, -1);
         FreeMemblock(memblock);
         return false;
-    } else {
+    }
+    else
+    {
         FreeMemblock(memblock);
         return true;
     }
 }
 
-
-bool Script::FunctionExists(const stringc& name) const {
+bool Script::FunctionExists(const stringc &name) const
+{
     bool exists = false;
     lua_getglobal(mState, name.c_str());
-    if (lua_isfunction(mState, -1)) exists = true;
+    if (lua_isfunction(mState, -1))
+        exists = true;
     lua_pop(mState, 1);
     return exists;
 }
 
-
-bool Script::CallVoidFunction(const stringc& name) {
+bool Script::CallVoidFunction(const stringc &name)
+{
     mError = "";
     lua_getglobal(mState, name.c_str());
-    if (lua_isfunction(mState, -1)) {
-        if (lua_pcall(mState, 0, 1, 0)) mError = lua_tostring(mState, -1);
-        else if (!lua_isnil(mState, -1)) mError = stringc("'") + name + "' function cannot return a value";
-    } else {
+    if (lua_isfunction(mState, -1))
+    {
+        if (lua_pcall(mState, 0, 1, 0))
+            mError = lua_tostring(mState, -1);
+        else if (!lua_isnil(mState, -1))
+            mError = stringc("'") + name + "' function cannot return a value";
+    }
+    else
+    {
         mError = stringc("'") + name + "' function does not exist";
     }
     lua_pop(mState, 1);
     return mError == "";
 }
 
-
-int Script::LuaImport(lua_State* L) {
-    if (lua_gettop(L) > 0) {
+int Script::LuaImport(lua_State *L)
+{
+    if (lua_gettop(L) > 0)
+    {
         const stringc filename = lua_tostring(L, 1);
         const stringc fixedFilename = (Find(filename.c_str(), ".", 0) == -1)
-            ? (filename + ".lua")
-            : filename;
+                                          ? (filename + ".lua")
+                                          : filename;
         const stringc buffer = LoadString(fixedFilename.c_str());
-        if (buffer == "") {
+        if (buffer == "")
+        {
             lua_pushstring(L, (stringc("File '") + fixedFilename + "' does not exist or is empty.").c_str());
             lua_error(L);
             return 0;
         }
-        if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), fixedFilename.c_str()) == 0) {
+        if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), fixedFilename.c_str()) == 0)
+        {
             lua_pcall(L, 0, LUA_MULTRET, 0);
-        } else {
+        }
+        else
+        {
             lua_error(L);
         }
-    } else {
+    }
+    else
+    {
         lua_pushstring(L, "'import' requires filename argument.");
         lua_error(L);
     }
     return 0;
 }
 
-
-int Script::LuaLoad(lua_State* L) {
+int Script::LuaLoad(lua_State *L)
+{
 #ifndef _EMSCRIPTEN
-    if (lua_gettop(L) > 0) {
+    if (lua_gettop(L) > 0)
+    {
         const stringc libname = lua_tostring(L, 1);
-        sharedlib_t* lib = new sharedlib_t(libname.c_str());
-        if (!lib->isopen()) {
+        sharedlib_t *lib = new sharedlib_t(libname.c_str());
+        if (!lib->isopen())
+        {
             lua_pushstring(L, (stringc("Library '") + libname + "' could not be loaded.").c_str());
             lua_error(L);
             return 0;
         }
-        int (*loader)(ColdSteelSDK*) = (int(*)(ColdSteelSDK*))lib->funcptr((libname + "_load").c_str());
-        if (!loader) {
+        int (*loader)(ColdSteelSDK *) = (int (*)(ColdSteelSDK *))lib->funcptr((libname + "_load").c_str());
+        if (!loader)
+        {
             lua_pushstring(L, (stringc("Library '") + libname + "' does not contain '" + libname + "_load' function.").c_str());
             lua_error(L);
             return 0;
         }
-        if (!loader(&Get().mSDK)) {
+        if (!loader(&Get().mSDK))
+        {
             lua_pushstring(L, (stringc("Function '") + libname + "_load' returned 0.").c_str());
             lua_error(L);
             return 0;
         }
-    } else {
+    }
+    else
+    {
         lua_pushstring(L, "'load' requires library argument.");
         lua_error(L);
     }
@@ -130,8 +155,8 @@ int Script::LuaLoad(lua_State* L) {
     return 0;
 }
 
-
-ColdSteelSDK Script::GetSDK() {
+ColdSteelSDK Script::GetSDK()
+{
     ColdSteelSDK sdk;
     sdk.RegisterFunction = RegisterFunction;
     sdk.GetBoolArg = GetBoolArg;
@@ -147,57 +172,57 @@ ColdSteelSDK Script::GetSDK() {
     return sdk;
 }
 
-
-void Script::RegisterFunction(const char* name, int (*f)(void*)) {
+void Script::RegisterFunction(const char *name, int (*f)(void *))
+{
     lua_register(Get().mState, name, (lua_CFunction)f);
 }
 
-
-int Script::GetBoolArg(void* context, int index) {
-    return lua_toboolean((lua_State*)context, index);
+int Script::GetBoolArg(void *context, int index)
+{
+    return lua_toboolean((lua_State *)context, index);
 }
 
-
-int Script::GetIntArg(void* context, int index) {
-    return lua_tointeger((lua_State*)context, index);
+int Script::GetIntArg(void *context, int index)
+{
+    return lua_tointeger((lua_State *)context, index);
 }
 
-
-float Script::GetFloatArg(void* context, int index) {
-    return lua_tonumber((lua_State*)context, index);
+float Script::GetFloatArg(void *context, int index)
+{
+    return lua_tonumber((lua_State *)context, index);
 }
 
-
-const char* Script::GetStringArg(void* context, int index) {
-    return lua_tostring((lua_State*)context, index);
+const char *Script::GetStringArg(void *context, int index)
+{
+    return lua_tostring((lua_State *)context, index);
 }
 
-
-const void* Script::GetPointerArg(void* context, int index) {
-    return lua_topointer((lua_State*)context, index);
+const void *Script::GetPointerArg(void *context, int index)
+{
+    return lua_topointer((lua_State *)context, index);
 }
 
-
-void Script::PushBool(void* context, int val) {
-    lua_pushboolean((lua_State*)context, val);
+void Script::PushBool(void *context, int val)
+{
+    lua_pushboolean((lua_State *)context, val);
 }
 
-
-void Script::PushInt(void* context, int val) {
-    lua_pushinteger((lua_State*)context, val);
+void Script::PushInt(void *context, int val)
+{
+    lua_pushinteger((lua_State *)context, val);
 }
 
-
-void Script::PushFloat(void* context, float val) {
-    lua_pushnumber((lua_State*)context, val);
+void Script::PushFloat(void *context, float val)
+{
+    lua_pushnumber((lua_State *)context, val);
 }
 
-
-void Script::PushString(void* context, const char* val) {
-    lua_pushstring((lua_State*)context, val);
+void Script::PushString(void *context, const char *val)
+{
+    lua_pushstring((lua_State *)context, val);
 }
 
-
-void Script::PushPointer(void* context, void* val) {
-    lua_pushlightuserdata((lua_State*)context, val);    
+void Script::PushPointer(void *context, void *val)
+{
+    lua_pushlightuserdata((lua_State *)context, val);
 }
