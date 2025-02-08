@@ -44,7 +44,7 @@ function Loop()
     else
         spacePressed = false
     end
-    
+
     for _, cube in ipairs(cubes) do
         TurnEntity(cube, 0, 32 * DeltaTime(), 0)
     end

@@ -41,16 +41,16 @@ function Loop()
 
     -- Begin drawing on screen, clearing the screen to black
     BeginDrawing(true, false, 0)
-    
+
     -- Draw all primitives
     for _, primitive in ipairs(primitives) do
         DrawPrimitive(primitive)
     end
-    
+
     -- Draw statistics texts
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
     DrawText(nil, Str(#primitives) .. " primitives", 2, 14, RGB(255, 255, 255))
-    
+
     -- Finish drawing on screen
     EndDrawing()
 end

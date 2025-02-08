@@ -75,12 +75,12 @@ SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 function Loop()
     -- Player yaw
     TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0)
-    
+
     -- Camera pitch
     TurnEntity(cam, mySpeed * ROT_SPEED * DeltaTime(), 0, 0)
     if (EntityPitch(cam) > MAX_PITCH) then SetEntityRotation(cam, MAX_PITCH, EntityYaw(cam), 0) end
     if (EntityPitch(cam) < -MAX_PITCH) then SetEntityRotation(cam, -MAX_PITCH, EntityYaw(cam), 0) end
-    
+
     -- Move player
     local movX = 0
     local movZ = 0
@@ -89,7 +89,7 @@ function Loop()
     if (KeyDown(KEY_A)) then movX = -MOVE_SPEED * DeltaTime() end
     if (KeyDown(KEY_D)) then movX = MOVE_SPEED * DeltaTime() end
     SlideEntity(player, movX, 0, movZ, 1, 1, 1, WORLD_GROUP)
-    
+
     -- Move sphere
     SetEntityPosition(sphere, 0, 3, 0)
     TurnEntity(sphere, 0, 8 * DeltaTime(), 0)
@@ -97,12 +97,12 @@ function Loop()
     SetEntityPosition(light, EntityX(sphere), EntityY(sphere), EntityZ(sphere))
     SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere), 25)
     SetListener(EntityX(cam), EntityY(cam), EntityZ(cam), EntityYaw(cam))
-    
+
     BeginDrawing(true, true, RGB(15, 15, 15))
     DrawWorld(cam)
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
     EndDrawing()
-    
+
     -- Update mouse speed
     mxSpeed = CursorX() - ScreenWidth()/2
     mySpeed = CursorY() - ScreenHeight()/2

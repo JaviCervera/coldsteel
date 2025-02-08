@@ -11,7 +11,7 @@ function Loop()
     local textY = (ScreenHeight() - textHeight) / 2
     local leftLimit = 2
     local rightLimit = ScreenWidth() - textWidth - 2
-    
+
     textX = textX + textDir * TEXT_SPEED * DeltaTime()
     if textX <= leftLimit then
         textX = leftLimit

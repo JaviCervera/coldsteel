@@ -298,15 +298,15 @@ using namespace gui;
 
 typedef int bool_t;
 
-
-inline const wchar_t* _WSTR(const char* string) {
+inline const wchar_t *_WSTR(const char *string)
+{
     static wchar_t wstring[1024];
     mbstowcs(wstring, string, 1024);
     return wstring;
 }
 
-
-inline const char* _CSTR(const wchar_t* wstring) {
+inline const char *_CSTR(const wchar_t *wstring)
+{
     static char string[1024];
     wcstombs(string, wstring, 1024);
     return string;

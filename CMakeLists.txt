@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 project(coldsteel)
 
 #Define file groups
-file(GLOB COLDSTEEL_EXE_FILES "src/*.cc" "src/*.cpp" "src/runtime.rc" "lib/lua/*.c" "lib/stb/stb_vorbis.c")
+file(GLOB COLDSTEEL_EXE_FILES "src/*.cpp" "src/runtime.rc" "lib/lua/*.c" "lib/stb/stb_vorbis.c")
 
 #Add header and lib directories
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

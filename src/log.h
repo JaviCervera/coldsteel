@@ -3,12 +3,11 @@
 #include "common.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-
-EXPORT void CALL LogInfo(const char* msg);
-
+    EXPORT void CALL LogInfo(const char *msg);
 
 #ifdef __cplusplus
 } /* extern "C" */

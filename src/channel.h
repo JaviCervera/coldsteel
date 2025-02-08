@@ -3,29 +3,29 @@
 #include "common.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-struct Channel;
-struct Sound;
+    struct Channel;
+    struct Sound;
 
 #ifndef SWIG
-Channel* _PlayChannel(Sound* sound, bool_t loop);
+    Channel *_PlayChannel(Sound *sound, bool_t loop);
 #endif
 
-EXPORT void CALL StopChannel(Channel* channel);
-EXPORT void CALL PauseChannel(Channel* channel);
-EXPORT void CALL ResumeChannel(Channel* channel);
-EXPORT void CALL SetChannelPosition(Channel* channel, float x, float y, float z, float radius);
-EXPORT float CALL ChannelX(Channel* channel);
-EXPORT float CALL ChannelY(Channel* channel);
-EXPORT float CALL ChannelZ(Channel* channel);
-EXPORT float CALL ChannelRadius(Channel* channel);
-EXPORT void CALL SetChannelPitch(Channel* channel, float pitch);
-EXPORT void CALL SetChannelVolume(Channel* channel, float volume);
-EXPORT void CALL SetChannelPan(Channel* channel, float pan);
-EXPORT bool_t CALL ChannelPlaying(Channel* channel);
-
+    EXPORT void CALL StopChannel(Channel *channel);
+    EXPORT void CALL PauseChannel(Channel *channel);
+    EXPORT void CALL ResumeChannel(Channel *channel);
+    EXPORT void CALL SetChannelPosition(Channel *channel, float x, float y, float z, float radius);
+    EXPORT float CALL ChannelX(Channel *channel);
+    EXPORT float CALL ChannelY(Channel *channel);
+    EXPORT float CALL ChannelZ(Channel *channel);
+    EXPORT float CALL ChannelRadius(Channel *channel);
+    EXPORT void CALL SetChannelPitch(Channel *channel, float pitch);
+    EXPORT void CALL SetChannelVolume(Channel *channel, float volume);
+    EXPORT void CALL SetChannelPan(Channel *channel, float pan);
+    EXPORT bool_t CALL ChannelPlaying(Channel *channel);
 
 #ifdef __cplusplus
 } /* extern "C" */

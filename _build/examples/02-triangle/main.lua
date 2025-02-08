@@ -2,7 +2,7 @@ SetAmbient(RGB(255, 255, 255))
 
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 0, -2)
-    
+
 local mesh = CreateMesh()
 local surf = AddSurface(mesh)
 AddVertex(surf, 0, 0.5, 0, 0, 0, -1, RGB(255, 0, 0), 0, 0)

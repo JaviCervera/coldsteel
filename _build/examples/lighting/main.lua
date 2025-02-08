@@ -48,7 +48,7 @@ function Loop()
         SetEntityPosition(light, 0, 0, 0)
         MoveEntity(light, 0, 0, -48)
     end
-    
+
     BeginDrawing(true, true, RGB(0, 0, 0))
     DrawWorld(cam)
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
