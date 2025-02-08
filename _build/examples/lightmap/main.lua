@@ -1,5 +1,3 @@
-SetAmbient(RGB(255, 255, 255))
-
 -- Create and setup camera
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 2, -2)
@@ -17,6 +15,10 @@ SetMaterialTexture(mat, 1, lightmapTex)
 FreeMesh(mesh)
 --FreeTexture(boxTex)
 --FreeTexture(lightmapTex)
+
+-- Create light (it can darken the lightmap, but not brighten it)
+local light = CreateLight(LIGHT_POINT)
+SetEntityPosition(light, 2, 2, -2)
 
 function Loop()
     TurnEntity(cube, 0, 64 * DeltaTime(), 0)
