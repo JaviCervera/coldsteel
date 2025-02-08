@@ -53,6 +53,15 @@ def copy_runtime(out_dir: str, out_name: str) -> None:
     dest = os.path.join(runtime_path(out_dir, out_name), out_name)
     shutil.copy(source, dest)
 
+    # Copy dlls on Windows
+    if is_windows():
+        shutil.copy(
+            os.path.join(script_path(), 'Irrlicht.dll'),
+            os.path.join(runtime_path(out_dir, out_name), 'Irrlicht.dll'))
+        shutil.copy(
+            os.path.join(script_path(), 'OpenAL32.dll'),
+            os.path.join(runtime_path(out_dir, out_name), 'OpenAL32.dll'))
+
 
 def copy_icns(out_dir: str, out_name: str) -> None:
     source = os.path.join(script_path(), 'coldsteel.icns')
