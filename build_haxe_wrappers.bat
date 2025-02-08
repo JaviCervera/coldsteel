@@ -2,5 +2,5 @@
 
 mkdir _build\haxe
 swig.exe -xml -xmllite -c++ -o _build/haxe/coldsteel.xml coldsteel.i
-haxe -m HaxeWrapperBuilder --interp
+haxe --run HaxeWrapperBuilder
 del _build\haxe\coldsteel.xml

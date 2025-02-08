@@ -8,11 +8,13 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
+* Use Lua 5.1 (for LuaJIT compatibility).
+* Use Irrlicht as a dll.
 * AmbientLight should be white by default, and 30, 30, 30 when the first light is added (unless it was changed manually).
 * Fix FreeTexture.
 * Add terrain and matrix support.
 * Add particle support.
 * Replace OpenAL with raudio.
 * Use Direct3D 8 on Windows.
-* Use Lua 5.1 (for LuaJIT compatibility).
+* Replace Python scripts with a tool written in Haxe.
 * Add instructions on how to use Haxe.
