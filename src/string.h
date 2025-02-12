@@ -2,35 +2,26 @@
 
 #include "common.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-    EXPORT int CALL Val(const char *str);
-    EXPORT float CALL ValF(const char *str);
-    EXPORT const char *CALL Str(int number);
-    EXPORT const char *CALL StrF(float number);
-    EXPORT const char *CALL Left(const char *str, int num);
-    EXPORT const char *CALL Right(const char *str, int num);
-    EXPORT const char *CALL Mid(const char *str, int pos, int num);
-    EXPORT const char *CALL Replace(const char *str, const char *find, const char *replace);
-    EXPORT int CALL Find(const char *str, const char *find, int offset);
-    EXPORT const char *CALL Upper(const char *str);
-    EXPORT const char *CALL Lower(const char *str);
-    EXPORT const char *CALL Trim(const char *str);
-    EXPORT const char *CALL Char(int code);
-    EXPORT int CALL Code(const char *str);
-    EXPORT int CALL Len(const char *str);
-    EXPORT int CALL SplitCount(const char *str, const char *delimiter);
-    EXPORT const char *CALL SplitIndex(const char *str, const char *delimiter, int index);
-    EXPORT const char *CALL StripExt(const char *filename);
-    EXPORT const char *CALL StripDir(const char *filename);
-    EXPORT const char *CALL ExtractExt(const char *filename);
-    EXPORT const char *CALL ExtractDir(const char *filename);
-    EXPORT const char *CALL LoadString(const char *filename);
-    EXPORT void CALL SaveString(const char *str, const char *filename, bool_t append);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+int Val(const char *str);
+float ValF(const char *str);
+const char *Str(int number);
+const char *StrF(float number);
+const char *Left(const char *str, int num);
+const char *Right(const char *str, int num);
+const char *Mid(const char *str, int pos, int num);
+const char *Replace(const char *str, const char *find, const char *replace);
+int Find(const char *str, const char *find, int offset);
+const char *Upper(const char *str);
+const char *Lower(const char *str);
+const char *Trim(const char *str);
+const char *Char(int code);
+int Code(const char *str);
+int Len(const char *str);
+int SplitCount(const char *str, const char *delimiter);
+const char *SplitIndex(const char *str, const char *delimiter, int index);
+const char *StripExt(const char *filename);
+const char *StripDir(const char *filename);
+const char *ExtractExt(const char *filename);
+const char *ExtractDir(const char *filename);
+const char *LoadString(const char *filename);
+void SaveString(const char *str, const char *filename, bool_t append);

@@ -2,25 +2,16 @@
 
 #include "common.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+struct XMLNode;
 
-    struct XMLNode;
-
-    EXPORT XMLNode *CALL ParseXML(const char *filename);
-    EXPORT void CALL FreeXML(XMLNode *node);
-    EXPORT const char *CALL XMLName(XMLNode *node);
-    EXPORT const char *CALL XMLText(XMLNode *node);
-    EXPORT int CALL XMLNumAttributes(XMLNode *node);
-    EXPORT const char *CALL XMLAttributeName(XMLNode *node, int index);
-    EXPORT const char *CALL XMLAttributeValue(XMLNode *node, const char *name);
-    EXPORT int CALL XMLNumChildren(XMLNode *node);
-    EXPORT XMLNode *CALL XMLChild(XMLNode *node, int index);
-    EXPORT int CALL XMLNumChildrenNamed(XMLNode *node, const char *name);
-    EXPORT XMLNode *CALL XMLChildNamed(XMLNode *node, const char *name, int index);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+XMLNode *ParseXML(const char *filename);
+void FreeXML(XMLNode *node);
+const char *XMLName(XMLNode *node);
+const char *XMLText(XMLNode *node);
+int XMLNumAttributes(XMLNode *node);
+const char *XMLAttributeName(XMLNode *node, int index);
+const char *XMLAttributeValue(XMLNode *node, const char *name);
+int XMLNumChildren(XMLNode *node);
+XMLNode *XMLChild(XMLNode *node, int index);
+int XMLNumChildrenNamed(XMLNode *node, const char *name);
+XMLNode *XMLChildNamed(XMLNode *node, const char *name, int index);

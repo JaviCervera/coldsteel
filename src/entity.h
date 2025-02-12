@@ -2,52 +2,43 @@
 
 #include "common.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-    EXPORT ISceneNode *CALL CreateEntity();
-    EXPORT void CALL FreeEntity(ISceneNode *entity);
-    EXPORT int CALL EntityType(ISceneNode *entity);
-    EXPORT void CALL SetEntityName(ISceneNode *entity, const char *name);
-    EXPORT const char *CALL EntityName(ISceneNode *entity);
-    EXPORT void CALL SetEntityVisible(ISceneNode *entity, bool_t visible);
-    EXPORT bool_t CALL EntityVisible(ISceneNode *entity);
-    EXPORT void CALL SetEntityParent(ISceneNode *entity, ISceneNode *parent);
-    EXPORT ISceneNode *CALL EntityParent(ISceneNode *entity);
-    EXPORT int CALL EntityNumChildren(ISceneNode *entity);
-    EXPORT ISceneNode *CALL EntityChild(ISceneNode *entity, int index);
-    EXPORT void CALL SetEntityPosition(ISceneNode *entity, float x, float y, float z);
-    EXPORT void CALL MoveEntity(ISceneNode *entity, float x, float y, float z);
-    EXPORT ISceneNode *CALL SlideEntity(ISceneNode *entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group);
-    EXPORT float CALL EntityX(ISceneNode *entity);
-    EXPORT float CALL EntityY(ISceneNode *entity);
-    EXPORT float CALL EntityZ(ISceneNode *entity);
-    EXPORT float CALL EntityLocalX(ISceneNode *entity);
-    EXPORT float CALL EntityLocalY(ISceneNode *entity);
-    EXPORT float CALL EntityLocalZ(ISceneNode *entity);
-    EXPORT void CALL SetEntityRotation(ISceneNode *entity, float pitch, float yaw, float roll);
-    EXPORT void CALL TurnEntity(ISceneNode *entity, float pitch, float yaw, float roll);
-    EXPORT void CALL PointEntity(ISceneNode *entity, float x, float y, float z);
-    EXPORT float CALL EntityPitch(ISceneNode *entity);
-    EXPORT float CALL EntityYaw(ISceneNode *entity);
-    EXPORT float CALL EntityRoll(ISceneNode *entity);
-    EXPORT void CALL SetEntityScale(ISceneNode *entity, float x, float y, float z);
-    EXPORT float CALL EntityScaleX(ISceneNode *entity);
-    EXPORT float CALL EntityScaleY(ISceneNode *entity);
-    EXPORT float CALL EntityScaleZ(ISceneNode *entity);
-    EXPORT float CALL EntityWidth(ISceneNode *entity);
-    EXPORT float CALL EntityHeight(ISceneNode *entity);
-    EXPORT float CALL EntityDepth(ISceneNode *entity);
-    EXPORT int CALL EntityNumMaterials(ISceneNode *entity);
-    EXPORT SMaterial *CALL EntityMaterial(ISceneNode *entity, int index);
-    EXPORT void CALL SetEntityCollision(ISceneNode *entity, int type, int group);
-    EXPORT bool_t CALL EntityCollision(ISceneNode *entity);
-    EXPORT int CALL EntityGroup(ISceneNode *entity);
-    EXPORT float CALL EntityDistance(ISceneNode *entity, float x, float y, float z);
-    EXPORT float CALL EntityDistanceSquare(ISceneNode *entity, float x, float y, float z);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+ISceneNode *CreateEntity();
+void FreeEntity(ISceneNode *entity);
+int EntityType(ISceneNode *entity);
+void SetEntityName(ISceneNode *entity, const char *name);
+const char *EntityName(ISceneNode *entity);
+void SetEntityVisible(ISceneNode *entity, bool_t visible);
+bool_t EntityVisible(ISceneNode *entity);
+void SetEntityParent(ISceneNode *entity, ISceneNode *parent);
+ISceneNode *EntityParent(ISceneNode *entity);
+int EntityNumChildren(ISceneNode *entity);
+ISceneNode *EntityChild(ISceneNode *entity, int index);
+void SetEntityPosition(ISceneNode *entity, float x, float y, float z);
+void MoveEntity(ISceneNode *entity, float x, float y, float z);
+ISceneNode *SlideEntity(ISceneNode *entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group);
+float EntityX(ISceneNode *entity);
+float EntityY(ISceneNode *entity);
+float EntityZ(ISceneNode *entity);
+float EntityLocalX(ISceneNode *entity);
+float EntityLocalY(ISceneNode *entity);
+float EntityLocalZ(ISceneNode *entity);
+void SetEntityRotation(ISceneNode *entity, float pitch, float yaw, float roll);
+void TurnEntity(ISceneNode *entity, float pitch, float yaw, float roll);
+void PointEntity(ISceneNode *entity, float x, float y, float z);
+float EntityPitch(ISceneNode *entity);
+float EntityYaw(ISceneNode *entity);
+float EntityRoll(ISceneNode *entity);
+void SetEntityScale(ISceneNode *entity, float x, float y, float z);
+float EntityScaleX(ISceneNode *entity);
+float EntityScaleY(ISceneNode *entity);
+float EntityScaleZ(ISceneNode *entity);
+float EntityWidth(ISceneNode *entity);
+float EntityHeight(ISceneNode *entity);
+float EntityDepth(ISceneNode *entity);
+int EntityNumMaterials(ISceneNode *entity);
+SMaterial *EntityMaterial(ISceneNode *entity, int index);
+void SetEntityCollision(ISceneNode *entity, int type, int group);
+bool_t EntityCollision(ISceneNode *entity);
+int EntityGroup(ISceneNode *entity);
+float EntityDistance(ISceneNode *entity, float x, float y, float z);
+float EntityDistanceSquare(ISceneNode *entity, float x, float y, float z);

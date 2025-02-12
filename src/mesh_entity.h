@@ -2,26 +2,17 @@
 
 #include "common.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-    EXPORT IMeshSceneNode *CALL CreateMeshEntity(IMesh *mesh);
-    EXPORT IMeshSceneNode *CALL CreateOctreeMeshEntity(IMesh *mesh);
-    EXPORT IMesh *CALL MeshEntityMesh(IMeshSceneNode *entity);
-    EXPORT void CALL SetMeshEntityCastShadows(IMeshSceneNode *entity, bool_t enable);
-    EXPORT bool_t CALL MeshEntityCastShadows(IMeshSceneNode *entity);
-    EXPORT void CALL SetMeshEntityLoop(IMeshSceneNode *entity, bool_t loop);
-    EXPORT bool_t CALL MeshEntityLoop(IMeshSceneNode *entity);
-    EXPORT void CALL SetMeshEntityFPS(IMeshSceneNode *entity, float fps);
-    EXPORT float CALL MeshEntityFPS(IMeshSceneNode *entity);
-    EXPORT void CALL SetMeshEntityFrame(IMeshSceneNode *entity, float frame);
-    EXPORT float CALL MeshEntityFrame(IMeshSceneNode *entity);
-    EXPORT void CALL SetMeshEntityFrames(IMeshSceneNode *entity, int first, int last);
-    EXPORT int CALL MeshEntityFirstFrame(IMeshSceneNode *entity);
-    EXPORT int CALL MeshEntityLastFrame(IMeshSceneNode *entity);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+IMeshSceneNode *CreateMeshEntity(IMesh *mesh);
+IMeshSceneNode *CreateOctreeMeshEntity(IMesh *mesh);
+IMesh *MeshEntityMesh(IMeshSceneNode *entity);
+void SetMeshEntityCastShadows(IMeshSceneNode *entity, bool_t enable);
+bool_t MeshEntityCastShadows(IMeshSceneNode *entity);
+void SetMeshEntityLoop(IMeshSceneNode *entity, bool_t loop);
+bool_t MeshEntityLoop(IMeshSceneNode *entity);
+void SetMeshEntityFPS(IMeshSceneNode *entity, float fps);
+float MeshEntityFPS(IMeshSceneNode *entity);
+void SetMeshEntityFrame(IMeshSceneNode *entity, float frame);
+float MeshEntityFrame(IMeshSceneNode *entity);
+void SetMeshEntityFrames(IMeshSceneNode *entity, int first, int last);
+int MeshEntityFirstFrame(IMeshSceneNode *entity);
+int MeshEntityLastFrame(IMeshSceneNode *entity);

@@ -3,125 +3,120 @@
 #include "light.h"
 #include "world.h"
 
-extern "C"
+ILightSceneNode *CreateLight(int type)
 {
+  map<int, E_LIGHT_TYPE> types;
+  types[LIGHT_DIRECTIONAL] = ELT_DIRECTIONAL;
+  types[LIGHT_POINT] = ELT_POINT;
+  types[LIGHT_SPOT] = ELT_SPOT;
+  ILightSceneNode *light = _Device()->getSceneManager()->addLightSceneNode();
+  light->setLightType(types[type]);
+  if (!_HasSetAmbient())
+    _Device()->getSceneManager()->setAmbientLight(_Color(RGB(30, 30, 30)));
+  return light;
+}
 
-    EXPORT ILightSceneNode *CALL CreateLight(int type)
-    {
-        map<int, E_LIGHT_TYPE> types;
-        types[LIGHT_DIRECTIONAL] = ELT_DIRECTIONAL;
-        types[LIGHT_POINT] = ELT_POINT;
-        types[LIGHT_SPOT] = ELT_SPOT;
-        ILightSceneNode *light = _Device()->getSceneManager()->addLightSceneNode();
-        light->setLightType(types[type]);
-        if (!_HasSetAmbient())
-            _Device()->getSceneManager()->setAmbientLight(_Color(RGB(30, 30, 30)));
-        return light;
-    }
+int LightType(ILightSceneNode *light)
+{
+  map<E_LIGHT_TYPE, int> types;
+  types[ELT_DIRECTIONAL] = LIGHT_DIRECTIONAL;
+  types[ELT_POINT] = LIGHT_POINT;
+  types[ELT_SPOT] = LIGHT_SPOT;
+  return types[light->getLightType()];
+}
 
-    EXPORT int CALL LightType(ILightSceneNode *light)
-    {
-        map<E_LIGHT_TYPE, int> types;
-        types[ELT_DIRECTIONAL] = LIGHT_DIRECTIONAL;
-        types[ELT_POINT] = LIGHT_POINT;
-        types[ELT_SPOT] = LIGHT_SPOT;
-        return types[light->getLightType()];
-    }
+void SetLightDiffuse(ILightSceneNode *light, int color)
+{
+  light->getLightData().DiffuseColor = _Color(color);
+}
 
-    EXPORT void CALL SetLightDiffuse(ILightSceneNode *light, int color)
-    {
-        light->getLightData().DiffuseColor = _Color(color);
-    }
+int LightDiffuse(ILightSceneNode *light)
+{
+  return _IntColor(light->getLightData().DiffuseColor.toSColor());
+}
 
-    EXPORT int CALL LightDiffuse(ILightSceneNode *light)
-    {
-        return _IntColor(light->getLightData().DiffuseColor.toSColor());
-    }
+void SetLightAmbient(ILightSceneNode *light, int color)
+{
+  light->getLightData().AmbientColor = _Color(color);
+}
 
-    EXPORT void CALL SetLightAmbient(ILightSceneNode *light, int color)
-    {
-        light->getLightData().AmbientColor = _Color(color);
-    }
+int LightAmbient(ILightSceneNode *light)
+{
+  return _IntColor(light->getLightData().AmbientColor.toSColor());
+}
 
-    EXPORT int CALL LightAmbient(ILightSceneNode *light)
-    {
-        return _IntColor(light->getLightData().AmbientColor.toSColor());
-    }
+void SetLightSpecular(ILightSceneNode *light, int color)
+{
+  light->getLightData().SpecularColor = _Color(color);
+}
 
-    EXPORT void CALL SetLightSpecular(ILightSceneNode *light, int color)
-    {
-        light->getLightData().SpecularColor = _Color(color);
-    }
+int LightSpecular(ILightSceneNode *light)
+{
+  return _IntColor(light->getLightData().SpecularColor.toSColor());
+}
 
-    EXPORT int CALL LightSpecular(ILightSceneNode *light)
-    {
-        return _IntColor(light->getLightData().SpecularColor.toSColor());
-    }
+void SetLightCastShadows(ILightSceneNode *light, bool_t enable)
+{
+  light->enableCastShadow(enable);
+}
 
-    EXPORT void CALL SetLightCastShadows(ILightSceneNode *light, bool_t enable)
-    {
-        light->enableCastShadow(enable);
-    }
+bool_t LightCastShadows(ILightSceneNode *light)
+{
+  return light->getCastShadow();
+}
 
-    EXPORT bool_t CALL LightCastShadows(ILightSceneNode *light)
-    {
-        return light->getCastShadow();
-    }
+void SetLightRadius(ILightSceneNode *light, float radius)
+{
+  light->setRadius(radius);
+}
 
-    EXPORT void CALL SetLightRadius(ILightSceneNode *light, float radius)
-    {
-        light->setRadius(radius);
-    }
+float LightRadius(ILightSceneNode *light)
+{
+  return light->getRadius();
+}
 
-    EXPORT float CALL LightRadius(ILightSceneNode *light)
-    {
-        return light->getRadius();
-    }
+void SetLightAttenuation(ILightSceneNode *light, float constant, float linear, float quadratic)
+{
+  light->getLightData().Attenuation = vector3df(constant, linear, quadratic);
+}
 
-    EXPORT void CALL SetLightAttenuation(ILightSceneNode *light, float constant, float linear, float quadratic)
-    {
-        light->getLightData().Attenuation = vector3df(constant, linear, quadratic);
-    }
+float LightConstantAttenuation(ILightSceneNode *light)
+{
+  return light->getLightData().Attenuation.X;
+}
 
-    EXPORT float CALL LightConstantAttenuation(ILightSceneNode *light)
-    {
-        return light->getLightData().Attenuation.X;
-    }
+float LightLinearAttenuation(ILightSceneNode *light)
+{
+  return light->getLightData().Attenuation.Y;
+}
 
-    EXPORT float CALL LightLinearAttenuation(ILightSceneNode *light)
-    {
-        return light->getLightData().Attenuation.Y;
-    }
+float LightQuadraticAttenuation(ILightSceneNode *light)
+{
+  return light->getLightData().Attenuation.Z;
+}
 
-    EXPORT float CALL LightQuadraticAttenuation(ILightSceneNode *light)
-    {
-        return light->getLightData().Attenuation.Z;
-    }
+void SetLightCone(ILightSceneNode *light, float inner, float outer)
+{
+  light->getLightData().InnerCone = inner;
+  light->getLightData().OuterCone = outer;
+}
 
-    EXPORT void CALL SetLightCone(ILightSceneNode *light, float inner, float outer)
-    {
-        light->getLightData().InnerCone = inner;
-        light->getLightData().OuterCone = outer;
-    }
+float LightInnerCone(ILightSceneNode *light)
+{
+  return light->getLightData().InnerCone;
+}
 
-    EXPORT float CALL LightInnerCone(ILightSceneNode *light)
-    {
-        return light->getLightData().InnerCone;
-    }
+float LightOuterCone(ILightSceneNode *light)
+{
+  return light->getLightData().OuterCone;
+}
 
-    EXPORT float CALL LightOuterCone(ILightSceneNode *light)
-    {
-        return light->getLightData().OuterCone;
-    }
+void SetLightFalloff(ILightSceneNode *light, float falloff)
+{
+  light->getLightData().Falloff = falloff;
+}
 
-    EXPORT void CALL SetLightFalloff(ILightSceneNode *light, float falloff)
-    {
-        light->getLightData().Falloff = falloff;
-    }
-
-    EXPORT float CALL LightFalloff(ILightSceneNode *light)
-    {
-        return light->getLightData().Falloff;
-    }
-
-} // extern "C"
+float LightFalloff(ILightSceneNode *light)
+{
+  return light->getLightData().Falloff;
+}

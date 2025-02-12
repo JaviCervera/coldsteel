@@ -2,46 +2,37 @@
 
 #include "common.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+float Floor(float val);
+float Ceil(float val);
+float Abs(float val);
+float Sqr(float val);
+float Sin(float val);
+float Cos(float val);
+float Tan(float val);
+float ASin(float val);
+float ACos(float val);
+float ATan(float val);
+float ATan2(float x, float y);
+float Exp(float val);
+float Pow(float base, float exp);
+float Log(float val);
+float Log10(float val);
+float Min(float a, float b);
+float Max(float a, float b);
+float Clamp(float val, float min, float max);
+int BoolToInt(bool_t val);
+int Int(float val);
+int Rand(int min, int max);
+void RandSeed(int seed);
+float Deg(float rad);
+float Rad(float deg);
+float Wrap(float val, float mod);
+float PointX();
+float PointY();
+float PointZ();
+float NormalX();
+float NormalY();
+float NormalZ();
 
-    EXPORT float CALL Floor(float val);
-    EXPORT float CALL Ceil(float val);
-    EXPORT float CALL Abs(float val);
-    EXPORT float CALL Sqr(float val);
-    EXPORT float CALL Sin(float val);
-    EXPORT float CALL Cos(float val);
-    EXPORT float CALL Tan(float val);
-    EXPORT float CALL ASin(float val);
-    EXPORT float CALL ACos(float val);
-    EXPORT float CALL ATan(float val);
-    EXPORT float CALL ATan2(float x, float y);
-    EXPORT float CALL Exp(float val);
-    EXPORT float CALL Pow(float base, float exp);
-    EXPORT float CALL Log(float val);
-    EXPORT float CALL Log10(float val);
-    EXPORT float CALL Min(float a, float b);
-    EXPORT float CALL Max(float a, float b);
-    EXPORT float CALL Clamp(float val, float min, float max);
-    EXPORT int CALL BoolToInt(bool_t val);
-    EXPORT int CALL Int(float val);
-    EXPORT int CALL Rand(int min, int max);
-    EXPORT void CALL RandSeed(int seed);
-    EXPORT float CALL Deg(float rad);
-    EXPORT float CALL Rad(float deg);
-    EXPORT float CALL Wrap(float val, float mod);
-    EXPORT float CALL PointX();
-    EXPORT float CALL PointY();
-    EXPORT float CALL PointZ();
-    EXPORT float CALL NormalX();
-    EXPORT float CALL NormalY();
-    EXPORT float CALL NormalZ();
-
-    void _SetPoint(float x, float y, float z);
-    void _SetNormal(float x, float y, float z);
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+void _SetPoint(float x, float y, float z);
+void _SetNormal(float x, float y, float z);
