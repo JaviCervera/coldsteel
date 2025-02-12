@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Fix FreeTexture.
 * Add terrain and matrix support.
 * Add particle support.
 * Replace OpenAL with raudio.

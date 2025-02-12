@@ -13,8 +13,6 @@ SetMaterialType(mat, MATERIAL_LIGHTMAP)
 SetMaterialTexture(mat, 0, boxTex)
 SetMaterialTexture(mat, 1, lightmapTex)
 FreeMesh(mesh)
---FreeTexture(boxTex)
---FreeTexture(lightmapTex)
 
 -- Create light (it can darken the lightmap, but not brighten it)
 local light = CreateLight(LIGHT_POINT)

@@ -26,9 +26,9 @@ extern "C"
         return _Device()->getVideoDriver()->getTexture(filename);
     }
 
-    EXPORT void CALL FreeTexture(ITexture *tex)
+    EXPORT void CALL ClearTextureCache()
     {
-        _Device()->getVideoDriver()->removeTexture(tex);
+        _Device()->getVideoDriver()->removeAllTextures();
     }
 
     EXPORT void CALL DrawTexture(ITexture *tex, int x, int y)
