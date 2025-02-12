@@ -1,6 +1,7 @@
 #include "core.h"
 #include "graphics.h"
 #include "light.h"
+#include "world.h"
 
 extern "C"
 {
@@ -13,6 +14,8 @@ extern "C"
         types[LIGHT_SPOT] = ELT_SPOT;
         ILightSceneNode *light = _Device()->getSceneManager()->addLightSceneNode();
         light->setLightType(types[type]);
+        if (!_HasSetAmbient())
+            _Device()->getSceneManager()->setAmbientLight(_Color(RGB(30, 30, 30)));
         return light;
     }
 

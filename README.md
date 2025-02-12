@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* AmbientLight should be white by default, and 30, 30, 30 when the first light is added (unless it was changed manually).
 * Fix FreeTexture.
 * Add terrain and matrix support.
 * Add particle support.

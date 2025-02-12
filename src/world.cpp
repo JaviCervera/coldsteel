@@ -5,6 +5,7 @@
 
 static ISceneNode *_skybox = NULL;
 static ISceneNode *_skydome = NULL;
+static bool _hasSetAmbient = false;
 
 extern "C"
 {
@@ -12,6 +13,7 @@ extern "C"
     EXPORT void CALL SetAmbient(int color)
     {
         _Device()->getSceneManager()->setAmbientLight(_Color(color));
+        _hasSetAmbient = true;
     }
 
     EXPORT void CALL SetShadowColor(int color)
@@ -102,6 +104,11 @@ extern "C"
         _SetPoint(position.X, position.Y, position.Z);
         _SetNormal(normal.X, normal.Y, normal.Z);
         return entity;
+    }
+
+    bool _HasSetAmbient()
+    {
+        return _hasSetAmbient;
     }
 
 } // extern "C"

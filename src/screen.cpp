@@ -1,4 +1,5 @@
 #include "core.h"
+#include "graphics.h"
 #include "gui.h"
 #include "input.h"
 #include "listener.h"
@@ -176,6 +177,7 @@ extern "C"
         _SetDevice(createDeviceEx(params));
         _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
         _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+        _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
 
         // Init gui skin
         IGUISkin *skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
