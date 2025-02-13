@@ -243,12 +243,9 @@ SMaterial *EntityMaterial(ISceneNode *entity, int index)
 void SetEntityCollision(ISceneNode *entity, int type, int group)
 {
   ITriangleSelector *selector = NULL;
-  IAnimatedMeshSceneNode *animNode = (entity->getType() == ESNT_ANIMATED_MESH)
-                                         ? (IAnimatedMeshSceneNode *)entity
-                                         : NULL;
-  IMeshSceneNode *meshNode = (entity->getType() == ESNT_MESH || entity->getType() == ESNT_OCTREE)
-                                 ? (IMeshSceneNode *)entity
-                                 : NULL;
+  IAnimatedMeshSceneNode *animNode = (entity->getType() == ESNT_ANIMATED_MESH) ? (IAnimatedMeshSceneNode *)entity : NULL;
+  IMeshSceneNode *meshNode = (entity->getType() == ESNT_MESH || entity->getType() == ESNT_OCTREE) ? (IMeshSceneNode *)entity : NULL;
+  ITerrainSceneNode *terrainNode = (entity->getType() == ESNT_TERRAIN) ? (ITerrainSceneNode *)entity : NULL;
   if (entity->getTriangleSelector())
   {
     _colliders.remove(entity->getTriangleSelector());
@@ -260,9 +257,12 @@ void SetEntityCollision(ISceneNode *entity, int type, int group)
     selector = _Device()->getSceneManager()->createTriangleSelectorFromBoundingBox(entity);
     break;
   case COLLISION_MESH:
-    selector =
-        animNode ? _Device()->getSceneManager()->createTriangleSelector(animNode) : meshNode ? _Device()->getSceneManager()->createTriangleSelector(meshNode->getMesh(), meshNode)
-                                                                                             : NULL;
+    if (animNode)
+      selector = _Device()->getSceneManager()->createTriangleSelector(animNode);
+    else if (meshNode)
+      selector = _Device()->getSceneManager()->createTriangleSelector(meshNode->getMesh(), meshNode);
+    else if (terrainNode)
+      selector = _Device()->getSceneManager()->createTerrainTriangleSelector(terrainNode);
     break;
   case COLLISION_OCTREE:
     selector =

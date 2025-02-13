@@ -24,6 +24,7 @@
 #include "sprite.h"
 #include "string.h"
 #include "surface.h"
+#include "terrain.h"
 #include "texture.h"
 #include "world.h"
 #include "xml.h"

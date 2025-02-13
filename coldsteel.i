@@ -9,6 +9,7 @@ class ICameraSceneNode : public ISceneNode { protected: ICameraSceneNode(); };
 class ILightSceneNode : public ISceneNode { protected: ILightSceneNode(); };
 class IMeshSceneNode : public ISceneNode { protected: IMeshSceneNode(); };
 class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode(); };
+class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 
 %include "src/common.h"
 %include "src/bitwise.h"
@@ -35,6 +36,7 @@ class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode()
 %include "src/sprite.h"
 %include "src/string.h"
 %include "src/surface.h"
+%include "src/terrain.h"
 %include "src/texture.h"
 %include "src/world.h"
 %include "src/xml.h"
