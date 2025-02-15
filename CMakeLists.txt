@@ -1,6 +1,3 @@
-#Minimum version
-cmake_minimum_required(VERSION 3.0)
-
 #Define project
 project(coldsteel)
 
@@ -25,7 +22,7 @@ add_executable(coldsteel ${COLDSTEEL_EXE_FILES})
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DWIN32)
+	add_definitions(-DWIN32)
 	if (MSVC)
 		message("Platform is Windows (MSVC)")
 		#add_definitions(-D_CRT_SECURE_NO_WARNINGS)

@@ -53,3 +53,4 @@ src/lua_wrapper.cpp
 !_build/OpenAL32.dll
 !lib/openal/OpenAL32.lib
 !upx.exe
+mingw_342/*

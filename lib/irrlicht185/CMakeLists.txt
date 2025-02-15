@@ -1,6 +1,3 @@
-#Minimum version
-cmake_minimum_required(VERSION 3.0)
-
 #Define project
 project(Irrlicht)
 
@@ -47,9 +44,9 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 #Add common options
 if (IRRLICHT_SHARED)
-	target_compile_definitions(Irrlicht PRIVATE ${COMPILE_DEFINITIONS} -D_USRDLL -DIRRLICHT_EXPORTS)
+	add_definitions(-D_USRDLL -DIRRLICHT_EXPORTS)
 else (IRRLICHT_SHARED)
-	target_compile_definitions(Irrlicht PRIVATE ${COMPILE_DEFINITIONS} -D_IRR_STATIC_LIB_)
+	add_definitions(-D_IRR_STATIC_LIB_)
 endif (IRRLICHT_SHARED)
 add_definitions(-U__STRICT_ANSI__)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration")
