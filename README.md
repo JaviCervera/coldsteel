@@ -8,9 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Add matrix support.
 * Add particle support.
 * Replace OpenAL with raudio.
-* Use Direct3D 8 on Windows.
 * Replace Python scripts with a tool written in Haxe.
 * Add instructions on how to use Haxe.

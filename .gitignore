@@ -50,7 +50,6 @@ src/lua_wrapper.cpp
 
 # Exceptions
 !_build/csluac.exe
-!_build/Irrlicht.dll
 !_build/OpenAL32.dll
 !lib/openal/OpenAL32.lib
 !upx.exe
