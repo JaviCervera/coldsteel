@@ -8,7 +8,3 @@ void PauseMusic();
 void ResumeMusic();
 void SetMusicVolume(float volume);
 bool_t MusicPlaying();
-
-#ifndef SWIG
-void _UpdateMusic();
-#endif

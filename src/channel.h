@@ -5,10 +5,6 @@
 struct Channel;
 struct Sound;
 
-#ifndef SWIG
-Channel *_PlayChannel(Sound *sound, bool_t loop);
-#endif
-
 void StopChannel(Channel *channel);
 void PauseChannel(Channel *channel);
 void ResumeChannel(Channel *channel);

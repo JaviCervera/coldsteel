@@ -20,5 +20,6 @@ function Loop()
     if KeyDown(KEY_RIGHT) then TurnEntity(root, 0, 90 * DeltaTime(), 0) end
 	BeginDrawing(true, true, RGB(55, 155, 255))
 	DrawWorld(cam)
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
 	EndDrawing()
 end

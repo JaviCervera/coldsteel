@@ -1,6 +1,9 @@
 #Define project
 project(coldsteel)
 
+#Options
+option(AUDIO "Compile with audio support" ON)
+
 #Define file groups
 file(GLOB COLDSTEEL_EXE_FILES "src/*.cpp" "src/runtime.rc" "lib/lua/*.c" "lib/stb/stb_vorbis.c")
 
@@ -20,6 +23,10 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 add_executable(coldsteel ${COLDSTEEL_EXE_FILES})
 
 #Add platform specific options
+if (AUDIO)
+else (AUDIO)
+	add_definitions(-DNO_AUDIO)
+endif (AUDIO)
 add_definitions(-D_IRR_STATIC_LIB_)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	add_definitions(-DWIN32)
@@ -33,7 +40,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
 	endif (MSVC)
-	target_link_libraries(coldsteel -lIrrlicht -lOpenAL32 -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
+	if (AUDIO)
+		target_link_libraries(coldsteel -lOpenAL32 ${TARGET_LINK_LIBRARIES})
+	endif (AUDIO)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	#add_definitions(-std=c++11 -stdlib=libc++)

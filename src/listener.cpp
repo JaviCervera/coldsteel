@@ -1,38 +1,27 @@
-#ifdef __APPLE__
-#include <OpenAL/al.h>
-#else
-#include <AL/al.h>
-#endif
+#include "audio_driver.h"
 #include "listener.h"
-
-static vector3df _position;
-static float _yaw;
 
 void SetListener(float x, float y, float z, float yaw)
 {
-  alListener3f(AL_POSITION, x, y, z);
-  alListener3f(AL_ORIENTATION, 0, yaw, 0);
-  // TODO: Set alVelocity based on previous position
-  _position = vector3df(x, y, z);
-  _yaw = yaw;
+  AudioDriver::Get().SetListener(x, y, z, yaw);
 }
 
 float ListenerX()
 {
-  return _position.X;
+  return AudioDriver::Get().ListenerX();
 }
 
 float ListenerY()
 {
-  return _position.Y;
+  return AudioDriver::Get().ListenerY();
 }
 
 float ListenerZ()
 {
-  return _position.Z;
+  return AudioDriver::Get().ListenerZ();
 }
 
 float ListenerYaw()
 {
-  return _yaw;
+  return AudioDriver::Get().ListenerYaw();
 }

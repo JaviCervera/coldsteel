@@ -1,20 +1,13 @@
-#ifdef __APPLE__
-#include <OpenAL/alc.h>
-#else
-#include <AL/alc.h>
-#endif
+#include "audio_driver.h"
 #include "core.h"
 #include "dir.h"
 #include "input.h"
-#include "music.h"
 #include "screen.h"
 
 static IrrlichtDevice *_device = NULL;
 static u32 _initMillisecs;
 static int _lastMillisecs;
 static float _delta = 0.0f;
-static ALCdevice *_alDevice = NULL;
-static ALCcontext *_alContext = NULL;
 
 float DeltaTime()
 {
@@ -41,29 +34,17 @@ int System(const char *command)
 void _Init()
 {
   _SetDevice(NULL);
-
-  // Create OpenAL context
-  if (!_alDevice)
-    _alDevice = alcOpenDevice(NULL);
-  if (!_alContext)
-    _alContext = alcCreateContext(_alDevice, NULL);
-  if (_alContext)
-    alcMakeContextCurrent(_alContext);
+  AudioDriver::Get().Init();
 }
 
 void _Finish()
 {
-  if (_alContext)
-    alcDestroyContext(_alContext);
-  if (_alDevice)
-    alcCloseDevice(_alDevice);
-  _alDevice = NULL;
-  _alContext = NULL;
+  AudioDriver::Get().Finish();
 }
 
 bool_t _Run()
 {
-  _UpdateMusic();
+  AudioDriver::Get().Update();
   bool result = _Device()->run() && _Device()->getVideoDriver() != NULL;
   const int msecs = Millisecs();
   const int deltaMsecs = msecs - _lastMillisecs;
