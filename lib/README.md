@@ -2,7 +2,9 @@
 
 ## Irrlicht
 
-Desktop version uses Irrlicht 1.9.0 commit **r6297**. Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
+Win32 version uses Irrlicht 1.8.5.
+Other desktop versions use Irrlicht 1.9.0 commit **r6297**.
+Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
 
 The modifications made to the engine are described here:
 

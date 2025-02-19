@@ -4,6 +4,7 @@ extern "C"
 #include "../lib/lua/lualib.h"
 #include "../lib/lua/lauxlib.h"
 }
+#include "dir.h"
 #include "memblock.h"
 #include "script.h"
 #include "sharedlib.h"
@@ -41,7 +42,10 @@ bool Script::Load(const stringc &filename)
 {
   Memblock *memblock = LoadMemblock(filename.c_str());
   if (!memblock)
+  {
+    mError = stringc("Cannot find file '") + CurrentDir() + "/" + filename + "'";
     return false;
+  }
   if (luaL_loadbuffer(mState, (const char *)memblock, MemblockSize(memblock), filename.c_str()) || lua_pcall(mState, 0, LUA_MULTRET, 0))
   {
     mError = lua_tostring(mState, -1);
