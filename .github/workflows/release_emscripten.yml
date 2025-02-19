@@ -24,7 +24,6 @@ jobs:
       - name: Delete unnecesary files from build ❌
         run: |
           rm _build/coldsteel.data
-          rm _build/OpenAL32.dll
       - name: Package build 📦
         run: python3 ./.github/scripts/zip_build_dir.py
       - name: Create release 🚀

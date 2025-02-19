@@ -19,7 +19,7 @@ float Ceil(float val)
 
 float Abs(float val)
 {
-  return abs(val);
+  return fabs(val);
 }
 
 float Sqr(float val)

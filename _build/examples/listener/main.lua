@@ -2,6 +2,7 @@ MAX_PITCH = 80
 WORLD_GROUP = 1
 ROT_SPEED = 15
 MOVE_SPEED = 16
+SOUND_RADIUS = 25
 
 SetCursorVisible(false);
 
@@ -66,7 +67,7 @@ FreeMesh(mesh)
 
 -- Play sound
 local sound = LoadSound("heli.ogg")
-local channel = PlaySound(sound, true)
+local channel = PlaySound3D(sound, EntityX(sphere), EntityY(sphere), EntityZ(sphere), SOUND_RADIUS, true)
 
 local mxSpeed = 0
 local mySpeed = 0
@@ -95,7 +96,7 @@ function Loop()
     TurnEntity(sphere, 0, 8 * DeltaTime(), 0)
     MoveEntity(sphere, 0, 0, -20)
     SetEntityPosition(light, EntityX(sphere), EntityY(sphere), EntityZ(sphere))
-    SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere), 25)
+    SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere), SOUND_RADIUS)
     SetListener(EntityX(cam), EntityY(cam), EntityZ(cam), EntityYaw(cam))
 
     BeginDrawing(true, true, RGB(15, 15, 15))
