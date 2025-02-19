@@ -8,8 +8,8 @@ from typing import Tuple
 import zipfile
 
 
-JS_SIZE_TPL = '[{"filename":"/package.dat","start":0,"end":0}],"remote_package_size":0'
-JS_SIZE_REP = '[{"filename":"/package.dat","start":0,"end":$SIZE}],"remote_package_size":$SIZE'
+JS_SIZE_TPL = '[{"filename":"/data.bin","start":0,"end":0}],"remote_package_size":0'
+JS_SIZE_REP = '[{"filename":"/data.bin","start":0,"end":$SIZE}],"remote_package_size":$SIZE'
 PLIST_NAME = '$NAME'
 
 
@@ -79,7 +79,7 @@ def build() -> None:
             os.makedirs(resources_path(outdir, outfile), exist_ok=True)
             write_plist(outdir, outfile)
             copy_icns(outdir, outfile)
-        write_zip(dir, runtime_path(outdir, outfile), 'package.dat')
+        write_zip(dir, runtime_path(outdir, outfile), 'data.bin')
         copy_runtime(outdir, outfile)
     elif target == 'html':
         pkg_size = write_zip(dir, outdir, outfile + '.data')

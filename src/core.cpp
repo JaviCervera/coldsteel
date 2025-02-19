@@ -81,7 +81,7 @@ void _SetDevice(IrrlichtDevice *device)
   _lastMillisecs = 0;
   _delta = 0.0f;
 #ifndef EMSCRIPTEN
-  AddZip("package.dat");
+  AddZip("data.bin");
 #endif
 }
 

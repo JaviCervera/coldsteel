@@ -108,6 +108,6 @@ And the following right before line 278 (before the call to `createDriver()`):
 
 ```c++
 #ifdef EMSCRIPTEN
-FileSystem->addFileArchive("package.dat", true, false, io::EFAT_ZIP);
+FileSystem->addFileArchive("data.bin", true, false, io::EFAT_ZIP);
 #endif
 ```
