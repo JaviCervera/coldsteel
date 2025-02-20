@@ -183,6 +183,16 @@ bool_t MaterialVertexColorsEnabled(SMaterial *material)
   return material->getFlag(EMF_COLOR_MATERIAL);
 }
 
+void SetMaterialNormalizeEnabled(SMaterial *material, bool_t enabled)
+{
+  material->setFlag(EMF_NORMALIZE_NORMALS, enabled);
+}
+
+bool_t MaterialNormalizeEnabled(SMaterial *material)
+{
+  return material->getFlag(EMF_NORMALIZE_NORMALS);
+}
+
 E_MATERIAL_TYPE _IrrlichtMaterialType(int blend)
 {
   map<int, E_MATERIAL_TYPE> types;

@@ -15,13 +15,13 @@ set CXX=%~dp0mingw_342/bin/mingw32-g++.exe
 echo # Building Irrlicht (Desktop) ...
 cd _CMAKE/_IRRLICHT
 ..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht185
-..\..\mingw_342\bin\mingw32-make
+..\..\mingw_342\bin\mingw32-make -j8
 cd ../..
 
 echo # Building ColdSteel (Desktop) ...
 cd _CMAKE/_COLDSTEEL
 ..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_RC_FLAGS="-F pe-i386" ../..
-..\..\mingw_342\bin\mingw32-make
+..\..\mingw_342\bin\mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
 cd ../..
 

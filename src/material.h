@@ -33,3 +33,5 @@ void SetMaterialCullingEnabled(SMaterial *material, bool_t enabled);
 bool_t MaterialCullingEnabled(SMaterial *material);
 void SetMaterialVertexColorsEnabled(SMaterial *material, bool_t enabled);
 bool_t MaterialVertexColorsEnabled(SMaterial *material);
+void SetMaterialNormalizeEnabled(SMaterial *material, bool_t enabled);
+bool_t MaterialNormalizeEnabled(SMaterial *material);
