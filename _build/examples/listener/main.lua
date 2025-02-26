@@ -4,7 +4,7 @@ ROT_SPEED = 15
 MOVE_SPEED = 16
 SOUND_RADIUS = 25
 
-SetCursorVisible(false);
+SetCursorVisible(false)
 
 -- Create player entity
 local player = CreateEntity()

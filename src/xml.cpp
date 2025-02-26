@@ -21,11 +21,10 @@ struct XMLNode
   XMLNode(const stringc &name,
           const stringc &text,
           const array<XMLAttribute> &attributes,
-          const array<XMLNode> &children)
-      : name(name),
-        text(text),
-        attributes(attributes),
-        children(children) {}
+          const array<XMLNode> &children) : name(name),
+                                            text(text),
+                                            attributes(attributes),
+                                            children(children) {}
 
   const stringc &getName() const { return name; }
 
@@ -84,127 +83,132 @@ private:
   array<XMLNode> children;
 };
 
-bool_t _asPrepareNextXMLElement(IXMLReaderUTF8 *xml);
-XMLNode *_asParseXMLNode(IXMLReaderUTF8 *xml);
-
-XMLNode *ParseXML(const char *filename)
+extern "C"
 {
-  IXMLReaderUTF8 *reader = _Device()->getFileSystem()->createXMLReaderUTF8(filename);
-  if (reader != NULL)
+
+  bool_t _asPrepareNextXMLElement(IXMLReaderUTF8 *xml);
+  XMLNode *_asParseXMLNode(IXMLReaderUTF8 *xml);
+
+  EXPORT XMLNode *CALL ParseXML(const char *filename)
   {
-    while (_asPrepareNextXMLElement(reader) && reader->getNodeType() != EXN_ELEMENT)
+    IXMLReaderUTF8 *reader = _Device()->getFileSystem()->createXMLReaderUTF8(filename);
+    if (reader != NULL)
     {
-    }
-    return (reader->getNodeType() == EXN_ELEMENT)
-               ? _asParseXMLNode(reader)
-               : NULL;
-  }
-  else
-  {
-    return NULL;
-  }
-}
-
-void FreeXML(XMLNode *node)
-{
-  delete node;
-}
-
-const char *XMLName(XMLNode *node)
-{
-  return node->getName().c_str();
-}
-
-const char *XMLText(XMLNode *node)
-{
-  return node->getText().c_str();
-}
-
-int XMLNumAttributes(XMLNode *node)
-{
-  return node->getNumAttributes();
-}
-
-const char *XMLAttributeName(XMLNode *node, int index)
-{
-  return node->getAttributeName(index).c_str();
-}
-
-const char *XMLAttributeValue(XMLNode *node, const char *name)
-{
-  return node->getAttributeValue(name).c_str();
-}
-
-int XMLNumChildren(XMLNode *node)
-{
-  return node->getNumChildren();
-}
-
-XMLNode *XMLChild(XMLNode *node, int index)
-{
-  return node->getChild(index);
-}
-
-int XMLNumChildrenNamed(XMLNode *node, const char *name)
-{
-  return node->findChildren(name).size();
-}
-
-XMLNode *XMLChildNamed(XMLNode *node, const char *name, int index)
-{
-  array<XMLNode *> children = node->findChildren(name);
-  if (index >= 0 && index < children.size())
-  {
-    return children[index];
-  }
-  else
-  {
-    return NULL;
-  }
-}
-
-bool_t _asPrepareNextXMLElement(IXMLReaderUTF8 *xml)
-{
-  bool_t valid = xml->read();
-  while (valid && xml->getNodeType() == EXN_COMMENT)
-  {
-    valid = xml->read();
-  }
-  return valid;
-}
-
-XMLNode *_asParseXMLNode(IXMLReaderUTF8 *xml)
-{
-  stringc name = xml->getNodeName();
-  stringc text = "";
-  array<XMLAttribute> attributes;
-  for (int i = 0; i < xml->getAttributeCount(); ++i)
-  {
-    stringc attName = xml->getAttributeName(i);
-    stringc attValue = xml->getAttributeValue(attName.c_str());
-    attributes.push_back(XMLAttribute(attName, attValue));
-  }
-  array<XMLNode> children;
-  if (!xml->isEmptyElement())
-  {
-    while (_asPrepareNextXMLElement(xml) && xml->getNodeType() != EXN_ELEMENT_END)
-    {
-      XMLNode *child = NULL;
-      switch (xml->getNodeType())
+      while (_asPrepareNextXMLElement(reader) && reader->getNodeType() != EXN_ELEMENT)
       {
-      case EXN_ELEMENT:
-        child = _asParseXMLNode(xml);
-        children.push_back(*child);
-        delete child;
-        break;
-      case EXN_CDATA:
-      case EXN_TEXT:
-        text += xml->getNodeData();
-        break;
-      default:
-        break;
+      }
+      return (reader->getNodeType() == EXN_ELEMENT)
+                 ? _asParseXMLNode(reader)
+                 : NULL;
+    }
+    else
+    {
+      return NULL;
+    }
+  }
+
+  EXPORT void CALL FreeXML(XMLNode *node)
+  {
+    delete node;
+  }
+
+  EXPORT const char *CALL XMLName(XMLNode *node)
+  {
+    return node->getName().c_str();
+  }
+
+  EXPORT const char *CALL XMLText(XMLNode *node)
+  {
+    return node->getText().c_str();
+  }
+
+  EXPORT int CALL XMLNumAttributes(XMLNode *node)
+  {
+    return node->getNumAttributes();
+  }
+
+  EXPORT const char *CALL XMLAttributeName(XMLNode *node, int index)
+  {
+    return node->getAttributeName(index).c_str();
+  }
+
+  EXPORT const char *CALL XMLAttributeValue(XMLNode *node, const char *name)
+  {
+    return node->getAttributeValue(name).c_str();
+  }
+
+  EXPORT int CALL XMLNumChildren(XMLNode *node)
+  {
+    return node->getNumChildren();
+  }
+
+  EXPORT XMLNode *CALL XMLChild(XMLNode *node, int index)
+  {
+    return node->getChild(index);
+  }
+
+  EXPORT int CALL XMLNumChildrenNamed(XMLNode *node, const char *name)
+  {
+    return node->findChildren(name).size();
+  }
+
+  EXPORT XMLNode *CALL XMLChildNamed(XMLNode *node, const char *name, int index)
+  {
+    array<XMLNode *> children = node->findChildren(name);
+    if (index >= 0 && index < children.size())
+    {
+      return children[index];
+    }
+    else
+    {
+      return NULL;
+    }
+  }
+
+  bool_t _asPrepareNextXMLElement(IXMLReaderUTF8 *xml)
+  {
+    bool_t valid = xml->read();
+    while (valid && xml->getNodeType() == EXN_COMMENT)
+    {
+      valid = xml->read();
+    }
+    return valid;
+  }
+
+  XMLNode *_asParseXMLNode(IXMLReaderUTF8 *xml)
+  {
+    stringc name = xml->getNodeName();
+    stringc text = "";
+    array<XMLAttribute> attributes;
+    for (int i = 0; i < xml->getAttributeCount(); ++i)
+    {
+      stringc attName = xml->getAttributeName(i);
+      stringc attValue = xml->getAttributeValue(attName.c_str());
+      attributes.push_back(XMLAttribute(attName, attValue));
+    }
+    array<XMLNode> children;
+    if (!xml->isEmptyElement())
+    {
+      while (_asPrepareNextXMLElement(xml) && xml->getNodeType() != EXN_ELEMENT_END)
+      {
+        XMLNode *child = NULL;
+        switch (xml->getNodeType())
+        {
+        case EXN_ELEMENT:
+          child = _asParseXMLNode(xml);
+          children.push_back(*child);
+          delete child;
+          break;
+        case EXN_CDATA:
+        case EXN_TEXT:
+          text += xml->getNodeData();
+          break;
+        default:
+          break;
+        }
       }
     }
+    return new XMLNode(name, text, attributes, children);
   }
-  return new XMLNode(name, text, attributes, children);
-}
+
+} // extern "C"

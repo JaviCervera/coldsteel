@@ -1,22 +1,27 @@
 #include "audio_driver.h"
 #include "sound.h"
 
-Sound *LoadSound(const char *filename)
+extern "C"
 {
-  return AudioDriver::Get().LoadSound(filename);
-}
 
-void FreeSound(Sound *sound)
-{
-  AudioDriver::Get().FreeSound(sound);
-}
+  EXPORT Sound *CALL LoadSound(const char *filename)
+  {
+    return AudioDriver::Get().LoadSound(filename);
+  }
 
-Channel PlaySound(Sound *sound, bool_t loop)
-{
-  return AudioDriver::Get().PlaySound(sound, loop);
-}
+  EXPORT void CALL FreeSound(Sound *sound)
+  {
+    AudioDriver::Get().FreeSound(sound);
+  }
 
-Channel PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool_t loop)
-{
-  return AudioDriver::Get().PlaySound3D(sound, x, y, z, radius, loop);
-}
+  EXPORT Channel CALL PlaySound(Sound *sound, bool_t loop)
+  {
+    return AudioDriver::Get().PlaySound(sound, loop);
+  }
+
+  EXPORT Channel CALL PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool_t loop)
+  {
+    return AudioDriver::Get().PlaySound3D(sound, x, y, z, radius, loop);
+  }
+
+} // extern "C"

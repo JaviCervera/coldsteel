@@ -2,17 +2,26 @@
 
 #include "common.h"
 
-ITexture *CreateTexture(int width, int height);
-ITexture *CreateRenderTexture(int width, int height);
-ITexture *LoadTexture(const char *filename);
-void ClearTextureCache();
-void DrawTexture(ITexture *tex, int x, int y);
-void DrawTextureEx(ITexture *tex, int x, int y, int width, int height, int color);
-void *LockTexture(ITexture *tex);
-void UnlockTexture(ITexture *tex);
-void SetTextureColorKey(ITexture *tex, int color);
-void NormalizeTexture(ITexture *tex, float amplitude);
-int TextureWidth(ITexture *tex);
-int TextureHeight(ITexture *tex);
-const char *TextureFilename(ITexture *tex);
-void SetTextureCreationFlags(int flags);
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+  EXPORT ITexture *CALL CreateTexture(int width, int height);
+  EXPORT ITexture *CALL CreateRenderTexture(int width, int height);
+  EXPORT ITexture *CALL LoadTexture(const char *filename);
+  EXPORT void CALL ClearTextureCache();
+  EXPORT void CALL DrawTexture(ITexture *tex, int x, int y);
+  EXPORT void CALL DrawTextureEx(ITexture *tex, int x, int y, int width, int height, int color);
+  EXPORT void *CALL LockTexture(ITexture *tex);
+  EXPORT void CALL UnlockTexture(ITexture *tex);
+  EXPORT void CALL SetTextureColorKey(ITexture *tex, int color);
+  EXPORT void CALL NormalizeTexture(ITexture *tex, float amplitude);
+  EXPORT int CALL TextureWidth(ITexture *tex);
+  EXPORT int CALL TextureHeight(ITexture *tex);
+  EXPORT const char *CALL TextureFilename(ITexture *tex);
+  EXPORT void CALL SetTextureCreationFlags(int flags);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif

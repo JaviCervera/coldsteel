@@ -7,169 +7,174 @@
 static vector3df _point;
 static vector3df _normal;
 
-float Floor(float val)
+extern "C"
 {
-  return floor(val);
-}
 
-float Ceil(float val)
-{
-  return ceil(val);
-}
+  EXPORT float CALL Floor(float val)
+  {
+    return floor(val);
+  }
 
-float Abs(float val)
-{
-  return fabs(val);
-}
+  EXPORT float CALL Ceil(float val)
+  {
+    return ceil(val);
+  }
 
-float Sqr(float val)
-{
-  return sqrt(val);
-}
+  EXPORT float CALL Abs(float val)
+  {
+    return fabs(val);
+  }
 
-float Sin(float val)
-{
-  return sin(val * DEG2RAD);
-}
+  EXPORT float CALL Sqr(float val)
+  {
+    return sqrt(val);
+  }
 
-float Cos(float val)
-{
-  return cos(val * DEG2RAD);
-}
+  EXPORT float CALL Sin(float val)
+  {
+    return sin(val * DEG2RAD);
+  }
 
-float Tan(float val)
-{
-  return tan(val * DEG2RAD);
-}
+  EXPORT float CALL Cos(float val)
+  {
+    return cos(val * DEG2RAD);
+  }
 
-float ASin(float val)
-{
-  return asin(val * RAD2DEG);
-}
+  EXPORT float CALL Tan(float val)
+  {
+    return tan(val * DEG2RAD);
+  }
 
-float ACos(float val)
-{
-  return acos(val * RAD2DEG);
-}
+  EXPORT float CALL ASin(float val)
+  {
+    return asin(val * RAD2DEG);
+  }
 
-float ATan(float val)
-{
-  return atan(val * RAD2DEG);
-}
+  EXPORT float CALL ACos(float val)
+  {
+    return acos(val * RAD2DEG);
+  }
 
-float ATan2(float x, float y)
-{
-  return atan2(x, y) * RAD2DEG;
-}
+  EXPORT float CALL ATan(float val)
+  {
+    return atan(val * RAD2DEG);
+  }
 
-float Exp(float val)
-{
-  return exp(val);
-}
+  EXPORT float CALL ATan2(float x, float y)
+  {
+    return atan2(x, y) * RAD2DEG;
+  }
 
-float Pow(float base, float exp)
-{
-  return pow(base, exp);
-}
+  EXPORT float CALL Exp(float val)
+  {
+    return exp(val);
+  }
 
-float Log(float val)
-{
-  return log(val);
-}
+  EXPORT float CALL Pow(float base, float exp)
+  {
+    return pow(base, exp);
+  }
 
-float Log10(float val)
-{
-  return log10(val);
-}
+  EXPORT float CALL Log(float val)
+  {
+    return log(val);
+  }
 
-float Min(float a, float b)
-{
-  return (a < b) ? a : b;
-}
+  EXPORT float CALL Log10(float val)
+  {
+    return log10(val);
+  }
 
-float Max(float a, float b)
-{
-  return (a > b) ? a : b;
-}
+  EXPORT float CALL Min(float a, float b)
+  {
+    return (a < b) ? a : b;
+  }
 
-float Clamp(float val, float min, float max)
-{
-  return Min(Max(val, min), max);
-}
+  EXPORT float CALL Max(float a, float b)
+  {
+    return (a > b) ? a : b;
+  }
 
-int BoolToInt(bool_t val)
-{
-  return val ? 1 : 0;
-}
+  EXPORT float CALL Clamp(float val, float min, float max)
+  {
+    return Min(Max(val, min), max);
+  }
 
-int Int(float val)
-{
-  return (int)val;
-}
+  EXPORT int CALL BoolToInt(bool_t val)
+  {
+    return val ? 1 : 0;
+  }
 
-int Rand(int min, int max)
-{
-  return (rand() % (max - min)) + min;
-}
+  EXPORT int CALL Int(float val)
+  {
+    return (int)val;
+  }
 
-void RandSeed(int seed)
-{
-  return srand(seed);
-}
+  EXPORT int CALL Rand(int min, int max)
+  {
+    return (rand() % (max - min)) + min;
+  }
 
-float Deg(float rad)
-{
-  return rad * RAD2DEG;
-}
+  EXPORT void CALL RandSeed(int seed)
+  {
+    return srand(seed);
+  }
 
-float Rad(float deg)
-{
-  return deg * DEG2RAD;
-}
+  EXPORT float CALL Deg(float rad)
+  {
+    return rad * RAD2DEG;
+  }
 
-float Wrap(float val, float mod)
-{
-  return (mod != 0)
-             ? (val - mod * floor(val / mod))
-             : val;
-}
+  EXPORT float CALL Rad(float deg)
+  {
+    return deg * DEG2RAD;
+  }
 
-float PointX()
-{
-  return _point.X;
-}
+  EXPORT float CALL Wrap(float val, float mod)
+  {
+    return (mod != 0)
+               ? (val - mod * floor(val / mod))
+               : val;
+  }
 
-float PointY()
-{
-  return _point.Y;
-}
+  EXPORT float CALL PointX()
+  {
+    return _point.X;
+  }
 
-float PointZ()
-{
-  return _point.Z;
-}
+  EXPORT float CALL PointY()
+  {
+    return _point.Y;
+  }
 
-float NormalX()
-{
-  return _normal.X;
-}
+  EXPORT float CALL PointZ()
+  {
+    return _point.Z;
+  }
 
-float NormalY()
-{
-  return _normal.Y;
-}
+  EXPORT float CALL NormalX()
+  {
+    return _normal.X;
+  }
 
-float NormalZ()
-{
-  return _normal.Z;
-}
+  EXPORT float CALL NormalY()
+  {
+    return _normal.Y;
+  }
 
-void _SetPoint(float x, float y, float z)
-{
-  _point.set(x, y, z);
-}
+  EXPORT float CALL NormalZ()
+  {
+    return _normal.Z;
+  }
 
-void _SetNormal(float x, float y, float z)
-{
-  _normal.set(x, y, z);
-}
+  void _SetPoint(float x, float y, float z)
+  {
+    _point.set(x, y, z);
+  }
+
+  void _SetNormal(float x, float y, float z)
+  {
+    _normal.set(x, y, z);
+  }
+
+} // extern "C"

@@ -2,14 +2,14 @@
 #include "core.h"
 #include "memblock.h"
 
-Memblock *CreateMemblock(int size)
+EXPORT Memblock *CALL CreateMemblock(int size)
 {
   char *memblock = (char *)calloc(1, size + 4);
   ((int *)memblock)[0] = (int)size;
   return (Memblock *)((int *)memblock + 1);
 }
 
-Memblock *LoadMemblock(const char *filename)
+EXPORT Memblock *CALL LoadMemblock(const char *filename)
 {
   Memblock *memblock = NULL;
   IReadFile *file = _Device()->getFileSystem()->createAndOpenFile(filename);
@@ -22,7 +22,7 @@ Memblock *LoadMemblock(const char *filename)
   return memblock;
 }
 
-void SaveMemblock(Memblock *memblock, const char *filename)
+EXPORT void CALL SaveMemblock(Memblock *memblock, const char *filename)
 {
   IWriteFile *file = _Device()->getFileSystem()->createAndWriteFile(filename);
   if (file)
@@ -32,39 +32,39 @@ void SaveMemblock(Memblock *memblock, const char *filename)
   }
 }
 
-void FreeMemblock(Memblock *memblock)
+EXPORT void CALL FreeMemblock(Memblock *memblock)
 {
   free((int *)memblock - 1);
 }
 
-int MemblockSize(const Memblock *memblock)
+EXPORT int CALL MemblockSize(const Memblock *memblock)
 {
   return ((const int *)memblock - 1)[0];
 }
 
-void SetMemblockByte(Memblock *memblock, int offset, int val)
+EXPORT void CALL SetMemblockByte(Memblock *memblock, int offset, int val)
 {
   unsigned char b = (unsigned char)val;
   memcpy((char *)memblock + offset, &b, sizeof(unsigned char));
 }
 
-void SetMemblockShort(Memblock *memblock, int offset, int val)
+EXPORT void CALL SetMemblockShort(Memblock *memblock, int offset, int val)
 {
   unsigned short s = (unsigned short)val;
   memcpy((char *)memblock + offset, &s, sizeof(unsigned short));
 }
 
-void SetMemblockInt(Memblock *memblock, int offset, int val)
+EXPORT void CALL SetMemblockInt(Memblock *memblock, int offset, int val)
 {
   memcpy((char *)memblock + offset, &val, sizeof(val));
 }
 
-void SetMemblockFloat(Memblock *memblock, int offset, float val)
+EXPORT void CALL SetMemblockFloat(Memblock *memblock, int offset, float val)
 {
   memcpy((char *)memblock + offset, &val, sizeof(val));
 }
 
-void SetMemblockString(Memblock *memblock, int offset, const char *val)
+EXPORT void CALL SetMemblockString(Memblock *memblock, int offset, const char *val)
 {
   const int len = (int)strlen(val);
   SetMemblockInt(memblock, offset, len);
@@ -74,35 +74,35 @@ void SetMemblockString(Memblock *memblock, int offset, const char *val)
   }
 }
 
-int MemblockByte(const Memblock *memblock, int offset)
+EXPORT int CALL MemblockByte(const Memblock *memblock, int offset)
 {
   unsigned char val;
   memcpy(&val, (const char *)memblock + offset, sizeof(val));
   return val;
 }
 
-int MemblockShort(const Memblock *memblock, int offset)
+EXPORT int CALL MemblockShort(const Memblock *memblock, int offset)
 {
   unsigned short val;
   memcpy(&val, (const char *)memblock + offset, sizeof(val));
   return val;
 }
 
-int MemblockInt(const Memblock *memblock, int offset)
+EXPORT int CALL MemblockInt(const Memblock *memblock, int offset)
 {
   int val;
   memcpy(&val, (const char *)memblock + offset, sizeof(val));
   return val;
 }
 
-float MemblockFloat(const Memblock *memblock, int offset)
+EXPORT float CALL MemblockFloat(const Memblock *memblock, int offset)
 {
   float val;
   memcpy(&val, (const char *)memblock + offset, sizeof(val));
   return val;
 }
 
-const char *MemblockString(const Memblock *memblock, int offset)
+EXPORT const char *CALL MemblockString(const Memblock *memblock, int offset)
 {
   static stringc result;
   result = "";
