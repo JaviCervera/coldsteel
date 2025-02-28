@@ -8,8 +8,10 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* GUI styles.
-* Add particles support.
 * Replace Python scripts with a tool written in Haxe.
+* Add font editor.
+* Add particles support & editor.
+* Add material editor.
+* GUI styles.
 * Add shader support.
 * Add instructions on how to use Haxe.

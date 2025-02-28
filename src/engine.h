@@ -19,6 +19,7 @@
 #include "mesh.h"
 #include "mesh_entity.h"
 #include "music.h"
+#include "pixmap.h"
 #include "screen.h"
 #include "sound.h"
 #include "sprite.h"
