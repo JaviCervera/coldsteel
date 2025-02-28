@@ -4,20 +4,20 @@ SetEntityPosition(cam, 0, 32, -90)
 SetEntityRotation(cam, 16, 0, 0)
 
 -- Setup lighting
-SetAmbient(RGB(0, 0, 0))
+SetAmbient(COLOR_BLACK)
 local lights = {
     CreateLight(LIGHT_POINT),
     CreateLight(LIGHT_POINT),
     CreateLight(LIGHT_POINT)
 }
 SetLightAttenuation(lights[1], 1, 0.05, 0)
-SetLightDiffuse(lights[1], RGB(255, 0, 0))
+SetLightDiffuse(lights[1], COLOR_RED)
 SetEntityRotation(lights[1], 0, 0, 0)
 SetLightAttenuation(lights[2], 1, 0.05, 0)
-SetLightDiffuse(lights[2], RGB(0, 255, 0))
+SetLightDiffuse(lights[2], COLOR_GREEN)
 SetEntityRotation(lights[2], 0, 120, 0)
 SetLightAttenuation(lights[3], 1, 0.05, 0)
-SetLightDiffuse(lights[3], RGB(0, 0, 255))
+SetLightDiffuse(lights[3], COLOR_BLUE)
 SetEntityRotation(lights[3], 0, 240, 0)
 
 -- Create spheres
@@ -31,7 +31,7 @@ for i = 1, 81 do
     SetEntityPosition(sphere, x, 0, z)
     local mat = EntityMaterial(sphere, 0)
     SetMaterialShininess(mat, 0.15)
-    SetMaterialSpecular(mat, RGB(255, 255, 255))
+    SetMaterialSpecular(mat, COLOR_WHITE)
     spheres[i] = sphere
     x = x + 8
     if x > 32 then
@@ -49,8 +49,8 @@ function Loop()
         MoveEntity(light, 0, 0, -48)
     end
 
-    BeginDrawing(true, true, RGB(0, 0, 0))
+    BeginDrawing(true, true, COLOR_BLACK)
     DrawWorld(cam)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     EndDrawing()
 end

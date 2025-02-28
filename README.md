@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Color constants.
 * GUI styles.
 * Add particles support.
 * Replace Python scripts with a tool written in Haxe.

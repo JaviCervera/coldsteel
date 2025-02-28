@@ -4,9 +4,8 @@ SetEntityPosition(cam, 0, 2, -2)
 SetEntityRotation(cam, 45, 0, 0)
 
 -- Setup lighting
-SetAmbient(RGB(40, 40, 40))
-local light = CreateLight(LIGHT_POINT)
-SetEntityPosition(light, 2, 2, -2)
+local light = CreateLight(LIGHT_DIRECTIONAL)
+SetEntityRotation(light, 45, -45, 0)
 
 -- Create cube
 local mesh = CreateCube()
@@ -28,8 +27,8 @@ function Loop()
     if KeyDown(KEY_UP) then SlideEntity(cone, 0, 0, DeltaTime(), 1, 1, 1, 1) end
     if KeyDown(KEY_DOWN) then SlideEntity(cone, 0, 0, -DeltaTime(), 1, 1, 1, 1) end
 
-    BeginDrawing(true, true, RGB(15, 15, 15))
+    BeginDrawing(true, true, COLOR_DARKGRAY)
     DrawWorld(cam)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     EndDrawing()
 end

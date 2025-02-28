@@ -1,7 +1,5 @@
-COLOR_WHITE = RGB(255, 255, 255)
-
 function Loop()
-	BeginDrawing(true, false, RGB(0, 0, 0))
+	BeginDrawing(true, false, COLOR_BLACK)
 	if NumJoysticks() > 0 then
 		DrawText(nil, "Name: " .. JoystickName(0), 4, 4, COLOR_WHITE)
 		DrawText(nil, "Num Joystick Axes: " .. Str(NumJoystickAxes(0)), 4, 16, COLOR_WHITE)
@@ -15,7 +13,7 @@ function Loop()
 			DrawText(nil, "Button " .. Str(i) .. pressed, 4, 40 + (NumJoystickAxes(0) + i)*12, COLOR_WHITE)
 		end
 	else
-		DrawText(nil, "No joysticks connected", 4, 4, RGB(255, 0, 0))
+		DrawText(nil, "No joysticks connected", 4, 4, COLOR_RED)
 	end
 	EndDrawing()
 end

@@ -1,7 +1,7 @@
 NUM_CUBES = 16 * 500
 
-SetAmbient(RGB(75, 75, 75))
-SetFog(RGB(64, 64, 64), 0, 20)
+SetAmbient(COLOR_DARKGRAY)
+SetFog(COLOR_DARKGRAY, 0, 20)
 
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 0, -7)
@@ -11,7 +11,7 @@ local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
 local mesh = CreateCube()
-SetMeshColor(mesh, RGB(140, 70, 20))
+SetMeshColor(mesh, COLOR_BROWN)
 
 local cubes = {}
 local x = -7
@@ -48,9 +48,9 @@ function Loop()
     for _, cube in ipairs(cubes) do
         TurnEntity(cube, 0, 32 * DeltaTime(), 0)
     end
-    BeginDrawing(true, true, RGB(64, 64, 64))
+    BeginDrawing(true, true, COLOR_DARKGRAY)
     DrawWorld(cam)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
-    DrawText(nil, "Press SPACE to toggle fog", 2, 14, RGB(255, 255, 255))
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(nil, "Press SPACE to toggle fog", 2, 14, COLOR_WHITE)
     EndDrawing()
 end

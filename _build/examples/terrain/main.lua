@@ -18,8 +18,8 @@ function Loop()
     if KeyDown(KEY_DOWN) then MoveEntity(root, 0, 0, -100 * DeltaTime()) end
     if KeyDown(KEY_LEFT) then TurnEntity(root, 0, -90 * DeltaTime(), 0) end
     if KeyDown(KEY_RIGHT) then TurnEntity(root, 0, 90 * DeltaTime(), 0) end
-    BeginDrawing(true, true, 0)
+    BeginDrawing(true, true, COLOR_BLACK)
     DrawWorld(cam)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     EndDrawing()
 end

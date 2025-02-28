@@ -5,8 +5,8 @@ local cam = CreateCamera()
 function Loop()
     TurnEntity(cam, 0, 8 * DeltaTime(), 0)
 
-    BeginDrawing(false, true, 0)
+    BeginDrawing(false, true, COLOR_BLACK)
     DrawWorld(cam)
-    DrawText(nil, CurrentDir(), 4, 4, RGB(255, 255, 0))
+    DrawText(nil, CurrentDir(), 4, 4, COLOR_YELLOW)
     EndDrawing()
 end

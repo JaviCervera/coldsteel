@@ -1,4 +1,4 @@
-SetAmbient(RGB(255, 255, 255))
+SetAmbient(COLOR_WHITE)
 
 local tex = LoadTexture("tree.png")
 local cam = CreateCamera()

@@ -12,7 +12,7 @@ local texture = LoadTexture("wall.jpg")
 local room = CreateMeshEntity(LoadMesh("room.3ds"))
 for i = 0, EntityNumMaterials(room)-1 do
 	local mat = EntityMaterial(room, i)
-	SetMaterialSpecular(mat, RGB(0, 0, 0))
+	SetMaterialSpecular(mat, COLOR_BLACK)
 	SetMaterialTexture(mat, 0, texture)
 end
 

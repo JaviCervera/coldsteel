@@ -24,6 +24,21 @@ using namespace io;
 using namespace gui;
 #endif
 
+// Colors
+#define COLOR_RED -65536
+#define COLOR_GREEN -16711936
+#define COLOR_BLUE -16776961
+#define COLOR_CYAN -16711681
+#define COLOR_MAGENTA -65281
+#define COLOR_YELLOW -256
+#define COLOR_BLACK -16777216
+#define COLOR_WHITE -1
+#define COLOR_GRAY -8355712
+#define COLOR_LIGHTGRAY -4210753
+#define COLOR_DARKGRAY -12566464
+#define COLOR_ORANGE -23296
+#define COLOR_BROWN -7650029
+
 // Screen
 #define SCREEN_WINDOWED 1
 #define SCREEN_RESIZABLE 2

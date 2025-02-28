@@ -22,10 +22,10 @@ function Loop()
         textDir = textDir * -1;
     end
 
-    BeginDrawing(true, false, RGB(48, 48, 48))
-    DrawLine(0, textY - 3, ScreenWidth(), textY - 3, RGB(255, 255, 255))
-    DrawLine(0, textY + textHeight + 2, ScreenWidth(), textY + textHeight + 2, RGB(255, 255, 255))
-    DrawRect(0, textY - 2, ScreenWidth(), textHeight + 4, RGB(0, 0, 128))
-    DrawText(font, TEXT, textX, textY, RGB(255, 255, 0))
+    BeginDrawing(true, false, COLOR_DARKGRAY)
+    DrawLine(0, textY - 3, ScreenWidth(), textY - 3, COLOR_WHITE)
+    DrawLine(0, textY + textHeight + 2, ScreenWidth(), textY + textHeight + 2, COLOR_WHITE)
+    DrawRect(0, textY - 2, ScreenWidth(), textHeight + 4, COLOR_BLUE)
+    DrawText(font, TEXT, textX, textY, COLOR_YELLOW)
     EndDrawing()
 end

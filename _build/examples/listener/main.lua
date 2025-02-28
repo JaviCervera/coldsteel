@@ -33,7 +33,7 @@ local floor = CreateMeshEntity(mesh)
 SetEntityCollision(floor, COLLISION_BOX, WORLD_GROUP)
 SetEntityPosition(floor, 0, -0.5, 0)
 local mat = EntityMaterial(floor, 0)
-SetMaterialDiffuse(mat, RGB(0, 0, 0))
+SetMaterialDiffuse(mat, COLOR_BLACK)
 SetMaterialAmbient(mat, RGB(55, 55, 55))
 SetMaterialVertexColorsEnabled(mat, false)
 FreeMesh(mesh)
@@ -101,7 +101,7 @@ function Loop()
 
     BeginDrawing(true, true, RGB(15, 15, 15))
     DrawWorld(cam)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     EndDrawing()
 
     -- Update mouse speed
