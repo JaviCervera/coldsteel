@@ -13,8 +13,9 @@ file(
 	"lib/lua/*.c"
 	"lib/soloud/src/audiosource/wav/*.cpp"
 	"lib/soloud/src/audiosource/wav/stb_vorbis.c"
-	"lib/soloud/src/core/*.cpp"
-	"lib/soloud/src/backend/winmm/soloud_winmm.cpp")
+	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
+	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
+	"lib/soloud/src/core/*.cpp")
 
 #Add header and lib directories
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -39,6 +40,7 @@ else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	include_directories(
 		${INCLUDE_DIRECTORIES}
 		${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190/include
+		${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
 		${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
 	link_directories(
 		${LINK_DIRECTORIES}
@@ -65,12 +67,13 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
+	add_definitions(-DWITH_COREAUDIO)
 	#add_definitions(-std=c++11 -stdlib=libc++)
 	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
-	target_link_libraries(coldsteel -lIrrlicht "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(coldsteel -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
 	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")

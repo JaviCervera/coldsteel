@@ -9,6 +9,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 ## TODO
 
 * Replace Python scripts with a tool written in Haxe.
+* Add tinyfontdialogs.
 * Add font editor.
 * Add particles support & editor.
 * Add material editor.
