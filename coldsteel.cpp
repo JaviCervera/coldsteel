@@ -33,6 +33,10 @@ extern "C"
 #include "lib/zip/zip.c"
 }
 
+#ifdef _WIN32
+#define realpath(N, R) _fullpath((R), (N), _MAX_PATH)
+#endif
+
 void Run(const std::string &dir);
 void Build(const std::string &dir);
 void CreateBundle(const std::string &out_dir, const std::string &out_file);
@@ -78,9 +82,11 @@ struct Options
   {
     if (argc != 3)
       ThrowUsage();
-    return Options(
-        ParseMode(argv[1]),
-        RealPath(IsDir(argv[2]) ? argv[2] : ExtractDir(argv[2])));
+    const Mode mode = ParseMode(argv[1]);
+    std::string dir = RealPath(IsDir(argv[2]) ? argv[2] : ExtractDir(argv[2]));
+    if (dir.rfind('\\') == dir.length() - 1 || dir.rfind('/') == dir.length() - 1)
+      dir = dir.substr(0, dir.length() - 1);
+    return Options(mode, dir);
   }
 
 private:

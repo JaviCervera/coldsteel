@@ -1,5 +1,8 @@
 @echo off
 
+echo # Building coldsteel cli
+g++ -O2 -static -s -fno-rtti -o _build/coldsteel.exe coldsteel.cpp
+
 echo # Generating Lua wrapper ...
 swig.exe -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
 
@@ -18,11 +21,11 @@ cd _CMAKE/_IRRLICHT
 ..\..\mingw_342\bin\mingw32-make -j8
 cd ../..
 
-echo # Building ColdSteel (Desktop) ...
+echo # Building csrun (Desktop) ...
 cd _CMAKE/_COLDSTEEL
 ..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_RC_FLAGS="-F pe-i386" ../..
 ..\..\mingw_342\bin\mingw32-make -j8
-move "coldsteel.exe" "..\..\_build\coldsteel.exe"
+move "csrun.exe" "..\..\_build\csrun.exe"
 cd ../..
 
 pause
