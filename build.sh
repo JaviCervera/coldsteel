@@ -1,6 +1,9 @@
 #!/bin/sh
 cd `dirname $0`
 
+echo "# Building coldsteel cli"
+g++ -O2 -s -o _build/coldsteel coldsteel.cpp
+
 echo "# Generating Lua wrapper ..."
 swig -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
 
@@ -16,9 +19,9 @@ cd ../../_CMAKE/_IRRLICHT
 make
 cd ../..
 
-echo "# Building ColdSteel (Desktop) ..."
+echo "# Building csrun (Desktop) ..."
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
 make
-mv coldsteel ../../_build/coldsteel
+mv csrun ../../_build/csrun
 cd ../..

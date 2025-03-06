@@ -1,9 +1,0 @@
-#!/bin/sh
-cd `dirname $0`
-python3 csbuild.py html $1
-sleep 0.001
-echo "Launching server..."
-echo "- Go to http://localhost:8000 on your browser."
-echo "- Ctrl+C and confirm to finish."
-cd $1.build
-python3 -m http.server

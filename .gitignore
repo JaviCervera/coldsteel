@@ -1,20 +1,3 @@
-.DS_Store
-.vscode
-_build/*
-!_build/LICENSE
-!_build/README.md
-!_build/coldsteel.html
-!_build/coldsteel.icns
-!_build/csrun*
-!_build/csserve*
-!_build/geany
-!_build/examples
-!_build/Info.plist
-!_build/media
-_build/examples/*.build
-_CMAKE
-src/lua_wrapper.cpp
-
 # Prerequisites
 *.d
 
@@ -48,7 +31,21 @@ src/lua_wrapper.cpp
 *.out
 *.app
 
-# Exceptions
+.DS_Store
+.vscode
+_build/*
+!_build/LICENSE
+!_build/README.md
+!_build/coldsteel.html
+!_build/coldsteel.icns
+!_build/csluac
 !_build/csluac.exe
-!upx.exe
+!_build/geany
+!_build/examples
+!_build/Info.plist
+!_build/media
+_build/examples/*.build
+_CMAKE
 mingw_342/*
+src/lua_wrapper.cpp
+!upx.exe

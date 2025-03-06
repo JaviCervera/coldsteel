@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 #Define project
-project(coldsteel)
+project(csrun)
 
 #Define file groups
 file(
@@ -48,7 +48,7 @@ else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 #Add executable targets
-add_executable(coldsteel ${COLDSTEEL_EXE_FILES})
+add_executable(csrun ${COLDSTEEL_EXE_FILES})
 
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
@@ -64,7 +64,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
 	endif (MSVC)
-	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(csrun -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	add_definitions(-DWITH_COREAUDIO)
@@ -73,17 +73,17 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
-	target_link_libraries(coldsteel -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(csrun -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
 	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti -fPIC")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
-	target_link_libraries(coldsteel -lIrrlicht -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(csrun -lIrrlicht -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	message("Platform is Emscripten")
-	target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DLUA_USE_LONGJMP)
+	target_compile_definitions(csrun PRIVATE ${COMPILE_DEFINITIONS} -DLUA_USE_LONGJMP)
 	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions -fno-rtti -fstrict-aliasing	-U__STRICT_ANSI__")
 	set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-o coldsteel.html -lIrrlicht -lGL --preload-file ../../data.bin@/ -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1")
 else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")

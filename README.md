@@ -8,8 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Replace Python scripts with a tool written in C++.
-* Update Irrlicht 1.9 from latest ogl-es branch of SVN and use in all versions.
+* Update Irrlicht 1.9 from latest ogl-es branch of SVN and use in all versions (and update _build/media/Shaders).
 * Use Irrlicht 1.3.1 on Win95 version? (version used in original ColdSteel SDK).
 * Use legacy icon on Win95 version.
 * Add mesh based terrain.
