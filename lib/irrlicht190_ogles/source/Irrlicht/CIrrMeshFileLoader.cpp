@@ -9,12 +9,12 @@
 #include "os.h"
 #include "IXMLReader.h"
 #include "SAnimatedMesh.h"
+#include "SMesh.h"
 #include "fast_atof.h"
 #include "IReadFile.h"
 #include "IAttributes.h"
-#include "IMeshSceneNode.h"
+#include "IVideoDriver.h"
 #include "CDynamicMeshBuffer.h"
-#include "SMeshBufferLightMap.h"
 
 namespace irr
 {
@@ -197,7 +197,6 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 				if (vertexTypeName1 == vertexType)
 				{
 					buffer = new CDynamicMeshBuffer(irr::video::EVT_STANDARD, itype);
-
 				}
 				else
 				if (vertexTypeName2 == vertexType)
@@ -209,8 +208,11 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 				{
 					buffer = new CDynamicMeshBuffer(irr::video::EVT_TANGENTS, itype);
 				}
-				buffer->getVertexBuffer().reallocate(vertexCount);
-				buffer->Material = material;
+				if ( buffer )
+				{
+					buffer->getVertexBuffer().reallocate(vertexCount);
+					buffer->Material = material;
+				}
 			}
 			else
 			if (indicesSectionName == nodeName)
@@ -276,13 +278,13 @@ void CIrrMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, IIn
 
 void CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, CDynamicMeshBuffer* sbuffer)
 {
-	core::stringc data = reader->getNodeData();
-	const c8* p = &data[0];
-	scene::IVertexBuffer& Vertices = sbuffer->getVertexBuffer();
-	video::E_VERTEX_TYPE vType = Vertices.getType();
-
 	if (sbuffer)
 	{
+		core::stringc data = reader->getNodeData();
+		const c8* p = &data[0];
+		scene::IVertexBuffer& Vertices = sbuffer->getVertexBuffer();
+		video::E_VERTEX_TYPE vType = Vertices.getType();
+
 		for (int i=0; i<vertexCount && *p; ++i)
 		{
 			switch(vType)
@@ -458,7 +460,7 @@ void CIrrMeshFileLoader::skipSection(io::IXMLReader* reader, bool reportSkipping
 		{
 			#ifdef _DEBUG
 			if (reportSkipping)
-				os::Printer::log("irrMesh unknown element:", core::stringc(reader->getNodeName()).c_str());
+				os::Printer::log("irrMesh unknown element", core::stringc(reader->getNodeName()).c_str());
 			#endif
 
 			++tagCounter;

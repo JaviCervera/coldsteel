@@ -328,7 +328,7 @@ public:
 
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				Driver->draw2DImage(this, layer, true);
+				Driver->draw2DImageQuad(this, layer, true);
 
 				IImage* tmpImage = Driver->createImage(ECF_A8R8G8B8, Size);
 				glReadPixels(0, 0, Size.Width, Size.Height, GL_RGBA, GL_UNSIGNED_BYTE, tmpImage->getData());
@@ -411,7 +411,7 @@ public:
 			u32 width = Size.Width;
 			u32 height = Size.Height;
 			u8* tmpData = static_cast<u8*>(data);
-			u32 dataSize = 0;
+			size_t dataSize = 0;
 			u32 level = 0;
 
 			do
@@ -612,7 +612,7 @@ protected:
 		}
 		else
 		{
-			u32 dataSize = IImage::getDataSizeFromFormat(ColorFormat, width, height);
+			GLsizei dataSize = (GLsizei)IImage::getDataSizeFromFormat(ColorFormat, width, height);
 
 			switch (TextureType)
 			{
@@ -651,7 +651,7 @@ protected:
 	GLint InternalFormat;
 	GLenum PixelFormat;
 	GLenum PixelType;
-	void (*Converter)(const void*, s32, void*);
+	void (*Converter)(const void*, u32, void*);
 
 	bool LockReadOnly;
 	IImage* LockImage;

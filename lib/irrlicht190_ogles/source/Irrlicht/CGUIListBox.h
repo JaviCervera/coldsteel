@@ -33,11 +33,8 @@ namespace gui
 		//! returns amount of list items
 		virtual u32 getItemCount() const IRR_OVERRIDE;
 
-		//! returns string of a list item. the id may be a value from 0 to itemCount-1
+		//! returns string of a list item. The id may be a value from 0 to itemCount-1
 		virtual const wchar_t* getListItem(u32 id) const IRR_OVERRIDE;
-
-		//! adds an list item, returns id of item
-		virtual u32 addItem(const wchar_t* text) IRR_OVERRIDE;
 
 		//! clears the list
 		virtual void clear() IRR_OVERRIDE;
@@ -62,7 +59,14 @@ namespace gui
 		//! \param icon Sprite index of the Icon within the current sprite bank. Set it to -1 if you want no icon
 		//! \return
 		//! returns the id of the new created item
-		virtual u32 addItem(const wchar_t* text, s32 icon) IRR_OVERRIDE;
+		virtual u32 addItem(const wchar_t* text, s32 icon=-1) IRR_OVERRIDE;
+
+		//! Insert the item at the given index
+		//! Return the index on success or -1 on failure.
+		virtual s32 insertItem(u32 index, const wchar_t* text, s32 icon=-1) IRR_OVERRIDE;
+
+		//! set the item at the given index
+		virtual void setItem(u32 index, const wchar_t* text, s32 icon=-1) IRR_OVERRIDE;
 
 		//! Returns the icon of an item
 		virtual s32 getIcon(u32 id) const IRR_OVERRIDE;
@@ -103,7 +107,7 @@ namespace gui
 		//! clear all item colors at index
 		virtual void clearItemOverrideColor(u32 index) IRR_OVERRIDE;
 
-		//! clear item color at index for given colortype
+		//! clear item color at index for given color type
 		virtual void clearItemOverrideColor(u32 index, EGUI_LISTBOX_COLOR colorType) IRR_OVERRIDE;
 
 		//! has the item at index its color overwritten?
@@ -114,13 +118,6 @@ namespace gui
 
 		//! return the default color which is used for the given colorType
 		virtual video::SColor getItemDefaultColor(EGUI_LISTBOX_COLOR colorType) const IRR_OVERRIDE;
-
-		//! set the item at the given index
-		virtual void setItem(u32 index, const wchar_t* text, s32 icon) IRR_OVERRIDE;
-
-		//! Insert the item at the given index
-		//! Return the index on success or -1 on failure.
-		virtual s32 insertItem(u32 index, const wchar_t* text, s32 icon) IRR_OVERRIDE;
 
 		//! Swap the items at the given indices
 		virtual void swapItems(u32 index1, u32 index2) IRR_OVERRIDE;
@@ -133,6 +130,15 @@ namespace gui
 
 		//! Access the vertical scrollbar
 		virtual IGUIScrollBar* getVerticalScrollBar() const IRR_OVERRIDE;
+
+		//! Sets a skin independent font.
+		virtual void setOverrideFont(IGUIFont* font=0) IRR_OVERRIDE;
+
+		//! Gets the override font (if any)
+		virtual IGUIFont* getOverrideFont(void) const IRR_OVERRIDE;
+
+		//! Get the font which is used for drawing
+		virtual IGUIFont* getActiveFont() const IRR_OVERRIDE;
 
 	private:
 
@@ -154,7 +160,7 @@ namespace gui
 			ListItemOverrideColor OverrideColors[EGUI_LBC_COUNT];
 		};
 
-		void recalculateItemHeight();
+		void recalculateItemHeight(bool forceRecalculation=false);
 		void selectNew(s32 ypos, bool onlyHover=false);
 		void recalculateScrollPos();
 		void updateScrollBarSize(s32 size);
@@ -167,14 +173,16 @@ namespace gui
 
 		core::array< ListItem > Items;
 		s32 Selected;
+		s32 HoverSelected;	// When >= 0 we're in the middle of changing selection while mouse is pressed. We need to know so selected again isn't called too often.
 		s32 ItemHeight;
 		s32 ItemHeightOverride;
 		s32 TotalItemHeight;
 		s32 ItemsIconWidth;
-		gui::IGUIFont* Font;
-		gui::IGUISpriteBank* IconBank;
-		gui::IGUIScrollBar* ScrollBar;
-		u32 selectTime;
+		IGUIFont* Font;
+		IGUIFont* OverrideFont;
+		IGUISpriteBank* IconBank;
+		IGUIScrollBar* ScrollBar;
+		u32 SelectTime;
 		u32 LastKeyTime;
 		core::stringw KeyBuffer;
 		bool Selecting;

@@ -1029,8 +1029,8 @@ COGLES2Driver::~COGLES2Driver()
 
 		IRR_PROFILE(CProfileScope p1(EPID_ES2_DRAW_2DIMAGE);)
 
-			// texcoords need to be flipped horizontally for RTTs
-			const bool isRTT = texture->isRenderTarget();
+		// texcoords need to be flipped horizontally for RTTs
+		const bool isRTT = texture->isRenderTarget();
 		const core::dimension2du& ss = texture->getOriginalSize();
 		const f32 invW = 1.f / static_cast<f32>(ss.Width);
 		const f32 invH = 1.f / static_cast<f32>(ss.Height);
@@ -1099,7 +1099,7 @@ COGLES2Driver::~COGLES2Driver()
 		testGLError(__LINE__);
 	}
 
-	void COGLES2Driver::draw2DImage(const video::ITexture* texture, u32 layer, bool flip)
+	void COGLES2Driver::draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip)
 	{
 		if (!texture)
 			return;
@@ -2023,7 +2023,7 @@ COGLES2Driver::~COGLES2Driver()
 	}
 
 
-	void COGLES2Driver::chooseMaterial2D()
+	void COGLES2Driver::chooseMaterial2D(bool textureClampToEdge)
 	{
 		if (!OverrideMaterial2DEnabled)
 			Material = InitMaterial2D;
@@ -2036,6 +2036,17 @@ COGLES2Driver::~COGLES2Driver()
 			OverrideMaterial2D.Lighting=false;
 
 			Material = OverrideMaterial2D;
+		}
+
+		if ( textureClampToEdge )	// usually needed for NPOT textures on WebGL
+		{
+			for (u32 i=0; i<video::MATERIAL_MAX_TEXTURES; ++i)
+			{
+				InitMaterial2D.TextureLayer[i].BilinearFilter=false;
+				InitMaterial2D.TextureLayer[i].TextureWrapU=video::ETC_CLAMP_TO_EDGE;
+				InitMaterial2D.TextureLayer[i].TextureWrapV=video::ETC_CLAMP_TO_EDGE;
+				InitMaterial2D.TextureLayer[i].TextureWrapW = video::ETC_CLAMP_TO_EDGE;
+			}
 		}
 	}
 
@@ -2086,11 +2097,14 @@ COGLES2Driver::~COGLES2Driver()
 		return 8;
 	}
 
-	void COGLES2Driver::setViewPort(const core::rect<s32>& area)
+	void COGLES2Driver::setViewPort(const core::rect<s32>& area, bool clipToRenderTarget)
 	{
 		core::rect<s32> vp = area;
-		core::rect<s32> rendert(0, 0, getCurrentRenderTargetSize().Width, getCurrentRenderTargetSize().Height);
-		vp.clipAgainst(rendert);
+		if ( clipToRenderTarget )
+		{
+			core::rect<s32> rendert(0, 0, getCurrentRenderTargetSize().Width, getCurrentRenderTargetSize().Height);
+			vp.clipAgainst(rendert);
+		}
 
 		if (vp.getHeight() > 0 && vp.getWidth() > 0)
 			CacheHandler->setViewport(vp.UpperLeftCorner.X, getCurrentRenderTargetSize().Height - vp.UpperLeftCorner.Y - vp.getHeight(), vp.getWidth(), vp.getHeight());
@@ -2373,6 +2387,13 @@ COGLES2Driver::~COGLES2Driver()
 			callback, baseMaterial, userData);
 
 		r->drop();
+
+		if (callback && nr >= 0)
+		{
+			r->startUseProgram();
+			callback->OnCreate(r, userData);
+		}
+
 		return nr;
 	}
 
@@ -2535,7 +2556,7 @@ COGLES2Driver::~COGLES2Driver()
 		if (target==video::ERT_MULTI_RENDER_TEXTURES || target==video::ERT_RENDER_TEXTURE || target==video::ERT_STEREO_BOTH_BUFFERS)
 			return 0;
 
-		GLint internalformat = GL_RGBA;
+		GLint internalformat = GL_RGBA;	// Note BGRA not available on ES2. Thought there might be extensions we could use maybe.
 		GLint type = GL_UNSIGNED_BYTE;
 		{
 //			glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, &internalformat);
@@ -2590,6 +2611,22 @@ COGLES2Driver::~COGLES2Driver()
 			p2 -= pitch;
 		}
 		delete [] tmpBuffer;
+
+		// also GL_RGBA doesn't match the internal encoding of the image (which is BGRA)
+		if (GL_RGBA == internalformat && GL_UNSIGNED_BYTE == type)
+		{
+			pixels = static_cast<u8*>(newImage->getData());
+			for (u32 i = 0; i < ScreenSize.Height; i++)
+			{
+				for (u32 j = 0; j < ScreenSize.Width; j++)
+				{
+					u32 c = *(u32*) (pixels + 4 * j);
+					*(u32*) (pixels + 4 * j) = (c & 0xFF00FF00) |
+						((c & 0x00FF0000) >> 16) | ((c & 0x000000FF) << 16);
+				}
+				pixels += pitch;
+			}
+		}
 
 		if (testGLError(__LINE__))
 		{
@@ -2699,7 +2736,7 @@ COGLES2Driver::~COGLES2Driver()
 	}
 
 	bool COGLES2Driver::getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-		GLenum& pixelType, void(**converter)(const void*, s32, void*)) const
+		GLenum& pixelType, void(**converter)(const void*, u32, void*)) const
 	{
 		bool supported = false;
 		pixelFormat = GL_RGBA;
@@ -2965,7 +3002,7 @@ COGLES2Driver::~COGLES2Driver()
 		GLint dummyInternalFormat;
 		GLenum dummyPixelFormat;
 		GLenum dummyPixelType;
-		void (*dummyConverter)(const void*, s32, void*);
+		void (*dummyConverter)(const void*, u32, void*);
 		return getColorFormatParameters(format, dummyInternalFormat, dummyPixelFormat, dummyPixelType, &dummyConverter);
 	}
 

@@ -9,10 +9,7 @@
 
 #include "IMeshWriter.h"
 #include "IWriteFile.h"
-#include "SB3DStructs.h"
 #include "ISkinnedMesh.h"
-
-
 
 namespace irr
 {
@@ -37,14 +34,14 @@ private:
     u32 getJointChunkSize(const ISkinnedMesh* mesh, ISkinnedMesh::SJoint* joint);
     core::array<ISkinnedMesh::SJoint*> getRootJoints(const ISkinnedMesh* mesh);
 
-    u32 getUVlayerCount(IMesh *mesh);
+    u32 getUVlayerCount(const IMesh *mesh);
     ISkinnedMesh* getSkinned (IMesh *mesh);
 
     inline void writeVector2(io::IWriteFile* file, const core::vector2df& vec);
     inline void writeVector3(io::IWriteFile* file, const core::vector3df& vec);
     inline void writeQuaternion(io::IWriteFile* file, const core::quaternion& quat);
     inline void writeColor(io::IWriteFile* file, const video::SColorf& color);
-    void writeSizeFrom(io::IWriteFile* file, const u32 from, const u32 adressToWrite);
+    void writeSizeFrom(io::IWriteFile* file, const u32 from, const u32 addressToWrite);
 };
 
 } // end namespace

@@ -6,7 +6,7 @@
 #define IRR_C_BILLBOARD_SCENE_NODE_H_INCLUDED
 
 #include "IBillboardSceneNode.h"
-#include "SMeshBuffer.h"
+#include "CMeshBuffer.h"
 
 namespace irr
 {
@@ -71,6 +71,20 @@ public:
 
 	//! Get the real boundingbox used by the billboard (which depends on the active camera)
 	virtual const core::aabbox3d<f32>& getTransformedBillboardBoundingBox(const irr::scene::ICameraSceneNode* camera) IRR_OVERRIDE;
+
+	//! Get the amount of mesh buffers.
+	virtual u32 getMeshBufferCount() const IRR_OVERRIDE
+	{
+		return Buffer ? 1 : 0;
+	}
+
+	//! Get pointer to the mesh buffer.
+	virtual IMeshBuffer* getMeshBuffer(u32 nr) const IRR_OVERRIDE
+	{
+		if ( nr == 0 )
+			return Buffer;
+		return 0;
+	}
 
 	//! Writes attributes of the scene node.
 	virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const IRR_OVERRIDE;

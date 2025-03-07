@@ -12,7 +12,7 @@ namespace irr
 {
 namespace scene
 {
-	//! Template implementation of the IMeshBuffer interface
+	//! Template implementation of the IMeshBuffer interface for 16-bit buffers
 	template <class T>
 	class CMeshBuffer : public IMeshBuffer
 	{
@@ -21,6 +21,7 @@ namespace scene
 		CMeshBuffer()
 			: ChangedID_Vertex(1), ChangedID_Index(1)
 			, MappingHint_Vertex(EHM_NEVER), MappingHint_Index(EHM_NEVER)
+			, BoundingBox(1,-1)
 			, PrimitiveType(EPT_TRIANGLES)
 		{
 			#ifdef _DEBUG
@@ -128,8 +129,7 @@ namespace scene
 					BoundingBox.addInternalPoint(Vertices[i].Pos);
 			}
 			else
-				BoundingBox.reset(0,0,0);
-
+				BoundingBox = core::aabbox3df(1,-1);
 		}
 
 
@@ -176,63 +176,63 @@ namespace scene
 			return Vertices[i].TCoords;
 		}
 
+		//! returns color of vertex i
+		virtual video::SColor& getColor(u32 i) IRR_OVERRIDE
+		{
+			return Vertices[i].Color;
+		}
+
+		//! returns color of vertex i
+		virtual const video::SColor& getColor(u32 i) const IRR_OVERRIDE
+		{
+			return Vertices[i].Color;
+		}
 
 		//! Append the vertices and indices to the current buffer
 		/** Only works for compatible types, i.e. either the same type
 		or the main buffer is of standard type. Otherwise, behavior is
-		undefined.
+		undefined. Also can't append it's own vertices/indices to itself.
 		*/
-		virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices) IRR_OVERRIDE
+		virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices, bool updateBoundingBox=true) IRR_OVERRIDE
 		{
-			if (vertices == getVertices())
+			if (vertices == getVertices() || indices == getIndices())	// can't do that because we're doing reallocations on those blocks
 				return;
 
 			const u32 vertexCount = getVertexCount();
 			u32 i;
 
-			Vertices.reallocate(vertexCount+numVertices);
+			Vertices.reallocate(vertexCount+numVertices, false);
 			for (i=0; i<numVertices; ++i)
 			{
-				Vertices.push_back(reinterpret_cast<const T*>(vertices)[i]);
-				BoundingBox.addInternalPoint(reinterpret_cast<const T*>(vertices)[i].Pos);
+				Vertices.push_back(static_cast<const T*>(vertices)[i]);
 			}
 
-			Indices.reallocate(getIndexCount()+numIndices);
+			if ( updateBoundingBox && numVertices > 0)
+			{
+				if ( vertexCount == 0 )
+					BoundingBox.reset(static_cast<const T*>(vertices)[0].Pos);
+
+				for (i=0; i<numVertices; ++i)
+					BoundingBox.addInternalPoint(static_cast<const T*>(vertices)[i].Pos);
+			}
+
+			Indices.reallocate(getIndexCount()+numIndices, false);
 			for (i=0; i<numIndices; ++i)
 			{
 				Indices.push_back(indices[i]+vertexCount);
 			}
+
+			setDirty();
 		}
 
 
 		//! Append the meshbuffer to the current buffer
-		/** Only works for compatible types, i.e. either the same type
-		or the main buffer is of standard type. Otherwise, behavior is
-		undefined.
-		\param other Meshbuffer to be appended to this one.
-		*/
-		virtual void append(const IMeshBuffer* const other) IRR_OVERRIDE
+		virtual void append(const IMeshBuffer* const other, bool updateBoundingBox=true) IRR_OVERRIDE
 		{
-			/*
-			if (this==other)
+			if ( getVertexType() != other->getVertexType() )
 				return;
 
-			const u32 vertexCount = getVertexCount();
-			u32 i;
-
-			Vertices.reallocate(vertexCount+other->getVertexCount());
-			for (i=0; i<other->getVertexCount(); ++i)
-			{
-				Vertices.push_back(reinterpret_cast<const T*>(other->getVertices())[i]);
-			}
-
-			Indices.reallocate(getIndexCount()+other->getIndexCount());
-			for (i=0; i<other->getIndexCount(); ++i)
-			{
-				Indices.push_back(other->getIndices()[i]+vertexCount);
-			}
-			BoundingBox.addInternalBox(other->getBoundingBox());
-			*/
+			append(other->getVertices(), other->getVertexCount(), other->getIndices(), other->getIndexCount(), updateBoundingBox);
 		}
 
 
@@ -286,6 +286,41 @@ namespace scene
 		/** This shouldn't be used for anything outside the VideoDriver. */
 		virtual u32 getChangedID_Index() const IRR_OVERRIDE {return ChangedID_Index;}
 
+		//! Returns type of the class implementing the IMeshBuffer
+		virtual EMESH_BUFFER_TYPE getType() const  IRR_OVERRIDE
+		{
+			return getTypeT();
+		}
+
+		//! Create copy of the meshbuffer
+		virtual IMeshBuffer* createClone(int cloneFlags) const IRR_OVERRIDE
+		{
+			CMeshBuffer<T> * clone = new CMeshBuffer<T>();
+
+			if (cloneFlags & ECF_VERTICES)
+			{
+				clone->Vertices = Vertices;
+				clone->BoundingBox = BoundingBox;
+			}
+
+			if (cloneFlags & ECF_INDICES)
+			{
+				clone->Indices = Indices;
+			}
+
+			clone->PrimitiveType = PrimitiveType;
+			clone->Material = getMaterial();
+			clone->MappingHint_Vertex = MappingHint_Vertex;
+			clone->MappingHint_Index = MappingHint_Index;
+
+			return clone;
+		}
+
+		//! Returns type of the class implementing the IMeshBuffer for template specialization
+		// Minor note: Some compilers (VS) allow directly specializing the virtual function,
+		// but this will fail on other compilers (GCC). So using a helper function.
+		EMESH_BUFFER_TYPE getTypeT() const;
+
 		u32 ChangedID_Vertex;
 		u32 ChangedID_Index;
 
@@ -311,6 +346,25 @@ namespace scene
 	typedef CMeshBuffer<video::S3DVertex2TCoords> SMeshBufferLightMap;
 	//! Meshbuffer with vertices having tangents stored, e.g. for normal mapping
 	typedef CMeshBuffer<video::S3DVertexTangents> SMeshBufferTangents;
+
+	//! partial specialization to return types
+	template <>
+	inline EMESH_BUFFER_TYPE CMeshBuffer<video::S3DVertex>::getTypeT() const
+	{
+		return EMBT_STANDARD;
+	}
+	template <>
+	inline EMESH_BUFFER_TYPE CMeshBuffer<video::S3DVertex2TCoords>::getTypeT() const
+	{
+		return EMBT_LIGHTMAP;
+	}
+	template <>
+	inline EMESH_BUFFER_TYPE CMeshBuffer<video::S3DVertexTangents>::getTypeT() const
+	{
+		return EMBT_TANGENTS;
+	}
+
+
 } // end namespace scene
 } // end namespace irr
 

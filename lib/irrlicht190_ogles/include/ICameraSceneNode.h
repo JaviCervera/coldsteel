@@ -116,25 +116,46 @@ namespace scene
 		/** \return The aspect ratio of the camera. */
 		virtual f32 getAspectRatio() const =0;
 
-		//! Gets the field of view of the camera.
+		//! Gets the vertical field of view of the camera.
 		/** \return The field of view of the camera in radians. */
 		virtual f32 getFOV() const =0;
 
+		//! Get the horizontal and vertical lens/projection plane shift
+		/** \return Project plane offset */
+		virtual core::vector2df getLensShift() const
+		{
+			return core::vector2df(0.f, 0.f);	
+		}
+
 		//! Sets the value of the near clipping plane. (default: 1.0f)
-		/** \param zn: New z near value. */
+		/** Also changes projection matrix and resets IsOrthogonal flag.
+		\param zn: New z near value. */
 		virtual void setNearValue(f32 zn) =0;
 
 		//! Sets the value of the far clipping plane (default: 2000.0f)
-		/** \param zf: New z far value. */
+		/** Also changes projection matrix and resets IsOrthogonal flag.
+		\param zf: New z far value. */
 		virtual void setFarValue(f32 zf) =0;
 
 		//! Sets the aspect ratio (default: 4.0f / 3.0f)
-		/** \param aspect: New aspect ratio. */
+		/** Also changes projection matrix and resets IsOrthogonal flag.
+		\param aspect: New aspect ratio. */
 		virtual void setAspectRatio(f32 aspect) =0;
 
-		//! Sets the field of view (Default: PI / 2.5f)
-		/** \param fovy: New field of view in radians. */
+		//! Sets the vertical field of view (Default: PI / 2.5f)
+		/** Also changes projection matrix and resets IsOrthogonal flag.
+		\param fovy: New field of view in radians. */
 		virtual void setFOV(f32 fovy) =0;
+
+		//! Set the horizontal and vertical lens/projection plane shift
+		/** Like rendering a larger field of view and then cropping
+		it off-center. Allows for things like 2-point perspective.
+		\param shift: Offset by which the projection plane is moved.
+		If you move by 1 or -1 it will move the center by half a screen.
+		Positive X go to the left and positive Y go down.
+		By default it will be 0,0 */
+		virtual void setLensShift(const core::vector2df& shift)
+		{}
 
 		//! Get the view frustum.
 		/** \return The current view frustum. */
@@ -165,7 +186,10 @@ namespace scene
 		@see getTargetAndRotationBinding() */
 		virtual void bindTargetAndRotation(bool bound) =0;
 
-		//! Updates the matrices without uploading them to the driver
+		//! Updates the view matrix and frustum without uploading the matrix to the driver.
+		/** You need this when you want an up-to-date camera view matrix & frustum before the render() call.
+		Usually you should call updateAbsolutePosition() before calling this.
+		Despite it's function name, the projection matrix is not touched. */
 		virtual void updateMatrices() = 0;
 
 		//! Queries if the camera scene node's rotation and its target position are bound together.

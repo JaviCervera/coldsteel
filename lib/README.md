@@ -3,8 +3,8 @@
 ## Irrlicht
 
 Win32 version uses Irrlicht 1.8.5.
-Other desktop versions use Irrlicht 1.9.0 commit **r6297**.
-Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6258**.
+Desktop versions use Irrlicht 1.9.0 commit **r6688**.
+Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6687**.
 
 The modifications made to the engine are described here:
 
@@ -18,6 +18,11 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO_IRR_COMPILE_WITH_FB_DEVICE_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_8_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_9_
+#define NO_IRR_COMPILE_WITH_OGLES1_
+#define NO_IRR_COMPILE_WITH_OGLES2_
+#ifndef EMSCRIPTEN
+#define NO_IRR_COMPILE_WITH_WEBGL1_
+#endif
 //#define NO_IRR_COMPILE_WITH_OPENGL_
 #define NO_IRR_COMPILE_WITH_SOFTWARE_
 #define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
@@ -48,6 +53,7 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO_IRR_COMPILE_WITH_PCX_LOADER_
 #define NO_IRR_COMPILE_WITH_PPM_LOADER_
 #define NO_IRR_COMPILE_WITH_PSD_LOADER_
+#define NO_IRR_COMPILE_WITH_PVR_LOADER_
 #define NO_IRR_COMPILE_WITH_DDS_LOADER_
 #define NO_IRR_COMPILE_WITH_WAL_LOADER_
 #define NO_IRR_COMPILE_WITH_LMP_LOADER_
@@ -67,10 +73,10 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 
 Also, a couple of changes have been made in `include/SMaterial.h` to change the default use of vertex colors in lighting.
 
-Search for `ColorMaterial(ECM_DIFFUSE), BlendOperation(EBO_NONE),` and replace with:
+Search for `ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE),` and replace with:
 
 ```c++
-ColorMaterial(ECM_DIFFUSE_AND_AMBIENT), BlendOperation(EBO_NONE),
+ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE_AND_AMBIENT),
 ```
 
 Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with:
@@ -81,19 +87,21 @@ ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
 
 ### macOS (irrlicht190 only)
 
-On file `CIrrDeviceMacOSX.mm`, search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:
+On file `CIrrDeviceOSX.mm`, search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:
 
 ```c++
 if (bundleName) {
 ```
 
-Belowthat, after the line that contains `[NSApp setMainMenu:mainMenu];`, close the block with a new line containing `}`.
+Below that, after the line that contains `[NSApp setMainMenu:mainMenu];`, close the block with a new line containing `}`.
 
 Also, search for the line `Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSResizableWindowMask backing:type defer:FALSE];` and replace with:
 
 ```c++
 Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask backing:type defer:FALSE];
 ```
+
+On `CIrrDeviceWin32.cpp`, search for `case EDT_WEBGL1:` and replace with `case video::EDT_WEBGL1:`.
 
 ### Emscripten (irrlicht190_ogles only)
 

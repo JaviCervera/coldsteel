@@ -6,7 +6,8 @@
 #define IRR_C_CUBE_SCENE_NODE_H_INCLUDED
 
 #include "IMeshSceneNode.h"
-#include "SMesh.h"
+#include "IMesh.h"
+#include "IGeometryCreator.h"
 
 namespace irr
 {
@@ -20,7 +21,8 @@ namespace scene
 		CCubeSceneNode(f32 size, ISceneNode* parent, ISceneManager* mgr, s32 id,
 			const core::vector3df& position = core::vector3df(0,0,0),
 			const core::vector3df& rotation = core::vector3df(0,0,0),
-			const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
+			const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f),
+			ECUBE_MESH_TYPE type=ECMT_1BUF_12VTX_NA);
 
 		virtual ~CCubeSceneNode();
 
@@ -60,7 +62,7 @@ namespace scene
 		virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0) IRR_OVERRIDE;
 
 		//! Sets a new mesh to display
-		virtual void setMesh(IMesh* mesh) IRR_OVERRIDE {}
+		virtual void setMesh(IMesh* mesh, bool copyMeshMaterials) IRR_OVERRIDE {}
 
 		//! Returns the current mesh
 		virtual IMesh* getMesh(void) IRR_OVERRIDE { return Mesh; }
@@ -84,6 +86,7 @@ namespace scene
 		IMesh* Mesh;
 		IShadowVolumeSceneNode* Shadow;
 		f32 Size;
+		ECUBE_MESH_TYPE MeshType;
 	};
 
 } // end namespace scene

@@ -21,6 +21,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 	//! Default constructor
 	SSkinMeshBuffer(video::E_VERTEX_TYPE vt=video::EVT_STANDARD) :
 		ChangedID_Vertex(1), ChangedID_Index(1), VertexType(vt),
+		BoundingBox(1,-1),
 		PrimitiveType(EPT_TRIANGLES),
 		MappingHint_Vertex(EHM_NEVER), MappingHint_Index(EHM_NEVER),
 		BoundingBoxNeedsRecalculated(true)
@@ -148,7 +149,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 			case video::EVT_STANDARD:
 			{
 				if (Vertices_Standard.empty())
-					BoundingBox.reset(0,0,0);
+					BoundingBox = core::aabbox3df(1,-1);
 				else
 				{
 					BoundingBox.reset(Vertices_Standard[0].Pos);
@@ -160,7 +161,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 			case video::EVT_2TCOORDS:
 			{
 				if (Vertices_2TCoords.empty())
-					BoundingBox.reset(0,0,0);
+					BoundingBox = core::aabbox3df(1,-1);
 				else
 				{
 					BoundingBox.reset(Vertices_2TCoords[0].Pos);
@@ -172,7 +173,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 			case video::EVT_TANGENTS:
 			{
 				if (Vertices_Tangents.empty())
-					BoundingBox.reset(0,0,0);
+					BoundingBox = core::aabbox3df(1,-1);
 				else
 				{
 					BoundingBox.reset(Vertices_Tangents[0].Pos);
@@ -326,11 +327,39 @@ struct SSkinMeshBuffer : public IMeshBuffer
 		}
 	}
 
+	//! returns color of vertex i
+	virtual video::SColor& getColor(u32 i) IRR_OVERRIDE
+	{
+		switch (VertexType)
+		{
+			case video::EVT_2TCOORDS:
+				return Vertices_2TCoords[i].Color;
+			case video::EVT_TANGENTS:
+				return Vertices_Tangents[i].Color;
+			default:
+				return Vertices_Standard[i].Color;
+		}
+	}
+
+	//! returns color of vertex i
+	virtual const video::SColor& getColor(u32 i) const IRR_OVERRIDE
+	{
+		switch (VertexType)
+		{
+			case video::EVT_2TCOORDS:
+				return Vertices_2TCoords[i].Color;
+			case video::EVT_TANGENTS:
+				return Vertices_Tangents[i].Color;
+			default:
+				return Vertices_Standard[i].Color;
+		}
+	}
+
 	//! append the vertices and indices to the current buffer
-	virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices) IRR_OVERRIDE {}
+	virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices, bool updateBoundingBox) IRR_OVERRIDE {}
 
 	//! append the meshbuffer to the current buffer
-	virtual void append(const IMeshBuffer* const other) IRR_OVERRIDE {}
+	virtual void append(const IMeshBuffer* const other, bool updateBoundingBox) IRR_OVERRIDE {}
 
 	//! get the current hardware mapping hint for vertex buffers
 	virtual E_HARDWARE_MAPPING getHardwareMappingHint_Vertex() const IRR_OVERRIDE
@@ -382,6 +411,41 @@ struct SSkinMeshBuffer : public IMeshBuffer
 	virtual u32 getChangedID_Vertex() const IRR_OVERRIDE {return ChangedID_Vertex;}
 
 	virtual u32 getChangedID_Index() const IRR_OVERRIDE {return ChangedID_Index;}
+
+	//! Returns type of the class implementing the IMeshBuffer
+	virtual EMESH_BUFFER_TYPE getType() const  IRR_OVERRIDE
+	{
+		return EMBT_SKIN;
+	}
+
+	//! Create copy of the meshbuffer
+	virtual IMeshBuffer* createClone(int cloneFlags) const IRR_OVERRIDE
+	{
+		SSkinMeshBuffer* clone = new SSkinMeshBuffer(VertexType);
+
+		if (cloneFlags & ECF_VERTICES)
+		{
+			clone->Vertices_Tangents = Vertices_Tangents;
+			clone->Vertices_2TCoords = Vertices_2TCoords;
+			clone->Vertices_Standard = Vertices_Standard;
+
+			clone->BoundingBox = BoundingBox;
+			clone->BoundingBoxNeedsRecalculated = BoundingBoxNeedsRecalculated;
+		}
+
+		if (cloneFlags & ECF_INDICES)
+		{
+			clone->Indices = Indices;
+		}
+
+		clone->Transformation = Transformation;
+		clone->Material = getMaterial();
+		clone->PrimitiveType = PrimitiveType;
+		clone->MappingHint_Vertex = MappingHint_Vertex;
+		clone->MappingHint_Index = MappingHint_Index;
+
+		return clone;
+	}
 
 	//! Call this after changing the positions of any vertex.
 	void boundingBoxNeedsRecalculated(void) { BoundingBoxNeedsRecalculated = true; }

@@ -18,34 +18,16 @@ file(
 	"lib/soloud/src/core/*.cpp")
 
 #Add header and lib directories
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	include_directories(
-		${INCLUDE_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-	link_directories(
-		${LINK_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT)
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-	include_directories(
-		${INCLUDE_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-	link_directories(
-		${LINK_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)
-else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	include_directories(
-		${INCLUDE_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190/include
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
-		${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-	link_directories(
-		${LINK_DIRECTORIES}
-		${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+include_directories(
+	${INCLUDE_DIRECTORIES}
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)
+else (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 
 #Add executable targets
 add_executable(csrun ${COLDSTEEL_EXE_FILES})
@@ -59,7 +41,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		#add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	else (MSVC)
 		message("Platform is Windows (MinGW)")
-		#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
@@ -68,15 +49,12 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	add_definitions(-DWITH_COREAUDIO)
-	#add_definitions(-std=c++11 -stdlib=libc++)
-	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(csrun -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
-	#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c90 -pedantic-errors -Wall")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti -fPIC")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")

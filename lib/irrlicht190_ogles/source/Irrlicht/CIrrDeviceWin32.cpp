@@ -130,8 +130,8 @@ namespace irr
 			if (dev)
 			{
 				dev->Unacquire();
+				dev->Release();
 			}
-			dev->Release();
 		}
 
 		if (DirectInputDevice)
@@ -448,8 +448,9 @@ irr::core::stringc SJoystickWin32Control::findJoystickName(int index, const JOYC
     RegCloseKey(hKey);
 
     return result;
-#endif
+#else
 	return "";
+#endif
 }
 
 bool SJoystickWin32Control::activateJoysticks(core::array<SJoystickInfo> & joystickInfo)
@@ -1228,7 +1229,7 @@ void CIrrDeviceWin32::createDriver()
 		os::Printer::log("OpenGL-ES2 driver was not compiled in.", ELL_ERROR);
 #endif
 		break;
-	case EDT_WEBGL1:
+	case video::EDT_WEBGL1:
 		os::Printer::log("WebGL1 driver not supported on Win32 device.", ELL_ERROR);
 		break;
 	case video::EDT_SOFTWARE:
@@ -1281,7 +1282,7 @@ bool CIrrDeviceWin32::run()
 //! Pause the current process for the minimum time allowed only to allow other processes to execute
 void CIrrDeviceWin32::yield()
 {
-	Sleep(1);
+	Sleep(0);
 }
 
 //! Pause execution and let other processes to run for a specified amount of time.
@@ -1354,7 +1355,7 @@ bool CIrrDeviceWin32::present(video::IImage* image, void* windowId, core::rect<s
 {
 	HWND hwnd = HWnd;
 	if ( windowId )
-		hwnd = reinterpret_cast<HWND>(windowId);
+		hwnd = static_cast<HWND>(windowId);
 
 	HDC dc = GetDC(hwnd);
 
@@ -1579,7 +1580,6 @@ typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 void CIrrDeviceWin32::getWindowsVersion(core::stringc& out)
 {
 	OSVERSIONINFOEX osvi;
-	PGPI pGPI;
 	BOOL bOsVersionInfoEx;
 
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
@@ -1631,9 +1631,14 @@ void CIrrDeviceWin32::getWindowsVersion(core::stringc& out)
 		{
 			if (osvi.dwMajorVersion == 6)
 			{
-				DWORD dwType;
-				pGPI = (PGPI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
-				pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType);
+				DWORD dwType = 0; // (PRODUCT_UNDEFINED not available on MinGW)
+				HMODULE hmKernel32 = GetModuleHandle(TEXT("kernel32.dll"));
+				if ( hmKernel32 )
+				{
+					PGPI pGPI = (PGPI)GetProcAddress(hmKernel32, "GetProductInfo");
+					if ( pGPI )
+						pGPI(osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType);
+				}
 
 				switch (dwType)
 				{
@@ -2179,11 +2184,29 @@ gui::ECURSOR_ICON CIrrDeviceWin32::CCursorControl::addIcon(const gui::SCursorSpr
 			irr::core::rect<s32> rectIcon = icon.SpriteBank->getPositions()[rectId];
 
 			HCURSOR hc = Device->TextureToCursor(HWnd, icon.SpriteBank->getTexture(texId), rectIcon, icon.HotSpot);
-			cW32.Frames.push_back( CursorFrameW32(hc) );
+			if ( hc != NULL )
+			{
+				cW32.Frames.push_back( CursorFrameW32(hc) );
+			}
+			else
+			{
+				core::stringc warning("addIcon could not convert texture to cursor for frame ");
+				warning += core::stringc(i);
+				warning += " error ";
+				warning += core::stringc(GetLastError());
+				os::Printer::log(warning.c_str(), ELL_WARNING);
+			}
 		}
 
-		Cursors.push_back( cW32 );
-		return (gui::ECURSOR_ICON)(Cursors.size() - 1);
+		if ( !cW32.Frames.empty() )
+		{
+			Cursors.push_back( cW32 );
+			return (gui::ECURSOR_ICON)(Cursors.size() - 1);
+		}
+		else
+		{
+			os::Printer::log("addIcon failed due to the lack of cursor frames", ELL_WARNING);
+		}
 	}
 	return gui::ECI_NORMAL;
 }

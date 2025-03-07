@@ -19,6 +19,7 @@ namespace scene
 		SSharedMeshBuffer() 
 			: IMeshBuffer()
 			, Vertices(0), ChangedID_Vertex(1), ChangedID_Index(1)
+			, BoundingBox(1,-1)
 			, MappingHintVertex(EHM_NEVER), MappingHintIndex(EHM_NEVER)
 			, PrimitiveType(EPT_TRIANGLES)
 		{
@@ -28,7 +29,11 @@ namespace scene
 		}
 
 		//! constructor
-		SSharedMeshBuffer(core::array<video::S3DVertex> *vertices) : IMeshBuffer(), Vertices(vertices), ChangedID_Vertex(1), ChangedID_Index(1), MappingHintVertex(EHM_NEVER), MappingHintIndex(EHM_NEVER)
+		SSharedMeshBuffer(core::array<video::S3DVertex> *vertices) 
+			: IMeshBuffer(), Vertices(vertices), ChangedID_Vertex(1), ChangedID_Index(1)
+			, BoundingBox(1,-1)
+			, MappingHintVertex(EHM_NEVER), MappingHintIndex(EHM_NEVER)
+			, PrimitiveType(EPT_TRIANGLES)
 		{
 			#ifdef _DEBUG
 			setDebugName("SSharedMeshBuffer");
@@ -120,7 +125,7 @@ namespace scene
 		virtual void recalculateBoundingBox() IRR_OVERRIDE
 		{
 			if (!Vertices || Vertices->empty() || Indices.empty())
-				BoundingBox.reset(0,0,0);
+				BoundingBox = core::aabbox3df(1,-1);
 			else
 			{
 				BoundingBox.reset((*Vertices)[Indices[0]].Pos);
@@ -171,10 +176,32 @@ namespace scene
 			return (*Vertices)[Indices[i]].TCoords;
 		}
 
+		//! returns color of vertex i
+		virtual video::SColor& getColor(u32 i) IRR_OVERRIDE
+		{
+			IRR_DEBUG_BREAK_IF(!Vertices);
+			return (*Vertices)[Indices[i]].Color;
+		}
+
+		//! returns color of vertex i
+		virtual const video::SColor& getColor(u32 i) const IRR_OVERRIDE
+		{
+			IRR_DEBUG_BREAK_IF(!Vertices);
+			return (*Vertices)[Indices[i]].Color;
+		}
+
+
 		//! append the vertices and indices to the current buffer
-		virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices)  IRR_OVERRIDE {}
+		virtual void append(const void* const vertices, u32 numVertices, const u16* const indices, u32 numIndices, bool updateBoundingBox)  IRR_OVERRIDE 
+		{
+			// can't do that as it doesn't own the vertex memory
+		}
+
 		//! append the meshbuffer to the current buffer
-		virtual void append(const IMeshBuffer* const other) IRR_OVERRIDE {}
+		virtual void append(const IMeshBuffer* const other, bool updateBoundingBox) IRR_OVERRIDE 
+		{
+			// can't do that as it doesn't own the vertex memory
+		}
 
 		//! get the current hardware mapping hint
 		virtual E_HARDWARE_MAPPING getHardwareMappingHint_Vertex() const IRR_OVERRIDE
@@ -225,6 +252,36 @@ namespace scene
 		//! Get the currently used ID for identification of changes.
 		/** This shouldn't be used for anything outside the VideoDriver. */
 		virtual u32 getChangedID_Index() const IRR_OVERRIDE {return ChangedID_Index;}
+
+		//! Returns type of the class implementing the IMeshBuffer
+		virtual EMESH_BUFFER_TYPE getType() const  IRR_OVERRIDE
+		{
+			return EMBT_SHARED;
+		}
+
+		//! Create copy of the meshbuffer
+		virtual IMeshBuffer* createClone(int cloneFlags) const IRR_OVERRIDE
+		{
+			SSharedMeshBuffer * clone = new SSharedMeshBuffer();
+
+			if (cloneFlags & ECF_VERTICES)
+			{
+				clone->Vertices = Vertices;
+				clone->BoundingBox = BoundingBox;
+			}
+
+			if (cloneFlags & ECF_INDICES)
+			{
+				clone->Indices = Indices;
+			}
+
+			clone->Material = Material;
+			clone->MappingHintVertex = MappingHintVertex;
+			clone->MappingHintIndex = MappingHintIndex;
+			clone->PrimitiveType = PrimitiveType;
+
+			return clone;
+		}
 
 		//! Material of this meshBuffer
 		video::SMaterial Material;

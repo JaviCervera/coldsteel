@@ -118,7 +118,7 @@ namespace video
 			const video::SColor* const colors = 0, bool useAlphaChannelOfTexture = false) IRR_OVERRIDE;
 
 		// internally used
-		virtual void draw2DImage(const video::ITexture* texture, u32 layer, bool flip);
+		virtual void draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip);
 
 		//! draws a set of 2d images
 		virtual void draw2DImageBatch(const video::ITexture* texture,
@@ -192,7 +192,7 @@ namespace video
 			video::SColor rightDownEdge = video::SColor(0,0,0,0)) IRR_OVERRIDE;
 
 		//! sets a viewport
-		virtual void setViewPort(const core::rect<s32>& area) IRR_OVERRIDE;
+		virtual void setViewPort(const core::rect<s32>& area, bool clipToRenderTarget=true) IRR_OVERRIDE;
 
 		//! Only used internally by the engine
 		virtual void OnResize(const core::dimension2d<u32>& size) IRR_OVERRIDE;
@@ -207,7 +207,7 @@ namespace video
 		virtual const core::matrix4& getTransform(E_TRANSFORMATION_STATE state) const IRR_OVERRIDE;
 
 		//! Can be called by an IMaterialRenderer to make its work easier.
-		virtual void setBasicRenderStates(const SMaterial& material, const SMaterial& lastmaterial, bool resetAllRenderstates) IRR_OVERRIDE;
+		void setBasicRenderStates(const SMaterial& material, const SMaterial& lastmaterial, bool resetAllRenderstates);
 
 		//! Compare in SMaterial doesn't check texture parameters, so we should call this on each OnRender call.
 		void setTextureRenderStates(const SMaterial& material, bool resetAllRenderstates);
@@ -327,7 +327,7 @@ namespace video
 		virtual GLenum getZBufferBits() const;
 
 		virtual bool getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-			GLenum& pixelType, void(**converter)(const void*, s32, void*)) const;
+			GLenum& pixelType, void(**converter)(const void*, u32, void*)) const;
 
 		//! Get current material.
 		const SMaterial& getCurrentMaterial() const;
@@ -338,7 +338,7 @@ namespace video
 		//! inits the opengl-es driver
 		virtual bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer);
 
-		void chooseMaterial2D();
+		void chooseMaterial2D(bool textureClampToEdge=false);
 
 		virtual ITexture* createDeviceDependentTexture(const io::path& name, IImage* image) IRR_OVERRIDE;
 

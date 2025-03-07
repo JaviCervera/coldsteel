@@ -234,9 +234,10 @@ public:
 	//! Set (copy) data from given memory block
 	/** \param newData data to set, must have newSize elements
 	\param newSize Amount of elements in newData
-	\param canShrink When true we reallocate the array even it can shrink. 
-	May reduce memory usage, but call is more whenever size changes.
 	\param newDataIsSorted Info if you pass sorted/unsorted data
+	\param canShrink Specifies whether the array is reallocated even if
+	enough space is available. Setting this flag to false can speed up
+	array usage, but may use more memory than required by the data.
 	*/
 	void set_data(const T* newData, u32 newSize, bool newDataIsSorted=false, bool canShrink=false)
 	{
@@ -299,22 +300,27 @@ public:
 			return *this;
 		strategy = other.strategy;
 
+		// (TODO: we could probably avoid re-allocations of data when (allocated < other.allocated)
+
 		if (data)
 			clear();
-
-		//if (allocated < other.allocated)
-		if (other.allocated == 0)
-			data = 0;
-		else
-			data = allocator.allocate(other.allocated); // new T[other.allocated];
 
 		used = other.used;
 		free_when_destroyed = true;
 		is_sorted = other.is_sorted;
 		allocated = other.allocated;
 
-		for (u32 i=0; i<other.used; ++i)
-			allocator.construct(&data[i], other.data[i]); // data[i] = other.data[i];
+		if (other.allocated == 0)
+		{
+			data = 0;
+		}
+		else
+		{
+			data = allocator.allocate(other.allocated); // new T[other.allocated];
+
+			for (u32 i=0; i<other.used; ++i)
+				allocator.construct(&data[i], other.data[i]); // data[i] = other.data[i];
+		}
 
 		return *this;
 	}
@@ -520,29 +526,31 @@ public:
 	}
 
 
-	//! Finds an element in linear time, which is very slow.
-	/** Use binary_search for faster finding. Only works if ==operator is
-	implemented.
-	\param element Element to search for.
+	//! Finds an element by searching linearly from array start to end
+	/** Can be slow with large arrays, try binary_search for those.
+	Only works if corresponding operator== is implemented.
+	\param element Element to search for. 
 	\return Position of the searched element if it was found, otherwise -1
 	is returned. */
-	s32 linear_search(const T& element) const
+	template <class E>
+	s32 linear_search(const E& element) const
 	{
 		for (u32 i=0; i<used; ++i)
-			if (element == data[i])
+			if (data[i] == element)
 				return (s32)i;
 
 		return -1;
 	}
 
 
-	//! Finds an element in linear time, which is very slow.
-	/** Use binary_search for faster finding. Only works if ==operator is
-	implemented.
-	\param element: Element to search for.
+	//! Finds an element by searching linearly from array end to start.
+	/** Can be slow with large arrays, try binary_search for those.
+	Only works if corresponding operator== is implemented.
+	\param element Element to search for.
 	\return Position of the searched element if it was found, otherwise -1
 	is returned. */
-	s32 linear_reverse_search(const T& element) const
+	template <class E>
+	s32 linear_reverse_search(const E& element) const
 	{
 		for (s32 i=used-1; i>=0; --i)
 			if (data[i] == element)

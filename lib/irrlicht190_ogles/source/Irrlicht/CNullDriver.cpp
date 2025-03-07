@@ -11,6 +11,7 @@
 #include "IImageLoader.h"
 #include "IImageWriter.h"
 #include "IMaterialRenderer.h"
+#include "IMeshSceneNode.h"
 #include "IAnimatedMeshSceneNode.h"
 #include "CMeshManipulator.h"
 #include "CColorConverter.h"
@@ -115,7 +116,7 @@ CNullDriver::CNullDriver(io::IFileSystem* io, const core::dimension2d<u32>& scre
 	setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
 	setTextureCreationFlag(ETCF_CREATE_MIP_MAPS, true);
 	setTextureCreationFlag(ETCF_AUTO_GENERATE_MIP_MAPS, true);
-	setTextureCreationFlag(ETCF_ALLOW_MEMORY_COPY, true);
+	setTextureCreationFlag(ETCF_ALLOW_MEMORY_COPY, false);
 
 	ViewPort = core::rect<s32>(core::position2d<s32>(0,0), core::dimension2di(screenSize));
 
@@ -441,10 +442,7 @@ ITexture* CNullDriver::addTexture(const core::dimension2d<u32>& size, const io::
 	IImage* image = new CImage(format, size);
 	ITexture* t = 0;
 
-	core::array<IImage*> imageArray(1);
-	imageArray.push_back(image);
-
-	if (checkImage(imageArray))
+	if (checkImage(image->getColorFormat(), image->getDimension()))
 	{
 		t = createDeviceDependentTexture(name, image);
 	}
@@ -473,18 +471,14 @@ ITexture* CNullDriver::addTexture(const io::path& name, IImage* image)
 
 	ITexture* t = 0;
 
-	core::array<IImage*> imageArray(1);
-	imageArray.push_back(image);
-
-	if (checkImage(imageArray))
+	if (checkImage(image->getColorFormat(), image->getDimension()))
 	{
 		t = createDeviceDependentTexture(name, image);
-	}
-
-	if (t)
-	{
-		addTexture(t);
-		t->drop();
+		if (t)
+		{
+			addTexture(t);
+			t->drop();
+		}
 	}
 
 	return t;
@@ -509,12 +503,11 @@ ITexture* CNullDriver::addTextureCubemap(const io::path& name, IImage* imagePosX
 	if (checkImage(imageArray))
 	{
 		t = createDeviceDependentTextureCubemap(name, imageArray);
-	}
-
-	if (t)
-	{
-		addTexture(t);
-		t->drop();
+		if (t)
+		{
+			addTexture(t);
+			t->drop();
+		}
 	}
 
 	return t;
@@ -777,7 +770,7 @@ bool CNullDriver::setRenderTarget(ITexture* texture, u16 clearFlag, SColor clear
 }
 
 //! sets a viewport
-void CNullDriver::setViewPort(const core::rect<s32>& area)
+void CNullDriver::setViewPort(const core::rect<s32>& area, bool clipToRenderTarget)
 {
 }
 
@@ -1434,88 +1427,91 @@ bool CNullDriver::checkPrimitiveCount(u32 prmCount) const
 
 bool CNullDriver::checkImage(const core::array<IImage*>& image) const
 {
-	bool status = true;
-
 	if (image.size() > 0)
 	{
 		ECOLOR_FORMAT lastFormat = image[0]->getColorFormat();
 		core::dimension2d<u32> lastSize = image[0]->getDimension();
 
-		for (u32 i = 0; i < image.size() && status; ++i)
+		for (u32 i = 0; i < image.size(); ++i)
 		{
 			ECOLOR_FORMAT format = image[i]->getColorFormat();
 			core::dimension2d<u32> size = image[i]->getDimension();
 
-			switch (format)
-			{
-			case ECF_DXT1:
-			case ECF_DXT2:
-			case ECF_DXT3:
-			case ECF_DXT4:
-			case ECF_DXT5:
-				if (!queryFeature(EVDF_TEXTURE_COMPRESSED_DXT))
-				{
-					os::Printer::log("DXT texture compression not available.", ELL_ERROR);
-					status = false;
-				}
-				else if (size.getOptimalSize(true, false) != size)
-				{
-					os::Printer::log("Invalid size of image for DXT texture, size of image must be power of two.", ELL_ERROR);
-					status = false;
-				}
-				break;
-			case ECF_PVRTC_RGB2:
-			case ECF_PVRTC_ARGB2:
-			case ECF_PVRTC_RGB4:
-			case ECF_PVRTC_ARGB4:
-				if (!queryFeature(EVDF_TEXTURE_COMPRESSED_PVRTC))
-				{
-					os::Printer::log("PVRTC texture compression not available.", ELL_ERROR);
-					status = false;
-				}
-				else if (size.getOptimalSize(true, false) != size)
-				{
-					os::Printer::log("Invalid size of image for PVRTC compressed texture, size of image must be power of two and squared.", ELL_ERROR);
-					status = false;
-				}
-				break;
-			case ECF_PVRTC2_ARGB2:
-			case ECF_PVRTC2_ARGB4:
-				if (!queryFeature(EVDF_TEXTURE_COMPRESSED_PVRTC2))
-				{
-					os::Printer::log("PVRTC2 texture compression not available.", ELL_ERROR);
-					status = false;
-				}
-				break;
-			case ECF_ETC1:
-				if (!queryFeature(EVDF_TEXTURE_COMPRESSED_ETC1))
-				{
-					os::Printer::log("ETC1 texture compression not available.", ELL_ERROR);
-					status = false;
-				}
-				break;
-			case ECF_ETC2_RGB:
-			case ECF_ETC2_ARGB:
-				if (!queryFeature(EVDF_TEXTURE_COMPRESSED_ETC2))
-				{
-					os::Printer::log("ETC2 texture compression not available.", ELL_ERROR);
-					status = false;
-				}
-				break;
-			default:
-				break;
-			}
-
 			if (format != lastFormat || size != lastSize)
-				status = false;
+				return false;
+
+			if ( !checkImage(format, size) )
+				return false;
 		}
+	
+		return true;
 	}
-	else
+	return false;
+}
+
+bool CNullDriver::checkImage(ECOLOR_FORMAT format, const core::dimension2du& size) const
+{
+	switch (format)
 	{
-		status = false;
+		case ECF_DXT1:
+		case ECF_DXT2:
+		case ECF_DXT3:
+		case ECF_DXT4:
+		case ECF_DXT5:
+			if (!queryFeature(EVDF_TEXTURE_COMPRESSED_DXT))
+			{
+				os::Printer::log("DXT texture compression not available.", ELL_ERROR);
+				return false;
+			}
+			else if (size.getOptimalSize(true, false) != size)
+			{
+				os::Printer::log("Invalid size of image for DXT texture, size of image must be power of two.", ELL_ERROR);
+				return false;
+			}
+			break;
+		case ECF_PVRTC_RGB2:
+		case ECF_PVRTC_ARGB2:
+		case ECF_PVRTC_RGB4:
+		case ECF_PVRTC_ARGB4:
+			if (!queryFeature(EVDF_TEXTURE_COMPRESSED_PVRTC))
+			{
+				os::Printer::log("PVRTC texture compression not available.", ELL_ERROR);
+				return false;
+			}
+			else if (size.getOptimalSize(true, false) != size)
+			{
+				os::Printer::log("Invalid size of image for PVRTC compressed texture, size of image must be power of two and squared.", ELL_ERROR);
+				return false;
+			}
+			break;
+		case ECF_PVRTC2_ARGB2:
+		case ECF_PVRTC2_ARGB4:
+			if (!queryFeature(EVDF_TEXTURE_COMPRESSED_PVRTC2))
+			{
+				os::Printer::log("PVRTC2 texture compression not available.", ELL_ERROR);
+				return false;
+			}
+			break;
+		case ECF_ETC1:
+			if (!queryFeature(EVDF_TEXTURE_COMPRESSED_ETC1))
+			{
+				os::Printer::log("ETC1 texture compression not available.", ELL_ERROR);
+				return false;
+			}
+			break;
+		case ECF_ETC2_RGB:
+		case ECF_ETC2_ARGB:
+			if (!queryFeature(EVDF_TEXTURE_COMPRESSED_ETC2))
+			{
+				os::Printer::log("ETC2 texture compression not available.", ELL_ERROR);
+				return false;
+			}
+			break;
+		default:
+			break;
 	}
 
-	return status;
+	return true;
 }
 
 //! Enables or disables a texture creation flag.
@@ -1706,7 +1702,7 @@ IImage* CNullDriver::createImage(ITexture* texture, const core::position2d<s32>&
 		void * data = texture->lock(ETLM_READ_ONLY);
 		if ( !data)
 			return 0;
-		IImage* image = new CImage(texture->getColorFormat(), size, data, false, false);
+		IImage* image = new CImage(texture->getColorFormat(), size, data, false);
 		texture->unlock();
 		return image;
 	}
@@ -1823,7 +1819,7 @@ void CNullDriver::updateAllHardwareBuffers()
 		SHWBufferLink *Link=Iterator.getNode()->getValue();
 
 		Link->LastUsed++;
-		if (Link->LastUsed>20000)
+		if (Link->LastUsed>20000 || Link->MeshBuffer->getReferenceCount() == 1)
 		{
 			deleteHardwareBuffer(Link);
 
@@ -2003,7 +1999,7 @@ void CNullDriver::updateAllOcclusionQueries(bool block)
 /** Return value is the number of visible pixels/fragments.
 The value is a safe approximation, i.e. can be larger then the
 actual value of pixels. */
-u32 CNullDriver::getOcclusionQueryResult(scene::ISceneNode* node) const
+u32 CNullDriver::getOcclusionQueryResult(const scene::ISceneNode* node) const
 {
 	return ~0;
 }
@@ -2097,10 +2093,10 @@ s32 CNullDriver::addMaterialRenderer(IMaterialRenderer* renderer, const char* na
 
 
 //! Sets the name of a material renderer.
-void CNullDriver::setMaterialRendererName(s32 idx, const char* name)
+void CNullDriver::setMaterialRendererName(u32 idx, const char* name)
 {
-	if (idx < s32(sizeof(sBuiltInMaterialTypeNames) / sizeof(char*))-1 ||
-		idx >= (s32)MaterialRenderers.size())
+	if (idx < (sizeof(sBuiltInMaterialTypeNames) / sizeof(char*))-1 ||
+		idx >= MaterialRenderers.size())
 		return;
 
 	MaterialRenderers[idx].Name = name;

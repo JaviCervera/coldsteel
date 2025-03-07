@@ -17,14 +17,14 @@ set CXX=%~dp0mingw_342/bin/mingw32-g++.exe
 
 echo # Building Irrlicht (Desktop) ...
 cd _CMAKE/_IRRLICHT
-..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht185
-..\..\mingw_342\bin\mingw32-make -j8
+..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht190_ogles
+..\..\mingw_342\bin\mingw32-make
 cd ../..
 
 echo # Building csrun (Desktop) ...
 cd _CMAKE/_COLDSTEEL
 ..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_RC_FLAGS="-F pe-i386" ../..
-..\..\mingw_342\bin\mingw32-make -j8
+..\..\mingw_342\bin\mingw32-make
 move "csrun.exe" "..\..\_build\csrun.exe"
 cd ../..
 

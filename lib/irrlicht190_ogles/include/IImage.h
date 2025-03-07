@@ -10,7 +10,6 @@
 #include "rect.h"
 #include "SColor.h"
 #include "irrAllocator.h"
-#include <string.h>
 
 namespace irr
 {
@@ -34,7 +33,12 @@ public:
 #endif
 	{
 		BytesPerPixel = getBitsPerPixelFromFormat(Format) / 8;
-		Pitch = BytesPerPixel * Size.Width;
+
+		// We want the exact pitch even for compressed formats
+		if ( Size.Height > 0 )
+			Pitch = (irr::u32)(getDataSizeFromFormat(Format, Size.Width, Size.Height) / (size_t)Size.Height);
+		else
+			Pitch = 0;
 	}
 
 	//! destructor
@@ -74,18 +78,21 @@ public:
 	//! Returns bits per pixel.
 	u32 getBitsPerPixel() const
 	{
-
 		return getBitsPerPixelFromFormat(Format);
 	}
 
-	//! Returns bytes per pixel
+	//! Returns bytes per pixel for uncompressed formats
+	/** Note: With compressed formats this value tends to be wrong.
+	For those you usually have to work with either getBitsPerPixelFromFormat,
+	getBitsPerBlockFromFormat or getPitch. Which one of those you'll need 
+	depends on the use case. */
 	u32 getBytesPerPixel() const
 	{
 		return BytesPerPixel;
 	}
 
 	//! Returns image data size in bytes
-	u32 getImageDataSizeInBytes() const
+	size_t getImageDataSizeInBytes() const
 	{
 		return getDataSizeFromFormat(Format, Size.Width, Size.Height);
 	}
@@ -296,7 +303,7 @@ public:
 				}
 				else
 				{
-					u32 dataSize = 0;
+					size_t dataSize = 0;
 					u32 width = Size.Width;
 					u32 height = Size.Height;
 
@@ -359,6 +366,11 @@ public:
 	/**	NOTE: mipmaps are ignored */
 	virtual void copyToScalingBoxFilter(IImage* target, s32 bias = 0, bool blend = false) = 0;
 
+	//! Flips (mirrors) the image in one or two directions
+	/** \param topBottom Flip around central x-axis (vertical flipping)
+	\param leftRight Flip around central y-axis (typical mirror, horizontal flipping) */
+	virtual void flip(bool topBottom, bool leftRight) = 0;
+
 	//! fills the surface with given color
 	virtual void fill(const SColor &color) =0;
 
@@ -389,27 +401,26 @@ public:
 		case ECF_A8R8G8B8:
 			return 32;
 		case ECF_DXT1:
-			return 16;
+			return 4;
 		case ECF_DXT2:
 		case ECF_DXT3:
 		case ECF_DXT4:
 		case ECF_DXT5:
-			return 32;
+			return 8;
 		case ECF_PVRTC_RGB2:
-			return 12;
 		case ECF_PVRTC_ARGB2:
 		case ECF_PVRTC2_ARGB2:
-			return 16;
+			return 2;
 		case ECF_PVRTC_RGB4:
-			return 24;
 		case ECF_PVRTC_ARGB4:
 		case ECF_PVRTC2_ARGB4:
-			return 32;
+			return 4;
 		case ECF_ETC1:
+			return 4;
 		case ECF_ETC2_RGB:
-			return 24;
+			return 4;
 		case ECF_ETC2_ARGB:
-			return 32;
+			return 8;
 		case ECF_D16:
 			return 16;
 		case ECF_D32:
@@ -441,43 +452,92 @@ public:
 		}
 	}
 
-	//! calculate image data size in bytes for selected format, width and height.
-	static u32 getDataSizeFromFormat(ECOLOR_FORMAT format, u32 width, u32 height)
+	// Some (compressed) formats need to ensure blocks of bits stay together, which may
+	// not be identical to the amount of bits needed for a pixel.
+	// Also a block of bits maybe not be about pixels in a row, but tends
+	// to be about things like 4x4 pixel blocks. The order can even be unrelated to the 
+	// pixel order in some cases.
+	// For uncompressed formats it's the same value as getBitsPerPixelFromFormat
+	static u32 getBitsPerBlockFromFormat(const ECOLOR_FORMAT format)
 	{
-		u32 imageSize = 0;
+		switch(format)
+		{
+		case ECF_DXT1:
+			return 64;
+		case ECF_DXT2:
+		case ECF_DXT3:
+		case ECF_DXT4:
+		case ECF_DXT5:
+			return 128;
+		case ECF_PVRTC_RGB2:
+		case ECF_PVRTC_ARGB2:
+		case ECF_PVRTC2_ARGB2:
+		case ECF_PVRTC_RGB4:
+		case ECF_PVRTC_ARGB4:
+		case ECF_PVRTC2_ARGB4:
+			return 64;
+		case ECF_ETC1:
+			return 64;
+		case ECF_ETC2_RGB:
+			return 64;
+		case ECF_ETC2_ARGB:
+			return 128;
+		default:
+			return getBitsPerPixelFromFormat(format);
+		}
+	}
+
+	//! You should not create images where the result of getDataSizeFromFormat doesn't pass this function
+	/** Note that CImage does not yet check for this, but going beyond this limit is not supported well.
+	Image loaders should check for this.
+	If you don't have the format yet then checking width*height*bytes_per_pixel is mostly fine, but make
+	sure to work with size_t so it doesn't clip the result to u32 too early.
+	\return true when dataSize is small enough that it should be fine. */
+	static bool checkDataSizeLimit(size_t dataSize)
+	{
+		// 2gb for now. Could be we could do more on some platforms, but we still will run into
+		// problems right now then for example in then color converter (which currently still uses
+		// s32 for sizes).
+		return (size_t)(s32)(dataSize) == dataSize;
+	}
+
+	//! calculate image data size in bytes for selected format, width and height.
+	static size_t getDataSizeFromFormat(ECOLOR_FORMAT format, u32 width, u32 height)
+	{
+		size_t imageSize = 0;
 
 		switch (format)
 		{
 		case ECF_DXT1:
-			imageSize = ((width + 3) / 4) * ((height + 3) / 4) * 8;
+			imageSize = (size_t)((width + 3) / 4) * ((height + 3) / 4) * 8;
 			break;
 		case ECF_DXT2:
 		case ECF_DXT3:
 		case ECF_DXT4:
 		case ECF_DXT5:
-			imageSize = ((width + 3) / 4) * ((height + 3) / 4) * 16;
+			imageSize = (size_t)((width + 3) / 4) * ((height + 3) / 4) * 16;
 			break;
 		case ECF_PVRTC_RGB2:
 		case ECF_PVRTC_ARGB2:
-			imageSize = (core::max_<u32>(width, 16) * core::max_<u32>(height, 8) * 2 + 7) / 8;
+			imageSize = ((size_t)core::max_<u32>(width, 16) * core::max_<u32>(height, 8) * 2 + 7) / 8;
 			break;
 		case ECF_PVRTC_RGB4:
 		case ECF_PVRTC_ARGB4:
-			imageSize = (core::max_<u32>(width, 8) * core::max_<u32>(height, 8) * 4 + 7) / 8;
+			imageSize = ((size_t)core::max_<u32>(width, 8) * core::max_<u32>(height, 8) * 4 + 7) / 8;
 			break;
 		case ECF_PVRTC2_ARGB2:
-			imageSize = core::ceil32(width / 8.0f) * core::ceil32(height / 4.0f) * 8;
+			imageSize = (size_t)core::ceil32(width / 8.0f) * core::ceil32(height / 4.0f) * 8;
 			break;
 		case ECF_PVRTC2_ARGB4:
 		case ECF_ETC1:
 		case ECF_ETC2_RGB:
-			imageSize = core::ceil32(width / 4.0f) * core::ceil32(height / 4.0f) * 8;
+			imageSize = (size_t)core::ceil32(width / 4.0f) * core::ceil32(height / 4.0f) * 8;
 			break;
 		case ECF_ETC2_ARGB:
-			imageSize = core::ceil32(width / 4.0f) * core::ceil32(height / 4.0f) * 16;
+			imageSize = (size_t)core::ceil32(width / 4.0f) * core::ceil32(height / 4.0f) * 16;
 			break;
 		default: // uncompressed formats
-			imageSize = getBitsPerPixelFromFormat(format) / 8 * width;
+			imageSize = (size_t)getBitsPerPixelFromFormat(format) / 8 * width;
 			imageSize *= height;
 			break;
 		}

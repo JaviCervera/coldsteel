@@ -22,7 +22,10 @@ public:
 	//! constructor from raw image data
 	/** \param useForeignMemory: If true, the image will use the data pointer
 	directly and own it from now on, which means it will also try to delete [] the
-	data when the image will be destructed. If false, the memory will by copied. */
+	data when the image will be destructed. If false, the memory will by copied. 
+	\param deleteMemory When useForeignMemory is true it allows using that memory without
+	ever trying to delete it. When useForeignMemory is false then deleteMemory is
+	automatically true. */
 	CImage(ECOLOR_FORMAT format, const core::dimension2d<u32>& size, void* data,
 		bool ownForeignMemory = true, bool deleteMemory = true);
 
@@ -55,11 +58,14 @@ public:
 	//! copies this surface into another, scaling it to fit, applying a box filter
 	virtual void copyToScalingBoxFilter(IImage* target, s32 bias = 0, bool blend = false) IRR_OVERRIDE;
 
+	//! Flips (mirrors) the image in one or two directions
+	virtual void flip(bool topBottom, bool leftRight) IRR_OVERRIDE;
+
 	//! fills the surface with given color
 	virtual void fill(const SColor &color) IRR_OVERRIDE;
 
 private:
-	inline SColor getPixelBox ( s32 x, s32 y, s32 fx, s32 fy, s32 bias ) const;
+	inline SColor getPixelBox ( const s32 x, const s32 y, const s32 fx, const s32 fy, s32 bias ) const;
 };
 
 } // end namespace video

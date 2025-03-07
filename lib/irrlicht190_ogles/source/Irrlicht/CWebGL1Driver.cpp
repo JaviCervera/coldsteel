@@ -198,7 +198,7 @@ void CWebGL1Driver::draw2DImage(const video::ITexture* texture,
 
 	const core::rect<s32> poss(targetPos, sourceSize);
 
-	chooseMaterial2D();
+	chooseMaterial2D(needsClampToEdge(texture));
 	if ( !setMaterialTexture(0, texture) )
 		return;
 
@@ -249,7 +249,7 @@ void CWebGL1Driver::draw2DImage(const video::ITexture* texture, const core::rect
 
 	const video::SColor* const useColor = colors ? colors : temp;
 
-	chooseMaterial2D();
+	chooseMaterial2D(needsClampToEdge(texture));
 	if ( !setMaterialTexture(0, texture) )
 		return;
 
@@ -290,12 +290,12 @@ void CWebGL1Driver::draw2DImage(const video::ITexture* texture, const core::rect
 	testGLError();
 }
 
-void CWebGL1Driver::draw2DImage(const video::ITexture* texture, u32 layer, bool flip)
+void CWebGL1Driver::draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip)
 {
 	if (!texture )
 		return;
 
-	chooseMaterial2D();
+	chooseMaterial2D(needsClampToEdge(texture));
 	if ( !setMaterialTexture(0, texture) )
 		return;
 
@@ -336,7 +336,7 @@ void CWebGL1Driver::draw2DImageBatch(const video::ITexture* texture,
 	if (!texture)
 		return;
 
-	chooseMaterial2D();
+	chooseMaterial2D(needsClampToEdge(texture));
 	if ( !setMaterialTexture(0, texture) )
 		return;
 
@@ -412,7 +412,7 @@ void CWebGL1Driver::draw2DImageBatch(const video::ITexture* texture,
 	if ( !drawCount )
 		return;
 
-	chooseMaterial2D();
+	chooseMaterial2D(needsClampToEdge(texture));
 	if ( !setMaterialTexture(0, texture) )
 		return;
 
@@ -750,7 +750,7 @@ GLenum CWebGL1Driver::getZBufferBits() const
 }
 
 bool CWebGL1Driver::getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-	GLenum& pixelType, void(**converter)(const void*, s32, void*)) const
+	GLenum& pixelType, void(**converter)(const void*, u32, void*)) const
 {
 		bool supported = false;
 		pixelFormat = GL_RGBA;

@@ -8,11 +8,8 @@
 #include "IAnimatedMeshMD3.h"
 #include "IReadFile.h"
 #include "IFileSystem.h"
-#include "irrArray.h"
-#include "irrString.h"
 #include "SMesh.h"
-#include "SMeshBuffer.h"
-#include "IQ3Shader.h"
+#include "CMeshBuffer.h"
 
 namespace irr
 {
@@ -117,7 +114,7 @@ namespace scene
 		SMD3QuaternionTagList TagListIPol;
 
 		IMeshBuffer* createMeshBuffer(const SMD3MeshBuffer* source,
-				io::IFileSystem* fs, video::IVideoDriver* driver);
+				const io::IFileSystem* fs, video::IVideoDriver* driver);
 
 		void buildVertexArray(u32 frameA, u32 frameB, f32 interpolate,
 					const SMD3MeshBuffer* source,

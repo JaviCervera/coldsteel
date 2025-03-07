@@ -1032,7 +1032,7 @@ void COGLES1Driver::draw2DImage(const video::ITexture* texture, const core::rect
 		glDisable(GL_SCISSOR_TEST);
 }
 
-void COGLES1Driver::draw2DImage(const video::ITexture* texture, u32 layer, bool flip)
+void COGLES1Driver::draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip)
 {
 	if (!texture || !CacheHandler->getTextureCache().set(0, texture))
 		return;
@@ -2317,11 +2317,14 @@ void COGLES1Driver::setAmbientLight(const SColorf& color)
 
 
 // this code was sent in by Oliver Klems, thank you
-void COGLES1Driver::setViewPort(const core::rect<s32>& area)
+void COGLES1Driver::setViewPort(const core::rect<s32>& area, bool clipToRenderTarget)
 {
 	core::rect<s32> vp = area;
-	core::rect<s32> rendert(0, 0, getCurrentRenderTargetSize().Width, getCurrentRenderTargetSize().Height);
-	vp.clipAgainst(rendert);
+	if ( clipToRenderTarget )
+	{
+		core::rect<s32> rendert(0, 0, getCurrentRenderTargetSize().Width, getCurrentRenderTargetSize().Height);
+		vp.clipAgainst(rendert);
+	}
 
 	if (vp.getHeight() > 0 && vp.getWidth() > 0)
 		CacheHandler->setViewport(vp.UpperLeftCorner.X, getCurrentRenderTargetSize().Height - vp.UpperLeftCorner.Y - vp.getHeight(), vp.getWidth(), vp.getHeight());
@@ -3049,7 +3052,7 @@ GLenum COGLES1Driver::getZBufferBits() const
 }
 
 bool COGLES1Driver::getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-	GLenum& pixelType, void(**converter)(const void*, s32, void*)) const
+	GLenum& pixelType, void(**converter)(const void*, u32, void*)) const
 {
 	bool supported = false;
 	internalFormat = GL_RGBA;
@@ -3258,7 +3261,7 @@ bool COGLES1Driver::queryTextureFormat(ECOLOR_FORMAT format) const
 	GLint dummyInternalFormat;
 	GLenum dummyPixelFormat;
 	GLenum dummyPixelType;
-	void (*dummyConverter)(const void*, s32, void*);
+	void (*dummyConverter)(const void*, u32, void*);
 	return getColorFormatParameters(format, dummyInternalFormat, dummyPixelFormat, dummyPixelType, &dummyConverter);
 }
 

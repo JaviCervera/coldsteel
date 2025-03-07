@@ -153,6 +153,8 @@ namespace irr
 			virtual void setPosition(s32 x, s32 y) IRR_OVERRIDE
 			{
 				SDL_WarpMouse( x, y );
+				CursorPos.X = x;
+				CursorPos.Y = y;
 			}
 
 			//! Returns the current position of the mouse cursor.
@@ -174,6 +176,14 @@ namespace irr
 
 			virtual void setReferenceRect(core::rect<s32>* rect=0) IRR_OVERRIDE
 			{
+			}
+
+			virtual bool getReferenceRect(core::rect<s32>& rect) IRR_OVERRIDE
+			{ 
+				rect.UpperLeftCorner = core::vector2di(0,0);
+				rect.LowerRightCorner.X = (irr::s32)Device->Width;
+				rect.LowerRightCorner.Y = (irr::s32)Device->Height;
+				return false;
 			}
 
 		private:
@@ -200,15 +210,6 @@ namespace irr
 #else
 				CursorPos.X = Device->MouseX;
 				CursorPos.Y = Device->MouseY;
-
-				if (CursorPos.X < 0)
-					CursorPos.X = 0;
-				if (CursorPos.X > (s32)Device->Width)
-					CursorPos.X = Device->Width;
-				if (CursorPos.Y < 0)
-					CursorPos.Y = 0;
-				if (CursorPos.Y > (s32)Device->Height)
-					CursorPos.Y = Device->Height;
 #endif
 			}
 

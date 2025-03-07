@@ -8,8 +8,7 @@
 #include "IMeshSceneNode.h"
 #include "IQ3Shader.h"
 #include "IFileSystem.h"
-#include "SMeshBuffer.h"
-#include "SMeshBufferLightMap.h"
+#include "CMeshBuffer.h"
 #include "SMesh.h"
 #include "ISceneManager.h"
 
@@ -42,7 +41,7 @@ public:
 	//! Returns type of the scene node
 	virtual ESCENE_NODE_TYPE getType() const IRR_OVERRIDE { return ESNT_Q3SHADER_SCENE_NODE; }
 
-	virtual void setMesh(IMesh* mesh)IRR_OVERRIDE {}
+	virtual void setMesh(IMesh* mesh, bool copyMeshMaterials) IRR_OVERRIDE {}
 	virtual IMesh* getMesh() IRR_OVERRIDE { return Mesh; }
 	virtual void setReadOnlyMaterials(bool readonly) IRR_OVERRIDE {}
 	virtual bool isReadOnlyMaterials() const IRR_OVERRIDE { return true; }

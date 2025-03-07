@@ -35,13 +35,13 @@ namespace video
 	class COpenGLDriver : public CNullDriver, public IMaterialRendererServices, public COpenGLExtensionHandler
 	{
 	public:
-		// Information about state of fixed pipeline activity.
-		enum E_OPENGL_FIXED_PIPELINE_STATE
+		// Information about active pipeline state (fixed function vs shader)
+		enum E_OPENGL_ACTIVE_PIPELINE
 		{
-			EOFPS_ENABLE = 0, // fixed pipeline.
-			EOFPS_DISABLE, // programmable pipeline.
-			EOFPS_ENABLE_TO_DISABLE, // switch from fixed to programmable pipeline.
-			EOFPS_DISABLE_TO_ENABLE // switch from programmable to fixed pipeline.
+			EOAP_FIXED = 0, // fixed function pipeline.
+			EOAP_SHADER, // programmable pipeline.
+			EOAP_FIXED_TO_SHADER, // switch from fixed to programmable pipeline.
+			EOAP_SHADER_TO_FIXED // switch from programmable to fixed pipeline.
 		};
 
 #if defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_) || defined(_IRR_COMPILE_WITH_X11_DEVICE_) || defined(_IRR_COMPILE_WITH_OSX_DEVICE_)
@@ -111,7 +111,7 @@ namespace video
 		/** Return value is the number of visible pixels/fragments.
 		The value is a safe approximation, i.e. can be larger then the
 		actual value of pixels. */
-		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const IRR_OVERRIDE;
+		virtual u32 getOcclusionQueryResult(const scene::ISceneNode* node) const IRR_OVERRIDE;
 
 		//! Create render target.
 		virtual IRenderTarget* addRenderTarget() IRR_OVERRIDE;
@@ -148,7 +148,10 @@ namespace video
 			const core::rect<s32>& sourceRect, const core::rect<s32>* clipRect = 0,
 			const video::SColor* const colors = 0, bool useAlphaChannelOfTexture = false) IRR_OVERRIDE;
 
-		virtual void draw2DImage(const video::ITexture* texture, u32 layer, bool flip);
+		// Was some helper function used in previous texture locking. Currently not accessible for users
+		// and also no longer needed internally (unless we switch back to old texture lock code).
+		// It seems to draw the texture to a fullscreen quad. Also allows drawing one side of a cubemap texture.
+		void draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip);
 
 		//! draws a set of 2d images, using a color and the alpha channel of the
 		//! texture if desired.
@@ -249,7 +252,7 @@ namespace video
 			video::SColor rightDownEdge = video::SColor(0,0,0,0)) IRR_OVERRIDE;
 
 		//! sets a viewport
-		virtual void setViewPort(const core::rect<s32>& area) IRR_OVERRIDE;
+		virtual void setViewPort(const core::rect<s32>& area, bool clipToRenderTarget=true) IRR_OVERRIDE;
 
 		//! Sets the fog mode.
 		virtual void setFog(SColor color, E_FOG_TYPE fogType, f32 start,
@@ -269,8 +272,8 @@ namespace video
 		virtual const core::matrix4& getTransform(E_TRANSFORMATION_STATE state) const IRR_OVERRIDE;
 
 		//! Can be called by an IMaterialRenderer to make its work easier.
-		virtual void setBasicRenderStates(const SMaterial& material, const SMaterial& lastmaterial,
-			bool resetAllRenderstates) IRR_OVERRIDE;
+		void setBasicRenderStates(const SMaterial& material, const SMaterial& lastmaterial,
+			bool resetAllRenderstates);
 
 		//! Compare in SMaterial doesn't check texture parameters, so we should call this on each OnRender call.
 		virtual void setTextureRenderStates(const SMaterial& material, bool resetAllRenderstates);
@@ -402,16 +405,22 @@ namespace video
 		GLenum getZBufferBits() const;
 
 		bool getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-			GLenum& pixelType, void(**converter)(const void*, s32, void*)) const;
+			GLenum& pixelType, void(**converter)(const void*, u32, void*)) const;
 
-		//! Return info about fixed pipeline state.
-		E_OPENGL_FIXED_PIPELINE_STATE getFixedPipelineState() const;
+		//! Return info about active pipeline state.
+		E_OPENGL_ACTIVE_PIPELINE getActivePipelineState() const;
 
-		//! Set info about fixed pipeline state.
-		void setFixedPipelineState(E_OPENGL_FIXED_PIPELINE_STATE state);
+		//! Set info about active pipeline state.
+		void setActivePipelineState(E_OPENGL_ACTIVE_PIPELINE state);
 
 		//! Get current material.
 		const SMaterial& getCurrentMaterial() const;
+
+		//! Rest renderstates forcing stuff like OnSetMaterial to be called
+		void DoResetRenderStates() 
+		{
+			ResetRenderStates = true;
+		}
 
 		COpenGLCacheHandler* getCacheHandler() const;
 
@@ -462,7 +471,7 @@ namespace video
 		core::matrix4 Matrices[ETS_COUNT];
 		core::array<u8> ColorBuffer;
 
-		//! enumeration for rendering modes such as 2d and 3d for minizing the switching of renderStates.
+		//! enumeration for rendering modes such as 2d and 3d for minimizing the switching of renderStates.
 		enum E_RENDER_MODE
 		{
 			ERM_NONE = 0,	// no render state has been set yet.
@@ -493,7 +502,7 @@ namespace video
 		//! Color buffer format
 		ECOLOR_FORMAT ColorFormat;
 
-		E_OPENGL_FIXED_PIPELINE_STATE FixedPipelineState;
+		E_OPENGL_ACTIVE_PIPELINE ActivePipelineState;
 
 		SIrrlichtCreationParameters Params;
 

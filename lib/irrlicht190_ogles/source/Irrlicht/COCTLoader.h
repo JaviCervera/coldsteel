@@ -45,8 +45,6 @@
 
 #include "IMeshLoader.h"
 #include "IReadFile.h"
-#include "SMesh.h"
-#include "irrString.h"
 
 namespace irr
 {
@@ -115,12 +113,10 @@ namespace scene
 		};
 
 		struct octTexture {
-			u32 id;
 			char fileName[64];
 		};
 
 		struct octLightmap {
-			u32 id;
 			u8 data[128][128][3];
 		};
 

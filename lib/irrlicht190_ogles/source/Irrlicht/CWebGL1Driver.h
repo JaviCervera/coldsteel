@@ -15,6 +15,7 @@
 #include "CWebGLExtensionHandler.h"
 #include "CMeshBuffer.h"
 #include "EHardwareBufferFlags.h"
+#include "irrMath.h"
 
 namespace irr
 {
@@ -64,7 +65,7 @@ namespace video
 			const video::SColor* const colors = 0, bool useAlphaChannelOfTexture = false) IRR_OVERRIDE;
 
 		// internally used
-		virtual void draw2DImage(const video::ITexture* texture, u32 layer, bool flip)  IRR_OVERRIDE;
+		virtual void draw2DImageQuad(const video::ITexture* texture, u32 layer, bool flip)  IRR_OVERRIDE;
 
 		//! draws a set of 2d images
 		virtual void draw2DImageBatch(const video::ITexture* texture,
@@ -118,7 +119,7 @@ namespace video
 		virtual GLenum getZBufferBits() const IRR_OVERRIDE;
 
 		virtual bool getColorFormatParameters(ECOLOR_FORMAT format, GLint& internalFormat, GLenum& pixelFormat,
-			GLenum& pixelType, void(**converter)(const void*, s32, void*)) const IRR_OVERRIDE;
+			GLenum& pixelType, void(**converter)(const void*, u32, void*)) const IRR_OVERRIDE;
 
 	protected:
 		// create a meshbuffer which has as many vertices as indices
@@ -126,6 +127,11 @@ namespace video
 
 		virtual bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer) IRR_OVERRIDE;
 		void initWebGLExtensions();
+
+		inline bool needsClampToEdge(const irr::video::ITexture* texture) const
+		{
+			return core::isPowerOfTwo(texture->getSize().Width) || core::isPowerOfTwo(texture->getSize().Height);
+		}
 
 	private:
 		// CWebGL1Driver is derived from COGLES2Driver so it already got an extension handler from that.

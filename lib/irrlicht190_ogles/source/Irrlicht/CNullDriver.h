@@ -7,7 +7,6 @@
 
 #include "IVideoDriver.h"
 #include "IFileSystem.h"
-#include "IImagePresenter.h"
 #include "IGPUProgrammingServices.h"
 #include "irrArray.h"
 #include "irrString.h"
@@ -21,6 +20,7 @@
 #include "SVertexIndex.h"
 #include "SLight.h"
 #include "SExposedVideoData.h"
+#include "SOverrideMaterial.h"
 
 #ifdef _MSC_VER
 #pragma warning( disable: 4996)
@@ -111,7 +111,7 @@ namespace video
 			f32 clearDepth = 1.f, u8 clearStencil = 0) IRR_OVERRIDE;
 
 		//! sets a viewport
-		virtual void setViewPort(const core::rect<s32>& area) IRR_OVERRIDE;
+		virtual void setViewPort(const core::rect<s32>& area, bool clipToRenderTarget=true) IRR_OVERRIDE;
 
 		//! gets the area of the current viewport
 		virtual const core::rect<s32>& getViewPort() const IRR_OVERRIDE;
@@ -480,7 +480,7 @@ namespace video
 		/** Return value is the number of visible pixels/fragments.
 		The value is a safe approximation, i.e. can be larger than the
 		actual value of pixels. */
-		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const IRR_OVERRIDE;
+		virtual u32 getOcclusionQueryResult(const scene::ISceneNode* node) const IRR_OVERRIDE;
 
 		//! Create render target.
 		virtual IRenderTarget* addRenderTarget() IRR_OVERRIDE;
@@ -616,7 +616,7 @@ namespace video
 		virtual bool writeImageToFile(IImage* image, io::IWriteFile * file, u32 param = 0) IRR_OVERRIDE;
 
 		//! Sets the name of a material renderer.
-		virtual void setMaterialRendererName(s32 idx, const char* name) IRR_OVERRIDE;
+		virtual void setMaterialRendererName(u32 idx, const char* name) IRR_OVERRIDE;
 
 		//! Swap the material renderers used for certain id's
 		virtual void swapMaterialRenderers(u32 idx1, u32 idx2, bool swapNames) IRR_OVERRIDE;
@@ -710,6 +710,7 @@ namespace video
 		bool checkPrimitiveCount(u32 prmcnt) const;
 
 		bool checkImage(const core::array<IImage*>& image) const;
+		bool checkImage(ECOLOR_FORMAT format, const core::dimension2du& size) const;
 
 		// adds a material renderer and drops it afterwards. To be used for internal creation
 		s32 addAndDropMaterialRenderer(IMaterialRenderer* m);
@@ -749,6 +750,8 @@ namespace video
 			return (f32) getAverage ( p[(y * pitch) + x] );
 		}
 
+		// Check if z-writing should be enabled
+		// Note: If ZBuffer is disabled completely with ECFN_DISABLED it will still do nothing
 		inline bool getWriteZBuffer(const SMaterial& material) const
 		{
 			switch ( material.ZWriteEnable )
@@ -832,6 +835,11 @@ namespace video
 			bool operator==(const SOccQuery& other) const
 			{
 				return other.Node==Node;
+			}
+
+			bool operator==(const scene::ISceneNode* other) const
+			{
+				return other==Node;
 			}
 
 			scene::ISceneNode* Node;

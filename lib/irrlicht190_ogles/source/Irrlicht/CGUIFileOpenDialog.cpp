@@ -9,13 +9,9 @@
 
 #include "IGUISkin.h"
 #include "IGUIEnvironment.h"
-#include "IVideoDriver.h"
 #include "IGUIButton.h"
-#include "IGUIStaticText.h"
 #include "IGUIFont.h"
-#include "IGUIFontBitmap.h"
 #include "IFileList.h"
-#include "os.h"
 
 namespace irr
 {
@@ -342,7 +338,7 @@ void CGUIFileOpenDialog::draw()
 
 		IGUIFont* font = skin->getFont(EGDF_WINDOW);
 		if (font)
-			font->draw(Text.c_str(), rect,
+			font->draw(Text, rect,
 					skin->getColor(EGDC_ACTIVE_CAPTION),
 					false, true, &AbsoluteClippingRect);
 	}

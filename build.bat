@@ -11,7 +11,7 @@ mkdir _CMAKE\_IRRLICHT
 mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
-cd lib/irrlicht185
+cd lib/irrlicht190_ogles
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make -j8

@@ -6,9 +6,10 @@
 #define IRR_I_SKINNED_MESH_H_INCLUDED
 
 #include "irrArray.h"
-#include "IBoneSceneNode.h"
 #include "IAnimatedMesh.h"
 #include "SSkinMeshBuffer.h"
+#include "quaternion.h"
+#include "irrString.h"
 
 namespace irr
 {
@@ -124,7 +125,8 @@ namespace scene
 		//! Joints
 		struct SJoint
 		{
-			SJoint() : UseAnimationFrom(0), GlobalSkinningSpace(false),
+			SJoint() : Animatedscale(1,1,1),
+				UseAnimationFrom(0), GlobalSkinningSpace(false),
 				positionHint(-1),scaleHint(-1),rotationHint(-1)
 			{
 			}

@@ -7,13 +7,11 @@
 
 #include "IMeshLoader.h"
 #include "IFileSystem.h"
-#include "IVideoDriver.h"
 #include "irrString.h"
 #include "SMesh.h"
-#include "SMeshBuffer.h"
 #include "ISceneManager.h"
 #include "irrMap.h"
-#include "CAttributes.h"
+#include "IAttributes.h"
 
 namespace irr
 {

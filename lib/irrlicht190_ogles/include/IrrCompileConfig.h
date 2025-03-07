@@ -21,6 +21,11 @@
 #define NO_IRR_COMPILE_WITH_FB_DEVICE_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_8_
 #define NO_IRR_COMPILE_WITH_DIRECT3D_9_
+#define NO_IRR_COMPILE_WITH_OGLES1_
+#define NO_IRR_COMPILE_WITH_OGLES2_
+#ifndef EMSCRIPTEN
+#define NO_IRR_COMPILE_WITH_WEBGL1_
+#endif
 //#define NO_IRR_COMPILE_WITH_OPENGL_
 #define NO_IRR_COMPILE_WITH_SOFTWARE_
 #define NO_IRR_COMPILE_WITH_BURNINGSVIDEO_
@@ -51,6 +56,7 @@
 #define NO_IRR_COMPILE_WITH_PCX_LOADER_
 #define NO_IRR_COMPILE_WITH_PPM_LOADER_
 #define NO_IRR_COMPILE_WITH_PSD_LOADER_
+#define NO_IRR_COMPILE_WITH_PVR_LOADER_
 #define NO_IRR_COMPILE_WITH_DDS_LOADER_
 #define NO_IRR_COMPILE_WITH_WAL_LOADER_
 #define NO_IRR_COMPILE_WITH_LMP_LOADER_
@@ -402,7 +408,7 @@ you will not be able to use anything provided by the GUI Environment, including 
 #undef _IRR_COMPILE_WITH_GUI_
 #endif
 
-//! Define _IRR_COMPILE_WITH_PARTICLES to compile the engine the withe build-in particle system
+//! Define _IRR_COMPILE_WITH_PARTICLES to compile the engine the with the build-in particle system
 /** You can disable this if you don't need particles or use an external particle system. */
 #define _IRR_COMPILE_WITH_PARTICLES_
 #ifdef NO_IRR_COMPILE_WITH_PARTICLES_
@@ -648,7 +654,11 @@ B3D, MS3D or X meshes */
 #undef _IRR_COMPILE_WITH_LMTS_LOADER_
 #endif
 //! Define _IRR_COMPILE_WITH_MY3D_LOADER_ if you want to load MY3D files
-#define _IRR_COMPILE_WITH_MY3D_LOADER_
+//! Note: As My3DTools can't be found on the web anymore and there hasn't been
+//! any update about it since around 2005 the loader is deprecated with
+//! Irrlicht 1.9 and will be removed in Irrlicht 1.10 unless there are any
+//! news about the tool.
+//#define _IRR_COMPILE_WITH_MY3D_LOADER_
 #ifdef NO_IRR_COMPILE_WITH_MY3D_LOADER_
 #undef _IRR_COMPILE_WITH_MY3D_LOADER_
 #endif
@@ -1012,5 +1022,12 @@ precision will be lower but speed higher. currently X86 only
 		#undef _IRR_SCENEMANAGER_DEBUG
 	#endif
 #endif
+
+//! Solve Camera errors - Debug Feature
+/* - Allow Camera 90 degree up, Target==Position,buildCameraLookAtMatrixLH
+   - pre v1.9 CCameraSceneNode moved the up non-particular in the positive x-Direction. not compatible
+   - Enabled is not compatible with Irrlicht Collision and Response.
+*/
+//#define _IRR_COMPILE_WITH_90_DEGREE_CAMERA
 
 #endif // IRR_COMPILE_CONFIG_H_INCLUDED

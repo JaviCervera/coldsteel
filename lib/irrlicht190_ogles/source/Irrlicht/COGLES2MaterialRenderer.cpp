@@ -340,12 +340,9 @@ bool COGLES2MaterialRenderer::linkProgram()
 	return true;
 }
 
-
-void COGLES2MaterialRenderer::setBasicRenderStates(const SMaterial& material,
-						const SMaterial& lastMaterial,
-						bool resetAllRenderstates)
+void COGLES2MaterialRenderer::startUseProgram()
 {
-	Driver->setBasicRenderStates(material, lastMaterial, resetAllRenderstates);
+	Driver->getCacheHandler()->setProgram(Program);
 }
 
 s32 COGLES2MaterialRenderer::getVertexShaderConstantID(const c8* name)

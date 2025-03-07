@@ -8,9 +8,7 @@
 #include "irrTypes.h"
 #include "irrAllocator.h"
 #include "irrMath.h"
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 namespace irr
 {
@@ -947,13 +945,13 @@ public:
 	\param make_lower copy only lower case */
 	string<T> subString(u32 begin, s32 length, bool make_lower = false ) const
 	{
+		// clamp length to maximal value
+		if ((length+begin) > size())
+			length = size()-begin;
 		// if start after string
 		// or no proper substring length
 		if ((length <= 0) || (begin>=size()))
 			return string<T>("");
-		// clamp length to maximal value
-		if ((length+begin) > size())
-			length = size()-begin;
 
 		string<T> o;
 		o.reserve(length+1);

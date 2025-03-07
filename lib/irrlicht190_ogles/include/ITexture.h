@@ -78,9 +78,12 @@ enum E_TEXTURE_CREATION_FLAG
 	//! Allow the driver to keep a copy of the texture in memory
 	/** Enabling this makes calls to ITexture::lock a lot faster, but costs main memory.
 	Currently only used in combination with OpenGL drivers.
-	NOTE: Disabling this does not yet work correctly with alpha-textures.
-	So the default is on for now (but might change with Irrlicht 1.9 if we get the alpha-troubles fixed).
-	*/
+	If you don't call lock() on textures you won't need this flag.
+	Default is off.
+	NOTE: This did go through several revisions in Irrlicht 1.9 development, please
+	inform us if there are any problems left with texture locking after updating to 
+	this Irrlicht version (like messed up transparency). Irrlicht 1.8 didn't have
+	this option yet, but it behaved like when you enable this. */
 	ETCF_ALLOW_MEMORY_COPY = 0x00000080,
 
 	//! Enable automatic updating mip maps when the base texture changes.
@@ -195,20 +198,23 @@ public:
 	//! Lock function.
 	/** Locks the Texture and returns a pointer to access the
 	pixels. After lock() has been called and all operations on the pixels
-	are done, you must call unlock().
-	Locks are not accumulating, hence one unlock will do for an arbitrary
-	number of previous locks. You should avoid locking different levels without
-	unlocking in between, though, because only the last level locked will be
-	unlocked.
+	are done, you must call unlock(). Locks are not accumulating, hence one 
+	unlock will do for an arbitrary number of previous locks. You should avoid 
+	locking different levels without unlocking in between, because only the 
+	last level locked will be unlocked.
+
 	The size of the i-th mipmap level is defined as max(getSize().Width>>i,1)
-	and max(getSize().Height>>i,1)
+	and max(getSize().Height>>i,1).
+	Except for textures of EDT_SOFTWARE driver which returns data for 
+	getOriginalSize(). Reason: Both original sized and modified sized textures are used 
+	in that driver depending on whether the texture is used in 2d or 3d.
+
 	\param mode Specifies what kind of changes to the locked texture are
 	allowed. Unspecified behavior will arise if texture is written in read
 	only mode or read from in write only mode.
 	Support for this feature depends on the driver, so don't rely on the
 	texture being write-protected when locking with read-only, etc.
-	\param mipmapLevel NOTE: Currently broken, sorry, we try if we can repair it for 1.9 release.
-	Number of the mipmapLevel to lock. 0 is main texture.
+	\param mipmapLevel Number of the mipmapLevel to lock. 0 is main texture.
 	Non-existing levels will silently fail and return 0.
 	\param layer It determines which cubemap face or texture array layer should be locked.
 	\param lockFlags See E_TEXTURE_LOCK_FLAGS documentation.

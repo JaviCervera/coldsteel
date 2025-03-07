@@ -12,6 +12,7 @@ namespace irr
 {
 namespace scene
 {
+	class CBufferRenderNode;
 
 	class CMeshSceneNode : public IMeshSceneNode
 	{
@@ -55,7 +56,7 @@ namespace scene
 		virtual ESCENE_NODE_TYPE getType() const IRR_OVERRIDE { return ESNT_MESH; }
 
 		//! Sets a new mesh
-		virtual void setMesh(IMesh* mesh) IRR_OVERRIDE;
+		virtual void setMesh(IMesh* mesh, bool copyMeshMaterials) IRR_OVERRIDE;
 
 		//! Returns the current mesh
 		virtual IMesh* getMesh(void) IRR_OVERRIDE { return Mesh; }
@@ -83,6 +84,7 @@ namespace scene
 
 	protected:
 
+		void setUsedBufferRenderNodes(irr::u32 num);
 		void copyMaterials();
 
 		core::array<video::SMaterial> Materials;
@@ -92,8 +94,9 @@ namespace scene
 		IMesh* Mesh;
 		IShadowVolumeSceneNode* Shadow;
 
-		s32 PassCount;
 		bool ReadOnlyMaterials;
+
+		core::array<scene::CBufferRenderNode*> BufferRenderNodes;
 	};
 
 } // end namespace scene

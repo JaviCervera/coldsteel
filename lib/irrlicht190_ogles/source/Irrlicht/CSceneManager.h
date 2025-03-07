@@ -40,10 +40,10 @@ namespace scene
 		//! destructor
 		virtual ~CSceneManager();
 
-		//! gets an animateable mesh. loads it if needed. returned pointer must not be dropped.
+		//! gets an animatable mesh. loads it if needed. returned pointer must not be dropped.
 		virtual IAnimatedMesh* getMesh(const io::path& filename, const io::path& alternativeCacheName) IRR_OVERRIDE;
 
-		//! gets an animateable mesh. loads it if needed. returned pointer must not be dropped.
+		//! gets an animatable mesh. loads it if needed. returned pointer must not be dropped.
 		virtual IAnimatedMesh* getMesh(io::IReadFile* file) IRR_OVERRIDE;
 
 		//! Returns an interface to the mesh cache which is shared between all existing scene managers.
@@ -73,7 +73,8 @@ namespace scene
 		virtual IMeshSceneNode* addCubeSceneNode(f32 size=10.0f, ISceneNode* parent=0, s32 id=-1,
 			const core::vector3df& position = core::vector3df(0,0,0),
 			const core::vector3df& rotation = core::vector3df(0,0,0),
-			const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f)) IRR_OVERRIDE;
+			const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f),
+			ECUBE_MESH_TYPE type=ECMT_1BUF_12VTX_NA) IRR_OVERRIDE;
 
 		//! Adds a sphere scene node to the scene.
 		virtual IMeshSceneNode* addSphereSceneNode(f32 radius=5.0f, s32 polyCount=16, ISceneNode* parent=0, s32 id=-1,
@@ -123,7 +124,7 @@ namespace scene
 		virtual IOctreeSceneNode* addOctreeSceneNode(IAnimatedMesh* mesh, ISceneNode* parent=0,
 			s32 id=-1, s32 minimalPolysPerNode=512, bool alsoAddIfMeshPointerZero=false) IRR_OVERRIDE;
 
-		//! Adss a scene node for rendering using a octree. This a good method for rendering
+		//! Adds a scene node for rendering using a octree. This a good method for rendering
 		//! scenes with lots of geometry. The Octree is built on the fly from the mesh, much
 		//! faster then a bsp tree.
 		virtual IOctreeSceneNode* addOctreeSceneNode(IMesh* mesh, ISceneNode* parent=0,
@@ -140,15 +141,17 @@ namespace scene
 			const core::vector3df& lookat = core::vector3df(0,0,100),
 			s32 id=-1, bool makeActive=true) IRR_OVERRIDE;
 
-		//! Adds a camera scene node which is able to be controlle with the mouse similar
+		//! Adds a camera scene node which is able to be controlled with the mouse similar
 		//! like in the 3D Software Maya by Alias Wavefront.
 		//! The returned pointer must not be dropped.
 		virtual ICameraSceneNode* addCameraSceneNodeMaya(ISceneNode* parent=0,
 			f32 rotateSpeed=-1500.f, f32 zoomSpeed=200.f,
 			f32 translationSpeed=1500.f, s32 id=-1, f32 distance=70.f,
-			bool makeActive=true) IRR_OVERRIDE;
+			bool makeActive=true
+			, f32 rotX = 0.f, f32 rotY = 0.f
+		) IRR_OVERRIDE;
 
-		//! Adds a camera scene node which is able to be controled with the mouse and keys
+		//! Adds a camera scene node which is able to be controlled with the mouse and keys
 		//! like in most first person shooters (FPS):
 		virtual ICameraSceneNode* addCameraSceneNodeFPS(ISceneNode* parent = 0,
 			f32 rotateSpeed = 100.0f, f32 moveSpeed = .5f, s32 id=-1,
@@ -226,7 +229,7 @@ namespace scene
 		//! Add a arrow mesh to the mesh pool
 		virtual IAnimatedMesh* addArrowMesh(const io::path& name,
 				video::SColor vtxColor0, video::SColor vtxColor1,
-				u32 tesselationCylinder, u32 tesselationCone,
+				u32 tessellationCylinder, u32 tessellationCone,
 				f32 height, f32 cylinderHeight, f32 width0,
 				f32 width1) IRR_OVERRIDE;
 
@@ -408,6 +411,12 @@ namespace scene
 		//! Returns the current color of shadows.
 		virtual video::SColor getShadowColor() const IRR_OVERRIDE;
 
+		//! Shadow nodes drawing into the stencil buffer need that shadow to be drawn afterwards
+		virtual void requestDrawShadowPassStencilShadow() IRR_OVERRIDE
+		{
+			ShadowPassStencilShadowRequested = true;
+		}
+
 		//! Create a shadow volume scene node to be used with custom nodes
 		virtual IShadowVolumeSceneNode* createShadowVolumeSceneNode(const IMesh* shadowMesh, ISceneNode* parent, s32 id, bool zfailmethod, f32 infinity) IRR_OVERRIDE;
 
@@ -441,6 +450,16 @@ namespace scene
 
 		//! Returns current render pass.
 		virtual E_SCENE_NODE_RENDER_PASS getSceneNodeRenderPass() const IRR_OVERRIDE;
+
+		//! Get current node sorting algorithm used for transparent nodes
+		virtual E_TRANSPARENT_NODE_SORTING getTransparentNodeSorting() const IRR_OVERRIDE
+		{
+			return TransparentNodeSorting;
+		}
+
+		//! Set the node sorting algorithm used for transparent nodes
+		virtual void setTransparentNodeSorting(E_TRANSPARENT_NODE_SORTING sorting) IRR_OVERRIDE;
+
 
 		//! Creates a new scene manager.
 		virtual ISceneManager* createNewSceneManager(bool cloneContent) IRR_OVERRIDE;
@@ -564,14 +583,13 @@ namespace scene
 			void* TextureValue;
 		};
 
-		//! sort on distance (center) to camera
+		//! Sort on distance to camera
+		//! Larger distances drawn first
 		struct TransparentNodeEntry
 		{
-			TransparentNodeEntry(ISceneNode* n, const core::vector3df& camera)
-				: Node(n)
-			{
-				Distance = Node->getAbsoluteTransformation().getTranslation().getDistanceFromSQ(camera);
-			}
+			TransparentNodeEntry(ISceneNode* n, const f32 distance)
+				: Node(n), Distance(distance)
+			{}
 
 			bool operator < (const TransparentNodeEntry& other) const
 			{
@@ -615,7 +633,7 @@ namespace scene
 		//! file system
 		io::IFileSystem* FileSystem;
 
-		//! GUI Enviroment ( Debug Purpose )
+		//! GUI Environment (debug purpose)
 		gui::IGUIEnvironment* GUIEnvironment;
 
 		//! cursor control
@@ -642,8 +660,10 @@ namespace scene
 
 		//! current active camera
 		ICameraSceneNode* ActiveCamera;
-		core::vector3df camWorldPos; // Position of camera for transparent nodes.
+		core::vector3df CamWorldPos;	// Position of camera for transparent nodes.
+		core::vector3df CamWorldViewNormalized; // Normalized view direction of camera for transparent nodes.
 
+		bool ShadowPassStencilShadowRequested;
 		video::SColor ShadowColor;
 		video::SColorf AmbientLight;
 
@@ -655,6 +675,16 @@ namespace scene
 		IMeshCache* MeshCache;
 
 		E_SCENE_NODE_RENDER_PASS CurrentRenderPass;
+
+		//! Algorithm used to sort transparent nodes
+		E_TRANSPARENT_NODE_SORTING TransparentNodeSorting;
+		//! Pointer to the actual algorithm to get the distance
+		// NOTE: If we ever allow users to add sorting functions in the public interface 
+		//       then maybe we should not make the distance function a callback
+		//       but sorting the full array at once. That could give more flexibility,
+		//       like easier sorting based on several parameters.
+		//       I thought about that approach too late and not going back to it for now.
+		f32 (*funcTransparentNodeDistance)(const ISceneNode* node, const core::vector3df& cameraPos, const core::vector3df& cameraViewNormalized);
 
 		//! An optional callbacks manager to allow the user app finer control
 		//! over the scene lighting and rendering.

@@ -306,8 +306,8 @@ bool CIrrDeviceLinux::switchToFullscreen(bool reset)
 		if (bestMode != -1)
 		{
 			os::Printer::log("Starting vidmode fullscreen mode...", ELL_INFORMATION);
-			os::Printer::log("hdisplay: ", core::stringc(modes[bestMode]->hdisplay).c_str(), ELL_INFORMATION);
-			os::Printer::log("vdisplay: ", core::stringc(modes[bestMode]->vdisplay).c_str(), ELL_INFORMATION);
+			os::Printer::log("hdisplay", core::stringc(modes[bestMode]->hdisplay).c_str(), ELL_INFORMATION);
+			os::Printer::log("vdisplay", core::stringc(modes[bestMode]->vdisplay).c_str(), ELL_INFORMATION);
 
 			XF86VidModeSwitchToMode(XDisplay, Screennr, modes[bestMode]);
 			XF86VidModeSetViewPort(XDisplay, Screennr, 0, 0);
@@ -343,8 +343,8 @@ bool CIrrDeviceLinux::switchToFullscreen(bool reset)
 		if (bestMode != -1)
 		{
 			os::Printer::log("Starting randr fullscreen mode...", ELL_INFORMATION);
-			os::Printer::log("width: ", core::stringc(modes[bestMode].width).c_str(), ELL_INFORMATION);
-			os::Printer::log("height: ", core::stringc(modes[bestMode].height).c_str(), ELL_INFORMATION);
+			os::Printer::log("width", core::stringc(modes[bestMode].width).c_str(), ELL_INFORMATION);
+			os::Printer::log("height", core::stringc(modes[bestMode].height).c_str(), ELL_INFORMATION);
 
 			XRRSetScreenConfig(XDisplay,config,DefaultRootWindow(XDisplay),bestMode,OldRandrRotation,CurrentTime);
 			UseXRandR=true;
@@ -367,26 +367,26 @@ void IrrPrintXGrabError(int grabResult, const c8 * grabCommand )
 {
 	if ( grabResult == GrabSuccess )
 	{
-//		os::Printer::log(grabCommand, ": GrabSuccess", ELL_INFORMATION);
+//		os::Printer::log(grabCommand, "GrabSuccess", ELL_INFORMATION);
 		return;
 	}
 
 	switch ( grabResult )
 	{
 		case AlreadyGrabbed:
-			os::Printer::log(grabCommand, ": AlreadyGrabbed", ELL_WARNING);
+			os::Printer::log(grabCommand, "AlreadyGrabbed", ELL_WARNING);
 			break;
 		case GrabNotViewable:
-			os::Printer::log(grabCommand, ": GrabNotViewable", ELL_WARNING);
+			os::Printer::log(grabCommand, "GrabNotViewable", ELL_WARNING);
 			break;
 		case GrabFrozen:
-			os::Printer::log(grabCommand, ": GrabFrozen", ELL_WARNING);
+			os::Printer::log(grabCommand, "GrabFrozen", ELL_WARNING);
 			break;
 		case GrabInvalidTime:
-			os::Printer::log(grabCommand, ": GrabInvalidTime", ELL_WARNING);
+			os::Printer::log(grabCommand, "GrabInvalidTime", ELL_WARNING);
 			break;
 		default:
-			os::Printer::log(grabCommand, ": grab failed with unknown problem", ELL_WARNING);
+			os::Printer::log(grabCommand, "grab failed with unknown problem", ELL_WARNING);
 			break;
 	}
 }
@@ -455,7 +455,7 @@ bool CIrrDeviceLinux::createWindow()
 	}
 #ifdef _DEBUG
 	else
-		os::Printer::log("Visual chosen: ", core::stringc(static_cast<u32>(VisualInfo->visualid)).c_str(), ELL_DEBUG);
+		os::Printer::log("Visual chosen", core::stringc(static_cast<u32>(VisualInfo->visualid)).c_str(), ELL_DEBUG);
 #endif
 
 	// create color map
@@ -745,10 +745,9 @@ bool CIrrDeviceLinux::createInputContext()
 
 	if ( !bestStyle )
 	{
-		XDestroyIC(XInputContext);
-		XInputContext = 0;
-
 		os::Printer::log("XInputMethod has no input style we can use. Falling back to non-i18n input.", ELL_WARNING);
+		XCloseIM(XInputMethod);
+		XInputMethod = 0;
 		setlocale(LC_CTYPE, oldLocale.c_str());
 		return false;
 	}
@@ -760,6 +759,8 @@ bool CIrrDeviceLinux::createInputContext()
 	if (!XInputContext )
 	{
 		os::Printer::log("XInputContext failed to create an input context. Falling back to non-i18n input.", ELL_WARNING);
+		XCloseIM(XInputMethod);
+		XInputMethod = 0;
 		setlocale(LC_CTYPE, oldLocale.c_str());
 		return false;
 	}
@@ -1035,7 +1036,7 @@ bool CIrrDeviceLinux::run()
 								os::Printer::log("XLookupNone", ELL_INFORMATION);
 							else if ( status ==  XLookupKeySym )
 								// Getting this also when user did not set setlocale(LC_ALL, ""); and using an unknown locale
-								// XSupportsLocale doesn't seeem to catch that unfortunately - any other ideas to catch it are welcome.
+								// XSupportsLocale doesn't seem to catch that unfortunately - any other ideas to catch it are welcome.
 								os::Printer::log("XLookupKeySym", ELL_INFORMATION);
 							else if ( status ==  XBufferOverflow )
 								os::Printer::log("XBufferOverflow", ELL_INFORMATION);
@@ -1409,7 +1410,7 @@ video::IVideoModeList* CIrrDeviceLinux::getVideoModeList()
 			else
 			#endif
 			{
-				os::Printer::log("VidMode or RandR X11 extension requireed for VideoModeList." , ELL_WARNING);
+				os::Printer::log("VidMode or RandR X11 extension required for VideoModeList." , ELL_WARNING);
 			}
 		}
 		if (XDisplay && temporaryDisplay)
@@ -1993,7 +1994,7 @@ Bool PredicateIsEventType(Display *display, XEvent *event, XPointer arg)
 {
 	if ( event && event->type == *(int*)arg )
 	{
-//		os::Printer::log("remove event:", core::stringc((int)arg).c_str(), ELL_INFORMATION);
+//		os::Printer::log("remove event", core::stringc((int)arg).c_str(), ELL_INFORMATION);
 		return True;
 	}
 	return False;
@@ -2080,7 +2081,7 @@ Cursor CIrrDeviceLinux::TextureToMonochromeCursor(irr::video::ITexture * tex, co
 										ZPixmap,	// XYBitmap (depth=1), ZPixmap(depth=x)
 										0, 0, sourceRect.getWidth(), sourceRect.getHeight(),
 										32, // bitmap_pad,
-										0// bytes_per_line (0 means continuos in memory)
+										0// bytes_per_line (0 means continuous in memory)
 										);
 	sourceImage->data = new char[sourceImage->height * sourceImage->bytes_per_line];
 	XImage * maskImage = XCreateImage(XDisplay, VisualInfo->visual,
@@ -2263,7 +2264,7 @@ CIrrDeviceLinux::CCursorControl::CCursorControl(CIrrDeviceLinux* dev, bool null)
 CIrrDeviceLinux::CCursorControl::~CCursorControl()
 {
 	// Do not clearCursors here as the display is already closed
-	// TODO (cutealien): droping cursorcontrol earlier might work, not sure about reason why that's done in stub currently.
+	// TODO (cutealien): dropping cursorcontrol earlier might work, not sure about reason why that's done in stub currently.
 }
 
 #ifdef _IRR_COMPILE_WITH_X11_

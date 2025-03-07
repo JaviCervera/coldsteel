@@ -62,7 +62,7 @@ namespace video
 			f32 clearDepth = 1.f, u8 clearStencil = 0) IRR_OVERRIDE;
 
 		//! sets a viewport
-		virtual void setViewPort(const core::rect<s32>& area) IRR_OVERRIDE;
+		virtual void setViewPort(const core::rect<s32>& area, bool clipToRenderTarget=true) IRR_OVERRIDE;
 
 		struct SHWBufferLink_d3d9 : public SHWBufferLink
 		{
@@ -115,7 +115,7 @@ namespace video
 		/** Return value is the number of visible pixels/fragments.
 		The value is a safe approximation, i.e. can be larger then the
 		actual value of pixels. */
-		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const IRR_OVERRIDE;
+		virtual u32 getOcclusionQueryResult(const scene::ISceneNode* node) const IRR_OVERRIDE;
 
 		//! Create render target.
 		virtual IRenderTarget* addRenderTarget() IRR_OVERRIDE;
@@ -222,8 +222,8 @@ namespace video
 		virtual void OnResize(const core::dimension2d<u32>& size) IRR_OVERRIDE;
 
 		//! Can be called by an IMaterialRenderer to make its work easier.
-		virtual void setBasicRenderStates(const SMaterial& material, const SMaterial& lastMaterial,
-			bool resetAllRenderstates) IRR_OVERRIDE;
+		void setBasicRenderStates(const SMaterial& material, const SMaterial& lastMaterial,
+			bool resetAllRenderstates);
 
 		//! Returns type of video driver
 		virtual E_DRIVER_TYPE getDriverType() const IRR_OVERRIDE;

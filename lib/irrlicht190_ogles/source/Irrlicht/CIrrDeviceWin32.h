@@ -9,8 +9,6 @@
 #ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 
 #include "CIrrDeviceStub.h"
-#include "IrrlichtDevice.h"
-#include "IImagePresenter.h"
 
 #define WIN32_LEAN_AND_MEAN
 #if !defined(_IRR_XBOX_PLATFORM_)
@@ -71,7 +69,7 @@ namespace irr
 		virtual video::IVideoModeList* getVideoModeList() IRR_OVERRIDE;
 
 		//! Notifies the device, that it has been resized
-		/** Must be publis as it is called from free function (event handler) */
+		/** Must be public as it is called from free function (event handler) */
 		void OnResized();
 
 		//! Sets if the window should be resizable in windowed mode.
@@ -273,6 +271,30 @@ namespace irr
 				}
 				else
 					UseReferenceRect = false;
+			}
+
+			virtual bool getReferenceRect(core::rect<s32>& rect) IRR_OVERRIDE
+			{ 
+				if ( UseReferenceRect )
+				{
+					rect = ReferenceRect;
+				}
+				else
+				{
+					RECT wndRect;
+					if (GetWindowRect(HWnd, &wndRect))
+					{
+						rect.UpperLeftCorner.X = wndRect.left+BorderX;
+						rect.UpperLeftCorner.Y = wndRect.top+BorderY;
+					}
+					else // error case - not sure if it matters what we set here as coordinates returned will be -1, -1
+					{
+						rect.UpperLeftCorner = core::vector2di(0,0);
+					}
+					rect.LowerRightCorner.X = rect.UpperLeftCorner.X + (irr::s32)WindowSize.Width;
+					rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + (irr::s32)WindowSize.Height;
+				}
+				return UseReferenceRect;
 			}
 
 			/** Used to notify the cursor that the window was resized. */
