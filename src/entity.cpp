@@ -110,7 +110,8 @@ extern "C"
         vector3df collisionPoint;
         bool collisionFalling = false;
         const vector3df result = manager->getCollisionResultPosition(
-            selector, entity->getAbsolutePosition(),
+            selector,
+            entity->getAbsolutePosition(),
             radius,
             direction,
             collisionTriangle,

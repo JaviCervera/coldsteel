@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 #Define project
 project(csrun)
 
+#Options
+option(LEGACY_IRRLICHT "Compile with an old version of Irrlicht" OFF)
+
 #Define file groups
 file(
 	GLOB
@@ -18,11 +21,20 @@ file(
 	"lib/soloud/src/core/*.cpp")
 
 #Add header and lib directories
+if (LEGACY_IRRLICHT)
+add_definitions(-DLEGACY_IRRLICHT)
+include_directories(
+	${INCLUDE_DIRECTORIES}
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
+else (LEGACY_IRRLICHT)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
+endif (LEGACY_IRRLICHT)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)
 else (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
