@@ -14,16 +14,16 @@ extern "C"
   EXPORT void CALL SaveMemblock(Memblock *memblock, const char *filename);
   EXPORT void CALL FreeMemblock(Memblock *memblock);
   EXPORT int CALL MemblockSize(const Memblock *memblock);
-  EXPORT void CALL SetMemblockByte(Memblock *memblock, int offset, int val);
-  EXPORT void CALL SetMemblockShort(Memblock *memblock, int offset, int val);
-  EXPORT void CALL SetMemblockInt(Memblock *memblock, int offset, int val);
-  EXPORT void CALL SetMemblockFloat(Memblock *memblock, int offset, float val);
-  EXPORT void CALL SetMemblockString(Memblock *memblock, int offset, const char *val);
-  EXPORT int CALL MemblockByte(const Memblock *memblock, int offset);
-  EXPORT int CALL MemblockShort(const Memblock *memblock, int offset);
-  EXPORT int CALL MemblockInt(const Memblock *memblock, int offset);
-  EXPORT float CALL MemblockFloat(const Memblock *memblock, int offset);
-  EXPORT const char *CALL MemblockString(const Memblock *memblock, int offset);
+  EXPORT void CALL PokeByte(Memblock *memblock, int offset, int val);
+  EXPORT void CALL PokeShort(Memblock *memblock, int offset, int val);
+  EXPORT void CALL PokeInt(Memblock *memblock, int offset, int val);
+  EXPORT void CALL PokeFloat(Memblock *memblock, int offset, float val);
+  EXPORT void CALL PokeString(Memblock *memblock, int offset, const char *val);
+  EXPORT int CALL PeekByte(const Memblock *memblock, int offset);
+  EXPORT int CALL PeekShort(const Memblock *memblock, int offset);
+  EXPORT int CALL PeekInt(const Memblock *memblock, int offset);
+  EXPORT float CALL PeekFloat(const Memblock *memblock, int offset);
+  EXPORT const char *CALL PeekString(const Memblock *memblock, int offset);
 
 #ifdef __cplusplus
 } /* extern "C" */

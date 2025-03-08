@@ -8,6 +8,8 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
+* SetScreen function + list available screen resolutions.
+* Consider 1-based indices as in Lua?
 * Add mesh based terrain.
 * Add tinyfontdialogs.
 * Add Vortex samples?
