@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Use legacy icon on Win95 version.
 * Add mesh based terrain.
 * Add tinyfontdialogs.
 * Add Vortex samples?

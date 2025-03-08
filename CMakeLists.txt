@@ -7,18 +7,28 @@ project(csrun)
 #Options
 option(LEGACY_IRRLICHT "Compile with an old version of Irrlicht" OFF)
 
+if (LEGACY_IRRLICHT)
+  set(CMAKE_RC_COMPILER_INIT windres)
+  ENABLE_LANGUAGE(RC)
+  SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -i <SOURCE> -o <OBJECT>")
+endif (LEGACY_IRRLICHT)
+
 #Define file groups
 file(
 	GLOB
 	COLDSTEEL_EXE_FILES
-	"src/*.cpp"
-	"src/runtime.rc"
 	"lib/lua/*.c"
 	"lib/soloud/src/audiosource/wav/*.cpp"
 	"lib/soloud/src/audiosource/wav/stb_vorbis.c"
 	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
 	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
-	"lib/soloud/src/core/*.cpp")
+	"lib/soloud/src/core/*.cpp"
+	"src/*.cpp")
+if (LEGACY_IRRLICHT)
+file(GLOB COLDSTEEL_EXE_FILES ${COLDSTEEL_EXE_FILES} "src/legacy_runtime.rc")
+else (LEGACY_IRRLICHT)
+file(GLOB COLDSTEEL_EXE_FILES ${COLDSTEEL_EXE_FILES} "src/runtime.rc")
+endif (LEGACY_IRRLICHT)
 
 #Add header and lib directories
 if (LEGACY_IRRLICHT)

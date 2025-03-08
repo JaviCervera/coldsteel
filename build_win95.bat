@@ -14,6 +14,7 @@ mkdir _CMAKE\_COLDSTEEL
 echo # Use old version on MinGW
 set CC=%~dp0mingw_342/bin/mingw32-gcc.exe
 set CXX=%~dp0mingw_342/bin/mingw32-g++.exe
+set RC=%~dp0mingw_342/bin/windres.exe
 
 echo # Building Irrlicht (Desktop) ...
 cd _CMAKE/_IRRLICHT
@@ -23,7 +24,7 @@ cd ../..
 
 echo # Building csrun (Desktop) ...
 cd _CMAKE/_COLDSTEEL
-..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DLEGACY_IRRLICHT=ON -DCMAKE_RC_FLAGS="-F pe-i386" ../..
+..\..\mingw_342\bin\cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DLEGACY_IRRLICHT=ON -DCMAKE_RC_FLAGS="-O coff" ../..
 ..\..\mingw_342\bin\mingw32-make
 move "csrun.exe" "..\..\_build\csrun.exe"
 cd ../..
