@@ -11,11 +11,11 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 * SetScreen function + list available screen resolutions.
 * Consider 1-based indices as in Lua?
 * Add tinyfontdialogs.
-* Add Vortex samples?
+* Add more samples and demos.
 * Add SciTE based Lua editor.
 * Add font editor.
 * Add particles support & editor.
-* Add material editor.
+* Add mesh viewer.
 * GUI styles.
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).

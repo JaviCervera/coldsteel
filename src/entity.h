@@ -46,7 +46,7 @@ extern "C"
   EXPORT bool_t CALL EntityCollision(ISceneNode *entity);
   EXPORT int CALL EntityGroup(ISceneNode *entity);
   EXPORT float CALL EntityDistance(ISceneNode *entity, float x, float y, float z);
-  EXPORT float CALL EntityDistanceSquare(ISceneNode *entity, float x, float y, float z);
+  EXPORT float CALL EntitySquareDistance(ISceneNode *entity, float x, float y, float z);
 
 #ifdef __cplusplus
 } /* extern "C" */
