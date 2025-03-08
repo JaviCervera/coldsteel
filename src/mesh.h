@@ -14,6 +14,7 @@ extern "C"
   EXPORT IMesh *CALL CreateQuad();
   EXPORT IMesh *CALL CreateSphere(int segments);
   EXPORT IMesh *CALL LoadMesh(const char *filename);
+  EXPORT IMesh *CALL LoadTerrainMesh(IImage *heightmap, IImage *pixmap, float width, float height, float depth);
   EXPORT void CALL FreeMesh(IMesh *mesh);
   EXPORT void CALL SetMeshFPS(IMesh *mesh, float fps);
   EXPORT float CALL MeshFPS(IMesh *mesh);

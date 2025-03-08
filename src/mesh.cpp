@@ -124,6 +124,18 @@ extern "C"
     return _Device()->getSceneManager()->getMesh(filename);
   }
 
+  EXPORT IMesh *CALL LoadTerrainMesh(IImage *heightmap, IImage *pixmap, float width, float height, float depth)
+  {
+    if (heightmap && pixmap)
+    {
+      const dimension2df stretch = dimension2df(
+          float(width) / heightmap->getDimension().Width,
+          float(depth) / heightmap->getDimension().Height);
+      return _Device()->getSceneManager()->addTerrainMesh("*", pixmap, heightmap, stretch, height);
+    }
+    return NULL;
+  }
+
   EXPORT void CALL FreeMesh(IMesh *mesh)
   {
     if (_MeshAnimated(mesh))

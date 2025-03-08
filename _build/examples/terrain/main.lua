@@ -6,7 +6,16 @@ SetEntityRotation(cam, 30, 0, 0)
 SetEntityPosition(root, 500, 70, 200)
 
 -- Load terrain
-local terrain = LoadTerrain("terrain-heightmap.bmp", nil, 1000, 50, 1000)
+--[[
+local heightmap = LoadPixmap("terrain-heightmap.bmp")
+local pixmap = LoadPixmap("terrain-texture.jpg")
+local mesh = LoadTerrainMesh(heightmap, pixmap, 1000, 50, 1000)
+FreePixmap(heightmap)
+FreePixmap(pixmap)
+local terrain = CreateMeshEntity(mesh)
+]]--
+local terrain = LoadTerrain("terrain-heightmap.bmp", 1000, 50, 1000)
+ScaleTerrainTexture(terrain, 1, 16)
 local mat = EntityMaterial(terrain, 0)
 SetMaterialType(mat, MATERIAL_DETAIL)
 SetMaterialTexture(mat, 0, LoadTexture("terrain-texture.jpg"))
