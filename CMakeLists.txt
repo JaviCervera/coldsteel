@@ -20,7 +20,10 @@ file(
 	"lib/lua/*.c"
 	"lib/soloud/src/audiosource/wav/*.cpp"
 	"lib/soloud/src/audiosource/wav/stb_vorbis.c"
+	"lib/soloud/src/backend/alsa/soloud_alsa.cpp"
 	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
+	"lib/soloud/src/backend/openal/soloud_openal_dll.c"
+	"lib/soloud/src/backend/openal/soloud_openal.cpp"
 	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
 	"lib/soloud/src/core/*.cpp"
 	"lib/tinyfiledialogs/tinyfiledialogs.c"
@@ -78,12 +81,14 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	target_link_libraries(csrun -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
+	add_definitions(-DWITH_ALSA)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti -fPIC")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
-	target_link_libraries(csrun -lIrrlicht -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(csrun -lIrrlicht -lasound -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	message("Platform is Emscripten")
+	add_definitions(-DWITH_OPENAL)
 	target_compile_definitions(csrun PRIVATE ${COMPILE_DEFINITIONS} -DLUA_USE_LONGJMP)
 	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions -fno-rtti -fstrict-aliasing	-U__STRICT_ANSI__")
 	set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-o coldsteel.html -lIrrlicht -lGL --preload-file ../../data.bin@/ -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1")
