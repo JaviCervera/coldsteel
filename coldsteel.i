@@ -17,6 +17,7 @@ class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 %include "src/channel.h"
 %include "src/console.h"
 %include "src/core.h"
+%include "src/dialogs.h"
 %include "src/dir.h"
 %include "src/entity.h"
 %include "src/font.h"

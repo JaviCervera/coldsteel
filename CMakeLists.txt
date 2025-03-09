@@ -23,6 +23,7 @@ file(
 	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
 	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
 	"lib/soloud/src/core/*.cpp"
+	"lib/tinyfiledialogs/tinyfiledialogs.c"
 	"src/*.cpp")
 if (LEGACY_IRRLICHT)
 file(GLOB COLDSTEEL_EXE_FILES ${COLDSTEEL_EXE_FILES} "src/legacy_runtime.rc")

@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core.h"
+#include "dialogs.h"
 #include "dir.h"
 #include "screen.h"
 #include "script.h"
@@ -144,9 +145,7 @@ static CompilerConfig ParseConfig(int argc, char *argv[])
 static void PrintError()
 {
   _Device()->getLogger()->log(Script::Get().Error().c_str(), ELL_ERROR);
-#ifdef _WIN32
-  MessageBoxA(NULL, Script::Get().Error().c_str(), "Error", MB_OK | MB_ICONERROR);
-#endif
+  Notify("Error", Script::Get().Error().c_str(), true);
 }
 
 static void MainLoop()
@@ -174,35 +173,3 @@ static void EmscriptenMainLoop()
   }
 }
 #endif
-
-/*
-static CompilerConfig ParseCommandLine(int argc, char* argv[]) {
-    CompilerConfig config;
-    config.mode = MODE_RUN;
-    for (int i = 1; i < argc-1; ++i) {
-        if (strcmp(argv[i], "-check") == 0) {
-            config.mode = MODE_CHECK;
-        } else if (strcmp(argv[i], "-build") == 0) {
-            config.mode = MODE_BUILD;
-        } else if (strcmp(argv[i], "-help") == 0) {
-            printf("Usage: runtime [options] [sourcefile]\n");
-            printf("Options:\n");
-            printf(" -run: Run program (default).\n");
-            printf(" -check: Check syntax (do not generate output).\n");
-            printf(" -build: Build 'code.bcd' bytecode file.\n");
-            printf(" -help: Prints this text.\n");
-            printf("When called without arguments, the file 'code.bcd' will be executed.\n");
-            exit(-1);
-        } else if (strcmp(argv[i], "-run") != 0) {
-            printf("Unrecognized argument: %s\n", argv[i]);
-            exit(-1);
-        }
-    }
-    config.sourceFilename = (argc > 1) ? argv[argc-1] : "";
-    const int lastPathPos = config.sourceFilename.replace("\\", "/").findLast('/');
-    config.path = (lastPathPos != -1)
-        ? config.sourceFilename.subString(0, lastPathPos)
-        : "";
-    return config;
-}
-*/

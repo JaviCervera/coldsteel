@@ -43,7 +43,7 @@ bool Script::Load(const stringc &filename)
   Memblock *memblock = LoadMemblock(filename.c_str());
   if (!memblock)
   {
-    mError = stringc("Cannot find file '") + CurrentDir() + "/" + filename + "'";
+    mError = stringc("Cannot find file: ") + CurrentDir() + "/" + filename;
     return false;
   }
   if (luaL_loadbuffer(mState, (const char *)memblock, MemblockSize(memblock), filename.c_str()) || lua_pcall(mState, 0, LUA_MULTRET, 0))

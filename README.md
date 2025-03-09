@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Add tinyfontdialogs.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
 * Add font editor.

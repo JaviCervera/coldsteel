@@ -5,6 +5,7 @@
 #include "channel.h"
 #include "console.h"
 #include "core.h"
+#include "dialogs.h"
 #include "dir.h"
 #include "entity.h"
 #include "font.h"
