@@ -5,6 +5,8 @@ MAX_PRIMITIVES = 1000
 PRIM_LINE = 0
 PRIM_RECT = 1
 
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 function CreatePrimitive(type, color, x, y, z, w)
     return {
         type = type,

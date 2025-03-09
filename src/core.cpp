@@ -24,7 +24,7 @@ extern "C"
 
   EXPORT void CALL Exit(int code)
   {
-    _CloseScreen();
+    CloseScreen();
     _Finish();
     exit(code);
   }

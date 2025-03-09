@@ -1,3 +1,4 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 local xml = ParseXML("example.xml")
 
 function Loop()

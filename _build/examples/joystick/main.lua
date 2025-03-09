@@ -1,3 +1,5 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 function Loop()
 	BeginDrawing(true, false, COLOR_BLACK)
 	if NumJoysticks() > 0 then

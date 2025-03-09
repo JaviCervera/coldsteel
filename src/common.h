@@ -40,7 +40,7 @@ using namespace gui;
 #define COLOR_BROWN -7650029
 
 // Screen
-#define SCREEN_WINDOWED 1
+#define SCREEN_FULLSCREEN 1
 #define SCREEN_RESIZABLE 2
 #define SCREEN_VSYNC 4
 

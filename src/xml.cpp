@@ -114,46 +114,48 @@ extern "C"
 
   EXPORT const char *CALL XMLName(XMLNode *node)
   {
-    return node->getName().c_str();
+    return node ? node->getName().c_str() : "";
   }
 
   EXPORT const char *CALL XMLText(XMLNode *node)
   {
-    return node->getText().c_str();
+    return node ? node->getText().c_str() : "";
   }
 
   EXPORT int CALL XMLNumAttributes(XMLNode *node)
   {
-    return node->getNumAttributes();
+    return node ? node->getNumAttributes() : 0;
   }
 
   EXPORT const char *CALL XMLAttributeName(XMLNode *node, int index)
   {
-    return node->getAttributeName(index).c_str();
+    return node ? node->getAttributeName(index).c_str() : "";
   }
 
   EXPORT const char *CALL XMLAttributeValue(XMLNode *node, const char *name)
   {
-    return node->getAttributeValue(name).c_str();
+    return node ? node->getAttributeValue(name).c_str() : "";
   }
 
   EXPORT int CALL XMLNumChildren(XMLNode *node)
   {
-    return node->getNumChildren();
+    return node ? node->getNumChildren() : 0;
   }
 
   EXPORT XMLNode *CALL XMLChild(XMLNode *node, int index)
   {
-    return node->getChild(index);
+    return node ? node->getChild(index) : NULL;
   }
 
   EXPORT int CALL XMLNumChildrenNamed(XMLNode *node, const char *name)
   {
-    return node->findChildren(name).size();
+    return node ? node->findChildren(name).size() : 0;
   }
 
   EXPORT XMLNode *CALL XMLChildNamed(XMLNode *node, const char *name, int index)
   {
+    if (!node)
+      return NULL;
     array<XMLNode *> children = node->findChildren(name);
     if (index >= 0 && index < children.size())
     {

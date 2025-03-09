@@ -4,6 +4,7 @@ ROT_SPEED = 15
 MOVE_SPEED = 16
 SOUND_RADIUS = 25
 
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetCursorVisible(false)
 
 -- Create player entity

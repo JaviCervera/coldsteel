@@ -1,3 +1,5 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 -- Camera
 local root = CreateEntity()
 local cam = CreateCamera()

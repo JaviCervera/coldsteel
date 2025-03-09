@@ -1,6 +1,8 @@
 TEXT_SPEED = 200
 TEXT = "Hello, world!"
 
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 local font = LoadFont("liberation_mono.xml")
 local textX = 2
 local textDir = 1

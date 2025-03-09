@@ -1,3 +1,5 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 local tex = LoadTexture("space_station.jpg")
 SetSkydome(tex, 1, true)
 local cam = CreateCamera()

@@ -7,7 +7,6 @@ echo # Generating Lua wrapper ...
 swig.exe -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
 
 echo # Creating folders for CMake ...
-rem mkdir _CMAKE
 mkdir _CMAKE\_IRRLICHT
 mkdir _CMAKE\_COLDSTEEL
 

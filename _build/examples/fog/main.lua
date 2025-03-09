@@ -1,5 +1,6 @@
 NUM_CUBES = 16 * 500
 
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(COLOR_DARKGRAY)
 SetFog(COLOR_DARKGRAY, 0, 20)
 

@@ -1,3 +1,4 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(COLOR_WHITE)
 
 local tex = LoadTexture("tree.png")

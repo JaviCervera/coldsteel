@@ -1,3 +1,5 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
 -- Create and setup camera
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 2, -2)

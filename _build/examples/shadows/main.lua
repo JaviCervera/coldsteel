@@ -1,3 +1,4 @@
+OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(RGB(75, 75, 75))
 
 local cam = CreateCamera()
