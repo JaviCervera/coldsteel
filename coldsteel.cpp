@@ -39,13 +39,17 @@ extern "C"
 
 void Run(const std::string &dir);
 void Build(const std::string &dir);
+void BuildWeb(const std::string &dir);
 void CreateBundle(const std::string &out_dir, const std::string &out_file);
 void WritePlist(const std::string &out_dir, const std::string &out_file);
 std::string PlistPath(const std::string &out_dir, const std::string &out_file);
 void CopyIcns(const std::string &out_dir, const std::string &out_file);
 void CopyRuntime(const std::string &out_dir, const std::string &out_file);
-void WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file);
+size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file);
 void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir);
+void WriteJS(const std::string &out_dir, const std::string &out_file, size_t pkg_size);
+void WriteWasm(const std::string &out_dir, const std::string &out_file);
+void WriteHtml(const std::string &out_dir, const std::string &out_file);
 std::string RealPath(const std::string &path);
 bool IsDir(const std::string &path);
 std::string ExtractDir(const std::string &path);
@@ -61,6 +65,7 @@ bool IsMac();
 std::string LoadString(const std::string &filename);
 void SaveString(const std::string &str, const std::string &filename, bool append = true);
 std::string Replace(const std::string &str, const std::string &find, const std::string &rep);
+std::string Str(int value);
 void CopyFile(const std::string &src, const std::string &dst);
 
 enum Mode
@@ -121,8 +126,7 @@ int main(int argc, char *argv[])
       Build(opts.dir);
       break;
     case MODE_BUILD_WEB:
-      std::cout << "Web build not supported yet" << std::endl;
-      // BuildWeb(opts.dir);
+      BuildWeb(opts.dir);
       break;
     }
     return 0;
@@ -151,6 +155,18 @@ void Build(const std::string &dir)
     CreateBundle(out_dir, out_file);
   WriteZip(dir, RuntimeDir(out_dir, out_file), "data.bin");
   CopyRuntime(out_dir, out_file);
+}
+
+void BuildWeb(const std::string &dir)
+{
+  const std::string out_file = StripDir(dir);
+  const std::string out_dir = dir + ".build";
+  if (!IsDir(out_dir))
+    CreateDir(out_dir);
+  const size_t pkg_size = WriteZip(dir, out_dir, out_file + ".data");
+  WriteJS(out_dir, out_file, pkg_size);
+  WriteWasm(out_dir, out_file);
+  WriteHtml(out_dir, out_file);
 }
 
 void CreateBundle(const std::string &out_dir, const std::string &out_file)
@@ -192,13 +208,20 @@ void CopyRuntime(const std::string &out_dir, const std::string &out_file)
   CopyFile(src, dst);
 }
 
-void WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file)
+size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file)
 {
   const std::string zip_path = out_dir + "/" + out_file;
   std::cout << "Writing assets '" << zip_path << "' ..." << std::endl;
   zip_t *zip = zip_open(zip_path.c_str(), 9, 'w');
   AddZipFiles(zip, path, path);
+  AddZipFiles(zip, ProgramDir() + "/media", ProgramDir());
   zip_close(zip);
+
+  FILE *f = fopen(zip_path.c_str(), "rb");
+  fseek(f, 0, SEEK_END);
+  const size_t size = ftell(f);
+  fclose(f);
+  return size;
 }
 
 void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir)
@@ -220,6 +243,33 @@ void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_di
       zip_entry_close(zip);
     }
   }
+}
+
+#define JS_SIZE_TPL "[{filename:\"/data.bin\",start:0,end:0}],remote_package_size:0"
+#define JS_SIZE_REP "[{filename:\"/data.bin\",start:0,end:#SIZE}],remote_package_size:#SIZE"
+
+void WriteJS(const std::string &out_dir, const std::string &out_file, size_t pkg_size)
+{
+  const std::string js = Replace(Replace(LoadString(ProgramDir() + "/coldsteel.js"), JS_SIZE_TPL, Replace(JS_SIZE_REP, "#SIZE", Str(pkg_size))), "csrun", out_file);
+  const std::string dst = out_dir + "/" + out_file + ".js";
+  std::cout << "Writing js '" << dst << "' ..." << std::endl;
+  SaveString(js, dst);
+}
+
+void WriteWasm(const std::string &out_dir, const std::string &out_file)
+{
+  const std::string src = ProgramDir() + "/coldsteel.wasm";
+  const std::string dst = out_dir + "/" + out_file + ".wasm";
+  std::cout << "Writing wasm '" << dst << "' ..." << std::endl;
+  CopyFile(src, dst);
+}
+
+void WriteHtml(const std::string &out_dir, const std::string &out_file)
+{
+  const std::string html = Replace(Replace(LoadString(ProgramDir() + "/coldsteel.html"), "coldsteel", out_file), "Emscripten-Generated Code", out_file);
+  const std::string dst = out_dir + "/index.html";
+  std::cout << "Writing html '" << dst << "' ..." << std::endl;
+  SaveString(html, dst);
 }
 
 std::string RealPath(const std::string &path)
@@ -389,6 +439,13 @@ std::string Replace(const std::string &str, const std::string &find, const std::
     find_pos = strcopy.find(find, find_pos + rep.length());
   }
   return strcopy;
+}
+
+std::string Str(int value)
+{
+  char buf[32];
+  sprintf(buf, "%i", value);
+  return std::string(buf);
 }
 
 void CopyFile(const std::string &src, const std::string &dst)
