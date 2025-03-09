@@ -18,10 +18,10 @@ local terrain = CreateMeshEntity(mesh)
 ]]--
 local terrain = LoadTerrain("terrain-heightmap.bmp", 1000, 50, 1000)
 ScaleTerrainTexture(terrain, 1, 16)
-local mat = EntityMaterial(terrain, 0)
+local mat = EntityMaterial(terrain, 1)
 SetMaterialType(mat, MATERIAL_DETAIL)
-SetMaterialTexture(mat, 0, LoadTexture("terrain-texture.jpg"))
-SetMaterialTexture(mat, 1, LoadTexture("detailmap3.jpg"))
+SetMaterialTexture(mat, 1, LoadTexture("terrain-texture.jpg"))
+SetMaterialTexture(mat, 2, LoadTexture("detailmap3.jpg"))
 
 function Loop()
     if KeyDown(KEY_ESC) then Exit(0) end

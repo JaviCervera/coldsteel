@@ -19,10 +19,10 @@ local x = -7
 local z = NUM_CUBES / 16 * 2 - 2
 for i = 1, NUM_CUBES, 2 do
     cubes[i] = CreateMeshEntity(mesh)
-    SetMaterialFogEnabled(EntityMaterial(cubes[i], 0), true)
+    SetMaterialFogEnabled(EntityMaterial(cubes[i], 1), true)
     SetEntityPosition(cubes[i], x, -1.5, z)
     cubes[i+1] = CreateMeshEntity(mesh)
-    SetMaterialFogEnabled(EntityMaterial(cubes[i+1], 0), true)
+    SetMaterialFogEnabled(EntityMaterial(cubes[i+1], 1), true)
     SetEntityPosition(cubes[i+1], x, 1.5, z)
     x = x + 2
     if x > 7 then
@@ -37,7 +37,7 @@ function Loop()
     if KeyDown(KEY_SPACE) then
         if not spacePressed then
             for _, cube in ipairs(cubes) do
-                local mat = EntityMaterial(cube, 0)
+                local mat = EntityMaterial(cube, 1)
                 SetMaterialFogEnabled(mat, not MaterialFogEnabled(mat))
             end
         end

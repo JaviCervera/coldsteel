@@ -129,7 +129,7 @@ extern "C"
 
   EXPORT const char *CALL XMLAttributeName(XMLNode *node, int index)
   {
-    return node ? node->getAttributeName(index).c_str() : "";
+    return node ? node->getAttributeName(index - 1).c_str() : "";
   }
 
   EXPORT const char *CALL XMLAttributeValue(XMLNode *node, const char *name)
@@ -144,7 +144,7 @@ extern "C"
 
   EXPORT XMLNode *CALL XMLChild(XMLNode *node, int index)
   {
-    return node ? node->getChild(index) : NULL;
+    return node ? node->getChild(index - 1) : NULL;
   }
 
   EXPORT int CALL XMLNumChildrenNamed(XMLNode *node, const char *name)
@@ -157,9 +157,9 @@ extern "C"
     if (!node)
       return NULL;
     array<XMLNode *> children = node->findChildren(name);
-    if (index >= 0 && index < children.size())
+    if (index > 0 && index <= children.size())
     {
-      return children[index];
+      return children[index - 1];
     }
     else
     {

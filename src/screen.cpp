@@ -194,17 +194,17 @@ extern "C"
 
   EXPORT int CALL ScreenModeWidth(int index)
   {
-    return _Device()->getVideoModeList()->getVideoModeResolution(index).Width;
+    return _Device()->getVideoModeList()->getVideoModeResolution(index - 1).Width;
   }
 
   EXPORT int CALL ScreenModeHeight(int index)
   {
-    return _Device()->getVideoModeList()->getVideoModeResolution(index).Height;
+    return _Device()->getVideoModeList()->getVideoModeResolution(index - 1).Height;
   }
 
   EXPORT int CALL ScreenModeDepth(int index)
   {
-    return _Device()->getVideoModeList()->getVideoModeDepth(index);
+    return _Device()->getVideoModeList()->getVideoModeDepth(index - 1);
   }
 
   EXPORT int CALL DesktopWidth()

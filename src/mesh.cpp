@@ -24,72 +24,72 @@ extern "C"
     AddVertex(surf, 0.5f, 0.5f, -0.5f, 0, 0, -1, white, 1, 0);
     AddVertex(surf, -0.5f, -0.5f, -0.5f, 0, 0, -1, white, 0, 1);
     AddVertex(surf, 0.5f, -0.5f, -0.5f, 0, 0, -1, white, 1, 1);
-    AddIndex(surf, 0);
     AddIndex(surf, 1);
     AddIndex(surf, 2);
     AddIndex(surf, 3);
+    AddIndex(surf, 4);
+    AddIndex(surf, 3);
     AddIndex(surf, 2);
-    AddIndex(surf, 1);
 
     // Back face
     AddVertex(surf, 0.5f, 0.5f, 0.5f, 0, 0, 1, white, 0, 0);
     AddVertex(surf, -0.5f, 0.5f, 0.5f, 0, 0, 1, white, 1, 0);
     AddVertex(surf, 0.5f, -0.5f, 0.5f, 0, 0, 1, white, 0, 1);
     AddVertex(surf, -0.5f, -0.5f, 0.5f, 0, 0, 1, white, 1, 1);
-    AddIndex(surf, 4);
     AddIndex(surf, 5);
     AddIndex(surf, 6);
     AddIndex(surf, 7);
+    AddIndex(surf, 8);
+    AddIndex(surf, 7);
     AddIndex(surf, 6);
-    AddIndex(surf, 5);
 
     // Left face
     AddVertex(surf, -0.5f, 0.5f, 0.5f, -1, 0, 0, white, 0, 0);
     AddVertex(surf, -0.5f, 0.5f, -0.5f, -1, 0, 0, white, 1, 0);
     AddVertex(surf, -0.5f, -0.5f, 0.5f, -1, 0, 0, white, 0, 1);
     AddVertex(surf, -0.5f, -0.5f, -0.5f, -1, 0, 0, white, 1, 1);
-    AddIndex(surf, 8);
     AddIndex(surf, 9);
     AddIndex(surf, 10);
     AddIndex(surf, 11);
+    AddIndex(surf, 12);
+    AddIndex(surf, 11);
     AddIndex(surf, 10);
-    AddIndex(surf, 9);
 
     // Right face
     AddVertex(surf, 0.5f, 0.5f, -0.5f, 1, 0, 0, white, 0, 0);
     AddVertex(surf, 0.5f, 0.5f, 0.5f, 1, 0, 0, white, 1, 0);
     AddVertex(surf, 0.5f, -0.5f, -0.5f, 1, 0, 0, white, 0, 1);
     AddVertex(surf, 0.5f, -0.5f, 0.5f, 1, 0, 0, white, 1, 1);
-    AddIndex(surf, 12);
     AddIndex(surf, 13);
     AddIndex(surf, 14);
     AddIndex(surf, 15);
+    AddIndex(surf, 16);
+    AddIndex(surf, 15);
     AddIndex(surf, 14);
-    AddIndex(surf, 13);
 
     // Top face
     AddVertex(surf, -0.5f, 0.5f, 0.5f, 0, 1, 0, white, 0, 0);
     AddVertex(surf, 0.5f, 0.5f, 0.5f, 0, 1, 0, white, 1, 0);
     AddVertex(surf, -0.5f, 0.5f, -0.5f, 0, 1, 0, white, 0, 1);
     AddVertex(surf, 0.5f, 0.5f, -0.5f, 0, 1, 0, white, 1, 1);
-    AddIndex(surf, 16);
     AddIndex(surf, 17);
     AddIndex(surf, 18);
     AddIndex(surf, 19);
+    AddIndex(surf, 20);
+    AddIndex(surf, 19);
     AddIndex(surf, 18);
-    AddIndex(surf, 17);
 
     // Bottom face
     AddVertex(surf, -0.5f, -0.5f, -0.5f, 0, -1, 0, white, 0, 0);
     AddVertex(surf, 0.5f, -0.5f, -0.5f, 0, -1, 0, white, 1, 0);
     AddVertex(surf, -0.5f, -0.5f, 0.5f, 0, -1, 0, white, 0, 1);
     AddVertex(surf, 0.5f, -0.5f, 0.5f, 0, -1, 0, white, 1, 1);
-    AddIndex(surf, 20);
     AddIndex(surf, 21);
     AddIndex(surf, 22);
     AddIndex(surf, 23);
+    AddIndex(surf, 24);
+    AddIndex(surf, 23);
     AddIndex(surf, 22);
-    AddIndex(surf, 21);
 
     // Update mesh
     UpdateMesh(cube);
@@ -185,12 +185,12 @@ extern "C"
 
   EXPORT IMeshBuffer *CALL MeshSurface(IMesh *mesh, int index)
   {
-    return mesh->getMeshBuffer(index);
+    return mesh->getMeshBuffer(index - 1);
   }
 
   EXPORT void CALL UpdateMesh(IMesh *mesh)
   {
-    for (int i = 0; i < NumSurfaces(mesh); ++i)
+    for (int i = 1; i <= NumSurfaces(mesh); ++i)
     {
       MeshSurface(mesh, i)->recalculateBoundingBox();
     }

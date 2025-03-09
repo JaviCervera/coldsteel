@@ -8,7 +8,7 @@ extern "C"
 #endif
 
   EXPORT IMeshBuffer *CALL AddSurface(IMesh *mesh);
-  EXPORT int CALL AddIndex(IMeshBuffer *surface, int index);
+  EXPORT int CALL AddIndex(IMeshBuffer *surface, int vertexIndex);
   EXPORT int CALL NumIndices(IMeshBuffer *surface);
   EXPORT int CALL SurfaceIndex(IMeshBuffer *surface, int number);
   EXPORT int CALL AddVertex(IMeshBuffer *surface, float x, float y, float z, float nx, float ny, float nz, int color, float u, float v);

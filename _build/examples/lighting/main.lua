@@ -31,7 +31,7 @@ local z = -32
 for i = 1, 81 do
     local sphere = CreateMeshEntity(mesh)
     SetEntityPosition(sphere, x, 0, z)
-    local mat = EntityMaterial(sphere, 0)
+    local mat = EntityMaterial(sphere, 1)
     SetMaterialShininess(mat, 0.15)
     SetMaterialSpecular(mat, COLOR_WHITE)
     spheres[i] = sphere

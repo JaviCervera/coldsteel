@@ -48,7 +48,7 @@ extern "C"
   EXPORT const char *CALL Mid(const char *str, int pos, int num)
   {
     static stringc retstr;
-    retstr = stringc(str).subString(pos, num);
+    retstr = stringc(str).subString(pos - 1, num);
     return retstr.c_str();
   }
 
@@ -134,27 +134,27 @@ extern "C"
     static stringc retstr;
     const stringc s = str;
     const array<int> indices = _DelimiterIndices(s, delimiter);
-    if (index == 0 && indices.size() == 0)
+    if (index == 1 && indices.size() == 0)
     {
       retstr = s;
     }
-    else if (index == 0)
+    else if (index == 1)
     {
       retstr = s.subString(0, indices[0]);
     }
-    else if (index == indices.size())
+    else if (index == indices.size() + 1)
     {
       const int size = strlen(delimiter);
-      retstr = s.subString(indices[index - 1] + size, s.size() - indices[index - 1] - size);
+      retstr = s.subString(indices[index - 2] + size, s.size() - indices[index - 2] - size);
     }
-    else if (index > indices.size())
+    else if (index > indices.size() + 1)
     {
       retstr = "";
     }
     else
     {
       const int size = strlen(delimiter);
-      retstr = s.subString(indices[index - 1] + size, indices[index] - indices[index - 1] - size);
+      retstr = s.subString(indices[index - 2] + size, indices[index - 1] - indices[index - 2] - size);
     }
     return retstr.c_str();
   }

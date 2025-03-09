@@ -71,7 +71,7 @@ extern "C"
 
   EXPORT ISceneNode *CALL EntityChild(ISceneNode *entity, int index)
   {
-    return *(entity->getChildren().begin() + index);
+    return *(entity->getChildren().begin() + index - 1);
   }
 
   EXPORT void CALL SetEntityPosition(ISceneNode *entity, float x, float y, float z)
@@ -241,7 +241,7 @@ extern "C"
 
   EXPORT SMaterial *CALL EntityMaterial(ISceneNode *entity, int index)
   {
-    return &entity->getMaterial(index);
+    return &entity->getMaterial(index - 1);
   }
 
   EXPORT void CALL SetEntityCollision(ISceneNode *entity, int type, int group)

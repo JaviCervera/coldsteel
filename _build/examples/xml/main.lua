@@ -1,6 +1,8 @@
 OpenConsole()
 local xml = ParseXML("example.xml")
-for i = 0, XMLNumChildren(xml) - 1 do
+for i = 1, XMLNumChildren(xml) do
 	local child = XMLChild(xml, i)
 	print(XMLName(child) .. " : " .. XMLText(child))
 end
+
+function Loop() end

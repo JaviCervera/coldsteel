@@ -156,7 +156,7 @@ extern "C"
 
   EXPORT IGUIElement *CALL ControlChild(IGUIElement *control, int index)
   {
-    return *(control->getChildren().begin() + index);
+    return *(control->getChildren().begin() + (index - 1));
   }
 
   EXPORT void CALL SetControlShape(IGUIElement *control, int x, int y, int width, int height)
@@ -347,22 +347,22 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_COMBOBOX:
-      return ((IGUIComboBox *)control)->addItem(_WSTR(text));
+      return ((IGUIComboBox *)control)->addItem(_WSTR(text)) + 1;
     case CONTROL_MENU:
-      return ((IGUIContextMenu *)control)->addItem(_WSTR(text), id);
+      return ((IGUIContextMenu *)control)->addItem(_WSTR(text), id) + 1;
     case CONTROL_LISTBOX:
-      return ((IGUIListBox *)control)->addItem(_WSTR(text));
+      return ((IGUIListBox *)control)->addItem(_WSTR(text)) + 1;
     case CONTROL_TABBAR:
       ((IGUITabControl *)control)->addTab(_WSTR(text), id);
-      return ((IGUITabControl *)control)->getTabCount() - 1;
+      return ((IGUITabControl *)control)->getTabCount();
     case CONTROL_TOOLBAR:
     {
       IGUIButton *button = ((IGUIToolBar *)control)->addButton(id, _WSTR(text));
       button->setDrawBorder(false);
-      return ControlNumChildren(control) - 1;
+      return ControlNumChildren(control);
     }
     }
-    return -1;
+    return 0;
   }
 
   EXPORT int CALL ControlNumItems(IGUIElement *control)
@@ -388,7 +388,7 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      ((IGUIContextMenu *)control)->setItemEnabled(index, enable);
+      ((IGUIContextMenu *)control)->setItemEnabled(index - 1, enable);
       break;
     }
   }
@@ -398,7 +398,7 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      return ((IGUIContextMenu *)control)->isItemEnabled(index);
+      return ((IGUIContextMenu *)control)->isItemEnabled(index - 1);
     }
     return false;
   }
@@ -408,10 +408,10 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      ((IGUIContextMenu *)control)->setItemChecked(index, check);
+      ((IGUIContextMenu *)control)->setItemChecked(index - 1, check);
       break;
     case CONTROL_TOOLBAR:
-      ((IGUIButton *)ControlChild(control, index))->setPressed(check);
+      ((IGUIButton *)ControlChild(control, index - 1))->setPressed(check);
       break;
     }
   }
@@ -421,9 +421,9 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      return ((IGUIContextMenu *)control)->isItemChecked(index);
+      return ((IGUIContextMenu *)control)->isItemChecked(index - 1);
     case CONTROL_TOOLBAR:
-      return ((IGUIButton *)ControlChild(control, index))->isPressed();
+      return ((IGUIButton *)ControlChild(control, index - 1))->isPressed();
     }
     return false;
   }
@@ -433,13 +433,13 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_COMBOBOX:
-      ((IGUIComboBox *)control)->setSelected(index);
+      ((IGUIComboBox *)control)->setSelected(index - 1);
       break;
     case CONTROL_LISTBOX:
-      ((IGUIListBox *)control)->setSelected(index);
+      ((IGUIListBox *)control)->setSelected(index - 1);
       break;
     case CONTROL_TABBAR:
-      ((IGUITabControl *)control)->setActiveTab(index);
+      ((IGUITabControl *)control)->setActiveTab(index - 1);
       break;
     }
   }
@@ -465,7 +465,7 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      ((IGUIContextMenu *)control)->setItemText(index, _WSTR(text));
+      ((IGUIContextMenu *)control)->setItemText(index - 1, _WSTR(text));
       break;
     }
   }
@@ -475,7 +475,7 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_MENU:
-      return _CSTR(((IGUIContextMenu *)control)->getItemText(index));
+      return _CSTR(((IGUIContextMenu *)control)->getItemText(index - 1));
     }
     return _CSTR(L"");
   }
@@ -485,15 +485,15 @@ extern "C"
     switch (ControlType(control))
     {
     case CONTROL_COMBOBOX:
-      ((IGUIComboBox *)control)->removeItem(index);
+      ((IGUIComboBox *)control)->removeItem(index - 1);
     case CONTROL_MENU:
-      ((IGUIContextMenu *)control)->removeItem(index);
+      ((IGUIContextMenu *)control)->removeItem(index - 1);
       break;
     case CONTROL_LISTBOX:
-      ((IGUIListBox *)control)->removeItem(index);
+      ((IGUIListBox *)control)->removeItem(index - 1);
       break;
     case CONTROL_TABBAR:
-      ((IGUITabControl *)control)->removeTab(index);
+      ((IGUITabControl *)control)->removeTab(index - 1);
       break;
     }
   }

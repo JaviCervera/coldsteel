@@ -34,9 +34,9 @@ local helpMenu = CreateMenu("Help", mainMenu)
 
 -- Create toolbar
 local toolbar = CreateToolbar(nil)
-for i = 0, #icons - 1 do
-	AddControlItem(toolbar, "   ", 101 + i)
-	SetControlTexture(ControlChild(toolbar, i), icons[i+1], true)
+for i = 1, #icons do
+	AddControlItem(toolbar, "   ", 100 + i)
+	SetControlTexture(ControlChild(toolbar, i), icons[i], true)
 end
 
 local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
@@ -44,12 +44,12 @@ local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
 -- Create tabbar
 local tabbar = CreateTabbar(0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20, nil)
 AddControlItem(tabbar, "<untitled>", 0)
-SetControlFont(CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 0)), fixedsys)
+SetControlFont(CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1)), fixedsys)
 
 function Loop()
 	SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
-	for i = 0, ControlNumChildren(tabbar) -1 do
-		SetControlShape(ControlChild(ControlChild(tabbar, i), 0), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+	for i = 1, ControlNumChildren(tabbar) do
+		SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
 	end
 	BeginDrawing(true, true, RGB(210, 210, 210))
 	DrawGUI()

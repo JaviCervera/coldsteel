@@ -10,18 +10,18 @@ extern "C"
 
   EXPORT void CALL SetMaterialTexture(SMaterial *material, int index, ITexture *texture)
   {
-    material->setTexture(index, texture);
+    material->setTexture(index - 1, texture);
   }
 
   EXPORT ITexture *CALL MaterialTexture(SMaterial *material, int index)
   {
-    return material->getTexture(index);
+    return material->getTexture(index - 1);
   }
 
   EXPORT void CALL SetMaterialTextureTransform(SMaterial *material, int index, float xoffset, float yoffset, float angle, float xscale, float yscale)
   {
     matrix4 mat = matrix4().buildTextureTransform(Rad(angle), vector2df(0, 0), vector2df(xoffset, yoffset), vector2df(xscale, yscale));
-    material->setTextureMatrix(index, mat);
+    material->setTextureMatrix(index - 1, mat);
   }
 
   EXPORT void CALL SetMaterialType(SMaterial *material, int type)

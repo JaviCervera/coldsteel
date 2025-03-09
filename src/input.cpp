@@ -56,27 +56,27 @@ extern "C"
 
   EXPORT const char *CALL JoystickName(int index)
   {
-    return _joysticks[index].info.Name.c_str();
+    return _joysticks[index - 1].info.Name.c_str();
   }
 
   EXPORT int CALL NumJoystickAxes(int index)
   {
-    return _joysticks[index].info.Axes;
+    return _joysticks[index - 1].info.Axes;
   }
 
   EXPORT int CALL NumJoystickButtons(int index)
   {
-    return _joysticks[index].info.Buttons;
+    return _joysticks[index - 1].info.Buttons;
   }
 
   EXPORT bool_t CALL JoystickButtonDown(int index, int button)
   {
-    return _joysticks[index].event.IsButtonPressed(button);
+    return _joysticks[index - 1].event.IsButtonPressed(button);
   }
 
   EXPORT float CALL JoystickAxis(int index, int axis)
   {
-    const float value = _joysticks[index].event.Axis[axis] * 1.0f / 32768;
+    const float value = _joysticks[index - 1].event.Axis[axis] * 1.0f / 32768;
     const float fixedValue =
         (Abs(value) <= 0.1f) ? 0.0f : (value >= 0.995f) ? 1.0f
                                                         : value;

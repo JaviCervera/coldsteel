@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Consider 1-based indices as in Lua?
 * Add tinyfontdialogs.
 * Add more samples and demos.
 * Add SciTE based Lua editor.

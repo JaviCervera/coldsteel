@@ -106,14 +106,14 @@ static CompilerConfig ParseConfig(int argc, char *argv[])
   XMLNode *xml = ParseXML((config.path + "config.xml").c_str());
   if (xml)
   {
-    XMLNode *screenWidth = XMLChildNamed(xml, "screen_width", 0);
-    XMLNode *screenHeight = XMLChildNamed(xml, "screen_height", 0);
-    XMLNode *screenDepth = XMLChildNamed(xml, "screen_depth", 0);
-    XMLNode *screenFps = XMLChildNamed(xml, "screen_fps", 0);
-    XMLNode *screenSamples = XMLChildNamed(xml, "screen_samples", 0);
-    XMLNode *screenFullscreen = XMLChildNamed(xml, "screen_fullscreen", 0);
-    XMLNode *screenResizable = XMLChildNamed(xml, "screen_resizable", 0);
-    XMLNode *screenVsync = XMLChildNamed(xml, "screen_vsync", 0);
+    XMLNode *screenWidth = XMLChildNamed(xml, "screen_width", 1);
+    XMLNode *screenHeight = XMLChildNamed(xml, "screen_height", 1);
+    XMLNode *screenDepth = XMLChildNamed(xml, "screen_depth", 1);
+    XMLNode *screenFps = XMLChildNamed(xml, "screen_fps", 1);
+    XMLNode *screenSamples = XMLChildNamed(xml, "screen_samples", 1);
+    XMLNode *screenFullscreen = XMLChildNamed(xml, "screen_fullscreen", 1);
+    XMLNode *screenResizable = XMLChildNamed(xml, "screen_resizable", 1);
+    XMLNode *screenVsync = XMLChildNamed(xml, "screen_vsync", 1);
     if (screenWidth)
       config.screenWidth = Val(XMLText(screenWidth));
     if (screenHeight)
