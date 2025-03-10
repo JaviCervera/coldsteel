@@ -204,11 +204,12 @@ extern "C"
     params.Bits = depth;
 #ifdef EMSCRIPTEN
     params.DriverType = EDT_WEBGL1;
+    params.LoggingLevel = ELL_DEBUG;
 #else
     params.DriverType = EDT_OPENGL; // EDT_OGLES2
+    params.LoggingLevel = ELL_ERROR;
 #endif
     params.EventReceiver = new EventReceiver;
-    params.LoggingLevel = ELL_ERROR;
     params.Fullscreen = (flags & SCREEN_FULLSCREEN) == SCREEN_FULLSCREEN;
     params.Stencilbuffer = true;
     params.Vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;

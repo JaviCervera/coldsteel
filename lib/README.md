@@ -3,14 +3,11 @@
 ## Irrlicht
 
 Win32 version uses Irrlicht 1.8.5.
-Desktop versions use Irrlicht 1.9.0 commit **r6688**.
-Emscripten version uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6687**.
+Other versions uses the ogles branch of [Irrlicht SVN](https://sourceforge.net/p/irrlicht/code/HEAD/tree/branches/ogl-es/), commit **r6687**.
 
 The modifications made to the engine are described here:
 
-### Common
-
-Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
+### IrrCompileConfig.h
 
 ```c++
 #define NO_IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
@@ -71,7 +68,9 @@ Preprocessor definitions (put them in `include/IrrCompileConfig.h`):
 #define NO__IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_
 ```
 
-Also, a couple of changes have been made in `include/SMaterial.h` to change the default use of vertex colors in lighting.
+### SMaterial.h
+
+Also, a couple of changes have been made to change the default use of vertex colors in lighting.
 
 Search for `ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE),` and replace with:
 
@@ -85,9 +84,9 @@ Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with
 ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
 ```
 
-### macOS (irrlicht190 only)
+### CIrrDeviceOSX.mm
 
-On file `CIrrDeviceOSX.mm`, search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:
+Search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:
 
 ```c++
 if (bundleName) {
@@ -101,12 +100,9 @@ Also, search for the line `Window = [[NSWindow alloc] initWithContentRect:NSMake
 Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask backing:type defer:FALSE];
 ```
 
-On `CIrrDeviceWin32.cpp`, search for `case EDT_WEBGL1:` and replace with `case video::EDT_WEBGL1:`.
+### CIrrDeviceSDL.cpp
 
-### Emscripten (irrlicht190_ogles only)
-
-To have a compressed data package added by default to the filesystem, add the following as line 11
-of file `source/Irrlicht/CIrrDeviceSDL.cpp`:
+To have a compressed data package added by default to the filesystem, add the following as line 11:
 
 ```c++
 #include "IFileSystem.h"
@@ -119,3 +115,7 @@ And the following right before line 278 (before the call to `createDriver()`):
 FileSystem->addFileArchive("data.bin", true, false, io::EFAT_ZIP);
 #endif
 ```
+
+### CIrrDeviceWin32.cpp
+
+Search for `case EDT_WEBGL1:` and replace with `case video::EDT_WEBGL1:`.
