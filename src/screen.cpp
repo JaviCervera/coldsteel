@@ -110,39 +110,9 @@ extern "C"
 
   EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win)
   {
-    SIrrlichtCreationParameters params;
-    params.AntiAlias = samples;
-    params.Bits = depth;
-#ifdef EMSCRIPTEN
-    params.DriverType = EDT_WEBGL1;
-#else
-    params.DriverType = EDT_OPENGL; // EDT_OGLES2
-#endif
-    params.EventReceiver = new EventReceiver;
-    params.LoggingLevel = ELL_ERROR;
-    params.Fullscreen = (flags & SCREEN_FULLSCREEN) == SCREEN_FULLSCREEN;
-    params.Stencilbuffer = true;
-    params.Vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
-    params.WindowId = win;
-    params.WindowSize.Width = width;
-    params.WindowSize.Height = height;
-
-    // Init device
-    _SetDevice(createDeviceEx(params));
-    _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
-    _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
-    _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
-
-    // Init gui skin
-    IGUISkin *skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
-    for (int i = 0; i < EGDC_COUNT; ++i)
-    {
-      SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
-      col.setAlpha(255);
-      skin->setColor((EGUI_DEFAULT_COLOR)i, col);
-    }
-    _Device()->getGUIEnvironment()->setSkin(skin);
-    skin->drop();
+  #ifndef EMSCRIPTEN
+    _OpenScreenEx(width, height, depth, flags, samples, win);
+  #endif
   }
 
   EXPORT void CALL CloseScreen()
@@ -225,6 +195,43 @@ extern "C"
   EXPORT bool_t CALL FeatureSupported(int feature)
   {
     return _Device()->getVideoDriver()->queryFeature((E_VIDEO_DRIVER_FEATURE)feature);
+  }
+
+  void _OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win)
+  {
+    SIrrlichtCreationParameters params;
+    params.AntiAlias = samples;
+    params.Bits = depth;
+#ifdef EMSCRIPTEN
+    params.DriverType = EDT_WEBGL1;
+#else
+    params.DriverType = EDT_OPENGL; // EDT_OGLES2
+#endif
+    params.EventReceiver = new EventReceiver;
+    params.LoggingLevel = ELL_ERROR;
+    params.Fullscreen = (flags & SCREEN_FULLSCREEN) == SCREEN_FULLSCREEN;
+    params.Stencilbuffer = true;
+    params.Vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
+    params.WindowId = win;
+    params.WindowSize.Width = width;
+    params.WindowSize.Height = height;
+
+    // Init device
+    _SetDevice(createDeviceEx(params));
+    _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
+    _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+    _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
+
+    // Init gui skin
+    IGUISkin *skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
+    for (int i = 0; i < EGDC_COUNT; ++i)
+    {
+      SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
+      col.setAlpha(255);
+      skin->setColor((EGUI_DEFAULT_COLOR)i, col);
+    }
+    _Device()->getGUIEnvironment()->setSkin(skin);
+    skin->drop();
   }
 
   int _ScreenFrameMsecs()

@@ -27,6 +27,7 @@ extern "C"
   EXPORT bool_t CALL FeatureSupported(int feature);
 
 #ifndef SWIG
+  void _OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win);
   int _ScreenFrameMsecs();
 #endif
 

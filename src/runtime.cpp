@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
   if (config.screenWidth != 0 && config.screenHeight != 0)
   {
     int screenDepth = (config.screenDepth != 0) ? config.screenDepth : DesktopDepth();
-    OpenScreenEx(config.screenWidth, config.screenHeight, screenDepth, config.screenFlags, config.screenSamples, NULL);
+    _OpenScreenEx(config.screenWidth, config.screenHeight, screenDepth, config.screenFlags, config.screenSamples, NULL);
   }
   if (!Script::Get().Load(config.sourceFilename))
   {
@@ -126,19 +126,19 @@ static CompilerConfig ParseConfig(int argc, char *argv[])
     if (screenSamples)
       config.screenSamples = Val(XMLText(screenSamples));
     if (stringc(XMLText(screenFullscreen)) == "true")
-        config.screenFlags |= SCREEN_FULLSCREEN;
+      config.screenFlags |= SCREEN_FULLSCREEN;
     if (stringc(XMLText(screenResizable)) == "true")
       config.screenFlags |= SCREEN_RESIZABLE;
     if (stringc(XMLText(screenVsync)) == "true")
       config.screenFlags |= SCREEN_VSYNC;
     FreeXML(xml);
-#ifdef EMSCRIPTEN
-    if (config.screenWidth == 0)
-      config.screenWidth = 640;
-    if (config.screenHeight == 0)
-      config.screenHeight = 480;
-#endif
   }
+#ifdef EMSCRIPTEN
+  if (config.screenWidth == 0)
+    config.screenWidth = 640;
+  if (config.screenHeight == 0)
+    config.screenHeight = 480;
+#endif
   return config;
 }
 
