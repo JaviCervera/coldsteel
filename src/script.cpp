@@ -48,7 +48,7 @@ bool Script::Load(const stringc &filename)
   }
   if (luaL_loadbuffer(mState, (const char *)memblock, MemblockSize(memblock), filename.c_str()) || lua_pcall(mState, 0, LUA_MULTRET, 0))
   {
-    mError = lua_tostring(mState, -1);
+    mError = Replace(Replace(lua_tostring(mState, -1), "\"", "`"), "'", "`");
     FreeMemblock(memblock);
     return false;
   }
@@ -76,13 +76,13 @@ bool Script::CallVoidFunction(const stringc &name)
   if (lua_isfunction(mState, -1))
   {
     if (lua_pcall(mState, 0, 1, 0))
-      mError = lua_tostring(mState, -1);
+      mError = Replace(Replace(lua_tostring(mState, -1), "\"", "`"), "'", "`");
     else if (!lua_isnil(mState, -1))
-      mError = stringc("'") + name + "' function cannot return a value";
+      mError = name + " function cannot return a value";
   }
   else
   {
-    mError = stringc("'") + name + "' function does not exist";
+    mError = name + " function does not exist";
   }
   lua_pop(mState, 1);
   return mError == "";

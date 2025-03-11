@@ -8,12 +8,14 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
+* DrawWorld should render all cameras, and these should have clear mode etc.
+* Make tinyfiledialogs optional and use native GUI widgets when disabled.
+* Add particles support & editor.
 * Embed Lua into the CLI tool, so scripts are compiled when packaged.
 * Fix audio positioning.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
 * Add font editor.
-* Add particles support & editor.
 * Add mesh viewer.
 * GUI styles.
 * Add shader support.
