@@ -23,6 +23,7 @@
 #include "string.h"
 #include "xml.h"
 
+static stringc ParseWorkingDir(int argc, char *argv[]);
 static stringc RealDir(const stringc &dir);
 static stringc BinDir();
 static void PrintError();
@@ -31,8 +32,6 @@ static void EmscriptenMainLoop();
 
 struct CompilerConfig
 {
-  stringc sourceFilename;
-  stringc path;
   int screenWidth;
   int screenHeight;
   int screenDepth;
@@ -40,20 +39,10 @@ struct CompilerConfig
   int screenSamples;
   int screenFlags;
 
-  CompilerConfig(const stringc &path)
-      : sourceFilename("main.lua"),
-        path(RealDir(path)),
-        screenWidth(0),
-        screenHeight(0),
-        screenDepth(0),
-        screenFps(0),
-        screenSamples(0),
-        screenFlags(0) {}
-
-  static CompilerConfig Parse(int argc, char *argv[])
+  static CompilerConfig Parse(const stringc &filename)
   {
-    CompilerConfig config((argc > 1) ? (stringc(argv[1]) + "/") : "");
-    XMLNode *xml = ParseXML((config.path + "config.xml").c_str());
+    CompilerConfig config = CompilerConfig();
+    XMLNode *xml = ParseXML(filename.c_str());
     if (xml)
     {
       XMLNode *screenWidth = XMLChildNamed(xml, "screen_width", 1);
@@ -94,19 +83,19 @@ struct CompilerConfig
 
 int main(int argc, char *argv[])
 {
-  _Init();
-  const CompilerConfig config = CompilerConfig::Parse(argc, argv);
+  stringc path = ParseWorkingDir(argc, argv);
 #ifdef __APPLE__
-  ChangeDir(BinDir().c_str());
+  if (path == "")
+    path = BinDir();
 #endif
-  if (config.path != "")
-    ChangeDir(config.path.c_str());
+  _Init(path.c_str());
+  const CompilerConfig config = CompilerConfig::Parse("config.xml");
   if (config.screenWidth != 0 && config.screenHeight != 0)
   {
     int screenDepth = (config.screenDepth != 0) ? config.screenDepth : DesktopDepth();
     _OpenScreenEx(config.screenWidth, config.screenHeight, screenDepth, config.screenFlags, config.screenSamples, NULL);
   }
-  if (!Script::Get().Load(config.sourceFilename))
+  if (!Script::Get().Load("main.lua"))
   {
     PrintError();
     return -1;
@@ -127,6 +116,11 @@ int main(int argc, char *argv[])
   CloseScreen();
   _Finish();
   return 0;
+}
+
+static stringc ParseWorkingDir(int argc, char *argv[])
+{
+  return (argc > 1) ? RealDir(stringc(argv[1]) + "/") : "";
 }
 
 static stringc RealDir(const stringc &dir)
