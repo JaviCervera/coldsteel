@@ -22,3 +22,4 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
 * Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.
+* ODE physics?
