@@ -1,20 +1,22 @@
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
+#include <stdarg.h>
+#include <stdio.h>
+#undef __STRICT_ANSI__
+#include <stdlib.h>
+#include <string.h>
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#define realpath(N, R) _fullpath((R), (N), _MAX_PATH)
+#define realpath(N, R) _fullpath((R), (N), MAX_PATH)
 #undef LoadString
 #elif defined(__APPLE__)
 #include <mach-o/dyld.h>
 #else
 #include <unistd.h>
 #endif
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include "core.h"
 #include "dialogs.h"
 #include "dir.h"
