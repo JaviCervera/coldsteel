@@ -9,6 +9,7 @@ extern "C"
 
   EXPORT IImage *CALL CreatePixmap(int width, int height);
   EXPORT IImage *CALL CreatePixmapFromTexture(ITexture *texture);
+  EXPORT IImage *CALL CreatePixmapFromScreen();
   EXPORT IImage *CALL LoadPixmap(const char *filename);
   EXPORT void CALL FreePixmap(IImage *pixmap);
   EXPORT void CALL SavePixmap(IImage *pixmap, const char *filename);

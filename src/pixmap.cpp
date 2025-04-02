@@ -15,6 +15,11 @@ extern "C"
     return _Device()->getVideoDriver()->createImage(texture, vector2di(0, 0), texture->getSize());
   }
 
+  EXPORT IImage *CALL CreatePixmapFromScreen()
+  {
+    return _Device()->getVideoDriver()->createScreenShot(ECF_A8R8G8B8);
+  }
+
   EXPORT IImage *CALL LoadPixmap(const char *filename)
   {
     return _Device()->getVideoDriver()->createImageFromFile(filename);
