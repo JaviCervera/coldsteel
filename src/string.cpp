@@ -169,7 +169,7 @@ extern "C"
     }
     else
     {
-      retstr = Mid(filename, 0, endp - filename);
+      retstr = Mid(filename, 1, endp - filename);
     }
     return retstr.c_str();
   }
@@ -187,7 +187,7 @@ extern "C"
     else
     {
       const size_t offset = endp - filename + 1;
-      retstr = Mid(filename, offset, strlen(filename) - offset);
+      retstr = Mid(filename, offset + 1, strlen(filename) - offset);
     }
     return retstr.c_str();
   }
@@ -203,7 +203,7 @@ extern "C"
     else
     {
       const size_t offset = endp - filename + 1;
-      retstr = Mid(filename, offset, strlen(filename) - offset);
+      retstr = Mid(filename, offset + 1, strlen(filename) - offset);
     }
     return retstr.c_str();
   }
@@ -221,7 +221,7 @@ extern "C"
     else
     {
       const size_t size = endp - filename;
-      retstr = Mid(filename, 0, size);
+      retstr = Mid(filename, 1, size);
     }
     return retstr.c_str();
   }
