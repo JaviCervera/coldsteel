@@ -34,9 +34,9 @@ extern "C"
     return system(command);
   }
 
-  void _Init()
+  void _Init(const char *workingDir)
   {
-    _SetDevice(NULL);
+    _SetDevice(NULL, workingDir);
     AudioDriver::Get().Init();
   }
 
@@ -65,7 +65,7 @@ extern "C"
     return result;
   }
 
-  void _SetDevice(IrrlichtDevice *device)
+  void _SetDevice(IrrlichtDevice *device, const char *workingDir)
   {
     if (_device)
       _device->drop();
@@ -83,6 +83,10 @@ extern "C"
     _initMillisecs = _device->getTimer()->getRealTime();
     _lastMillisecs = 0;
     _delta = 0.0f;
+    if (workingDir && strcmp(workingDir, ""))
+    {
+      ChangeDir(workingDir);
+    }
 #ifndef EMSCRIPTEN
     AddZip("data.bin");
 #endif

@@ -29,6 +29,8 @@ end
 local primitives = {}
 
 function Loop()
+	if KeyDown(KEY_ESC) then Exit(0) end
+
     -- If we are below the limit, add a new primitive with random values
     if #primitives < MAX_PRIMITIVES then
         primitives[#primitives+1] = CreatePrimitive(

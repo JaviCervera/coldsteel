@@ -707,7 +707,7 @@ bool CIrrDeviceMacOSX::createWindow()
             }
 
             Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height)
-			styleMask:NSTitledWindowMask+NSClosableWindowMask+NSResizableWindowMask
+			styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask
 			backing:backing_type
 			defer:NO];
 

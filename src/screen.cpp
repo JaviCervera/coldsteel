@@ -117,7 +117,7 @@ extern "C"
 
   EXPORT void CALL CloseScreen()
   {
-    _SetDevice(NULL);
+    _SetDevice(NULL, NULL);
   }
 
   EXPORT void CALL SetScreenTitle(const char *caption)
@@ -218,7 +218,7 @@ extern "C"
     params.WindowSize.Height = height;
 
     // Init device
-    _SetDevice(createDeviceEx(params));
+    _SetDevice(createDeviceEx(params), NULL);
     _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
     _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
     _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));

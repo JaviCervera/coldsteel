@@ -94,10 +94,10 @@ if (bundleName) {
 
 Below that, after the line that contains `[NSApp setMainMenu:mainMenu];`, close the block with a new line containing `}`.
 
-Also, search for the line `Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSResizableWindowMask backing:type defer:FALSE];` and replace with:
+Also, search for `styleMask:NSTitledWindowMask+NSClosableWindowMask+NSResizableWindowMask` and replace with:
 
 ```c++
-Window = [[NSWindow alloc] initWithContentRect:NSMakeRect(x, y, CreationParams.WindowSize.Width,CreationParams.WindowSize.Height) styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask backing:type defer:FALSE];
+styleMask:NSTitledWindowMask+NSClosableWindowMask+NSMiniaturizableWindowMask
 ```
 
 ### CIrrDeviceSDL.cpp

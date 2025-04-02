@@ -4,6 +4,7 @@
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#define realpath(N, R) _fullpath((R), (N), _MAX_PATH)
 #undef LoadString
 #elif defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -22,10 +23,15 @@
 #include "string.h"
 #include "xml.h"
 
+static stringc ParseWorkingDir(int argc, char *argv[]);
+static stringc RealDir(const stringc &dir);
+static stringc BinDir();
+static void PrintError();
+static void MainLoop();
+static void EmscriptenMainLoop();
+
 struct CompilerConfig
 {
-  stringc sourceFilename;
-  stringc path;
   int screenWidth;
   int screenHeight;
   int screenDepth;
@@ -33,38 +39,63 @@ struct CompilerConfig
   int screenSamples;
   int screenFlags;
 
-  CompilerConfig(const stringc &path)
-      : sourceFilename("main.lua"),
-        path(path),
-        screenWidth(0),
-        screenHeight(0),
-        screenDepth(0),
-        screenFps(0),
-        screenSamples(0),
-        screenFlags(0) {}
+  static CompilerConfig Parse(const stringc &filename)
+  {
+    CompilerConfig config = CompilerConfig();
+    XMLNode *xml = ParseXML(filename.c_str());
+    if (xml)
+    {
+      XMLNode *screenWidth = XMLChildNamed(xml, "screen_width", 1);
+      XMLNode *screenHeight = XMLChildNamed(xml, "screen_height", 1);
+      XMLNode *screenDepth = XMLChildNamed(xml, "screen_depth", 1);
+      XMLNode *screenFps = XMLChildNamed(xml, "screen_fps", 1);
+      XMLNode *screenSamples = XMLChildNamed(xml, "screen_samples", 1);
+      XMLNode *screenFullscreen = XMLChildNamed(xml, "screen_fullscreen", 1);
+      XMLNode *screenResizable = XMLChildNamed(xml, "screen_resizable", 1);
+      XMLNode *screenVsync = XMLChildNamed(xml, "screen_vsync", 1);
+      if (screenWidth)
+        config.screenWidth = Val(XMLText(screenWidth));
+      if (screenHeight)
+        config.screenHeight = Val(XMLText(screenHeight));
+      if (screenDepth)
+        config.screenDepth = Val(XMLText(screenDepth));
+      if (screenFps)
+        config.screenFps = Val(XMLText(screenFps));
+      if (screenSamples)
+        config.screenSamples = Val(XMLText(screenSamples));
+      if (stringc(XMLText(screenFullscreen)) == "true")
+        config.screenFlags |= SCREEN_FULLSCREEN;
+      if (stringc(XMLText(screenResizable)) == "true")
+        config.screenFlags |= SCREEN_RESIZABLE;
+      if (stringc(XMLText(screenVsync)) == "true")
+        config.screenFlags |= SCREEN_VSYNC;
+      FreeXML(xml);
+    }
+#ifdef EMSCRIPTEN
+    if (config.screenWidth == 0)
+      config.screenWidth = 640;
+    if (config.screenHeight == 0)
+      config.screenHeight = 480;
+#endif
+    return config;
+  }
 };
-
-static stringc GetBinDir();
-static CompilerConfig ParseConfig(int argc, char *argv[]);
-static void PrintError();
-static void MainLoop();
-static void EmscriptenMainLoop();
 
 int main(int argc, char *argv[])
 {
-  _Init();
-  const CompilerConfig config = ParseConfig(argc, argv);
+  stringc path = ParseWorkingDir(argc, argv);
 #ifdef __APPLE__
-  ChangeDir(GetBinDir().c_str());
+  if (path == "")
+    path = BinDir();
 #endif
-  if (config.path != "")
-    ChangeDir(config.path.c_str());
+  _Init(path.c_str());
+  const CompilerConfig config = CompilerConfig::Parse("config.xml");
   if (config.screenWidth != 0 && config.screenHeight != 0)
   {
     int screenDepth = (config.screenDepth != 0) ? config.screenDepth : DesktopDepth();
     _OpenScreenEx(config.screenWidth, config.screenHeight, screenDepth, config.screenFlags, config.screenSamples, NULL);
   }
-  if (!Script::Get().Load(config.sourceFilename))
+  if (!Script::Get().Load("main.lua"))
   {
     PrintError();
     return -1;
@@ -87,7 +118,19 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-static stringc GetBinDir()
+static stringc ParseWorkingDir(int argc, char *argv[])
+{
+  return (argc > 1) ? RealDir(stringc(argv[1]) + "/") : "";
+}
+
+static stringc RealDir(const stringc &dir)
+{
+  char out_dir[FILENAME_MAX];
+  realpath(dir.c_str(), out_dir);
+  return out_dir;
+}
+
+static stringc BinDir()
 {
   char path[FILENAME_MAX];
 #if defined(_WIN32)
@@ -99,47 +142,6 @@ static stringc GetBinDir()
   path[readlink("/proc/self/exe", path, FILENAME_MAX)] = 0;
 #endif
   return ExtractDir(path);
-}
-
-static CompilerConfig ParseConfig(int argc, char *argv[])
-{
-  CompilerConfig config((argc > 1) ? (stringc(argv[1]) + "/") : "");
-  XMLNode *xml = ParseXML((config.path + "config.xml").c_str());
-  if (xml)
-  {
-    XMLNode *screenWidth = XMLChildNamed(xml, "screen_width", 1);
-    XMLNode *screenHeight = XMLChildNamed(xml, "screen_height", 1);
-    XMLNode *screenDepth = XMLChildNamed(xml, "screen_depth", 1);
-    XMLNode *screenFps = XMLChildNamed(xml, "screen_fps", 1);
-    XMLNode *screenSamples = XMLChildNamed(xml, "screen_samples", 1);
-    XMLNode *screenFullscreen = XMLChildNamed(xml, "screen_fullscreen", 1);
-    XMLNode *screenResizable = XMLChildNamed(xml, "screen_resizable", 1);
-    XMLNode *screenVsync = XMLChildNamed(xml, "screen_vsync", 1);
-    if (screenWidth)
-      config.screenWidth = Val(XMLText(screenWidth));
-    if (screenHeight)
-      config.screenHeight = Val(XMLText(screenHeight));
-    if (screenDepth)
-      config.screenDepth = Val(XMLText(screenDepth));
-    if (screenFps)
-      config.screenFps = Val(XMLText(screenFps));
-    if (screenSamples)
-      config.screenSamples = Val(XMLText(screenSamples));
-    if (stringc(XMLText(screenFullscreen)) == "true")
-      config.screenFlags |= SCREEN_FULLSCREEN;
-    if (stringc(XMLText(screenResizable)) == "true")
-      config.screenFlags |= SCREEN_RESIZABLE;
-    if (stringc(XMLText(screenVsync)) == "true")
-      config.screenFlags |= SCREEN_VSYNC;
-    FreeXML(xml);
-  }
-#ifdef EMSCRIPTEN
-  if (config.screenWidth == 0)
-    config.screenWidth = 640;
-  if (config.screenHeight == 0)
-    config.screenHeight = 480;
-#endif
-  return config;
 }
 
 static void PrintError()
