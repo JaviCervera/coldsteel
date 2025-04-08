@@ -11,6 +11,8 @@ extern "C"
   EXPORT void CALL SetCameraRange(ICameraSceneNode *cam, float near_, float far_);
   EXPORT float CALL CameraNearRange(ICameraSceneNode *cam);
   EXPORT float CALL CameraFarRange(ICameraSceneNode *cam);
+  EXPORT void CALL SetCameraAspectRatio(ICameraSceneNode *cam, float ratio);
+  EXPORT float CALL CameraAspectRatio(ICameraSceneNode *cam);
   EXPORT void CALL SetCameraFOV(ICameraSceneNode *cam, float fov);
   EXPORT float CALL CameraFOV(ICameraSceneNode *cam);
   EXPORT void CALL SetCameraOrtho(ICameraSceneNode *cam, float width, float height, float near_, float far_);

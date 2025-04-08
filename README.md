@@ -8,7 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* DrawWorld should render all cameras, and these should have clear mode etc.
+* DrawWorld should render all cameras, and these should have clear mode, render target etc.
 * Add ButtonHit, KeyHit, JoystickButtonHit.
 * Make tinyfiledialogs optional and use native GUI widgets when disabled.
 * Add particles support & editor.

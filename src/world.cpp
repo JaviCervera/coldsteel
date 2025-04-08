@@ -72,7 +72,7 @@ extern "C"
     matrix4 matrix = camera->getAbsoluteTransformation();
     matrix.transformVect(dest);
     camera->setTarget(dest);
-    if (!camera->isOrthogonal())
+    if (!camera->isOrthogonal() && camera->getAspectRatio() <= 0)
       camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
     _Device()->getSceneManager()->setActiveCamera(camera);
     _Device()->getSceneManager()->drawAll();

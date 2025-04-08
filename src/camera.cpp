@@ -7,7 +7,9 @@ extern "C"
 
   EXPORT ICameraSceneNode *CALL CreateCamera()
   {
-    return _Device()->getSceneManager()->addCameraSceneNode();
+    ICameraSceneNode *cam = _Device()->getSceneManager()->addCameraSceneNode();
+    cam->setAspectRatio(0);
+    return cam;
   }
 
   EXPORT void CALL SetCameraRange(ICameraSceneNode *cam, float near_, float far_)
@@ -24,6 +26,16 @@ extern "C"
   EXPORT float CALL CameraFarRange(ICameraSceneNode *cam)
   {
     return cam->getFarValue();
+  }
+  
+  EXPORT void CALL SetCameraAspectRatio(ICameraSceneNode *cam, float ratio)
+  {
+    cam->setAspectRatio(ratio);
+  }
+  
+  EXPORT float CALL CameraAspectRatio(ICameraSceneNode *cam)
+  {
+    return cam->getAspectRatio();
   }
 
   EXPORT void CALL SetCameraFOV(ICameraSceneNode *cam, float fov)
