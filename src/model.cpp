@@ -1,12 +1,12 @@
 #include "core.h"
 #include "entity.h"
 #include "mesh.h"
-#include "mesh_entity.h"
+#include "model.h"
 
 extern "C"
 {
 
-  EXPORT IMeshSceneNode *CALL CreateMeshEntity(IMesh *mesh)
+  EXPORT IMeshSceneNode *CALL CreateModel(IMesh *mesh)
   {
     if (_MeshAnimated(mesh))
     {
@@ -18,12 +18,32 @@ extern "C"
     }
   }
 
-  EXPORT IMeshSceneNode *CALL CreateOctreeMeshEntity(IMesh *mesh)
+  EXPORT IMeshSceneNode *CALL CreateOctreeModel(IMesh *mesh)
   {
     return _Device()->getSceneManager()->addOctreeSceneNode(mesh);
   }
 
-  EXPORT IMesh *CALL MeshEntityMesh(IMeshSceneNode *entity)
+  EXPORT IMeshSceneNode *CALL LoadModel(const char *filename)
+  {
+    IMesh *mesh = LoadMesh(filename);
+    if (!mesh)
+      return NULL;
+    IMeshSceneNode *model = CreateModel(mesh);
+    FreeMesh(mesh);
+    return model;
+  }
+
+  EXPORT IMeshSceneNode *CALL LoadOctreeModel(const char *filename)
+  {
+    IMesh *mesh = LoadMesh(filename);
+    if (!mesh)
+      return NULL;
+    IMeshSceneNode *model = CreateOctreeModel(mesh);
+    FreeMesh(mesh);
+    return model;
+  }
+
+  EXPORT IMesh *CALL ModelMesh(IMeshSceneNode *entity)
   {
     if (entity->getType() == ESNT_ANIMATED_MESH)
     {
@@ -35,7 +55,7 @@ extern "C"
     }
   }
 
-  EXPORT void CALL SetMeshEntityCastShadows(IMeshSceneNode *entity, bool_t enable)
+  EXPORT void CALL SetModelCastShadows(IMeshSceneNode *entity, bool_t enable)
   {
     int num = EntityNumChildren(entity);
     ISceneNode *shadowNode = NULL;
@@ -63,7 +83,7 @@ extern "C"
     }
   }
 
-  EXPORT bool_t CALL MeshEntityCastShadows(IMeshSceneNode *entity)
+  EXPORT bool_t CALL ModelCastShadows(IMeshSceneNode *entity)
   {
     int num = EntityNumChildren(entity);
     for (int i = 0; i < num; ++i)
@@ -76,59 +96,59 @@ extern "C"
     return false;
   }
 
-  EXPORT void CALL SetMeshEntityLoop(IMeshSceneNode *entity, bool_t loop)
+  EXPORT void CALL SetModelLoop(IMeshSceneNode *entity, bool_t loop)
   {
     if (entity->getType() == ESNT_ANIMATED_MESH)
       ((IAnimatedMeshSceneNode *)entity)->setLoopMode(loop);
   }
 
-  EXPORT bool_t CALL MeshEntityLoop(IMeshSceneNode *entity)
+  EXPORT bool_t CALL ModelLoop(IMeshSceneNode *entity)
   {
     return (entity->getType() == ESNT_ANIMATED_MESH)
                ? ((IAnimatedMeshSceneNode *)entity)->getLoopMode()
                : false;
   }
 
-  EXPORT void CALL SetMeshEntityFPS(IMeshSceneNode *entity, float fps)
+  EXPORT void CALL SetModelFPS(IMeshSceneNode *entity, float fps)
   {
     if (entity->getType() == ESNT_ANIMATED_MESH)
       ((IAnimatedMeshSceneNode *)entity)->setAnimationSpeed(fps);
   }
 
-  EXPORT float CALL MeshEntityFPS(IMeshSceneNode *entity)
+  EXPORT float CALL ModelFPS(IMeshSceneNode *entity)
   {
     return (entity->getType() == ESNT_ANIMATED_MESH)
                ? ((IAnimatedMeshSceneNode *)entity)->getAnimationSpeed()
                : 0;
   }
 
-  EXPORT void CALL SetMeshEntityFrame(IMeshSceneNode *entity, float frame)
+  EXPORT void CALL SetModelFrame(IMeshSceneNode *entity, float frame)
   {
     if (entity->getType() == ESNT_ANIMATED_MESH)
       ((IAnimatedMeshSceneNode *)entity)->setCurrentFrame(frame);
   }
 
-  EXPORT float CALL MeshEntityFrame(IMeshSceneNode *entity)
+  EXPORT float CALL ModelFrame(IMeshSceneNode *entity)
   {
     return (entity->getType() == ESNT_ANIMATED_MESH)
                ? ((IAnimatedMeshSceneNode *)entity)->getFrameNr()
                : -1;
   }
 
-  EXPORT void CALL SetMeshEntityFrames(IMeshSceneNode *entity, int first, int last)
+  EXPORT void CALL SetModelFrames(IMeshSceneNode *entity, int first, int last)
   {
     if (entity->getType() == ESNT_ANIMATED_MESH)
       ((IAnimatedMeshSceneNode *)entity)->setFrameLoop(first, last);
   }
 
-  EXPORT int CALL MeshEntityFirstFrame(IMeshSceneNode *entity)
+  EXPORT int CALL ModelFirstFrame(IMeshSceneNode *entity)
   {
     return (entity->getType() == ESNT_ANIMATED_MESH)
                ? ((IAnimatedMeshSceneNode *)entity)->getStartFrame()
                : -1;
   }
 
-  EXPORT int CALL MeshEntityLastFrame(IMeshSceneNode *entity)
+  EXPORT int CALL ModelLastFrame(IMeshSceneNode *entity)
   {
     return (entity->getType() == ESNT_ANIMATED_MESH)
                ? ((IAnimatedMeshSceneNode *)entity)->getEndFrame()

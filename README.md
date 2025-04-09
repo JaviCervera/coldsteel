@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Rename `MeshEntity` to `Model`. Add `LoadModel` directly (no need for `LoadMesh` -> `CreateModel` -> `FreeMesh`).
 * DrawWorld should render all cameras, and these should have clear mode, render target etc.
 * Add font editor.
 * Try to use Asyncify on Emscripten, remove Loop entrypoint from Lua, and add RefreshScreen.

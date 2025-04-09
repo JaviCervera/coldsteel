@@ -30,7 +30,7 @@ SetEntityRotation(light, 45, 215, 0)
 -- Create floor
 local mesh = CreateCube()
 ScaleMesh(mesh, 50, 1, 50)
-local floor = CreateMeshEntity(mesh)
+local floor = CreateModel(mesh)
 SetEntityCollision(floor, COLLISION_BOX, WORLD_GROUP)
 SetEntityPosition(floor, 0, -0.5, 0)
 local mat = EntityMaterial(floor, 1)
@@ -45,8 +45,8 @@ ScaleMesh(mesh, 4, 8, 4)
 local xpos = {-10, -10, 10, 10}
 local zpos = {-10, 10, -10, 10}
 for i = 1, #xpos do
-    local pillar = CreateMeshEntity(mesh)
-    SetMeshEntityCastShadows(pillar, true)
+    local pillar = CreateModel(mesh)
+    SetModelCastShadows(pillar, true)
     SetEntityCollision(pillar, COLLISION_BOX, WORLD_GROUP)
     SetEntityPosition(pillar, xpos[i], 4, zpos[i])
     mat = EntityMaterial(pillar, 1)
@@ -58,7 +58,7 @@ FreeMesh(mesh)
 
 -- Create floating sphere
 mesh = CreateSphere(32)
-local sphere = CreateMeshEntity(mesh)
+local sphere = CreateModel(mesh)
 mat = EntityMaterial(sphere, 1)
 SetMaterialDiffuse(mat, RGB(155, 155, 255))
 SetMaterialEmissive(mat, RGB(155, 155, 255))

@@ -10,17 +10,17 @@ SetLightDiffuse(light, RGB(255, 155, 180))
 SetLightRadius(light, 800)
 
 local texture = LoadTexture("wall.jpg")
-local room = CreateMeshEntity(LoadMesh("room.3ds"))
+local room = LoadModel("room.3ds")
 for i = 1, EntityNumMaterials(room) do
 	local mat = EntityMaterial(room, i)
 	SetMaterialSpecular(mat, COLOR_BLACK)
 	SetMaterialTexture(mat, 1, texture)
 end
 
-local dwarf = CreateMeshEntity(LoadMesh("dwarf.x"))
+local dwarf = LoadModel("dwarf.x")
 SetEntityPosition(dwarf, -50, 20, -60)
 SetEntityScale(dwarf, 2, 2, 2)
-SetMeshEntityCastShadows(dwarf, true)
+SetModelCastShadows(dwarf, true)
 
 function Loop()
 	TurnEntity(light, 0, 90 * DeltaTime(), 0)

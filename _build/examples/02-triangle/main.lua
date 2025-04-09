@@ -14,7 +14,8 @@ AddIndex(surf, 2)
 AddIndex(surf, 3)
 UpdateMesh(mesh)
 
-local triangle = CreateMeshEntity(mesh)
+local triangle = CreateModel(mesh)
+FreeMesh(mesh)
 SetMaterialCullingEnabled(EntityMaterial(triangle, 1), false)
 
 function Loop()

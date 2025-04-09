@@ -18,10 +18,10 @@ local cubes = {}
 local x = -7
 local z = NUM_CUBES / 16 * 2 - 2
 for i = 1, NUM_CUBES, 2 do
-    cubes[i] = CreateMeshEntity(mesh)
+    cubes[i] = CreateModel(mesh)
     SetMaterialFogEnabled(EntityMaterial(cubes[i], 1), true)
     SetEntityPosition(cubes[i], x, -1.5, z)
-    cubes[i+1] = CreateMeshEntity(mesh)
+    cubes[i+1] = CreateModel(mesh)
     SetMaterialFogEnabled(EntityMaterial(cubes[i+1], 1), true)
     SetEntityPosition(cubes[i+1], x, 1.5, z)
     x = x + 2

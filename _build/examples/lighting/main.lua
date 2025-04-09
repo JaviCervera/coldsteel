@@ -29,7 +29,7 @@ ScaleMesh(mesh, 5, 5, 5)
 local x = -32
 local z = -32
 for i = 1, 81 do
-    local sphere = CreateMeshEntity(mesh)
+    local sphere = CreateModel(mesh)
     SetEntityPosition(sphere, x, 0, z)
     local mat = EntityMaterial(sphere, 1)
     SetMaterialShininess(mat, 0.15)

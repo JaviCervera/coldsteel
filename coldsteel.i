@@ -31,7 +31,7 @@ class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 %include "src/math.h"
 %include "src/memblock.h"
 %include "src/mesh.h"
-%include "src/mesh_entity.h"
+%include "src/model.h"
 %include "src/music.h"
 %include "src/pixmap.h"
 %include "src/screen.h"

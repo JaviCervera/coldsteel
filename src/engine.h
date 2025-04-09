@@ -19,7 +19,7 @@
 #include "memblock.h"
 #include "math.h"
 #include "mesh.h"
-#include "mesh_entity.h"
+#include "model.h"
 #include "music.h"
 #include "pixmap.h"
 #include "screen.h"

@@ -11,7 +11,7 @@ SetEntityRotation(light, 45, -45, 0)
 
 -- Create cube
 local mesh = CreateCube()
-local cube = CreateMeshEntity(mesh)
+local cube = CreateModel(mesh)
 SetEntityPosition(cube, 0, 0, 2)
 SetEntityCollision(cube, COLLISION_BOX, 1)
 FreeMesh(mesh)
@@ -19,7 +19,7 @@ FreeMesh(mesh)
 -- Create cone
 mesh = CreateCone(8)
 RotateMesh(mesh, 90, 0, 0)
-local cone = CreateMeshEntity(mesh)
+local cone = CreateModel(mesh)
 SetEntityPosition(cone, 0, 0, -1)
 FreeMesh(mesh)
 
