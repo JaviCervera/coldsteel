@@ -8,12 +8,12 @@ extern "C"
 
   IMesh *FixMeshSpecular(IMesh *mesh);
 
-  EXPORT IMesh *CALL CreateCone(int segments)
+  EXPORT IMesh *CALL CreateConeMesh(int segments)
   {
     return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
   }
 
-  EXPORT IMesh *CALL CreateCube()
+  EXPORT IMesh *CALL CreateCubeMesh()
   {
     const int white = RGB(255, 255, 255);
     IMesh *cube = CreateMesh();
@@ -97,7 +97,7 @@ extern "C"
     return FixMeshSpecular(cube);
   }
 
-  EXPORT IMesh *CALL CreateCylinder(int segments)
+  EXPORT IMesh *CALL CreateCylinderMesh(int segments)
   {
     return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments));
   }
@@ -107,14 +107,14 @@ extern "C"
     return new SMesh();
   }
 
-  EXPORT IMesh *CALL CreateQuad()
+  EXPORT IMesh *CALL CreateQuadMesh()
   {
     IMesh *quad = FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1)));
     RotateMesh(quad, -90, 0, 0);
     return quad;
   }
 
-  EXPORT IMesh *CALL CreateSphere(int segments)
+  EXPORT IMesh *CALL CreateSphereMesh(int segments)
   {
     return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments));
   }

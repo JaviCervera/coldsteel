@@ -10,14 +10,14 @@ local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
 -- Create cube
-local mesh = CreateCube()
+local mesh = CreateCubeMesh()
 local cube = CreateModel(mesh)
 SetEntityPosition(cube, 0, 0, 2)
 SetEntityCollision(cube, COLLISION_BOX, 1)
 FreeMesh(mesh)
 
 -- Create cone
-mesh = CreateCone(8)
+mesh = CreateConeMesh(8)
 RotateMesh(mesh, 90, 0, 0)
 local cone = CreateModel(mesh)
 SetEntityPosition(cone, 0, 0, -1)

@@ -28,7 +28,7 @@ local light = CreateLight(LIGHT_POINT)
 SetEntityRotation(light, 45, 215, 0)
 
 -- Create floor
-local mesh = CreateCube()
+local mesh = CreateCubeMesh()
 ScaleMesh(mesh, 50, 1, 50)
 local floor = CreateModel(mesh)
 SetEntityCollision(floor, COLLISION_BOX, WORLD_GROUP)
@@ -40,7 +40,7 @@ SetMaterialVertexColorsEnabled(mat, false)
 FreeMesh(mesh)
 
 -- Create pillars
-mesh = CreateCube()
+mesh = CreateCubeMesh()
 ScaleMesh(mesh, 4, 8, 4)
 local xpos = {-10, -10, 10, 10}
 local zpos = {-10, 10, -10, 10}
@@ -57,7 +57,7 @@ end
 FreeMesh(mesh)
 
 -- Create floating sphere
-mesh = CreateSphere(32)
+mesh = CreateSphereMesh(32)
 local sphere = CreateModel(mesh)
 mat = EntityMaterial(sphere, 1)
 SetMaterialDiffuse(mat, RGB(155, 155, 255))

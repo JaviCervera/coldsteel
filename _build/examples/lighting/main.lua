@@ -24,7 +24,7 @@ SetEntityRotation(lights[3], 0, 240, 0)
 
 -- Create spheres
 local spheres = {}
-local mesh = CreateSphere(32)
+local mesh = CreateSphereMesh(32)
 ScaleMesh(mesh, 5, 5, 5)
 local x = -32
 local z = -32

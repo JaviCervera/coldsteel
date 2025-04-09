@@ -11,7 +11,7 @@ SetCameraRange(cam, 1, 5000)
 local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
-local mesh = CreateCube()
+local mesh = CreateCubeMesh()
 SetMeshColor(mesh, COLOR_BROWN)
 
 local cubes = {}

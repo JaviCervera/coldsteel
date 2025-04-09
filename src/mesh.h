@@ -7,12 +7,12 @@ extern "C"
 {
 #endif
 
-  EXPORT IMesh *CALL CreateCone(int segments);
-  EXPORT IMesh *CALL CreateCube();
-  EXPORT IMesh *CALL CreateCylinder(int segments);
+  EXPORT IMesh *CALL CreateConeMesh(int segments);
+  EXPORT IMesh *CALL CreateCubeMesh();
+  EXPORT IMesh *CALL CreateCylinderMesh(int segments);
   EXPORT IMesh *CALL CreateMesh();
-  EXPORT IMesh *CALL CreateQuad();
-  EXPORT IMesh *CALL CreateSphere(int segments);
+  EXPORT IMesh *CALL CreateQuadMesh();
+  EXPORT IMesh *CALL CreateSphereMesh(int segments);
   EXPORT IMesh *CALL LoadMesh(const char *filename);
   EXPORT IMesh *CALL LoadTerrainMesh(IImage *heightmap, IImage *pixmap, float width, float height, float depth);
   EXPORT void CALL FreeMesh(IMesh *mesh);

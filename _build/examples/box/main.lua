@@ -12,7 +12,7 @@ SetEntityRotation(dirLight, 45, -45, 0)
 
 -- Create cube
 local boxTex = LoadTexture("box.png")
-local mesh = CreateCube()
+local mesh = CreateCubeMesh()
 local cube = CreateModel(mesh)
 local mat = EntityMaterial(cube, 1)
 SetMaterialTexture(mat, 1, boxTex)
