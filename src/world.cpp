@@ -67,6 +67,7 @@ extern "C"
 
   EXPORT void CALL DrawWorld(ICameraSceneNode *camera)
   {
+    const float old_ratio = camera->getAspectRatio();
     const recti &viewport = _Device()->getVideoDriver()->getViewPort();
     vector3df dest(0, 0, 100);
     matrix4 matrix = camera->getAbsoluteTransformation();
@@ -76,6 +77,7 @@ extern "C"
       camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
     _Device()->getSceneManager()->setActiveCamera(camera);
     _Device()->getSceneManager()->drawAll();
+    camera->setAspectRatio(old_ratio);
   }
 
   EXPORT void CALL WorldToScreen(ICameraSceneNode *camera, float x, float y, float z)
