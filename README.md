@@ -8,16 +8,19 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
+* Rename `MeshEntity` to `Model`. Add `LoadModel` directly (no need for `LoadMesh` -> `CreateModel` -> `FreeMesh`).
 * DrawWorld should render all cameras, and these should have clear mode, render target etc.
-* Add ButtonHit, KeyHit, JoystickButtonHit.
-* Make tinyfiledialogs optional and use native GUI widgets when disabled.
-* Add particles support & editor.
+* Add font editor.
+* Try to use Asyncify on Emscripten, remove Loop entrypoint from Lua, and add RefreshScreen.
+* Do not handle screen setup differently on Emscripten.
 * Embed Lua into the CLI tool, so scripts are compiled when packaged.
+* Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
+* Add ButtonHit, KeyHit, JoystickButtonHit.
+* Add particles support & editor.
 * Fix audio positioning.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
-* Add font editor.
-* Add mesh viewer.
+* Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
 * GUI styles.
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
