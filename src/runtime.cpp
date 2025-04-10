@@ -1,6 +1,3 @@
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
-#endif
 #include <stdarg.h>
 #include <stdio.h>
 #undef __STRICT_ANSI__
@@ -16,7 +13,6 @@
 #else
 #include <unistd.h>
 #endif
-
 #include "core.h"
 #include "dialogs.h"
 #include "dir.h"
@@ -29,8 +25,6 @@ static stringc ParseWorkingDir(int argc, char *argv[]);
 static stringc RealDir(const stringc &dir);
 static stringc BinDir();
 static void PrintError();
-static void MainLoop();
-static void EmscriptenMainLoop();
 
 struct CompilerConfig
 {
@@ -102,19 +96,7 @@ int main(int argc, char *argv[])
     PrintError();
     return -1;
   }
-  if (Script::Get().FunctionExists("Loop"))
-  {
-#ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(EmscriptenMainLoop, config.screenFps, true);
-#else
-    SetScreenFPS(config.screenFps);
-    MainLoop();
-#endif
-  }
-  else
-  {
-    _Run();
-  }
+  RefreshScreen();
   CloseScreen();
   _Finish();
   return 0;
@@ -151,29 +133,3 @@ static void PrintError()
   _Device()->getLogger()->log(Script::Get().Error().c_str(), ELL_ERROR);
   Notify("Error", Script::Get().Error().c_str(), true);
 }
-
-static void MainLoop()
-{
-  bool ok = true;
-  while (_Run() && ok)
-  {
-    ok = Script::Get().CallVoidFunction("Loop");
-  }
-  if (!ok)
-    PrintError();
-}
-
-#ifdef EMSCRIPTEN
-static void EmscriptenMainLoop()
-{
-  if (_Run())
-  {
-    if (!Script::Get().CallVoidFunction("Loop"))
-      PrintError();
-  }
-  else
-  {
-    emscripten_cancel_main_loop();
-  }
-}
-#endif

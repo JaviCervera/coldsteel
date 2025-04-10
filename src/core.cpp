@@ -1,3 +1,6 @@
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
 #include "audio_driver.h"
 #include "core.h"
 #include "dir.h"
@@ -53,11 +56,13 @@ extern "C"
     const int deltaMsecs = msecs - _lastMillisecs;
     const int wait = _ScreenFrameMsecs() - deltaMsecs;
     const int fixedWait = (wait > 0) ? wait : 0;
-#ifndef __EMSCRIPTEN__
+#ifndef EMSCRIPTEN
     if (result && fixedWait > 0)
     {
       _Device()->sleep(fixedWait);
     }
+#else
+    emscripten_sleep(fixedWait);
 #endif
     const int msecsAfterWait = Millisecs();
     _delta = (msecsAfterWait - _lastMillisecs) / 1000.0f;

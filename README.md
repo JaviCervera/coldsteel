@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Try to use Asyncify on Emscripten and remove Loop entrypoint from Lua.
 * Do not handle screen setup differently on Emscripten.
 * Add font editor.
 * Embed Lua into the CLI tool, so scripts are compiled when packaged.
