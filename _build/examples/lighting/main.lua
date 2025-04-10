@@ -2,6 +2,7 @@ OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
 -- Create and setup camera
 local cam = CreateCamera()
+SetCameraClearColor(cam, COLOR_BLACK)
 SetEntityPosition(cam, 0, 32, -90)
 SetEntityRotation(cam, 16, 0, 0)
 
@@ -43,7 +44,7 @@ for i = 1, 81 do
 end
 FreeMesh(mesh)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     -- Update lights
     for _, light in ipairs(lights) do
         TurnEntity(light, 0, -32 * DeltaTime(), 0)
@@ -51,8 +52,7 @@ function Loop()
         MoveEntity(light, 0, 0, -48)
     end
 
-    BeginDrawing(true, true, COLOR_BLACK)
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    EndDrawing()
+    RefreshScreen()
 end

@@ -13,8 +13,6 @@ extern "C"
   EXPORT int CALL GreenVal(int color);
   EXPORT int CALL BlueVal(int color);
   EXPORT int CALL AlphaVal(int color);
-  EXPORT void CALL BeginDrawing(bool_t clear, bool_t clearDepth, int color);
-  EXPORT void CALL EndDrawing();
   EXPORT void CALL SetRenderTarget(ITexture *tex, bool_t clear, bool_t clearDepth, int color);
   EXPORT void CALL SetViewport(int x, int y, int width, int height);
   EXPORT void CALL DrawPoint(int x, int y, int color);

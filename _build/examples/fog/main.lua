@@ -7,6 +7,7 @@ SetFog(COLOR_DARKGRAY, 0, 20)
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 0, -7)
 SetCameraRange(cam, 1, 5000)
+SetCameraClearColor(cam, COLOR_DARKGRAY)
 
 local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
@@ -33,7 +34,7 @@ end
 
 local spacePressed = false
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     if KeyDown(KEY_SPACE) then
         if not spacePressed then
             for _, cube in ipairs(cubes) do
@@ -49,9 +50,8 @@ function Loop()
     for _, cube in ipairs(cubes) do
         TurnEntity(cube, 0, 32 * DeltaTime(), 0)
     end
-    BeginDrawing(true, true, COLOR_DARKGRAY)
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     DrawText(nil, "Press SPACE to toggle fog", 2, 14, COLOR_WHITE)
-    EndDrawing()
+    RefreshScreen()
 end

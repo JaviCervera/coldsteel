@@ -28,9 +28,7 @@ end
 
 local primitives = {}
 
-function Loop()
-	if KeyDown(KEY_ESC) then Exit(0) end
-
+while ScreenActive() and not KeyDown(KEY_ESC) do
     -- If we are below the limit, add a new primitive with random values
     if #primitives < MAX_PRIMITIVES then
         primitives[#primitives+1] = CreatePrimitive(
@@ -43,8 +41,8 @@ function Loop()
         )
     end
 
-    -- Begin drawing on screen, clearing the screen to black
-    BeginDrawing(true, false, 0)
+    --Clear the screen to black
+    ClearScreen(COLOR_BLACK)
 
     -- Draw all primitives
     for _, primitive in ipairs(primitives) do
@@ -55,6 +53,6 @@ function Loop()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
     DrawText(nil, Str(#primitives) .. " primitives", 2, 14, RGB(255, 255, 255))
 
-    -- Finish drawing on screen
-    EndDrawing()
+    -- Present changes on screen
+    RefreshScreen()
 end

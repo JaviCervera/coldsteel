@@ -46,12 +46,12 @@ local tabbar = CreateTabbar(0, headerHeight, ScreenWidth(), ScreenHeight() - hea
 AddControlItem(tabbar, "<untitled>", 0)
 SetControlFont(CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1)), fixedsys)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
 	SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
 	for i = 1, ControlNumChildren(tabbar) do
 		SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
 	end
-	BeginDrawing(true, true, RGB(210, 210, 210))
+	ClearScreen(RGB(210, 210, 210))
 	DrawGUI()
-	EndDrawing()
+	RefreshScreen()
 end

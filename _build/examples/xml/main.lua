@@ -5,4 +5,4 @@ for i = 1, XMLNumChildren(xml) do
 	print(XMLName(child) .. " : " .. XMLText(child))
 end
 
-function Loop() end
+while not KeyDown(KEY_ESC) do end

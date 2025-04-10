@@ -13,12 +13,11 @@ for z = -8, 8, 2 do
     end
 end
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     TurnEntity(cam, 0, 15 * DeltaTime(), 0)
     SetEntityPosition(cam, 0, 0, 0)
     MoveEntity(cam, 0, 0, -8)
 
-    BeginDrawing(true, true, RGB(0, 0, 128))
-    DrawWorld(cam)
-    EndDrawing()
+    DrawWorld()
+    RefreshScreen()
 end

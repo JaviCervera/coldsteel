@@ -10,6 +10,8 @@ extern "C"
   EXPORT void CALL OpenScreen(int width, int height, int depth, int flags);
   EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win);
   EXPORT void CALL CloseScreen();
+  EXPORT void CALL ClearScreen(int color);
+  EXPORT void CALL RefreshScreen();
   EXPORT void CALL SetScreenTitle(const char *caption);
   EXPORT void CALL SetScreenSize(int width, int height);
   EXPORT bool_t CALL ScreenActive();

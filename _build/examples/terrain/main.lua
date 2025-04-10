@@ -23,14 +23,13 @@ SetMaterialType(mat, MATERIAL_DETAIL)
 SetMaterialTexture(mat, 1, LoadTexture("terrain-texture.jpg"))
 SetMaterialTexture(mat, 2, LoadTexture("detailmap3.jpg"))
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     if KeyDown(KEY_ESC) then Exit(0) end
     if KeyDown(KEY_UP) then MoveEntity(root, 0, 0, 100 * DeltaTime()) end
     if KeyDown(KEY_DOWN) then MoveEntity(root, 0, 0, -100 * DeltaTime()) end
     if KeyDown(KEY_LEFT) then TurnEntity(root, 0, -90 * DeltaTime(), 0) end
     if KeyDown(KEY_RIGHT) then TurnEntity(root, 0, 90 * DeltaTime(), 0) end
-    BeginDrawing(true, true, COLOR_BLACK)
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    EndDrawing()
+    RefreshScreen()
 end

@@ -1,6 +1,7 @@
 #include "core.h"
 #include "entity.h"
 #include "math.h"
+#include "world.h"
 
 static map<ITriangleSelector *, int> _colliders;
 
@@ -12,8 +13,20 @@ extern "C"
     return _Device()->getSceneManager()->addEmptySceneNode();
   }
 
+  static void _FreeCamera(ISceneNode *entity)
+  {
+    if (entity->getType() == ESNT_CAMERA)
+      _RemoveCamera((ICameraSceneNode *)entity);
+    const ISceneNodeList &children = entity->getChildren();
+    for (ISceneNodeList::ConstIterator it = children.begin(); it != children.end(); ++it)
+    {
+      _FreeCamera(*it);
+    }
+  }
+
   EXPORT void CALL FreeEntity(ISceneNode *entity)
   {
+    _FreeCamera(entity);
     SetEntityCollision(entity, COLLISION_NONE, 0);
     entity->remove();
   }

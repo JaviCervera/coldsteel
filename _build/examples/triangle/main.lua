@@ -18,11 +18,10 @@ local triangle = CreateModel(mesh)
 FreeMesh(mesh)
 SetMaterialCullingEnabled(EntityMaterial(triangle, 1), false)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     TurnEntity(triangle, 0, 64 * DeltaTime(), 0)
 
-    BeginDrawing(true, true, COLOR_WHITE)
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_BLACK)
-    EndDrawing()
+    RefreshScreen()
 end

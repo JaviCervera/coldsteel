@@ -23,14 +23,13 @@ local cone = CreateModel(mesh)
 SetEntityPosition(cone, 0, 0, -1)
 FreeMesh(mesh)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     if KeyDown(KEY_LEFT) then TurnEntity(cone, 0, -32 * DeltaTime(), 0) end
     if KeyDown(KEY_RIGHT) then TurnEntity(cone, 0, 32 * DeltaTime(), 0) end
     if KeyDown(KEY_UP) then SlideEntity(cone, 0, 0, DeltaTime(), 1, 1, 1, 1) end
     if KeyDown(KEY_DOWN) then SlideEntity(cone, 0, 0, -DeltaTime(), 1, 1, 1, 1) end
 
-    BeginDrawing(true, true, COLOR_DARKGRAY)
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    EndDrawing()
+    RefreshScreen()
 end

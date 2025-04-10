@@ -14,13 +14,35 @@ extern "C"
   EXPORT void CALL SetSkydome(ITexture *tex, float texScale, bool_t fullSphere);
   EXPORT SMaterial *CALL SkyboxMaterial();
   EXPORT SMaterial *CALL SkydomeMaterial();
-  EXPORT void CALL DrawWorld(ICameraSceneNode *camera);
+  EXPORT void CALL DrawWorld();
   EXPORT void CALL WorldToScreen(ICameraSceneNode *camera, float x, float y, float z);
   EXPORT void CALL ScreenToWorld(ICameraSceneNode *camera, int x, int y, float depth);
   EXPORT ISceneNode *CALL Raycast(float x1, float y1, float z1, float x2, float y2, float z2, int group);
 
 #ifndef SWIG
+  struct CameraData
+  {
+    bool active;
+    recti viewport;
+    int clearFlags;
+    int clearColor;
+    ITexture *renderTarget;
+
+    CameraData(bool active, const recti &viewport, int clearFlags, int clearColor, ITexture *renderTarget)
+        : active(active),
+          viewport(viewport),
+          clearFlags(clearFlags),
+          clearColor(clearColor),
+          renderTarget(renderTarget)
+    {
+    }
+  };
+
   bool _HasSetAmbient();
+  void _AddCamera(ICameraSceneNode *camera);
+  void _RemoveCamera(ICameraSceneNode *camera);
+  CameraData *_CameraData(ICameraSceneNode *camera);
+
 #endif
 
 #ifdef __cplusplus

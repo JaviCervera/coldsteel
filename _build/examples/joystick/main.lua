@@ -1,7 +1,7 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
-function Loop()
-	BeginDrawing(true, false, COLOR_BLACK)
+while ScreenActive() and not KeyDown(KEY_ESC) do
+	ClearScreen(COLOR_BLACK)
 	if NumJoysticks() > 0 then
 		DrawText(nil, "Name: " .. JoystickName(1), 4, 4, COLOR_WHITE)
 		DrawText(nil, "Num Joystick Axes: " .. Str(NumJoystickAxes(1)), 4, 16, COLOR_WHITE)
@@ -17,5 +17,5 @@ function Loop()
 	else
 		DrawText(nil, "No joysticks connected", 4, 4, COLOR_RED)
 	end
-	EndDrawing()
+	RefreshScreen()
 end

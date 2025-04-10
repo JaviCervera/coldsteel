@@ -2,6 +2,7 @@ OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(RGB(75, 75, 75))
 
 local cam = CreateCamera()
+SetCameraClearMode(cam, false, true)
 SetEntityPosition(cam, -150, 150, -200)
 SetEntityRotation(cam, 30, 30, 0)
 
@@ -22,11 +23,10 @@ SetEntityPosition(dwarf, -50, 20, -60)
 SetEntityScale(dwarf, 2, 2, 2)
 SetModelCastShadows(dwarf, true)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
 	TurnEntity(light, 0, 90 * DeltaTime(), 0)
 	SetEntityPosition(light, 0, 150, 0)
 	MoveEntity(light, 0, 0, -250)
-	BeginDrawing(true, true, RGB(55, 155, 255))
-	DrawWorld(cam)
-	EndDrawing()
+	DrawWorld()
+	RefreshScreen()
 end

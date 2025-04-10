@@ -13,6 +13,7 @@ SetEntityPosition(player, 0, 2, 0)
 
 -- Create and setup camera
 local cam = CreateCamera()
+SetCameraClearMode(cam, false, true)
 SetEntityParent(cam, player)
 
 -- Setup environment
@@ -74,7 +75,7 @@ local mxSpeed = 0
 local mySpeed = 0
 SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 
-function Loop()
+while ScreenActive() and not KeyDown(KEY_ESC) do
     -- Player yaw
     TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0)
 
@@ -100,10 +101,9 @@ function Loop()
     SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere), SOUND_RADIUS)
     SetListener(EntityX(cam), EntityY(cam), EntityZ(cam), EntityYaw(cam))
 
-    BeginDrawing(true, true, RGB(15, 15, 15))
-    DrawWorld(cam)
+    DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    EndDrawing()
+    RefreshScreen()
 
     -- Update mouse speed
     mxSpeed = CursorX() - ScreenWidth()/2

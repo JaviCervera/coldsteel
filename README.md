@@ -8,10 +8,9 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* DrawWorld should render all cameras, and these should have clear mode, render target etc.
-* Add font editor.
-* Try to use Asyncify on Emscripten, remove Loop entrypoint from Lua, and add RefreshScreen.
+* Try to use Asyncify on Emscripten and remove Loop entrypoint from Lua.
 * Do not handle screen setup differently on Emscripten.
+* Add font editor.
 * Embed Lua into the CLI tool, so scripts are compiled when packaged.
 * Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
 * Add ButtonHit, KeyHit, JoystickButtonHit.

@@ -102,6 +102,7 @@ extern "C"
 {
 
   static int _screenFrameMsecs = 0;
+  static bool_t _run = true;
 
   EXPORT void CALL OpenScreen(int width, int height, int depth, int flags)
   {
@@ -120,6 +121,18 @@ extern "C"
     _SetDevice(NULL, NULL);
   }
 
+  EXPORT void CALL ClearScreen(int color)
+  {
+    _Device()->getVideoDriver()->setRenderTarget(NULL, true, false, _Color(color));
+  }
+
+  EXPORT void CALL RefreshScreen()
+  {
+    _Device()->getVideoDriver()->endScene();
+    _run = _Run();
+    _Device()->getVideoDriver()->beginScene(false, false);
+  }
+
   EXPORT void CALL SetScreenTitle(const char *caption)
   {
     _Device()->setWindowCaption(_WSTR(caption));
@@ -132,7 +145,7 @@ extern "C"
 
   EXPORT bool_t CALL ScreenActive()
   {
-    return _Device()->isWindowActive();
+    return _Device()->isWindowActive() && _run;
   }
 
   EXPORT int CALL ScreenWidth()
@@ -233,6 +246,8 @@ extern "C"
     }
     _Device()->getGUIEnvironment()->setSkin(skin);
     skin->drop();
+
+    _Device()->getVideoDriver()->beginScene(false, false);
   }
 
   int _ScreenFrameMsecs()

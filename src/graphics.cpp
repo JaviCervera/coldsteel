@@ -35,16 +35,6 @@ extern "C"
     return (color & 0xFF000000) >> 24;
   }
 
-  EXPORT void CALL BeginDrawing(bool_t clear, bool_t clearDepth, int color)
-  {
-    _Device()->getVideoDriver()->beginScene(clear, clearDepth, _Color(color));
-  }
-
-  EXPORT void CALL EndDrawing()
-  {
-    _Device()->getVideoDriver()->endScene();
-  }
-
   EXPORT void CALL SetRenderTarget(ITexture *tex, bool_t clear, bool_t clearDepth, int color)
   {
     _Device()->getVideoDriver()->setRenderTarget(tex, clear, clearDepth, _Color(color));
