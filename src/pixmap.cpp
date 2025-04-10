@@ -7,7 +7,11 @@ extern "C"
 
   EXPORT IImage *CALL CreatePixmap(int width, int height)
   {
-    return _Device()->getVideoDriver()->createImage(ECF_A8R8G8B8, dimension2du(width, height));
+    const ECOLOR_FORMAT format =
+        _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
+            ? ECF_A8R8G8B8
+            : ECF_A1R5G5B5;
+    return _Device()->getVideoDriver()->createImage(format, dimension2du(width, height));
   }
 
   EXPORT IImage *CALL CreatePixmapFromTexture(ITexture *texture)
@@ -17,7 +21,11 @@ extern "C"
 
   EXPORT IImage *CALL CreatePixmapFromScreen()
   {
-    return _Device()->getVideoDriver()->createScreenShot(ECF_A8R8G8B8);
+    const ECOLOR_FORMAT format =
+        _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
+            ? ECF_A8R8G8B8
+            : ECF_A1R5G5B5;
+    return _Device()->getVideoDriver()->createScreenShot(format);
   }
 
   EXPORT IImage *CALL LoadPixmap(const char *filename)

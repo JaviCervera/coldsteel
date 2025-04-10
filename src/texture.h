@@ -8,6 +8,7 @@ extern "C"
 #endif
 
   EXPORT ITexture *CALL CreateTexture(int width, int height);
+  EXPORT ITexture *CALL CreateTextureFromPixmap(IImage *pixmap);
   EXPORT ITexture *CALL CreateRenderTexture(int width, int height);
   EXPORT ITexture *CALL LoadTexture(const char *filename);
   EXPORT void CALL ClearTextureCache();

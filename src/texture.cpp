@@ -1,5 +1,7 @@
 #include "core.h"
 #include "graphics.h"
+#include "math.h"
+#include "string.h"
 #include "texture.h"
 
 extern "C"
@@ -7,17 +9,24 @@ extern "C"
 
   EXPORT ITexture *CALL CreateTexture(int width, int height)
   {
-    const ECOLOR_FORMAT format = _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
-                                     ? ECF_A8R8G8B8
-                                     : ECF_A1R5G5B5;
-    return _Device()->getVideoDriver()->addTexture(dimension2du(width, height), "", format);
+    const ECOLOR_FORMAT format =
+        _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
+            ? ECF_A8R8G8B8
+            : ECF_A1R5G5B5;
+    return _Device()->getVideoDriver()->addTexture(dimension2du(width, height), Str(Rand(0, INT_MAX)), format);
+  }
+
+  EXPORT ITexture *CALL CreateTextureFromPixmap(IImage *pixmap)
+  {
+    return _Device()->getVideoDriver()->addTexture(Str(Rand(0, INT_MAX)), pixmap);
   }
 
   EXPORT ITexture *CALL CreateRenderTexture(int width, int height)
   {
-    const ECOLOR_FORMAT format = _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
-                                     ? ECF_A8R8G8B8
-                                     : ECF_A1R5G5B5;
+    const ECOLOR_FORMAT format =
+        _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
+            ? ECF_A8R8G8B8
+            : ECF_A1R5G5B5;
     return _Device()->getVideoDriver()->addRenderTargetTexture(dimension2du(width, height), "", format);
   }
 
