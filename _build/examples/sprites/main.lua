@@ -13,7 +13,7 @@ for z = -8, 8, 2 do
     end
 end
 
-while ScreenActive() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     TurnEntity(cam, 0, 15 * DeltaTime(), 0)
     SetEntityPosition(cam, 0, 0, 0)
     MoveEntity(cam, 0, 0, -8)

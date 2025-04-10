@@ -9,7 +9,6 @@ extern "C"
   EXPORT ICameraSceneNode *CALL CreateCamera()
   {
     ICameraSceneNode *cam = _Device()->getSceneManager()->addCameraSceneNode();
-    cam->setAspectRatio(0);
     _AddCamera(cam);
     return cam;
   }
@@ -107,12 +106,12 @@ extern "C"
 
   EXPORT void CALL SetCameraAspectRatio(ICameraSceneNode *cam, float ratio)
   {
-    cam->setAspectRatio(ratio);
+    _CameraData(cam)->ratio = ratio;
   }
 
   EXPORT float CALL CameraAspectRatio(ICameraSceneNode *cam)
   {
-    return cam->getAspectRatio();
+    return _CameraData(cam)->ratio;
   }
 
   EXPORT void CALL SetCameraFOV(ICameraSceneNode *cam, float fov)
@@ -125,10 +124,14 @@ extern "C"
     return Deg(cam->getFOV());
   }
 
-  EXPORT void CALL SetCameraOrtho(ICameraSceneNode *cam, float width, float height, float near_, float far_)
+  EXPORT void CALL SetCameraOrtho(ICameraSceneNode *cam, bool_t enable)
   {
-    const matrix4 mat = matrix4().buildProjectionMatrixOrthoLH(width, height, near_, far_);
-    cam->setProjectionMatrix(mat, true);
+    _CameraData(cam)->isOrtho = enable;
+  }
+
+  EXPORT bool_t CALL CameraOrtho(ICameraSceneNode *cam)
+  {
+    return _CameraData(cam)->isOrtho;
   }
 
   EXPORT ISceneNode *CALL PickEntity(ICameraSceneNode *camera, int x, int y, int group)

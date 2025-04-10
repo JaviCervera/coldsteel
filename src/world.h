@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "graphics.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -23,17 +24,21 @@ extern "C"
   struct CameraData
   {
     bool active;
+    bool isOrtho;
+    float ratio;
     recti viewport;
     int clearFlags;
     int clearColor;
     ITexture *renderTarget;
 
-    CameraData(bool active, const recti &viewport, int clearFlags, int clearColor, ITexture *renderTarget)
-        : active(active),
-          viewport(viewport),
-          clearFlags(clearFlags),
-          clearColor(clearColor),
-          renderTarget(renderTarget)
+    CameraData()
+        : active(true),
+          isOrtho(false),
+          ratio(0),
+          viewport(),
+          clearFlags(3),
+          clearColor(RGB(0, 0, 64)),
+          renderTarget(NULL)
     {
     }
   };

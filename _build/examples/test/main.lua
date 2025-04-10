@@ -5,7 +5,7 @@ SetSkydome(tex, 1, true)
 local cam = CreateCamera()
 SetCameraClearMode(cam, false, true)
 
-while ScreenActive() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     TurnEntity(cam, 0, 8 * DeltaTime(), 0)
 
     DrawWorld()

@@ -7,7 +7,7 @@ local font = LoadFont("liberation_mono.xml")
 local textX = 2
 local textDir = 1
 
-while ScreenActive() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     local textWidth = TextWidth(font, TEXT)
     local textHeight = TextHeight(font, TEXT)
     local textY = (ScreenHeight() - textHeight) / 2

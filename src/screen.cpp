@@ -178,7 +178,12 @@ extern "C"
 
   EXPORT bool_t CALL ScreenActive()
   {
-    return _Device()->isWindowActive() && _run;
+    return _Device()->isWindowActive();
+  }
+
+  EXPORT bool_t CALL ScreenShouldClose()
+  {
+    return !_run;
   }
 
   EXPORT int CALL ScreenWidth()

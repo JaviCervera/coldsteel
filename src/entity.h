@@ -21,6 +21,7 @@ extern "C"
   EXPORT void CALL SetEntityPosition(ISceneNode *entity, float x, float y, float z);
   EXPORT void CALL MoveEntity(ISceneNode *entity, float x, float y, float z);
   EXPORT ISceneNode *CALL SlideEntity(ISceneNode *entity, float x, float y, float z, float radiusX, float radiusY, float radiusZ, int group);
+  EXPORT void CALL TranslateEntity(ISceneNode *entity, float x, float y, float z);
   EXPORT float CALL EntityX(ISceneNode *entity);
   EXPORT float CALL EntityY(ISceneNode *entity);
   EXPORT float CALL EntityZ(ISceneNode *entity);

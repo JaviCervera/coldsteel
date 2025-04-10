@@ -18,7 +18,7 @@ local triangle = CreateModel(mesh)
 FreeMesh(mesh)
 SetMaterialCullingEnabled(EntityMaterial(triangle, 1), false)
 
-while ScreenActive() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     TurnEntity(triangle, 0, 64 * DeltaTime(), 0)
 
     DrawWorld()

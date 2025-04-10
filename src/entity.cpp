@@ -146,6 +146,12 @@ extern "C"
     return collidedEntity;
   }
 
+  EXPORT void CALL TranslateEntity(ISceneNode *entity, float x, float y, float z)
+  {
+    entity->setPosition(entity->getPosition() + vector3df(x, y, z));
+    entity->updateAbsolutePosition();
+  }
+
   EXPORT float CALL EntityX(ISceneNode *entity)
   {
     return entity->getAbsolutePosition().X;

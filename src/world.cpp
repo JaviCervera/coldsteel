@@ -14,6 +14,32 @@ static CameraDataMap _cameraDatas;
 
 extern "C"
 {
+  static recti SetCameraViewportAndProjection(ICameraSceneNode *camera)
+  {
+    const CameraData *data = _CameraData(camera);
+    recti viewport = data->viewport;
+    if (viewport.getWidth() == 0)
+      viewport.LowerRightCorner.X = ScreenWidth() - 1;
+    if (viewport.getHeight() == 0)
+      viewport.LowerRightCorner.Y = ScreenHeight() - 1;
+    const float ratio = (data->ratio > 0) ? data->ratio : (viewport.getWidth() * 1.0f / viewport.getHeight());
+    if (data->isOrtho)
+    {
+      const float height = camera->getFOV() * 5;
+      const matrix4 mat = matrix4().buildProjectionMatrixOrthoLH(
+        height * ratio,
+        height,
+        camera->getNearValue(),
+        camera->getFarValue());
+      camera->setProjectionMatrix(mat, true);
+    }
+    else
+    {
+      camera->setAspectRatio(ratio);
+      camera->setProjectionMatrix(camera->getProjectionMatrix(), false);
+    }
+    return viewport;
+  }
 
   EXPORT void CALL SetAmbient(int color)
   {
@@ -79,7 +105,6 @@ extern "C"
       CameraData *data = _CameraData(camera);
       if (!data->active || !camera->isVisible())
         continue;
-      const float old_ratio = camera->getAspectRatio();
 
       // Set look point
       vector3df dest(0, 0, 100);
@@ -87,12 +112,8 @@ extern "C"
       matrix.transformVect(dest);
       camera->setTarget(dest);
 
-      // Set viewport
-      recti viewport = data->viewport;
-      if (viewport.getWidth() == 0)
-        viewport.LowerRightCorner.X = ScreenWidth() - 1;
-      if (viewport.getHeight() == 0)
-        viewport.LowerRightCorner.Y = ScreenHeight() - 1;
+      // Set viewport and projection
+      const recti viewport = SetCameraViewportAndProjection(camera);
       _Device()->getVideoDriver()->setViewPort(viewport);
 
       // Set render target & clear buffers
@@ -104,16 +125,9 @@ extern "C"
       if (data->clearFlags & 2)
         _Device()->getVideoDriver()->clearZBuffer();
 
-      // Set aspect ratio
-      if (!camera->isOrthogonal() && camera->getAspectRatio() <= 0)
-        camera->setAspectRatio(viewport.getWidth() * 1.0f / viewport.getHeight());
-
       // Draw
       _Device()->getSceneManager()->setActiveCamera(camera);
       _Device()->getSceneManager()->drawAll();
-
-      // Restore aspect ratio
-      camera->setAspectRatio(old_ratio);
     }
     _Device()->getVideoDriver()->setViewPort(prev_viewport);
     _Device()->getVideoDriver()->setRenderTarget(NULL, false, false);
@@ -121,13 +135,27 @@ extern "C"
 
   EXPORT void CALL WorldToScreen(ICameraSceneNode *camera, float x, float y, float z)
   {
+    const recti viewport = SetCameraViewportAndProjection(camera);
+    const vector2df ratio(
+      viewport.getWidth() * 1.0f / _Device()->getVideoDriver()->getScreenSize().Width,
+      viewport.getHeight() * 1.0f / _Device()->getVideoDriver()->getScreenSize().Height);
     const vector2di coords = _Device()->getSceneManager()->getSceneCollisionManager()->getScreenCoordinatesFrom3DPosition(vector3df(x, y, z), camera);
-    _SetPoint(coords.X, coords.Y, 0);
+    _SetPoint(
+      viewport.UpperLeftCorner.X + coords.X * ratio.X,
+      viewport.UpperLeftCorner.Y + coords.Y * ratio.Y,
+      0);
   }
 
   EXPORT void CALL ScreenToWorld(ICameraSceneNode *camera, int x, int y, float depth)
   {
-    const line3df line = _Device()->getSceneManager()->getSceneCollisionManager()->getRayFromScreenCoordinates(vector2di(x, y), camera);
+    const recti viewport = SetCameraViewportAndProjection(camera);
+    const dimension2du half_screen = _Device()->getVideoDriver()->getScreenSize() / 2;
+    const vector2df ratio(
+      _Device()->getVideoDriver()->getScreenSize().Width * 1.0f / viewport.getWidth(),
+      _Device()->getVideoDriver()->getScreenSize().Height * 1.0f / viewport.getHeight());
+    const vector2di diff(x - half_screen.Width, y - half_screen.Height);
+    const vector2di pos(half_screen.Width + diff.X * ratio.X, half_screen.Height + diff.Y * ratio.Y);
+    const line3df line = _Device()->getSceneManager()->getSceneCollisionManager()->getRayFromScreenCoordinates(pos, camera);
     const vector3df coords = lerp(line.start, line.end, depth);
     _SetPoint(coords.X, coords.Y, coords.Z);
   }
@@ -155,7 +183,7 @@ extern "C"
   void _AddCamera(ICameraSceneNode *camera)
   {
     _cameras.push_back(camera);
-    _cameraDatas.set(camera, CameraData(true, recti(), 3, RGB(0, 0, 64), NULL));
+    _cameraDatas.set(camera, CameraData());
   }
 
   void _RemoveCamera(ICameraSceneNode *camera)

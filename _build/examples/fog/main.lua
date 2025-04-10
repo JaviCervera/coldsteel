@@ -34,7 +34,7 @@ end
 
 local spacePressed = false
 
-while ScreenActive() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     if KeyDown(KEY_SPACE) then
         if not spacePressed then
             for _, cube in ipairs(cubes) do

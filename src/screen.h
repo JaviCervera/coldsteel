@@ -15,6 +15,7 @@ extern "C"
   EXPORT void CALL SetScreenTitle(const char *caption);
   EXPORT void CALL SetScreenSize(int width, int height);
   EXPORT bool_t CALL ScreenActive();
+  EXPORT bool_t CALL ScreenShouldClose();
   EXPORT int CALL ScreenWidth();
   EXPORT int CALL ScreenHeight();
   EXPORT void CALL SetScreenFPS(int fps);

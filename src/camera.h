@@ -29,7 +29,8 @@ extern "C"
   EXPORT float CALL CameraAspectRatio(ICameraSceneNode *cam);
   EXPORT void CALL SetCameraFOV(ICameraSceneNode *cam, float fov);
   EXPORT float CALL CameraFOV(ICameraSceneNode *cam);
-  EXPORT void CALL SetCameraOrtho(ICameraSceneNode *cam, float width, float height, float near_, float far_);
+  EXPORT void CALL SetCameraOrtho(ICameraSceneNode *cam, bool_t enable);
+  EXPORT bool_t CALL CameraOrtho(ICameraSceneNode *cam);
   EXPORT ISceneNode *CALL PickEntity(ICameraSceneNode *camera, int x, int y, int group);
 
 #ifdef __cplusplus
