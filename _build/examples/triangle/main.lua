@@ -22,6 +22,6 @@ while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
     TurnEntity(triangle, 0, 64 * DeltaTime(), 0)
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_BLACK)
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end

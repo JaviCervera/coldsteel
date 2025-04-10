@@ -1,15 +1,16 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(COLOR_WHITE)
 
-local tex = LoadTexture("tree.png")
+local tex = LoadTexture("logo.png")
 local cam = CreateCamera()
+SetCameraClearColor(cam, COLOR_BLACK)
 SetEntityRotation(cam, 30, 0, 0)
 
 for z = -8, 8, 2 do
     for x = -8, 8, 2 do
         local tree = CreateSprite(tex, MATERIAL_ALPHA)
         SetEntityPosition(tree, x, 0, z)
-        SetSpriteSize(tree, 1, 1)
+        SetSpriteSize(tree, 2, 2)
     end
 end
 
