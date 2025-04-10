@@ -2,6 +2,23 @@
 
 #include "common.h"
 
+// Collision types
+#define COLLISION_NONE 0
+#define COLLISION_BOX 1
+#define COLLISION_MESH 2
+#define COLLISION_OCTREE 3
+
+// Entity types
+#define ENTITY_EMPTY 0
+#define ENTITY_SPRITE 1
+#define ENTITY_CAMERA 2
+#define ENTITY_EMITTER 3
+#define ENTITY_LIGHT 4
+#define ENTITY_MESH 5
+#define ENTITY_MESH_OCTREE 6
+#define ENTITY_TERRAIN 7
+#define ENTITY_WATER 8
+
 #ifdef __cplusplus
 extern "C"
 {

@@ -2,6 +2,14 @@
 
 #include "common.h"
 
+// XML node types
+#define XML_NULL 0
+#define XML_NODE 1
+#define XML_NODEEND 2
+#define XML_TEXT 3
+#define XML_CDATA 5
+#define XML_UNKNOWN 6
+
 #ifdef __cplusplus
 extern "C"
 {

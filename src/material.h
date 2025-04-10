@@ -2,6 +2,39 @@
 
 #include "common.h"
 
+// Blend modes
+#define MATERIAL_SOLID 0
+#define MATERIAL_LIGHTMAP 1
+#define MATERIAL_LIGHTMAP2X 2
+#define MATERIAL_LIGHTMAP4X 3
+#define MATERIAL_DETAIL 4
+#define MATERIAL_ADD 5
+#define MATERIAL_ALPHA 6
+#define MATERIAL_VERTEXALPHA 7
+#define MATERIAL_MASKED 8
+#define MATERIAL_SPHERE 9
+#define MATERIAL_REFLECTION 10
+#define MATERIAL_NORMAL 11
+#define MATERIAL_NORMALADD 12
+#define MATERIAL_PARALLAX 13
+#define MATERIAL_PARALLAXADD 14
+
+// Render modes
+#define RENDER_FILLED 0
+#define RENDER_WIREFRAME 1
+#define RENDER_POINTCLOUD 2
+
+// Lighting modes
+#define LIGHTING_DISABLED 0
+#define LIGHTING_GOURAUD 1
+#define LIGHTING_FLAT 2
+
+// Filtering modes
+#define FILTER_DISABLED 0
+#define FILTER_BILINEAR 1
+#define FILTER_TRILINEAR 2
+#define FILTER_ANISOTROPIC 3
+
 #ifdef __cplusplus
 extern "C"
 {

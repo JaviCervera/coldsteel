@@ -2,6 +2,31 @@
 
 #include "common.h"
 
+// Gadget types
+#define CONTROL_BUTTON 1
+#define CONTROL_CHECKBOX 2
+#define CONTROL_COMBOBOX 3
+#define CONTROL_EDITBOX 4
+#define CONTROL_IMAGE 5
+#define CONTROL_LISTBOX 6
+#define CONTROL_MENU 7
+#define CONTROL_SCROLLBAR 8
+#define CONTROL_TABBAR 9
+#define CONTROL_TEXT 10
+#define CONTROL_TOOLBAR 11
+#define CONTROL_WINDOW 12
+
+// Gadget events
+#define CONTROL_LOSTFOCUS 0
+#define CONTROL_ENTER 1
+#define CONTROL_EXIT 2
+#define CONTROL_ACTION 3
+
+// EditBox types
+#define EDITBOX_SIMPLE 0
+#define EDITBOX_PASSWORD 1
+#define EDITBOX_MULTILINE 2
+
 #ifdef __cplusplus
 extern "C"
 {

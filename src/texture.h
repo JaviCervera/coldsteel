@@ -2,6 +2,10 @@
 
 #include "common.h"
 
+// Texture flags
+#define TEXTURE_MIPMAPS 1
+#define TEXTURE_16BITS 2
+
 #ifdef __cplusplus
 extern "C"
 {

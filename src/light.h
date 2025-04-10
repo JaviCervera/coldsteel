@@ -2,6 +2,11 @@
 
 #include "common.h"
 
+// Light types
+#define LIGHT_DIRECTIONAL 0
+#define LIGHT_POINT 1
+#define LIGHT_SPOT 2
+
 #ifdef __cplusplus
 extern "C"
 {
