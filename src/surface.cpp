@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "color.h"
 #include "surface.h"
 
 extern "C"

@@ -1,5 +1,5 @@
+#include "color.h"
 #include "core.h"
-#include "graphics.h"
 #include "pixmap.h"
 
 extern "C"

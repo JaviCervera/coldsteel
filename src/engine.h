@@ -3,6 +3,7 @@
 #include "bitwise.h"
 #include "camera.h"
 #include "channel.h"
+#include "color.h"
 #include "console.h"
 #include "core.h"
 #include "dialogs.h"

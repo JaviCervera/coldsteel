@@ -1,7 +1,7 @@
 #pragma once
 
+#include "color.h"
 #include "common.h"
-#include "graphics.h"
 
 #ifdef __cplusplus
 extern "C"

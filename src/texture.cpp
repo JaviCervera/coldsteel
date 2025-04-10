@@ -1,5 +1,5 @@
+#include "color.h"
 #include "core.h"
-#include "graphics.h"
 #include "math.h"
 #include "string.h"
 #include "texture.h"

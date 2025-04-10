@@ -1,6 +1,6 @@
+#include "color.h"
 #include "core.h"
 #include "font.h"
-#include "graphics.h"
 
 extern "C"
 {

@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "color.h"
 #include "material.h"
 #include "math.h"
 
@@ -76,12 +76,12 @@ extern "C"
 
   EXPORT void CALL SetMaterialShininess(SMaterial *material, float shininess)
   {
-    material->Shininess = shininess * 128;
+    material->Shininess = Clamp(shininess * 128, 0, 128);
   }
 
   EXPORT float CALL MaterialShininess(SMaterial *material)
   {
-    return material->Shininess / 128;
+    return Clamp(material->Shininess / 128, 0, 1);
   }
 
   EXPORT void CALL SetMaterialRenderMode(SMaterial *material, int mode)

@@ -1,5 +1,4 @@
 #include "core.h"
-#include "graphics.h"
 #include "math.h"
 #include "screen.h"
 #include "world.h"
@@ -154,7 +153,7 @@ extern "C"
       _Device()->getVideoDriver()->getScreenSize().Width * 1.0f / viewport.getWidth(),
       _Device()->getVideoDriver()->getScreenSize().Height * 1.0f / viewport.getHeight());
     const vector2di diff(x - half_screen.Width, y - half_screen.Height);
-    const vector2di pos(half_screen.Width + diff.X * ratio.X, half_screen.Height + diff.Y * ratio.Y);
+    const vector2di pos(int(half_screen.Width + diff.X * ratio.X), int(half_screen.Height + diff.Y * ratio.Y));
     const line3df line = _Device()->getSceneManager()->getSceneCollisionManager()->getRayFromScreenCoordinates(pos, camera);
     const vector3df coords = lerp(line.start, line.end, depth);
     _SetPoint(coords.X, coords.Y, coords.Z);

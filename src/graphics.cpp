@@ -1,39 +1,10 @@
+#include "color.h"
 #include "core.h"
 #include "graphics.h"
 #include "math.h"
 
 extern "C"
 {
-
-  EXPORT int CALL RGB(int red, int green, int blue)
-  {
-    return RGBA(red, green, blue, 255);
-  }
-
-  EXPORT int CALL RGBA(int red, int green, int blue, int alpha)
-  {
-    return (alpha << 24) + (red << 16) + (green << 8) + blue;
-  }
-
-  EXPORT int CALL RedVal(int color)
-  {
-    return (color & 0x00FF0000) >> 16;
-  }
-
-  EXPORT int CALL GreenVal(int color)
-  {
-    return (color & 0x0000FF00) >> 8;
-  }
-
-  EXPORT int CALL BlueVal(int color)
-  {
-    return (color & 0x000000FF);
-  }
-
-  EXPORT int CALL AlphaVal(int color)
-  {
-    return (color & 0xFF000000) >> 24;
-  }
 
   EXPORT void CALL SetRenderTarget(ITexture *tex, bool_t clear, bool_t clearDepth, int color)
   {
@@ -70,13 +41,3 @@ extern "C"
   }
 
 } // extern "C"
-
-SColor _Color(int color)
-{
-  return SColor(AlphaVal(color), RedVal(color), GreenVal(color), BlueVal(color));
-}
-
-int _IntColor(const SColor &color)
-{
-  return RGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-}

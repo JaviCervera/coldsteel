@@ -1,5 +1,5 @@
+#include "color.h"
 #include "core.h"
-#include "graphics.h"
 #include "gui.h"
 #include "input.h"
 #include "listener.h"
