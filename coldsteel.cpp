@@ -229,6 +229,8 @@ void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_di
   const std::vector<std::string> contents = DirContents(path);
   for (size_t i = 0; i < contents.size(); ++i)
   {
+    if (contents[i].substr(0, 1) == ".")
+      continue;
     const std::string filepath = path + "/" + contents[i];
     if (IsDir(filepath))
     {
