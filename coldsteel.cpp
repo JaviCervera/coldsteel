@@ -28,6 +28,11 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <vector>
+#include "lib/lua/lstate.h"
+#include "lib/lua/lua.h"
+#include "lib/lua/lualib.h"
+#include "lib/lua/lauxlib.h"
+#include "lib/lua/lundump.h"
 extern "C"
 {
 #include "lib/zip/zip.c"
@@ -38,15 +43,15 @@ extern "C"
 #endif
 
 void Run(const std::string &dir);
-void Build(const std::string &dir);
-void BuildWeb(const std::string &dir);
+void Build(const std::string &dir, bool precompile);
+void BuildWeb(const std::string &dir, bool precompile);
 void CreateBundle(const std::string &out_dir, const std::string &out_file);
 void WritePlist(const std::string &out_dir, const std::string &out_file);
 std::string PlistPath(const std::string &out_dir, const std::string &out_file);
 void CopyIcns(const std::string &out_dir, const std::string &out_file);
 void CopyRuntime(const std::string &out_dir, const std::string &out_file);
-size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file);
-void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir);
+size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file, bool precompile);
+void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir, bool precompile);
 void WriteJS(const std::string &out_dir, const std::string &out_file, size_t pkg_size);
 void WriteWasm(const std::string &out_dir, const std::string &out_file);
 void WriteHtml(const std::string &out_dir, const std::string &out_file);
@@ -79,9 +84,10 @@ struct Options
 {
   Mode mode;
   std::string dir;
+  bool precompile;
 
-  Options(Mode mode, const std::string &dir)
-      : mode(mode), dir(dir) {}
+  Options(Mode mode, const std::string &dir, bool precompile)
+      : mode(mode), dir(dir), precompile(precompile) {}
 
   static Options Parse(int argc, char *argv[])
   {
@@ -91,7 +97,7 @@ struct Options
     std::string dir = RealPath(IsDir(argv[2]) ? argv[2] : ExtractDir(argv[2]));
     if (dir.rfind('\\') == dir.length() - 1 || dir.rfind('/') == dir.length() - 1)
       dir = dir.substr(0, dir.length() - 1);
-    return Options(mode, dir);
+    return Options(mode, dir, true);
   }
 
 private:
@@ -123,10 +129,10 @@ int main(int argc, char *argv[])
       Run(opts.dir);
       break;
     case MODE_BUILD:
-      Build(opts.dir);
+      Build(opts.dir, opts.precompile);
       break;
     case MODE_BUILD_WEB:
-      BuildWeb(opts.dir);
+      BuildWeb(opts.dir, opts.precompile);
       break;
     }
     return 0;
@@ -145,7 +151,7 @@ void Run(const std::string &dir)
   system((runtime_path + " " + dir).c_str());
 }
 
-void Build(const std::string &dir)
+void Build(const std::string &dir, bool precompile)
 {
   const std::string out_file = StripDir(dir);
   const std::string out_dir = dir + ".build";
@@ -153,17 +159,17 @@ void Build(const std::string &dir)
     CreateDir(out_dir);
   if (IsMac())
     CreateBundle(out_dir, out_file);
-  WriteZip(dir, RuntimeDir(out_dir, out_file), "data.bin");
+  WriteZip(dir, RuntimeDir(out_dir, out_file), "data.bin", precompile);
   CopyRuntime(out_dir, out_file);
 }
 
-void BuildWeb(const std::string &dir)
+void BuildWeb(const std::string &dir, bool precompile)
 {
   const std::string out_file = StripDir(dir);
   const std::string out_dir = dir + ".build";
   if (!IsDir(out_dir))
     CreateDir(out_dir);
-  const size_t pkg_size = WriteZip(dir, out_dir, out_file + ".data");
+  const size_t pkg_size = WriteZip(dir, out_dir, out_file + ".data", precompile);
   WriteJS(out_dir, out_file, pkg_size);
   WriteWasm(out_dir, out_file);
   WriteHtml(out_dir, out_file);
@@ -208,13 +214,13 @@ void CopyRuntime(const std::string &out_dir, const std::string &out_file)
   CopyFile(src, dst);
 }
 
-size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file)
+size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file, bool precompile)
 {
   const std::string zip_path = out_dir + "/" + out_file;
   std::cout << "Writing assets '" << zip_path << "' ..." << std::endl;
   zip_t *zip = zip_open(zip_path.c_str(), 9, 'w');
-  AddZipFiles(zip, path, path);
-  AddZipFiles(zip, ProgramDir() + "/media", ProgramDir());
+  AddZipFiles(zip, path, path, precompile);
+  AddZipFiles(zip, ProgramDir() + "/media", ProgramDir(), precompile);
   zip_close(zip);
 
   FILE *f = fopen(zip_path.c_str(), "rb");
@@ -224,7 +230,23 @@ size_t WriteZip(const std::string &path, const std::string &out_dir, const std::
   return size;
 }
 
-void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir)
+static int writer(lua_State *, const void *p, size_t size, void *u)
+{
+  return (fwrite(p, size, 1, (FILE *)u) != 1) && (size != 0);
+}
+
+FILE *CreateCompiledLuafile(const std::string &filename)
+{
+  lua_State *L = lua_open();
+  if (luaL_loadfile(L, filename.c_str()))
+    return NULL;
+  FILE *f = tmpfile();
+  luaU_dump(L, clvalue(L->top - 1)->l.p, writer, f, true);
+  lua_close(L);
+  return f;
+}
+
+void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir, bool precompile)
 {
   const std::vector<std::string> contents = DirContents(path);
   for (size_t i = 0; i < contents.size(); ++i)
@@ -234,9 +256,29 @@ void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_di
     const std::string filepath = path + "/" + contents[i];
     if (IsDir(filepath))
     {
-      AddZipFiles(zip, filepath, root_dir);
+      AddZipFiles(zip, filepath, root_dir, precompile);
+      continue;
     }
-    else if (ExtractExt(filepath) != "hx" && ExtractExt(filepath) != "hxml")
+    if (ExtractExt(filepath) == "lua" && precompile)
+    {
+      const std::string rel_filepath = Replace(filepath, root_dir + "/", "");
+      std::cout << "Adding precompiled '" << filepath << "' as '" << rel_filepath << "' ..." << std::endl;
+      FILE *file = CreateCompiledLuafile(filepath);
+      if (file)
+      {
+        const size_t size = ftell(file);
+        char *data = new char[size];
+        rewind(file);
+        fread(data, sizeof(char), size, file);
+        fclose(file);
+        zip_entry_open(zip, rel_filepath.c_str());
+        zip_entry_write(zip, data, size);
+        zip_entry_close(zip);
+        delete[] data;
+        continue;
+      }
+    }
+    if (ExtractExt(filepath) != "hx" && ExtractExt(filepath) != "hxml")
     {
       const std::string rel_filepath = Replace(filepath, root_dir + "/", "");
       std::cout << "Adding '" << filepath << "' as '" << rel_filepath << "' ..." << std::endl;

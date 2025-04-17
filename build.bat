@@ -1,7 +1,7 @@
 @echo off
 
 echo # Building coldsteel cli
-g++ -O2 -static -s -fno-rtti -o _build/coldsteel.exe coldsteel.cpp
+g++ -O2 -static -s -fno-rtti -o _build/coldsteel.exe coldsteel.cpp lib/lua/*.c
 
 echo # Generating Lua wrapper ...
 swig.exe -lua -c++ -o src/lua_wrapper.cpp coldsteel.i

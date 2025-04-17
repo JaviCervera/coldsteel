@@ -2,7 +2,7 @@
 cd `dirname $0`
 
 echo "# Building coldsteel cli"
-g++ -O2 -s -fno-rtti -o _build/coldsteel coldsteel.cpp
+g++ -O2 -s -fno-rtti -o _build/coldsteel coldsteel.cpp lib/lua/*.c
 
 echo "# Generating Lua wrapper ..."
 swig -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
