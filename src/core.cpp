@@ -51,6 +51,7 @@ extern "C"
   bool_t _Run()
   {
     AudioDriver::Get().Update();
+    _ClearInputs();
     bool result = _Device()->run() && _Device()->getVideoDriver() != NULL;
     const int msecs = Millisecs();
     const int deltaMsecs = msecs - _lastMillisecs;

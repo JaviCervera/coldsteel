@@ -163,8 +163,11 @@ extern "C"
   EXPORT void CALL SetCursorPosition(int x, int y);
   EXPORT int CALL CursorX();
   EXPORT int CALL CursorY();
+  EXPORT int CALL CursorWheel();
   EXPORT bool_t CALL ButtonDown(int button);
+  EXPORT bool_t CALL ButtonHit(int button);
   EXPORT bool_t CALL KeyDown(int key);
+  EXPORT bool_t CALL KeyHit(int key);
   EXPORT int CALL NumJoysticks();
   EXPORT const char *CALL JoystickName(int index);
   EXPORT int CALL NumJoystickAxes(int index);
@@ -172,12 +175,16 @@ extern "C"
   EXPORT bool_t CALL JoystickButtonDown(int index, int button);
   EXPORT float CALL JoystickAxis(int index, int axis);
 
-  void _SetCursorMoved();
-  void _SetButtonDown(int button, bool down);
-  void _SetKeyDown(int key, bool down);
-  void _SetJoysticks(const array<SJoystickInfo> &joysticks);
-  void _SetJoystickEvent(const SEvent::SJoystickEvent &event);
-
 #ifdef __cplusplus
 } /* extern "C" */
+#endif
+
+#ifndef SWIG
+void _ClearInputs();
+void _SetCursorMoved();
+void _SetButtonDown(int button, bool down);
+void _SetKeyDown(int key, bool down);
+void _SetJoysticks(const array<SJoystickInfo> &joysticks);
+void _SetJoystickEvent(const SEvent::SJoystickEvent &event);
+void _IncCursorWheel(int amount);
 #endif

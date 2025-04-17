@@ -11,7 +11,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 * Add font editor.
 * Embed Lua into the CLI tool, so scripts are compiled when packaged.
 * Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
-* Add ButtonHit, KeyHit, JoystickButtonHit.
 * Add particles support & editor.
 * Fix audio positioning.
 * Add more samples and demos.

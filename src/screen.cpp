@@ -87,6 +87,9 @@ class EventReceiver : public IEventReceiver
       case EMIE_MMOUSE_LEFT_UP:
         _SetButtonDown(BUTTON_MIDDLE, false);
         break;
+      case EMIE_MOUSE_WHEEL:
+        _IncCursorWheel(int(event.MouseInput.Wheel));
+        break;
       default:
         break;
       }
@@ -100,7 +103,6 @@ class EventReceiver : public IEventReceiver
 
 extern "C"
 {
-
   static int _screenFrameMsecs = 0;
   static bool_t _run = true;
 
