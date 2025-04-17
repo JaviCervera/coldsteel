@@ -1,6 +1,6 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
 	ClearScreen(COLOR_BLACK)
 	if NumJoysticks() > 0 then
 		DrawText(nil, "Name: " .. JoystickName(1), 4, 4, COLOR_WHITE)

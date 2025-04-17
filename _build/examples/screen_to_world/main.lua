@@ -24,7 +24,7 @@ FreeMesh(mesh)
 local depth = 0
 local depth_dir = 1
 local space_pressed = false
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Update
     depth = depth + depth_dir * DeltaTime()
     if depth < 0 or depth > 1 then depth = Clamp(depth, 0, 1); depth_dir = depth_dir * -1 end

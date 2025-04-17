@@ -16,7 +16,7 @@ SetMaterialDiffuse(mat, COLOR_ORANGE)
 SetMaterialShininess(mat, 0.5)
 SetMaterialVertexColorsEnabled(mat, false)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_LEFT) then SetMaterialShininess(mat, MaterialShininess(mat) - 0.2 * DeltaTime()) end
     if KeyDown(KEY_RIGHT) then SetMaterialShininess(mat, MaterialShininess(mat) + 0.2 * DeltaTime()) end
     SetMaterialSpecular(mat, MultiplyColor(COLOR_WHITE, MaterialShininess(mat) * 2))

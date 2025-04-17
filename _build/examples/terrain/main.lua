@@ -23,7 +23,7 @@ SetMaterialType(mat, MATERIAL_DETAIL)
 SetMaterialTexture(mat, 1, LoadTexture("terrain-texture.jpg"))
 SetMaterialTexture(mat, 2, LoadTexture("detailmap3.jpg"))
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_ESC) then Exit(0) end
     if KeyDown(KEY_UP) then MoveEntity(root, 0, 0, 100 * DeltaTime()) end
     if KeyDown(KEY_DOWN) then MoveEntity(root, 0, 0, -100 * DeltaTime()) end

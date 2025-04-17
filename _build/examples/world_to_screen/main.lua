@@ -22,7 +22,7 @@ SetEntityName(model, "This is a cube")
 FreeMesh(mesh)
 
 local space_pressed = false
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Update
     TurnEntity(model, 45 * DeltaTime(), 90 * DeltaTime(), 0)
     if KeyDown(KEY_LEFT) then TranslateEntity(model, -DeltaTime(), 0, 0) end

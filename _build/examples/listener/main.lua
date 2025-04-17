@@ -75,7 +75,7 @@ local mxSpeed = 0
 local mySpeed = 0
 SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Player yaw
     TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0)
 

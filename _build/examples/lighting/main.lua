@@ -44,7 +44,7 @@ for i = 1, 81 do
 end
 FreeMesh(mesh)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Update lights
     for _, light in ipairs(lights) do
         TurnEntity(light, 0, -32 * DeltaTime(), 0)

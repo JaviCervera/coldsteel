@@ -22,7 +22,7 @@ local cube = CreateModel(mesh)
 SetMaterialTexture(EntityMaterial(cube, 1), 1, tex)
 FreeMesh(mesh)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 30 * DeltaTime(), 60 * DeltaTime(), 0)
 
     DrawWorld()

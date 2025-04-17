@@ -23,7 +23,7 @@ SetEntityPosition(dwarf, -50, 20, -60)
 SetEntityScale(dwarf, 2, 2, 2)
 SetModelCastShadows(dwarf, true)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
 	TurnEntity(light, 0, 90 * DeltaTime(), 0)
 	SetEntityPosition(light, 0, 150, 0)
 	MoveEntity(light, 0, 0, -250)

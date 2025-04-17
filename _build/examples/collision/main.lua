@@ -23,7 +23,7 @@ local cone = CreateModel(mesh)
 SetEntityPosition(cone, 0, 0, -1)
 FreeMesh(mesh)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_LEFT) then TurnEntity(cone, 0, -32 * DeltaTime(), 0) end
     if KeyDown(KEY_RIGHT) then TurnEntity(cone, 0, 32 * DeltaTime(), 0) end
     if KeyDown(KEY_UP) then SlideEntity(cone, 0, 0, DeltaTime(), 1, 1, 1, 1) end

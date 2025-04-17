@@ -18,7 +18,7 @@ local mat = EntityMaterial(cube, 1)
 SetMaterialTexture(mat, 1, boxTex)
 FreeMesh(mesh)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 0, 64 * DeltaTime(), 0)
 
     DrawWorld()

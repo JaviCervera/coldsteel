@@ -21,7 +21,7 @@ FreeMesh(mesh)
 local light = CreateLight(LIGHT_POINT)
 SetEntityPosition(light, 2, 2, -2)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 0, 64 * DeltaTime(), 0)
 
     DrawWorld()

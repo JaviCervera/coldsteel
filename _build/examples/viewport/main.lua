@@ -21,7 +21,7 @@ local mesh = CreateCubeMesh()
 local cube = CreateModel(mesh)
 FreeMesh(mesh)
 
-while not ScreenShouldClose() and not KeyDown(KEY_ESC) do
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 32 * DeltaTime(), 64 * DeltaTime(), 0)
 
     SetCameraViewport(cam, ScreenWidth() / 2, 0, ScreenWidth() / 2, ScreenHeight() / 2)
