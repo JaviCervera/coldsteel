@@ -1,13 +1,13 @@
 #include <soloud.h>
 #include <soloud_wav.h>
 #include <soloud_wavstream.h>
-#include "audio_driver.h"
-#include "math.h"
-#include "memblock.h"
+#include "audio.h"
+#include "../math.h"
+#include "../memblock.h"
 
-struct AudioDriver_SoLoud : public AudioDriver
+struct Audio_SoLoud : public Audio
 {
-  AudioDriver_SoLoud()
+  Audio_SoLoud()
       : soloud(), music(NULL), musicHandle(0) {}
 
   void Init()
@@ -56,7 +56,7 @@ struct AudioDriver_SoLoud : public AudioDriver
     soloud.setPan(channel, pan);
   }
 
-  bool_t ChannelPlaying(Channel channel)
+  bool ChannelPlaying(Channel channel)
   {
     return soloud.isValidVoiceHandle(channel);
   }
@@ -71,7 +71,7 @@ struct AudioDriver_SoLoud : public AudioDriver
     soloud.set3dListenerPosition(x, y, z);
   }
 
-  bool_t PlayMusic(const char *filename, bool_t loop)
+  bool PlayMusic(const char *filename, bool loop)
   {
     Memblock *data = LoadMemblock(filename);
     if (!data)
@@ -123,7 +123,7 @@ struct AudioDriver_SoLoud : public AudioDriver
     soloud.setVolume(musicHandle, volume);
   }
 
-  bool_t MusicPlaying()
+  bool MusicPlaying()
   {
     return soloud.isValidVoiceHandle(musicHandle);
   }
@@ -151,13 +151,13 @@ struct AudioDriver_SoLoud : public AudioDriver
     }
   }
 
-  Channel PlaySound(Sound *sound, bool_t loop)
+  Channel PlaySound(Sound *sound, bool loop)
   {
     ((SoLoud::AudioSource *)sound)->setLooping(loop);
     return soloud.play(*(SoLoud::AudioSource *)sound);
   }
 
-  Channel PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool_t loop)
+  Channel PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool loop)
   {
     ((SoLoud::AudioSource *)sound)->setLooping(loop);
     SoLoud::handle channel = soloud.play3d(*(SoLoud::AudioSource *)sound, x, y, z);
@@ -176,8 +176,8 @@ private:
   SoLoud::handle musicHandle;
 };
 
-AudioDriver &AudioDriver::Get()
+Audio &Audio::Get()
 {
-  static AudioDriver_SoLoud driver;
+  static Audio_SoLoud driver;
   return driver;
 }

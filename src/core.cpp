@@ -1,7 +1,7 @@
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
-#include "audio_driver.h"
+#include "driver/audio.h"
 #include "core.h"
 #include "dir.h"
 #include "input.h"
@@ -40,17 +40,17 @@ extern "C"
   void _Init(const char *workingDir)
   {
     _SetDevice(NULL, workingDir);
-    AudioDriver::Get().Init();
+    Audio::Get().Init();
   }
 
   void _Finish()
   {
-    AudioDriver::Get().Finish();
+    Audio::Get().Finish();
   }
 
   bool_t _Run()
   {
-    AudioDriver::Get().Update();
+    Audio::Get().Update();
     _ClearInputs();
     bool result = _Device()->run() && _Device()->getVideoDriver() != NULL;
     const int msecs = Millisecs();

@@ -1,4 +1,4 @@
-#include "audio_driver.h"
+#include "driver/audio.h"
 #include "sound.h"
 
 extern "C"
@@ -6,22 +6,22 @@ extern "C"
 
   EXPORT Sound *CALL LoadSound(const char *filename)
   {
-    return AudioDriver::Get().LoadSound(filename);
+    return Audio::Get().LoadSound(filename);
   }
 
   EXPORT void CALL FreeSound(Sound *sound)
   {
-    AudioDriver::Get().FreeSound(sound);
+    Audio::Get().FreeSound(sound);
   }
 
   EXPORT Channel CALL PlaySound(Sound *sound, bool_t loop)
   {
-    return AudioDriver::Get().PlaySound(sound, loop);
+    return Audio::Get().PlaySound(sound, loop);
   }
 
   EXPORT Channel CALL PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool_t loop)
   {
-    return AudioDriver::Get().PlaySound3D(sound, x, y, z, radius, loop);
+    return Audio::Get().PlaySound3D(sound, x, y, z, radius, loop);
   }
 
 } // extern "C"

@@ -16,8 +16,8 @@
 #include "core.h"
 #include "dialogs.h"
 #include "dir.h"
+#include "driver/scripting.h"
 #include "screen.h"
-#include "script.h"
 #include "string.h"
 #include "xml.h"
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     path = BinDir();
 #endif
   _Init(path.c_str());
-  if (!Script::Get().Load("main.lua"))
+  if (!Scripting::Get().Load("main.lua"))
   {
     PrintError();
     return -1;
@@ -73,6 +73,6 @@ static stringc BinDir()
 
 static void PrintError()
 {
-  _Device()->getLogger()->log(Script::Get().Error().c_str(), ELL_ERROR);
-  Notify("Error", Script::Get().Error().c_str(), true);
+  _Device()->getLogger()->log(Scripting::Get().Error(), ELL_ERROR);
+  Notify("Error", Scripting::Get().Error(), true);
 }

@@ -1,32 +1,32 @@
-#include "audio_driver.h"
+#include "driver/audio.h"
 #include "music.h"
 
 EXPORT bool_t CALL PlayMusic(const char *filename, bool_t loop)
 {
-  return AudioDriver::Get().PlayMusic(filename, loop);
+  return Audio::Get().PlayMusic(filename, loop);
 }
 
 EXPORT void CALL StopMusic()
 {
-  AudioDriver::Get().StopMusic();
+  Audio::Get().StopMusic();
 }
 
 EXPORT void CALL PauseMusic()
 {
-  AudioDriver::Get().PauseMusic();
+  Audio::Get().PauseMusic();
 }
 
 EXPORT void CALL ResumeMusic()
 {
-  AudioDriver::Get().ResumeMusic();
+  Audio::Get().ResumeMusic();
 }
 
 EXPORT void CALL SetMusicVolume(float volume)
 {
-  AudioDriver::Get().SetMusicVolume(volume);
+  Audio::Get().SetMusicVolume(volume);
 }
 
 EXPORT bool_t CALL MusicPlaying()
 {
-  return AudioDriver::Get().MusicPlaying();
+  return Audio::Get().MusicPlaying();
 }
