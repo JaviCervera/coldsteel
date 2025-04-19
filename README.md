@@ -8,6 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
+* Rename Memblock to Bank.
 * By default, materials should not use vertex colors.
 * Add font editor.
 * Replace SWIG generated wrapper.
