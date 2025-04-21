@@ -43,6 +43,7 @@
 #define FLAG_BACKFACECULLING 16
 #define FLAG_NORMALIZE 32
 #define FLAG_VERTEXCOLORS 64
+#define FLAG_CLAMP 128
 
 #ifdef __cplusplus
 extern "C"

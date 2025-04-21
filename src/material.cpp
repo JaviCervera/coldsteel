@@ -212,6 +212,7 @@ extern "C"
       flags.set(FLAG_BACKFACECULLING, EMF_BACK_FACE_CULLING);
       flags.set(FLAG_VERTEXCOLORS, EMF_COLOR_MATERIAL);
       flags.set(FLAG_NORMALIZE, EMF_NORMALIZE_NORMALS);
+      flags.set(FLAG_CLAMP, EMF_TEXTURE_WRAP);
     }
     const map<int, E_MATERIAL_FLAG>::Node *found = flags.find(flag);
     return found ? found->getValue() : E_MATERIAL_FLAG(0);
