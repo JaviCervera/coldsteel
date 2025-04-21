@@ -136,105 +136,74 @@ extern "C"
       return LIGHTING_FLAT;
   }
 
-  EXPORT void CALL SetMaterialFogEnabled(SMaterial *material, bool_t enabled)
+  EXPORT void CALL SetMaterialFlags(SMaterial *material, int flags)
   {
-    material->setFlag(EMF_FOG_ENABLE, enabled);
+    material->setFlag(EMF_FOG_ENABLE, flags & FLAG_FOG);
+    material->setFlag(EMF_ZBUFFER, flags & FLAG_ZREAD);
+    material->setFlag(EMF_ZWRITE_ENABLE, flags & FLAG_ZWRITE);
+    material->setFlag(EMF_BACK_FACE_CULLING, flags & FLAG_BACKFACECULLING);
+    material->setFlag(EMF_COLOR_MATERIAL, flags & FLAG_VERTEXCOLORS);
+    material->setFlag(EMF_NORMALIZE_NORMALS, flags & FLAG_NORMALIZE);
   }
 
-  EXPORT bool_t CALL MaterialFogEnabled(SMaterial *material)
+  EXPORT int CALL MaterialFlags(SMaterial *material)
   {
-    return material->getFlag(EMF_FOG_ENABLE);
-  }
-
-  EXPORT void CALL SetMaterialDepthReadingEnabled(SMaterial *material, bool_t enabled)
-  {
-    material->setFlag(EMF_ZBUFFER, enabled);
-  }
-
-  EXPORT bool_t CALL MaterialDepthReadingEnabled(SMaterial *material)
-  {
-    return material->getFlag(EMF_ZBUFFER);
-  }
-
-  EXPORT void CALL SetMaterialDepthWritingEnabled(SMaterial *material, bool_t enabled)
-  {
-    material->setFlag(EMF_ZWRITE_ENABLE, enabled);
-  }
-
-  EXPORT bool_t CALL MaterialDepthWritingEnabled(SMaterial *material)
-  {
-    return material->getFlag(EMF_ZWRITE_ENABLE);
-  }
-
-  EXPORT void CALL SetMaterialCullingEnabled(SMaterial *material, bool_t enabled)
-  {
-    material->setFlag(EMF_BACK_FACE_CULLING, enabled);
-  }
-
-  EXPORT bool_t CALL MaterialCullingEnabled(SMaterial *material)
-  {
-    return material->getFlag(EMF_BACK_FACE_CULLING);
-  }
-
-  EXPORT void CALL SetMaterialVertexColorsEnabled(SMaterial *material, bool_t enabled)
-  {
-    material->setFlag(EMF_COLOR_MATERIAL, enabled);
-  }
-
-  EXPORT bool_t CALL MaterialVertexColorsEnabled(SMaterial *material)
-  {
-    return material->getFlag(EMF_COLOR_MATERIAL);
-  }
-
-  EXPORT void CALL SetMaterialNormalizeEnabled(SMaterial *material, bool_t enabled)
-  {
-    material->setFlag(EMF_NORMALIZE_NORMALS, enabled);
-  }
-
-  EXPORT bool_t CALL MaterialNormalizeEnabled(SMaterial *material)
-  {
-    return material->getFlag(EMF_NORMALIZE_NORMALS);
+    int flags = 0;
+    if (material->getFlag(EMF_FOG_ENABLE))
+      flags |= FLAG_FOG;
+    if (material->getFlag(EMF_ZBUFFER)) flags |= FLAG_ZREAD;
+    if (material->getFlag(EMF_ZWRITE_ENABLE)) flags |= FLAG_ZWRITE;
+    if (material->getFlag(EMF_BACK_FACE_CULLING)) flags |= FLAG_BACKFACECULLING;
+    if (material->getFlag(EMF_COLOR_MATERIAL)) flags |= FLAG_VERTEXCOLORS;
+    if (material->getFlag(EMF_NORMALIZE_NORMALS)) flags |= FLAG_NORMALIZE;
+    return flags;
   }
 
   E_MATERIAL_TYPE _IrrlichtMaterialType(int blend)
   {
-    map<int, E_MATERIAL_TYPE> types;
-    types.set(MATERIAL_SOLID, EMT_SOLID);
-    types.set(MATERIAL_LIGHTMAP, EMT_LIGHTMAP_LIGHTING);
-    types.set(MATERIAL_LIGHTMAP2X, EMT_LIGHTMAP_LIGHTING_M2);
-    types.set(MATERIAL_LIGHTMAP4X, EMT_LIGHTMAP_LIGHTING_M4);
-    types.set(MATERIAL_DETAIL, EMT_DETAIL_MAP);
-    types.set(MATERIAL_ADD, EMT_TRANSPARENT_ADD_COLOR);
-    types.set(MATERIAL_ALPHA, EMT_TRANSPARENT_ALPHA_CHANNEL);
-    types.set(MATERIAL_VERTEXALPHA, EMT_TRANSPARENT_VERTEX_ALPHA);
-    types.set(MATERIAL_MASKED, EMT_TRANSPARENT_ALPHA_CHANNEL_REF);
-    types.set(MATERIAL_SPHERE, EMT_SPHERE_MAP);
-    types.set(MATERIAL_REFLECTION, EMT_TRANSPARENT_REFLECTION_2_LAYER);
-    types.set(MATERIAL_NORMAL, EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA);
-    types.set(MATERIAL_NORMALADD, EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR);
-    types.set(MATERIAL_PARALLAX, EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA);
-    types.set(MATERIAL_PARALLAXADD, EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR);
+    static map<int, E_MATERIAL_TYPE> types;
+    if (types.empty())
+    {
+      types.set(MATERIAL_SOLID, EMT_SOLID);
+      types.set(MATERIAL_LIGHTMAP, EMT_LIGHTMAP_LIGHTING);
+      types.set(MATERIAL_LIGHTMAP2X, EMT_LIGHTMAP_LIGHTING_M2);
+      types.set(MATERIAL_LIGHTMAP4X, EMT_LIGHTMAP_LIGHTING_M4);
+      types.set(MATERIAL_DETAIL, EMT_DETAIL_MAP);
+      types.set(MATERIAL_ADD, EMT_TRANSPARENT_ADD_COLOR);
+      types.set(MATERIAL_ALPHA, EMT_TRANSPARENT_ALPHA_CHANNEL);
+      types.set(MATERIAL_VERTEXALPHA, EMT_TRANSPARENT_VERTEX_ALPHA);
+      types.set(MATERIAL_MASKED, EMT_TRANSPARENT_ALPHA_CHANNEL_REF);
+      types.set(MATERIAL_SPHERE, EMT_SPHERE_MAP);
+      types.set(MATERIAL_REFLECTION, EMT_TRANSPARENT_REFLECTION_2_LAYER);
+      types.set(MATERIAL_NORMAL, EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA);
+      types.set(MATERIAL_NORMALADD, EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR);
+      types.set(MATERIAL_PARALLAX, EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA);
+      types.set(MATERIAL_PARALLAXADD, EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR);
+    }
     return types[blend];
   }
 
   int _MaterialType(E_MATERIAL_TYPE type)
   {
-    map<E_MATERIAL_TYPE, int> types;
-    types.set(EMT_SOLID, MATERIAL_SOLID);
-    types.set(EMT_LIGHTMAP_LIGHTING, MATERIAL_LIGHTMAP);
-    types.set(EMT_LIGHTMAP_LIGHTING_M2, MATERIAL_LIGHTMAP2X);
-    types.set(EMT_LIGHTMAP_LIGHTING_M4, MATERIAL_LIGHTMAP4X);
-    types.set(EMT_DETAIL_MAP, MATERIAL_DETAIL);
-    types.set(EMT_TRANSPARENT_ADD_COLOR, MATERIAL_ADD);
-    types.set(EMT_TRANSPARENT_ALPHA_CHANNEL, MATERIAL_ALPHA);
-    types.set(EMT_TRANSPARENT_VERTEX_ALPHA, MATERIAL_VERTEXALPHA);
-    types.set(EMT_TRANSPARENT_ALPHA_CHANNEL_REF, MATERIAL_MASKED);
-    types.set(EMT_SPHERE_MAP, MATERIAL_SPHERE);
-    types.set(EMT_TRANSPARENT_REFLECTION_2_LAYER, MATERIAL_REFLECTION);
-    types.set(EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_NORMAL);
-    types.set(EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_NORMALADD);
-    types.set(EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_PARALLAX);
-    types.set(EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_PARALLAXADD);
+    static map<E_MATERIAL_TYPE, int> types;
+    if (types.empty())
+    {
+      types.set(EMT_SOLID, MATERIAL_SOLID);
+      types.set(EMT_LIGHTMAP_LIGHTING, MATERIAL_LIGHTMAP);
+      types.set(EMT_LIGHTMAP_LIGHTING_M2, MATERIAL_LIGHTMAP2X);
+      types.set(EMT_LIGHTMAP_LIGHTING_M4, MATERIAL_LIGHTMAP4X);
+      types.set(EMT_DETAIL_MAP, MATERIAL_DETAIL);
+      types.set(EMT_TRANSPARENT_ADD_COLOR, MATERIAL_ADD);
+      types.set(EMT_TRANSPARENT_ALPHA_CHANNEL, MATERIAL_ALPHA);
+      types.set(EMT_TRANSPARENT_VERTEX_ALPHA, MATERIAL_VERTEXALPHA);
+      types.set(EMT_TRANSPARENT_ALPHA_CHANNEL_REF, MATERIAL_MASKED);
+      types.set(EMT_SPHERE_MAP, MATERIAL_SPHERE);
+      types.set(EMT_TRANSPARENT_REFLECTION_2_LAYER, MATERIAL_REFLECTION);
+      types.set(EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_NORMAL);
+      types.set(EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_NORMALADD);
+      types.set(EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_PARALLAX);
+      types.set(EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_PARALLAXADD);
+    }
     return types[type];
   }
 

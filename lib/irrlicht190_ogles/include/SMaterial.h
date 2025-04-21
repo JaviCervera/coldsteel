@@ -309,7 +309,7 @@ namespace video
 			EmissiveColor(0,0,0,0), SpecularColor(255,255,255,255),
 			Shininess(0.0f), MaterialTypeParam(0.0f), MaterialTypeParam2(0.0f), Thickness(1.0f),
 			AntiAliasing(EAAM_SIMPLE), ZBuffer(ECFN_LESSEQUAL), ZWriteEnable(EZW_AUTO),
-			ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE_AND_AMBIENT),
+			ColorMask(ECP_ALL),	ColorMaterial(ECM_NONE),
 			PolygonOffsetDepthBias(0.f), PolygonOffsetSlopeScale(0.f),
 			PolygonOffsetFactor(0), PolygonOffsetDirection(EPO_FRONT),
 			BlendOperation(EBO_NONE), BlendFactor(0.0f),

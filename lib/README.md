@@ -70,14 +70,6 @@ The modifications made to the engine are described here:
 
 ### SMaterial.h
 
-Also, a couple of changes have been made to change the default use of vertex colors in lighting.
-
-Search for `ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE),` and replace with:
-
-```c++
-ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE_AND_AMBIENT),
-```
-
 Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with:
 
 ```c++

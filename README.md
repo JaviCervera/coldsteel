@@ -8,8 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Rename Memblock to Bank.
-* By default, materials should not use vertex colors.
+* SetMaterialFlags and MaterialFlags.
 * Add font editor.
 * Replace SWIG generated wrapper.
 * Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.

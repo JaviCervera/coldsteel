@@ -35,6 +35,14 @@
 #define FILTER_TRILINEAR 2
 #define FILTER_ANISOTROPIC 3
 
+// Material flags
+#define FLAG_FOG 1
+#define FLAG_ZREAD 2
+#define FLAG_ZWRITE 4
+#define FLAG_BACKFACECULLING 8
+#define FLAG_NORMALIZE 16
+#define FLAG_VERTEXCOLORS 32
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -61,18 +69,8 @@ extern "C"
   EXPORT int CALL MaterialFilterMode(SMaterial *material);
   EXPORT void CALL SetMaterialLightingMode(SMaterial *material, int mode);
   EXPORT int CALL MaterialLightingMode(SMaterial *material);
-  EXPORT void CALL SetMaterialFogEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialFogEnabled(SMaterial *material);
-  EXPORT void CALL SetMaterialDepthReadingEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialDepthReadingEnabled(SMaterial *material);
-  EXPORT void CALL SetMaterialDepthWritingEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialDepthWritingEnabled(SMaterial *material);
-  EXPORT void CALL SetMaterialCullingEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialCullingEnabled(SMaterial *material);
-  EXPORT void CALL SetMaterialVertexColorsEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialVertexColorsEnabled(SMaterial *material);
-  EXPORT void CALL SetMaterialNormalizeEnabled(SMaterial *material, bool_t enabled);
-  EXPORT bool_t CALL MaterialNormalizeEnabled(SMaterial *material);
+  EXPORT void CALL SetMaterialFlags(SMaterial *material, int flags);
+  EXPORT int CALL MaterialFlags(SMaterial *material);
 
 #ifdef __cplusplus
 } /* extern "C" */
