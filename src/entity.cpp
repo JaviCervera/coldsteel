@@ -84,7 +84,7 @@ extern "C"
 
   EXPORT ISceneNode *CALL EntityChild(ISceneNode *entity, int index)
   {
-    return *(entity->getChildren().begin() + index - 1);
+    return *(entity->getChildren().begin() + (index - 1));
   }
 
   EXPORT void CALL SetEntityPosition(ISceneNode *entity, float x, float y, float z)
