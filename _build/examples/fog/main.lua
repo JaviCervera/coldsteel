@@ -14,16 +14,17 @@ SetEntityRotation(light, 45, -45, 0)
 
 local mesh = CreateCubeMesh()
 SetMeshColor(mesh, COLOR_BROWN)
+SetMaterialFlag(SurfaceMaterial(MeshSurface(mesh, 1)), FLAG_VERTEXCOLORS, true)
 
 local cubes = {}
 local x = -7
 local z = NUM_CUBES / 16 * 2 - 2
 for i = 1, NUM_CUBES, 2 do
     cubes[i] = CreateModel(mesh)
-    SetMaterialFogEnabled(EntityMaterial(cubes[i], 1), true)
+    SetMaterialFlag(EntityMaterial(cubes[i], 1), FLAG_FOG, true)
     SetEntityPosition(cubes[i], x, -1.5, z)
     cubes[i+1] = CreateModel(mesh)
-    SetMaterialFogEnabled(EntityMaterial(cubes[i+1], 1), true)
+    SetMaterialFlag(EntityMaterial(cubes[i], 1), FLAG_FOG, true)
     SetEntityPosition(cubes[i+1], x, 1.5, z)
     x = x + 2
     if x > 7 then
@@ -39,7 +40,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
         if not spacePressed then
             for _, cube in ipairs(cubes) do
                 local mat = EntityMaterial(cube, 1)
-                SetMaterialFogEnabled(mat, not MaterialFogEnabled(mat))
+                SetMaterialFlag(mat, FLAG_FOG, not MaterialFlag(mat, FLAG_FOG))
             end
         end
         spacePressed = true

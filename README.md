@@ -8,18 +8,18 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* SetMaterialFlags and MaterialFlags.
-* Add font editor.
+* Add ColdSteel Dll.
 * Replace SWIG generated wrapper.
 * Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
 * Add particles support & editor.
+* Add font editor.
 * Fix audio positioning.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
 * Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
 * GUI styles.
-* MouseXSpeed, MouseYSpeed, MouseWheelSpeed
-* JoystickButtonHit
+* MouseXSpeed, MouseYSpeed, MouseWheelSpeed.
+* JoystickButtonHit.
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
 * Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.

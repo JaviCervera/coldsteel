@@ -69,8 +69,8 @@ extern "C"
   EXPORT int CALL MaterialFilterMode(SMaterial *material);
   EXPORT void CALL SetMaterialLightingMode(SMaterial *material, int mode);
   EXPORT int CALL MaterialLightingMode(SMaterial *material);
-  EXPORT void CALL SetMaterialFlags(SMaterial *material, int flags);
-  EXPORT int CALL MaterialFlags(SMaterial *material);
+  EXPORT void CALL SetMaterialFlag(SMaterial *material, int flag, bool_t enable);
+  EXPORT bool_t CALL MaterialFlag(SMaterial *material, int flag);
 
 #ifdef __cplusplus
 } /* extern "C" */

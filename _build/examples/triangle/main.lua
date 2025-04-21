@@ -16,7 +16,8 @@ UpdateMesh(mesh)
 
 local triangle = CreateModel(mesh)
 FreeMesh(mesh)
-SetMaterialCullingEnabled(EntityMaterial(triangle, 1), false)
+SetMaterialFlag(EntityMaterial(triangle, 1), FLAG_BACKFACECULLING, false)
+SetMaterialFlag(EntityMaterial(triangle, 1), FLAG_VERTEXCOLORS, true)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(triangle, 0, 64 * DeltaTime(), 0)

@@ -14,7 +14,6 @@ FreeMesh(mesh)
 local mat = EntityMaterial(model, 1)
 SetMaterialDiffuse(mat, COLOR_ORANGE)
 SetMaterialShininess(mat, 0.5)
-SetMaterialVertexColorsEnabled(mat, false)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_LEFT) then SetMaterialShininess(mat, MaterialShininess(mat) - 0.2 * DeltaTime()) end

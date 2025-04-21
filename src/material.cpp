@@ -5,8 +5,9 @@
 extern "C"
 {
 
-  E_MATERIAL_TYPE _IrrlichtMaterialType(int blend);
+  E_MATERIAL_TYPE _IrrlichtMaterialType(int type);
   int _MaterialType(E_MATERIAL_TYPE type);
+  E_MATERIAL_FLAG _IrrlichtMaterialFlag(int flag);
 
   EXPORT void CALL SetMaterialTexture(SMaterial *material, int index, ITexture *texture)
   {
@@ -136,30 +137,20 @@ extern "C"
       return LIGHTING_FLAT;
   }
 
-  EXPORT void CALL SetMaterialFlags(SMaterial *material, int flags)
+  EXPORT void CALL SetMaterialFlag(SMaterial *material, int flag, bool_t enable)
   {
-    material->setFlag(EMF_FOG_ENABLE, flags & FLAG_FOG);
-    material->setFlag(EMF_ZBUFFER, flags & FLAG_ZREAD);
-    material->setFlag(EMF_ZWRITE_ENABLE, flags & FLAG_ZWRITE);
-    material->setFlag(EMF_BACK_FACE_CULLING, flags & FLAG_BACKFACECULLING);
-    material->setFlag(EMF_COLOR_MATERIAL, flags & FLAG_VERTEXCOLORS);
-    material->setFlag(EMF_NORMALIZE_NORMALS, flags & FLAG_NORMALIZE);
+    E_MATERIAL_FLAG irrflag = _IrrlichtMaterialFlag(flag);
+    if (irrflag != E_MATERIAL_FLAG(0))
+      material->setFlag(irrflag, enable);
   }
 
-  EXPORT int CALL MaterialFlags(SMaterial *material)
+  EXPORT bool_t CALL MaterialFlag(SMaterial *material, int flag)
   {
-    int flags = 0;
-    if (material->getFlag(EMF_FOG_ENABLE))
-      flags |= FLAG_FOG;
-    if (material->getFlag(EMF_ZBUFFER)) flags |= FLAG_ZREAD;
-    if (material->getFlag(EMF_ZWRITE_ENABLE)) flags |= FLAG_ZWRITE;
-    if (material->getFlag(EMF_BACK_FACE_CULLING)) flags |= FLAG_BACKFACECULLING;
-    if (material->getFlag(EMF_COLOR_MATERIAL)) flags |= FLAG_VERTEXCOLORS;
-    if (material->getFlag(EMF_NORMALIZE_NORMALS)) flags |= FLAG_NORMALIZE;
-    return flags;
+    E_MATERIAL_FLAG irrflag = _IrrlichtMaterialFlag(flag);
+    return (irrflag != E_MATERIAL_FLAG(0)) ? material->getFlag(irrflag) : false;
   }
 
-  E_MATERIAL_TYPE _IrrlichtMaterialType(int blend)
+  E_MATERIAL_TYPE _IrrlichtMaterialType(int type)
   {
     static map<int, E_MATERIAL_TYPE> types;
     if (types.empty())
@@ -180,7 +171,8 @@ extern "C"
       types.set(MATERIAL_PARALLAX, EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA);
       types.set(MATERIAL_PARALLAXADD, EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR);
     }
-    return types[blend];
+    const map<int, E_MATERIAL_TYPE>::Node *found = types.find(type);
+    return found ? found->getValue() : EMT_SOLID;
   }
 
   int _MaterialType(E_MATERIAL_TYPE type)
@@ -204,7 +196,24 @@ extern "C"
       types.set(EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_PARALLAX);
       types.set(EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_PARALLAXADD);
     }
-    return types[type];
+    const map<E_MATERIAL_TYPE, int>::Node *found = types.find(type);
+    return found ? found->getValue() : MATERIAL_SOLID;
+  }
+
+  E_MATERIAL_FLAG _IrrlichtMaterialFlag(int flag)
+  {
+    static map<int, E_MATERIAL_FLAG> flags;
+    if (flags.empty())
+    {
+      flags.set(FLAG_FOG, EMF_FOG_ENABLE);
+      flags.set(FLAG_ZREAD, EMF_ZBUFFER);
+      flags.set(FLAG_ZWRITE, EMF_ZWRITE_ENABLE);
+      flags.set(FLAG_BACKFACECULLING, EMF_BACK_FACE_CULLING);
+      flags.set(FLAG_VERTEXCOLORS, EMF_COLOR_MATERIAL);
+      flags.set(FLAG_NORMALIZE, EMF_NORMALIZE_NORMALS);
+    }
+    const map<int, E_MATERIAL_FLAG>::Node *found = flags.find(flag);
+    return found ? found->getValue() : E_MATERIAL_FLAG(0);
   }
 
 } // extern "C"

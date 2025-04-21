@@ -37,7 +37,6 @@ SetEntityPosition(floor, 0, -0.5, 0)
 local mat = EntityMaterial(floor, 1)
 SetMaterialDiffuse(mat, COLOR_BLACK)
 SetMaterialAmbient(mat, RGB(55, 55, 55))
-SetMaterialVertexColorsEnabled(mat, false)
 FreeMesh(mesh)
 
 -- Create pillars
@@ -53,7 +52,6 @@ for i = 1, #xpos do
     mat = EntityMaterial(pillar, 1)
     SetMaterialDiffuse(mat, RGB(120, 0, 0))
     SetMaterialAmbient(mat, RGB(120, 0, 0))
-    SetMaterialVertexColorsEnabled(mat, false)
 end
 FreeMesh(mesh)
 
@@ -64,7 +62,6 @@ mat = EntityMaterial(sphere, 1)
 SetMaterialDiffuse(mat, RGB(155, 155, 255))
 SetMaterialEmissive(mat, RGB(155, 155, 255))
 SetMaterialAmbient(mat, RGB(155, 155, 255))
-SetMaterialVertexColorsEnabled(mat, false)
 FreeMesh(mesh)
 
 -- Play sound
