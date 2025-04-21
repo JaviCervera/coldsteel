@@ -44,7 +44,7 @@ extern "C"
     return _Device()->getCursorControl()->getPosition().Y;
   }
 
-  EXPORT int CALL CursorWheel()
+  EXPORT int CALL CursorZ()
   {
     return _wheel;
   }

@@ -163,7 +163,7 @@ extern "C"
   EXPORT void CALL SetCursorPosition(int x, int y);
   EXPORT int CALL CursorX();
   EXPORT int CALL CursorY();
-  EXPORT int CALL CursorWheel();
+  EXPORT int CALL CursorZ();
   EXPORT bool_t CALL ButtonDown(int button);
   EXPORT bool_t CALL ButtonHit(int button);
   EXPORT bool_t CALL KeyDown(int key);
