@@ -205,6 +205,7 @@ extern "C"
     static map<int, E_MATERIAL_FLAG> flags;
     if (flags.empty())
     {
+      flags.set(FLAG_LIGHTING, EMF_LIGHTING);
       flags.set(FLAG_FOG, EMF_FOG_ENABLE);
       flags.set(FLAG_ZREAD, EMF_ZBUFFER);
       flags.set(FLAG_ZWRITE, EMF_ZWRITE_ENABLE);

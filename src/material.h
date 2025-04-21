@@ -36,12 +36,13 @@
 #define FILTER_ANISOTROPIC 3
 
 // Material flags
-#define FLAG_FOG 1
-#define FLAG_ZREAD 2
-#define FLAG_ZWRITE 4
-#define FLAG_BACKFACECULLING 8
-#define FLAG_NORMALIZE 16
-#define FLAG_VERTEXCOLORS 32
+#define FLAG_LIGHTING 1
+#define FLAG_FOG 2
+#define FLAG_ZREAD 4
+#define FLAG_ZWRITE 8
+#define FLAG_BACKFACECULLING 16
+#define FLAG_NORMALIZE 32
+#define FLAG_VERTEXCOLORS 64
 
 #ifdef __cplusplus
 extern "C"
