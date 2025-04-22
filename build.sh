@@ -5,7 +5,7 @@ echo "# Building coldsteel cli"
 g++ -O2 -s -fno-rtti -o _build/coldsteel coldsteel.cpp lib/lua/*.c
 
 echo "# Generating Lua wrapper ..."
-swig -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
+swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
 echo "# Creating folders for CMake ..."
 mkdir _CMAKE

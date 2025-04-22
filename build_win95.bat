@@ -6,7 +6,7 @@ g++ -O2 -static -s -fno-rtti -o _build/coldsteel.exe coldsteel.cpp lib/lua/*.c
 set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 
 echo # Generating Lua wrapper ...
-swig.exe -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
+swig.exe -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
 echo # Creating folders for CMake ...
 mkdir _CMAKE\_IRRLICHT

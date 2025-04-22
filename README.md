@@ -8,7 +8,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Add ColdSteel Dll.
 * Replace SWIG generated wrapper.
 * Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
 * Add particles support & editor.

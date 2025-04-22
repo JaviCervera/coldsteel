@@ -2,7 +2,7 @@
 cd `dirname $0`
 
 echo "# Generating Lua wrapper ..."
-swig -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
+swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
 echo "# Creating folders for CMake ..."
 mkdir _CMAKE

@@ -1,7 +1,7 @@
 @echo off
 
 echo # Generating Lua wrapper ...
-swig.exe -lua -c++ -o src/lua_wrapper.cpp coldsteel.i
+swig.exe -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
 echo # Creating folders for CMake ...
 mkdir _CMAKE\_COLDSTEEL_EMSCRIPTEN
