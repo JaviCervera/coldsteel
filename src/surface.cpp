@@ -1,12 +1,16 @@
 #include "color.h"
 #include "surface.h"
 
+static int _surfaceCreationFlags = 0;
+
 extern "C"
 {
 
   EXPORT IMeshBuffer *CALL AddSurface(IMesh *mesh)
   {
-    IMeshBuffer *buffer = new SMeshBufferLightMap();
+    IMeshBuffer *buffer = (_surfaceCreationFlags & SURFACE_2TEXCOORDS)
+      ? (IMeshBuffer *)(new SMeshBufferLightMap())
+      : (IMeshBuffer *)(new SMeshBuffer());
     ((SMesh *)mesh)->addMeshBuffer(buffer);
     buffer->drop();
     return buffer;
@@ -15,10 +19,19 @@ extern "C"
   EXPORT int CALL AddIndex(IMeshBuffer *surface, int vertexIndex)
   {
     --vertexIndex;
-    int lastIndex = NumIndices(surface);
-    surface->append(NULL, 0, (const u16 *)&vertexIndex, 1);
-    surface->getIndices()[lastIndex] = vertexIndex;
-    return lastIndex + 1;
+    switch (surface->getVertexType())
+    {
+    case EVT_STANDARD:
+      ((SMeshBuffer*)surface)->Indices.push_back(vertexIndex);
+      break;
+    case EVT_2TCOORDS:
+      ((SMeshBufferLightMap*)surface)->Indices.push_back(vertexIndex);
+      break;
+    case EVT_TANGENTS:
+      ((SMeshBufferTangents*)surface)->Indices.push_back(vertexIndex);
+      break;
+    }
+    return NumIndices(surface);
   }
 
   EXPORT int CALL NumIndices(IMeshBuffer *surface)
@@ -38,23 +51,14 @@ extern "C"
     switch (surface->getVertexType())
     {
     case EVT_STANDARD:
-    {
-      S3DVertex vertex(x, y, z, nx, ny, nz, _Color(color), u, v);
-      surface->append(&vertex, 1, NULL, 0);
+      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertex(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
-    }
     case EVT_2TCOORDS:
-    {
-      S3DVertex2TCoords vertex(x, y, z, nx, ny, nz, _Color(color), u, v);
-      surface->append(&vertex, 1, NULL, 0);
+      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertex2TCoords(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
-    }
     case EVT_TANGENTS:
-    {
-      S3DVertexTangents vertex(x, y, z, nx, ny, nz, _Color(color), u, v);
-      surface->append(&vertex, 1, NULL, 0);
+      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertexTangents(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
-    }
     }
     return NumVertices(surface);
   }
@@ -147,6 +151,11 @@ extern "C"
   EXPORT SMaterial *CALL SurfaceMaterial(IMeshBuffer *surface)
   {
     return &surface->getMaterial();
+  }
+
+  EXPORT void *CALL SetSurfaceCreationFlags(int flags)
+  {
+    _surfaceCreationFlags = flags;
   }
 
 } // extern "C"

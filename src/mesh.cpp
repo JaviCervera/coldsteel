@@ -15,6 +15,9 @@ extern "C"
 
   EXPORT IMesh *CALL CreateCubeMesh()
   {
+  #ifndef LEGACY_IRRLICHT
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1), ECMT_1BUF_24VTX_NP));
+  #else
     const int white = RGB(255, 255, 255);
     IMesh *cube = CreateMesh();
     IMeshBuffer *surf = AddSurface(cube);
@@ -95,6 +98,7 @@ extern "C"
     UpdateMesh(cube);
 
     return FixMeshSpecular(cube);
+#endif
   }
 
   EXPORT IMesh *CALL CreateCylinderMesh(int segments)
@@ -112,6 +116,11 @@ extern "C"
     IMesh *quad = FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1)));
     RotateMesh(quad, -90, 0, 0);
     return quad;
+  }
+
+  EXPORT IMesh *CALL CreateSimpleCubeMesh()
+  {
+    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1)));
   }
 
   EXPORT IMesh *CALL CreateSphereMesh(int segments)

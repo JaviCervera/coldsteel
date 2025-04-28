@@ -2,6 +2,8 @@
 
 #include "common.h"
 
+#define SURFACE_2TEXCOORDS 1
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -24,6 +26,7 @@ extern "C"
   EXPORT float CALL VertexU(IMeshBuffer *surface, int index, int set);
   EXPORT float CALL VertexV(IMeshBuffer *surface, int index, int set);
   EXPORT SMaterial *CALL SurfaceMaterial(IMeshBuffer *surface);
+  EXPORT void *CALL SetSurfaceCreationFlags(int flags);
 
 #ifdef __cplusplus
 } /* extern "C" */

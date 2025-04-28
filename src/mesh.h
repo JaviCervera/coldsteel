@@ -12,6 +12,7 @@ extern "C"
   EXPORT IMesh *CALL CreateCylinderMesh(int segments);
   EXPORT IMesh *CALL CreateMesh();
   EXPORT IMesh *CALL CreateQuadMesh();
+  EXPORT IMesh *CALL CreateSimpleCubeMesh();
   EXPORT IMesh *CALL CreateSphereMesh(int segments);
   EXPORT IMesh *CALL LoadMesh(const char *filename);
   EXPORT IMesh *CALL LoadTerrainMesh(IImage *heightmap, IImage *pixmap, float width, float height, float depth);
