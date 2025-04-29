@@ -26,7 +26,7 @@ extern "C"
   EXPORT float CALL VertexU(IMeshBuffer *surface, int index, int set);
   EXPORT float CALL VertexV(IMeshBuffer *surface, int index, int set);
   EXPORT SMaterial *CALL SurfaceMaterial(IMeshBuffer *surface);
-  EXPORT void *CALL SetSurfaceCreationFlags(int flags);
+  EXPORT void CALL SetSurfaceCreationFlags(int flags);
 
 #ifdef __cplusplus
 } /* extern "C" */

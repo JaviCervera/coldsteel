@@ -9,8 +9,8 @@ extern "C"
   EXPORT IMeshBuffer *CALL AddSurface(IMesh *mesh)
   {
     IMeshBuffer *buffer = (_surfaceCreationFlags & SURFACE_2TEXCOORDS)
-      ? (IMeshBuffer *)(new SMeshBufferLightMap())
-      : (IMeshBuffer *)(new SMeshBuffer());
+                              ? (IMeshBuffer *)(new SMeshBufferLightMap())
+                              : (IMeshBuffer *)(new SMeshBuffer());
     ((SMesh *)mesh)->addMeshBuffer(buffer);
     buffer->drop();
     return buffer;
@@ -22,13 +22,13 @@ extern "C"
     switch (surface->getVertexType())
     {
     case EVT_STANDARD:
-      ((SMeshBuffer*)surface)->Indices.push_back(vertexIndex);
+      ((SMeshBuffer *)surface)->Indices.push_back(vertexIndex);
       break;
     case EVT_2TCOORDS:
-      ((SMeshBufferLightMap*)surface)->Indices.push_back(vertexIndex);
+      ((SMeshBufferLightMap *)surface)->Indices.push_back(vertexIndex);
       break;
     case EVT_TANGENTS:
-      ((SMeshBufferTangents*)surface)->Indices.push_back(vertexIndex);
+      ((SMeshBufferTangents *)surface)->Indices.push_back(vertexIndex);
       break;
     }
     return NumIndices(surface);
@@ -51,13 +51,13 @@ extern "C"
     switch (surface->getVertexType())
     {
     case EVT_STANDARD:
-      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertex(x, y, z, nx, ny, nz, _Color(color), u, v));
+      ((SMeshBuffer *)surface)->Vertices.push_back(S3DVertex(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
     case EVT_2TCOORDS:
-      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertex2TCoords(x, y, z, nx, ny, nz, _Color(color), u, v));
+      ((SMeshBuffer *)surface)->Vertices.push_back(S3DVertex2TCoords(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
     case EVT_TANGENTS:
-      ((SMeshBuffer*)surface)->Vertices.push_back(S3DVertexTangents(x, y, z, nx, ny, nz, _Color(color), u, v));
+      ((SMeshBuffer *)surface)->Vertices.push_back(S3DVertexTangents(x, y, z, nx, ny, nz, _Color(color), u, v));
       break;
     }
     return NumVertices(surface);
@@ -153,7 +153,7 @@ extern "C"
     return &surface->getMaterial();
   }
 
-  EXPORT void *CALL SetSurfaceCreationFlags(int flags)
+  EXPORT void CALL SetSurfaceCreationFlags(int flags)
   {
     _surfaceCreationFlags = flags;
   }
