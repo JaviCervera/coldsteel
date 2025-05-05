@@ -8,17 +8,17 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Replace SWIG generated wrapper.
-* Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
 * Add particles support & editor.
 * Add font editor.
 * Fix audio positioning.
+* CursorXSpeed, CursorYSpeed, CursorZSpeed.
+* JoystickButtonHit.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
+* Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
+* Replace SWIG generated wrapper.
 * Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
 * GUI styles.
-* MouseXSpeed, MouseYSpeed, MouseWheelSpeed.
-* JoystickButtonHit.
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
 * Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.
