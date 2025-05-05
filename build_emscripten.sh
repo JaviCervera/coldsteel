@@ -20,6 +20,7 @@ echo "# Building ColdSteel (Emscripten) ..."
 emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 emmake make NDEBUG=1
+mv csrun.html ../../_build/coldsteel.html
 mv csrun.js ../../_build/coldsteel.js
 mv csrun.data ../../_build/coldsteel.data
 mv csrun.wasm ../../_build/coldsteel.wasm
