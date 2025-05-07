@@ -18,10 +18,10 @@ echo # Building ColdSteel (Emscripten) ...
 call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 call emmake make NDEBUG=1 -j8
-move "csrun.html" "..\..\_build\coldsteel.html"
-move "csrun.js" "..\..\_build\coldsteel.js"
-move "csrun.data" "..\..\_build\coldsteel.data"
-move "csrun.wasm" "..\..\_build\coldsteel.wasm"
+move "coldsteel.html" "..\..\_build\coldsteel.html"
+move "coldsteel.js" "..\..\_build\coldsteel.js"
+move "coldsteel.data" "..\..\_build\coldsteel.data"
+move "coldsteel.wasm" "..\..\_build\coldsteel.wasm"
 cd ../..
 
 pause

@@ -15,7 +15,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 * JoystickButtonHit.
 * Add more samples and demos.
 * Add SciTE based Lua editor.
-* Use Irrlicht's embedded zlib to create the assets pkg, and merge `coldsteel` and `csrun`.
+* Use Irrlicht's embedded zlib to create the assets pkg.
 * Replace SWIG generated wrapper.
 * Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
 * GUI styles.

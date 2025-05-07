@@ -1,8 +1,5 @@
 @echo off
 
-echo # Building coldsteel cli
-g++ -O2 -static -s -fno-rtti -o _build/coldsteel.exe coldsteel.cpp lib/lua/*.c
-
 set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 
 echo # Generating Lua wrapper ...
@@ -14,15 +11,15 @@ mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
 cd _CMAKE/_IRRLICHT
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF ../../lib/irrlicht185
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF ../../lib/irrlicht185
 mingw32-make -j8
 cd ../..
 
-echo # Building csrun (Desktop) ...
+echo # Building coldsteel (Desktop) ...
 cd _CMAKE/_COLDSTEEL
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DLEGACY_IRRLICHT=ON -DCMAKE_RC_FLAGS="-O coff" ../..
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLEGACY_IRRLICHT=ON -DCMAKE_RC_FLAGS="-O coff" ../..
 mingw32-make -j8
-move "csrun.exe" "..\..\_build\csrun.exe"
+move "coldsteel.exe" "..\..\_build\coldsteel.exe"
 cd ../..
 
 pause

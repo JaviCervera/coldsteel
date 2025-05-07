@@ -1,22 +1,22 @@
-csrun _build\examples\box
-csrun _build\examples\collision
-csrun _build\examples\editor
-csrun _build\examples\fog
-csrun _build\examples\hello
-csrun _build\examples\joystick
-csrun _build\examples\lighting
-csrun _build\examples\lightmap
-csrun _build\examples\listener
-csrun _build\examples\primitives
-csrun _build\examples\render_to_texture
-csrun _build\examples\screen_to_world
-csrun _build\examples\shadows
-csrun _build\examples\specular
-csrun _build\examples\sprites
-csrun _build\examples\terrain
-csrun _build\examples\test
-csrun _build\examples\texture_from_pixmap
-csrun _build\examples\triangle
-csrun _build\examples\viewport
-csrun _build\examples\world_to_screen
-csrun _build\examples\xml
+coldsteel run _build\examples\box
+coldsteel run _build\examples\collision
+coldsteel run _build\examples\editor
+coldsteel run _build\examples\fog
+coldsteel run _build\examples\hello
+coldsteel run _build\examples\joystick
+coldsteel run _build\examples\lighting
+coldsteel run _build\examples\lightmap
+coldsteel run _build\examples\listener
+coldsteel run _build\examples\primitives
+coldsteel run _build\examples\render_to_texture
+coldsteel run _build\examples\screen_to_world
+coldsteel run _build\examples\shadows
+coldsteel run _build\examples\specular
+coldsteel run _build\examples\sprites
+coldsteel run _build\examples\terrain
+coldsteel run _build\examples\test
+coldsteel run _build\examples\texture_from_pixmap
+coldsteel run _build\examples\triangle
+coldsteel run _build\examples\viewport
+coldsteel run _build\examples\world_to_screen
+coldsteel run _build\examples\xml
