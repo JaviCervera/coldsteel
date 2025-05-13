@@ -8,18 +8,18 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Add particles support & editor.
+* DrawPoint, DrawOval.
+* Set material properties in drawing functions.
 * Add font editor.
+* Add particles support & editor.
 * Fix audio positioning.
 * CursorXSpeed, CursorYSpeed, CursorZSpeed.
 * JoystickButtonHit.
 * Add more samples and demos.
-* Add SciTE based Lua editor.
-* Use Irrlicht's embedded zlib to create the assets pkg.
-* Replace SWIG generated wrapper.
 * Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
+* Add Lua editor.
 * GUI styles.
 * Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
 * Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.
-* ODE physics?
+* ODE physics.

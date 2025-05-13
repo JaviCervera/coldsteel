@@ -24,7 +24,7 @@ for i = 1, NUM_CUBES, 2 do
     SetMaterialFlag(EntityMaterial(cubes[i], 1), FLAG_FOG, true)
     SetEntityPosition(cubes[i], x, -1.5, z)
     cubes[i+1] = CreateModel(mesh)
-    SetMaterialFlag(EntityMaterial(cubes[i], 1), FLAG_FOG, true)
+    SetMaterialFlag(EntityMaterial(cubes[i+1], 1), FLAG_FOG, true)
     SetEntityPosition(cubes[i+1], x, 1.5, z)
     x = x + 2
     if x > 7 then
