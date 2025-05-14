@@ -21,8 +21,6 @@ file(
 	"lib/soloud/src/audiosource/wav/stb_vorbis.c"
 	"lib/soloud/src/backend/alsa/soloud_alsa.cpp"
 	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
-	"lib/soloud/src/backend/openal/soloud_openal_dll.c"
-	"lib/soloud/src/backend/openal/soloud_openal.cpp"
 	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
 	"lib/soloud/src/core/*.cpp"
 	"lib/tinyfiledialogs/tinyfiledialogs.c"
