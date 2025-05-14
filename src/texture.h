@@ -18,6 +18,7 @@ extern "C"
   EXPORT void CALL ClearTextureCache();
   EXPORT void CALL DrawTexture(ITexture *tex, int x, int y);
   EXPORT void CALL DrawTextureEx(ITexture *tex, int x, int y, int width, int height, int color);
+  EXPORT void CALL DrawTextureEx2(ITexture *tex, int src_x, int src_y, int src_width, int src_height, int dst_x, int dst_y, int dst_width, int dst_height, int color);
   EXPORT void *CALL LockTexture(ITexture *tex);
   EXPORT void CALL UnlockTexture(ITexture *tex);
   EXPORT void CALL SetTextureColorKey(ITexture *tex, int color);

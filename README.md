@@ -10,7 +10,6 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 * DrawOval.
 * Set material properties in drawing functions.
-* Add font editor.
 * Add particles support & editor.
 * Fix audio positioning.
 * CursorXSpeed, CursorYSpeed, CursorZSpeed.

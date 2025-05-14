@@ -48,9 +48,17 @@ extern "C"
 
   EXPORT void CALL DrawTextureEx(ITexture *tex, int x, int y, int width, int height, int color)
   {
-    SColor col = _Color(color);
-    SColor colors[] = {col, col, col, col};
-    _Device()->getVideoDriver()->draw2DImage(tex, recti(x, y, x + width, y + height), recti(0, 0, tex->getSize().Width, tex->getSize().Height), NULL, colors, true);
+    DrawTextureEx2(tex, 0, 0, tex->getSize().Width, tex->getSize().Height, x, y, width, height, color);
+  }
+
+  EXPORT void CALL DrawTextureEx2(ITexture *tex, int src_x, int src_y, int src_width, int src_height, int dst_x, int dst_y, int dst_width, int dst_height, int color)
+  {
+    const SColor col = _Color(color);
+    const SColor colors[] = {col, col, col, col};
+    _Device()->getVideoDriver()->draw2DImage(
+        tex,
+        recti(dst_x, dst_y, dst_x + dst_width, dst_y + dst_height),
+        recti(src_x, src_y, src_x + src_width, src_y + src_height), NULL, colors, true);
   }
 
   EXPORT void *CALL LockTexture(ITexture *tex)

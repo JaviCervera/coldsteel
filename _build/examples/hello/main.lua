@@ -3,7 +3,7 @@ TEXT = "Hello, world!"
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
-local font = LoadFont("liberation_mono.xml")
+local font = LoadFont("LiberationMono-Regular.ttf", 18)
 local textX = 2
 local textDir = 1
 
@@ -28,6 +28,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     DrawLine(0, textY - 3, ScreenWidth(), textY - 3, COLOR_WHITE)
     DrawLine(0, textY + textHeight + 2, ScreenWidth(), textY + textHeight + 2, COLOR_WHITE)
     DrawRect(0, textY - 2, ScreenWidth(), textHeight + 4, COLOR_BLUE)
-    DrawText(font, TEXT, textX, textY, COLOR_YELLOW)
+    DrawText(font, TEXT, textX, textY - 2, COLOR_YELLOW)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end

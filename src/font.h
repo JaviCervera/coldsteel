@@ -7,11 +7,13 @@ extern "C"
 {
 #endif
 
-  EXPORT IGUIFont *CALL LoadFont(const char *filename);
-  EXPORT void CALL FreeFont(IGUIFont *font);
-  EXPORT void CALL DrawText(IGUIFont *font, const char *text, int x, int y, int color);
-  EXPORT int CALL TextWidth(IGUIFont *font, const char *text);
-  EXPORT int CALL TextHeight(IGUIFont *font, const char *text);
+  struct Font;
+
+  EXPORT Font *CALL LoadFont(const char *filename, int height);
+  EXPORT void CALL FreeFont(Font *font);
+  EXPORT void CALL DrawText(Font *font, const char *text, int x, int y, int color);
+  EXPORT int CALL TextWidth(Font *font, const char *text);
+  EXPORT int CALL TextHeight(Font *font, const char *text);
 
 #ifdef __cplusplus
 } /* extern "C" */
