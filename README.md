@@ -8,7 +8,7 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* DrawPoint, DrawOval.
+* DrawOval.
 * Set material properties in drawing functions.
 * Add font editor.
 * Add particles support & editor.
