@@ -8,14 +8,12 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* DrawOval.
-* Set material properties in drawing functions.
 * Add particles support & editor.
 * Fix audio positioning.
+* Fix manual mesh creation crashing on Irrlicht 1.9.
 * CursorXSpeed, CursorYSpeed, CursorZSpeed.
 * JoystickButtonHit.
 * Add more samples and demos.
-* Add mesh viewer with material support and LoadMeshEx which provides a materials file as well.
 * Add Lua editor.
 * GUI styles.
 * Add shader support.
