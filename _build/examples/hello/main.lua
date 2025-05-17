@@ -3,7 +3,7 @@ TEXT = "Hello, world!"
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
-local font = LoadFont("LiberationMono-Regular.ttf", 18)
+local font = LoadFont("FSEX300.ttf", 16)
 local textX = 2
 local textDir = 1
 

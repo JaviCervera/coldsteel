@@ -8,15 +8,11 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 
 ## TODO
 
-* Add particles support & editor.
+* GUI controls expect an IGUIFont*, so instances of Font* cannot be passed.
 * Fix audio positioning.
 * Fix manual mesh creation crashing on Irrlicht 1.9.
-* CursorXSpeed, CursorYSpeed, CursorZSpeed.
 * JoystickButtonHit.
 * Add more samples and demos.
 * Add Lua editor.
-* GUI styles.
-* Add shader support.
 * Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
 * Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.
-* ODE physics.
