@@ -2,10 +2,6 @@
 
 [![build_emscripten](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml/badge.svg)](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml)
 
-Check out [this readme](_build/README.md).
-
-NOTE: When the instructions given in the file above refer to the root folder, it means `_build`.
-
 ## TODO
 
 * GUI controls expect an IGUIFont*, so instances of Font* cannot be passed.
@@ -14,5 +10,5 @@ NOTE: When the instructions given in the file above refer to the root folder, it
 * JoystickButtonHit.
 * Add more samples and demos.
 * Add Lua editor.
-* Add documentation (with Sphinx? - also check if SWIG parses Doxygen comments).
-* Update Haxe support with `Entity` instead of `ISceneNode`, etc, and add instructions.
+* Add Doxygen documentation (maybe use Sphinx + Breathe?).
+* Add Pelican gh page website.
