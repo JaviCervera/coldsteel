@@ -35,7 +35,9 @@ extern "C"
   EXPORT float CALL MeshHeight(IMesh *mesh);
   EXPORT float CALL MeshDepth(IMesh *mesh);
 
+#ifndef SWIG
   bool_t _MeshAnimated(IMesh *mesh);
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */

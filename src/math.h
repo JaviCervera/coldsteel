@@ -40,8 +40,10 @@ extern "C"
   EXPORT float CALL NormalY();
   EXPORT float CALL NormalZ();
 
+#ifndef SWIG
   void _SetPoint(float x, float y, float z);
   void _SetNormal(float x, float y, float z);
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */

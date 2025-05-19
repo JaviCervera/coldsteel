@@ -94,7 +94,9 @@ extern "C"
   EXPORT IGUIElement *CALL GUIEventControl();
   EXPORT int CALL GUIEventMenuId();
 
+#ifndef SWIG
   void _PostEvent(int type, IGUIElement *control, int menuId);
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */
