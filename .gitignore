@@ -43,6 +43,7 @@ _build/*
 !_build/media
 _build/examples/*.build
 _CMAKE
-TDM-GCC-32/*
+doc_out
+TDM-GCC-32
 src/lua_wrapper.cc
 !upx.exe
