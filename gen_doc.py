@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 import os
+import re
 from typing import List
 import xml.etree.ElementTree as ET
+
+import markdown
+from markdown.extensions import Extension
 
 DOCS_PATH = 'doc_out/xml'
 
@@ -24,13 +28,53 @@ class File:
   def __bool__(self):
     return bool(self.definitions) or bool(self.functions)
 
+class AnchorHeaderExtension(Extension):
+  def extendMarkdown(self, md):
+    md.preprocessors.register(AnchorHeaderPreprocessor(md), 'anchor_headers', 175)
+
+class AnchorHeaderPreprocessor(markdown.preprocessors.Preprocessor):
+  def run(self, lines):
+    new_lines = []
+    for line in lines:
+        # Match headers (e.g., # Header, ## Header, etc.)
+        if line.startswith('#'):
+          # Create an anchor link from the header text
+          header_text = line.strip('# ').strip()
+          code_tag_start = '<code>' if header_text.startswith('`') else ''
+          code_tag_end = '</code>' if header_text.startswith('`') else ''
+          if code_tag_start:
+            header_text = header_text.strip('`')
+            anchor = re.sub(r'\s+', '-', header_text).lower()
+            anchor = anchor.split('(')[0]
+            line = f'<h{line.count("#")}>{code_tag_start}<a id="{anchor}" href="#{anchor}">{header_text}</a>{code_tag_end}</h{line.count("#")}>'
+          else:
+            line = f'<h{line.count("#")}>{header_text}</h{line.count("#")}>'
+        new_lines.append(line)
+    return new_lines
+
 def main():
-  with open(f'doc_out/documentation.md', mode='w') as f:
-    for header in headers_to_parse():
-      module = os.path.basename(header[:header.find('_8h.xml')])
-      file = md_file(parse_file(header))
-      if file:
-        f.write(f'## {module.capitalize()}\n\n{file}\n\n')
+  doc = '# ColdSteel Engine documentation\n\n'
+  for header in headers_to_parse():
+    module = os.path.basename(header[:header.find('_8h.xml')])
+    file = md_file(parse_file(header))
+    if file:
+      doc += f'## {module.capitalize()}\n\n{file}\n\n'
+  html = f"""
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="../styles.css"> <!-- Link to the CSS file -->
+      <title>ColdSteel Engine documentation</title>
+  </head>
+  <body>
+      {markdown.markdown(doc, extensions=[AnchorHeaderExtension()])}
+  </body>
+  </html>
+  """
+  with open(f'doc_out/documentation.html', mode='w') as f:
+    f.write(html)
 
 # -------------------------------------
 # XML Parsing
