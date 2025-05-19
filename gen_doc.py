@@ -16,17 +16,19 @@ class Param:
 
 @dataclass(frozen=True)
 class Function:
+  description: str
   type: str
   name: str
   params: List[Param]
 
 @dataclass(frozen=True)
 class File:
+  description: str
   definitions: List[str]
   functions: List[Function]
 
   def __bool__(self):
-    return bool(self.definitions) or bool(self.functions)
+    return bool(self.description) or bool(self.definitions) or bool(self.functions)
 
 class AnchorHeaderExtension(Extension):
   def extendMarkdown(self, md):
@@ -56,9 +58,9 @@ def main():
   doc = '# ColdSteel Engine documentation\n\n'
   for header in headers_to_parse():
     module = os.path.basename(header[:header.find('_8h.xml')])
-    file = md_file(parse_file(header))
+    file = md_file(module, parse_file(header))
     if file:
-      doc += f'## {module.capitalize()}\n\n{file}\n\n'
+      doc += f'{file}\n\n'
   html = f"""
   <!DOCTYPE html>
   <html lang="en">
@@ -86,13 +88,18 @@ def headers_to_parse():
 
 def parse_file(filename):
   root = ET.parse(filename).getroot()
+  desc = ''
+  desc_node = root.find('./compounddef/detaileddescription')
+  if desc_node:
+    desc = desc_node.find('./para').text.strip()
   defs = sorted([d.text for d in root.findall('./compounddef/sectiondef/memberdef[@kind="define"]/name')])
   funcs = sorted([parse_function(f) for f in root.findall('./compounddef/sectiondef/memberdef[@kind="function"]')], key=lambda x: x.name)
-  return File(definitions=defs, functions=funcs)
+  return File(description=desc, definitions=defs, functions=funcs)
 
 
 def parse_function(func):
   return Function(
+    description=func.find('./detaileddescription/para').text.strip() if func.find('./detaileddescription/para') is not None else '',
     type=parse_type((func.find('./type/ref') if func.find('./type/ref') is not None else func.find('./type')).text),
     name=func.find('./name').text,
     params=[parse_param(p) for p in func.findall('./param')]
@@ -151,10 +158,12 @@ def parse_type(type):
 # Markdown generation
 # -------------------------------------
 
-def md_file(file):
+def md_file(module, file):
   if not file:
     return ''
-  str = ''
+  str = f'## {module.capitalize()}\n\n'
+  if file.description:
+    str += file.description + '\n\n'
   if file.definitions:
     str += '### Constants\n' + '\n'.join([f'#### `{d}`' for d in file.definitions])
   if file.functions:
@@ -166,10 +175,13 @@ def md_file(file):
 
 def md_func(func):
   params = f'({", ".join([f"{p.name}: {p.type}" for p in func.params])})'
-  str = f'{func.name}{params}'
+  str = f'### `{func.name}{params}'
   if func.type != "void":
     str += f': {func.type}'
-  return f'#### `{str}`'
+  str += '`'
+  if func.description:
+    str += f'\n{func.description}'
+  return str
 
 
 if __name__ == '__main__':

@@ -1,4 +1,8 @@
-/** @file */
+/**
+ * @file
+ * A camera is a special type of Entity which is not visible in the world, but defines how the world
+ * will be rendered. It can be positioned and rotated in the world using the Entity functions.
+ * */
 #pragma once
 
 #include "common.h"
@@ -8,7 +12,11 @@ extern "C"
 {
 #endif
 
+  /**
+   * Creates a new camera.
+   */
   EXPORT ICameraSceneNode *CALL CreateCamera();
+
   EXPORT void CALL SetCameraActive(ICameraSceneNode *cam, bool_t active);
   EXPORT bool_t CALL CameraActive(ICameraSceneNode *cam);
   EXPORT void CALL SetCameraViewport(ICameraSceneNode *cam, int x, int y, int width, int height);
