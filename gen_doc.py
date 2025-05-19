@@ -42,8 +42,8 @@ def headers_to_parse():
 
 def parse_file(filename):
   root = ET.parse(filename).getroot()
-  defs = [d.text for d in root.findall('./compounddef/sectiondef/memberdef[@kind="define"]/name')]
-  funcs = [parse_function(f) for f in root.findall('./compounddef/sectiondef/memberdef[@kind="function"]')]
+  defs = sorted([d.text for d in root.findall('./compounddef/sectiondef/memberdef[@kind="define"]/name')])
+  funcs = sorted([parse_function(f) for f in root.findall('./compounddef/sectiondef/memberdef[@kind="function"]')], key=lambda x: x.name)
   return File(definitions=defs, functions=funcs)
 
 
