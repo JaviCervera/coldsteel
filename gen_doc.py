@@ -16,6 +16,14 @@ class Function:
   name: str
   params: List[Param]
 
+@dataclass(frozen=True)
+class File:
+  definitions: List[str]
+  functions: List[Function]
+
+  def __bool__(self):
+    return bool(self.definitions) or bool(self.functions)
+
 def main():
   with open(f'doc_out/documentation.md', mode='w') as f:
     for header in headers_to_parse():
@@ -34,8 +42,9 @@ def headers_to_parse():
 
 def parse_file(filename):
   root = ET.parse(filename).getroot()
+  defs = [d.text for d in root.findall('./compounddef/sectiondef/memberdef[@kind="define"]/name')]
   funcs = [parse_function(f) for f in root.findall('./compounddef/sectiondef/memberdef[@kind="function"]')]
-  return funcs
+  return File(definitions=defs, functions=funcs)
 
 
 def parse_function(func):
@@ -98,10 +107,17 @@ def parse_type(type):
 # Markdown generation
 # -------------------------------------
 
-def md_file(funcs):
-  if not funcs:
+def md_file(file):
+  if not file:
     return ''
-  return '### Functions\n' + '\n'.join([md_func(f) for f in funcs])
+  str = ''
+  if file.definitions:
+    str += '### Constants\n' + '\n'.join([f'#### `{d}`' for d in file.definitions])
+  if file.functions:
+    if str:
+      str += '\n\n'
+    str += '### Functions\n' + '\n'.join([md_func(f) for f in file.functions])
+  return str
 
 
 def md_func(func):
@@ -109,7 +125,7 @@ def md_func(func):
   str = f'{func.name}{params}'
   if func.type != "void":
     str += f': {func.type}'
-  return f'#### ```{str}```'
+  return f'#### `{str}`'
 
 
 if __name__ == '__main__':
