@@ -14,10 +14,19 @@ extern "C"
 
   /**
    * Creates a new camera.
+   *
+   * @return A new camera entity.
    */
   EXPORT ICameraSceneNode *CALL CreateCamera();
 
+  /**
+   * Set the camera "active" state. Only active cameras are drawn. This is true by default.
+   *
+   * @param cam The camera whose "active" state will be set.
+   * @param active The new "active" state.
+   */
   EXPORT void CALL SetCameraActive(ICameraSceneNode *cam, bool_t active);
+
   EXPORT bool_t CALL CameraActive(ICameraSceneNode *cam);
   EXPORT void CALL SetCameraViewport(ICameraSceneNode *cam, int x, int y, int width, int height);
   EXPORT int CALL CameraViewportX(ICameraSceneNode *cam);

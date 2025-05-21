@@ -13,6 +13,7 @@ DOCS_PATH = 'doc_out/xml'
 class Param:
   type: str
   name: str
+  description: str
 
 @dataclass(frozen=True)
 class Function:
@@ -20,6 +21,7 @@ class Function:
   type: str
   name: str
   params: List[Param]
+  return_desc: str
 
 @dataclass(frozen=True)
 class File:
@@ -89,9 +91,9 @@ def headers_to_parse():
 def parse_file(filename):
   root = ET.parse(filename).getroot()
   desc = ''
-  desc_node = root.find('./compounddef/detaileddescription')
-  if desc_node:
-    desc = desc_node.find('./para').text.strip()
+  desc_node = root.find('./compounddef/detaileddescription/para')
+  if desc_node is not None:
+    desc = desc_node.text.strip()
   defs = sorted([d.text for d in root.findall('./compounddef/sectiondef/memberdef[@kind="define"]/name')])
   funcs = sorted([parse_function(f) for f in root.findall('./compounddef/sectiondef/memberdef[@kind="function"]')], key=lambda x: x.name)
   return File(description=desc, definitions=defs, functions=funcs)
@@ -102,14 +104,22 @@ def parse_function(func):
     description=func.find('./detaileddescription/para').text.strip() if func.find('./detaileddescription/para') is not None else '',
     type=parse_type((func.find('./type/ref') if func.find('./type/ref') is not None else func.find('./type')).text),
     name=func.find('./name').text,
-    params=[parse_param(p) for p in func.findall('./param')]
+    params=[parse_param(p, func.findall('./detaileddescription/para/parameterlist[@kind="param"]/parameteritem')) for p in func.findall('./param')],
+    return_desc=func.find('./detaileddescription/para/simplesect[@kind="return"]/para').text.strip() if func.find('./detaileddescription/para/simplesect[@kind="return"]/para') is not None else '',
   )
 
 
-def parse_param(param):
+def parse_param(param, parameteritems):
+  name=param.find('./declname').text
+  description=''
+  for item in parameteritems:
+    if item.find('./parameternamelist/parametername').text == name:
+      description = item.find('./parameterdescription/para').text.strip()
+      break
   return Param(
     type=parse_type((param.find('./type/ref') if param.find('./type/ref') is not None else param.find('./type')).text),
-    name=param.find('./declname').text,
+    name=name,
+    description=description
   )
 
 def parse_type(type):
@@ -174,13 +184,21 @@ def md_file(module, file):
 
 
 def md_func(func):
-  params = f'({", ".join([f"{p.name}: {p.type}" for p in func.params])})'
-  str = f'### `{func.name}{params}'
-  if func.type != "void":
-    str += f': {func.type}'
-  str += '`'
+  str = f'### `{func.name}({", ".join([f"{p.name}" for p in func.params])})`'
   if func.description:
     str += f'\n{func.description}'
+  if func.params:
+    str += '\n\nParameters:\n\n'
+    for param in func.params:
+      str += f'* {param.name} ({param.type})'
+      if param.description:
+        str += f': {param.description}'
+      str += '\n'
+  if func.type != 'void':
+    str += f'\n\nReturns:\n\n* {func.type}'
+    if func.return_desc:
+      str += f' - {func.return_desc}'
+    str += '\n'
   return str
 
 
