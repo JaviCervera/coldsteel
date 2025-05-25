@@ -32,12 +32,8 @@ file(
 	COLDSTEEL_EXE_FILES
 	"lib/lua/*.c"
 	"src/*.cc"
-	"src/driver/*.cc")
-if (LEGACY_IRRLICHT)
-file(GLOB COLDSTEEL_EXE_FILES ${COLDSTEEL_EXE_FILES} "src/legacy_runtime.rc")
-else (LEGACY_IRRLICHT)
-file(GLOB COLDSTEEL_EXE_FILES ${COLDSTEEL_EXE_FILES} "src/runtime.rc")
-endif (LEGACY_IRRLICHT)
+	"src/driver/*.cc"
+	"src/runtime.rc")
 
 #Add header and lib directories
 if (LEGACY_IRRLICHT)

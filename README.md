@@ -14,8 +14,5 @@ sphinx-build -b html -Dbreathe_projects.my_project=doc_out/xml . doc_out/sphinx
 * GUI controls expect an IGUIFont*, so instances of Font* cannot be passed.
 * Fix audio positioning.
 * Fix manual mesh creation crashing on Irrlicht 1.9.
-* JoystickButtonHit.
-* Add more samples and demos.
-* Add Lua editor.
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
