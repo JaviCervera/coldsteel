@@ -23,7 +23,6 @@ class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 %include "src/entity.h"
 %include "src/font.h"
 %include "src/graphics.h"
-%include "src/gui.h"
 %include "src/input.h"
 %include "src/light.h"
 %include "src/listener.h"

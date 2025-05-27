@@ -22,6 +22,6 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
 
     DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    DrawText(nil, "Shininess: " .. MaterialShininess(mat) .. " (LEFT and RIGHT to change)", 2, 12, COLOR_WHITE)
+    DrawText(nil, "Shininess: " .. MaterialShininess(mat) .. " (LEFT and RIGHT to change)", 2, 16, COLOR_WHITE)
     RefreshScreen()
 end

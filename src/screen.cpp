@@ -1,6 +1,5 @@
 #include "color.h"
 #include "core.h"
-#include "gui.h"
 #include "input.h"
 #include "listener.h"
 #include "screen.h"
@@ -11,52 +10,6 @@ class EventReceiver : public IEventReceiver
   {
     switch (event.EventType)
     {
-    case EET_GUI_EVENT:
-      switch (event.GUIEvent.EventType)
-      {
-      case EGET_ELEMENT_FOCUS_LOST:
-        _PostEvent(CONTROL_LOSTFOCUS, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_ELEMENT_HOVERED:
-        _PostEvent(CONTROL_ENTER, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_ELEMENT_LEFT:
-        _PostEvent(CONTROL_EXIT, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_BUTTON_CLICKED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_SCROLL_BAR_CHANGED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_CHECKBOX_CHANGED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_LISTBOX_CHANGED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_LISTBOX_SELECTED_AGAIN:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_TAB_CHANGED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_EDITBOX_ENTER:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      case EGET_MENU_ITEM_SELECTED:
-        _PostEvent(
-            CONTROL_ACTION,
-            event.GUIEvent.Caller,
-            ((IGUIContextMenu *)event.GUIEvent.Caller)->getItemCommandId(((IGUIContextMenu *)event.GUIEvent.Caller)->getSelectedItem()));
-        break;
-      case EGET_COMBO_BOX_CHANGED:
-        _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
-        break;
-      default:
-        break;
-      }
-      break;
     case EET_JOYSTICK_INPUT_EVENT:
       _SetJoystickEvent(event.JoystickEvent);
       break;
@@ -136,17 +89,6 @@ extern "C"
     _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
     _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
     _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
-
-    // Init gui skin
-    IGUISkin *skin = _Device()->getGUIEnvironment()->createSkin(EGST_WINDOWS_CLASSIC);
-    for (int i = 0; i < EGDC_COUNT; ++i)
-    {
-      SColor col = skin->getColor((EGUI_DEFAULT_COLOR)i);
-      col.setAlpha(255);
-      skin->setColor((EGUI_DEFAULT_COLOR)i, col);
-    }
-    _Device()->getGUIEnvironment()->setSkin(skin);
-    skin->drop();
 
     _Device()->getVideoDriver()->beginScene(false, false);
   }

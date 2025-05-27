@@ -11,7 +11,6 @@
 #include "entity.h"
 #include "font.h"
 #include "graphics.h"
-#include "gui.h"
 #include "input.h"
 #include "light.h"
 #include "listener.h"

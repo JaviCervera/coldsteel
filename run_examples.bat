@@ -1,6 +1,5 @@
 coldsteel run _build\examples\box
 coldsteel run _build\examples\collision
-coldsteel run _build\examples\editor
 coldsteel run _build\examples\fog
 coldsteel run _build\examples\hello
 coldsteel run _build\examples\joystick

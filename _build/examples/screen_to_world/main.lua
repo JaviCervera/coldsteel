@@ -5,7 +5,7 @@ end
 function DrawBanner(cam)
     local text = ":: Press SPACE to change camera mode - Current mode: " .. CameraMode(cam) .. " ::"
     DrawRect(0, ScreenHeight() - 18, ScreenWidth(), 18, COLOR_BLACK)
-    DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 14, COLOR_WHITE)
+    DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 18, COLOR_WHITE)
 end
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
@@ -43,8 +43,8 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     ClearScreen(COLOR_DARKGRAY)
     DrawWorld()
     DrawText(nil, ScreenFPS() .. " FPS", 2, 2, COLOR_WHITE)
-    DrawText(nil, Int(CursorX()) .. ", " .. Int(CursorY()), 2, 12, COLOR_WHITE)
-    DrawText(nil, Int(PointX()) .. ", " .. Int(PointY()) .. ", " .. Int(PointZ()), 2, 22, COLOR_WHITE)
+    DrawText(nil, Int(CursorX()) .. ", " .. Int(CursorY()), 2, 18, COLOR_WHITE)
+    DrawText(nil, Int(PointX()) .. ", " .. Int(PointY()) .. ", " .. Int(PointZ()), 2, 34, COLOR_WHITE)
     DrawBanner(cam)
     RefreshScreen()
 end
