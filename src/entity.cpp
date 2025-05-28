@@ -205,15 +205,30 @@ extern "C"
 
   EXPORT float CALL EntityPitch(ISceneNode *entity)
   {
-    return entity->getRotation().X;
+    return entity->getAbsoluteTransformation().getRotationDegrees().X;
   }
 
   EXPORT float CALL EntityYaw(ISceneNode *entity)
   {
-    return entity->getRotation().Y;
+    return entity->getAbsoluteTransformation().getRotationDegrees().Y;
   }
 
   EXPORT float CALL EntityRoll(ISceneNode *entity)
+  {
+    return entity->getAbsoluteTransformation().getRotationDegrees().Z;
+  }
+
+  EXPORT float CALL EntityLocalPitch(ISceneNode *entity)
+  {
+    return entity->getRotation().X;
+  }
+
+  EXPORT float CALL EntityLocalYaw(ISceneNode *entity)
+  {
+    return entity->getRotation().Y;
+  }
+
+  EXPORT float CALL EntityLocalRoll(ISceneNode *entity)
   {
     return entity->getRotation().Z;
   }
@@ -225,15 +240,30 @@ extern "C"
 
   EXPORT float CALL EntityScaleX(ISceneNode *entity)
   {
-    return entity->getScale().X;
+    return entity->getAbsoluteTransformation().getScale().X;
   }
 
   EXPORT float CALL EntityScaleY(ISceneNode *entity)
   {
-    return entity->getScale().Y;
+    return entity->getAbsoluteTransformation().getScale().Y;
   }
 
   EXPORT float CALL EntityScaleZ(ISceneNode *entity)
+  {
+    return entity->getAbsoluteTransformation().getScale().Z;
+  }
+
+  EXPORT float CALL EntityLocalScaleX(ISceneNode *entity)
+  {
+    return entity->getScale().X;
+  }
+
+  EXPORT float CALL EntityLocalScaleY(ISceneNode *entity)
+  {
+    return entity->getScale().Y;
+  }
+
+  EXPORT float CALL EntityLocalScaleZ(ISceneNode *entity)
   {
     return entity->getScale().Z;
   }
