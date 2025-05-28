@@ -13,90 +13,90 @@ extern "C"
     return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
   }
 
+#ifdef LEGACY_IRRLICHT
+  struct Vertex
+  {
+    float x, y, z;    // Position
+    float nx, ny, nz; // Normal
+    int color;        // Color
+    float u, v;       // Texture coordinates
+
+    Vertex(float x, float y, float z, float nx, float ny, float nz, int color, float u, float v)
+        : x(x), y(y), z(z), nx(nx), ny(ny), nz(nz), color(color), u(u), v(v) {}
+  };
+#endif
+
   EXPORT IMesh *CALL CreateCubeMesh()
   {
-  #ifndef LEGACY_IRRLICHT
+#ifndef LEGACY_IRRLICHT
     return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1), ECMT_1BUF_24VTX_NP));
-  #else
-    const int white = RGB(255, 255, 255);
+#else
+    array<Vertex> vertices;
+    vertices.set_used(24);
+    vertices[0] = Vertex(-0.5f, 0.5f, -0.5f, 0, 0, -1, COLOR_WHITE, 0, 0);
+    vertices[1] = Vertex(0.5f, 0.5f, -0.5f, 0, 0, -1, COLOR_WHITE, 1, 0);
+    vertices[2] = Vertex(-0.5f, -0.5f, -0.5f, 0, 0, -1, COLOR_WHITE, 0, 1);
+    vertices[3] = Vertex(0.5f, -0.5f, -0.5f, 0, 0, -1, COLOR_WHITE, 1, 1);
+    vertices[4] = Vertex(0.5f, 0.5f, 0.5f, 0, 0, 1, COLOR_WHITE, 0, 0);
+    vertices[5] = Vertex(-0.5f, 0.5f, 0.5f, 0, 0, 1, COLOR_WHITE, 1, 0);
+    vertices[6] = Vertex(0.5f, -0.5f, 0.5f, 0, 0, 1, COLOR_WHITE, 0, 1);
+    vertices[7] = Vertex(-0.5f, -0.5f, 0.5f, 0, 0, 1, COLOR_WHITE, 1, 1);
+    vertices[8] = Vertex(-0.5f, 0.5f, 0.5f, -1, 0, 0, COLOR_WHITE, 0, 0);
+    vertices[9] = Vertex(-0.5f, 0.5f, -0.5f, -1, 0, 0, COLOR_WHITE, 1, 0);
+    vertices[10] = Vertex(-0.5f, -0.5f, 0.5f, -1, 0, 0, COLOR_WHITE, 0, 1);
+    vertices[11] = Vertex(-0.5f, -0.5f, -0.5f, -1, 0, 0, COLOR_WHITE, 1, 1);
+    vertices[12] = Vertex(0.5f, 0.5f, -0.5f, 1, 0, 0, COLOR_WHITE, 0, 0);
+    vertices[13] = Vertex(0.5f, 0.5f, 0.5f, 1, 0, 0, COLOR_WHITE, 1, 0);
+    vertices[14] = Vertex(0.5f, -0.5f, -0.5f, 1, 0, 0, COLOR_WHITE, 0, 1);
+    vertices[15] = Vertex(0.5f, -0.5f, 0.5f, 1, 0, 0, COLOR_WHITE, 1, 1);
+    vertices[16] = Vertex(-0.5f, 0.5f, 0.5f, 0, 1, 0, COLOR_WHITE, 0, 0);
+    vertices[17] = Vertex(0.5f, 0.5f, 0.5f, 0, 1, 0, COLOR_WHITE, 1, 0);
+    vertices[18] = Vertex(-0.5f, 0.5f, -0.5f, 0, 1, 0, COLOR_WHITE, 0, 1);
+    vertices[19] = Vertex(0.5f, 0.5f, -0.5f, 0, 1, 0, COLOR_WHITE, 1, 1);
+    vertices[20] = Vertex(-0.5f, -0.5f, 0.5f, 0, -1, 0, COLOR_WHITE, 0, 0);
+    vertices[21] = Vertex(0.5f, -0.5f, 0.5f, 0, -1, 0, COLOR_WHITE, 1, 0);
+    vertices[22] = Vertex(-0.5f, -0.5f, -0.5f, 0, -1, 0, COLOR_WHITE, 0, 1);
+    vertices[23] = Vertex(0.5f, -0.5f, -0.5f, 0, -1, 0, COLOR_WHITE, 1, 1);
+    array<u16> indices;
+    indices.set_used(36);
+    indices[0] = 1;
+    indices[1] = 2;
+    indices[2] = 3; // Front face
+    indices[3] = 4;
+    indices[4] = 3;
+    indices[5] = 2;
+    indices[6] = 5;
+    indices[7] = 6;
+    indices[8] = 7; // Back face
+    indices[9] = 8;
+    indices[10] = 7;
+    indices[11] = 6;
+    indices[12] = 9;
+    indices[13] = 10;
+    indices[14] = 11; // Left face
+    indices[15] = 12;
+    indices[16] = 11;
+    indices[17] = 10;
+    indices[18] = 13;
+    indices[19] = 14;
+    indices[20] = 15; // Right face
+    indices[21] = 16;
+    indices[22] = 15;
+    indices[23] = 14;
+    indices[24] = 17;
+    indices[25] = 18;
+    indices[26] = 19; // Top face
+    indices[27] = 20;
+    indices[28] = 19;
+    indices[29] = 18;
+    indices[30] = 21;
+    indices[31] = 22;
+    indices[32] = 23; // Bottom face
+    indices[33] = 24;
+    indices[34] = 23;
+    indices[35] = 22;
     IMesh *cube = CreateMesh();
-    IMeshBuffer *surf = AddSurface(cube);
-
-    // Front face
-    AddVertex(surf, -0.5f, 0.5f, -0.5f, 0, 0, -1, white, 0, 0);
-    AddVertex(surf, 0.5f, 0.5f, -0.5f, 0, 0, -1, white, 1, 0);
-    AddVertex(surf, -0.5f, -0.5f, -0.5f, 0, 0, -1, white, 0, 1);
-    AddVertex(surf, 0.5f, -0.5f, -0.5f, 0, 0, -1, white, 1, 1);
-    AddIndex(surf, 1);
-    AddIndex(surf, 2);
-    AddIndex(surf, 3);
-    AddIndex(surf, 4);
-    AddIndex(surf, 3);
-    AddIndex(surf, 2);
-
-    // Back face
-    AddVertex(surf, 0.5f, 0.5f, 0.5f, 0, 0, 1, white, 0, 0);
-    AddVertex(surf, -0.5f, 0.5f, 0.5f, 0, 0, 1, white, 1, 0);
-    AddVertex(surf, 0.5f, -0.5f, 0.5f, 0, 0, 1, white, 0, 1);
-    AddVertex(surf, -0.5f, -0.5f, 0.5f, 0, 0, 1, white, 1, 1);
-    AddIndex(surf, 5);
-    AddIndex(surf, 6);
-    AddIndex(surf, 7);
-    AddIndex(surf, 8);
-    AddIndex(surf, 7);
-    AddIndex(surf, 6);
-
-    // Left face
-    AddVertex(surf, -0.5f, 0.5f, 0.5f, -1, 0, 0, white, 0, 0);
-    AddVertex(surf, -0.5f, 0.5f, -0.5f, -1, 0, 0, white, 1, 0);
-    AddVertex(surf, -0.5f, -0.5f, 0.5f, -1, 0, 0, white, 0, 1);
-    AddVertex(surf, -0.5f, -0.5f, -0.5f, -1, 0, 0, white, 1, 1);
-    AddIndex(surf, 9);
-    AddIndex(surf, 10);
-    AddIndex(surf, 11);
-    AddIndex(surf, 12);
-    AddIndex(surf, 11);
-    AddIndex(surf, 10);
-
-    // Right face
-    AddVertex(surf, 0.5f, 0.5f, -0.5f, 1, 0, 0, white, 0, 0);
-    AddVertex(surf, 0.5f, 0.5f, 0.5f, 1, 0, 0, white, 1, 0);
-    AddVertex(surf, 0.5f, -0.5f, -0.5f, 1, 0, 0, white, 0, 1);
-    AddVertex(surf, 0.5f, -0.5f, 0.5f, 1, 0, 0, white, 1, 1);
-    AddIndex(surf, 13);
-    AddIndex(surf, 14);
-    AddIndex(surf, 15);
-    AddIndex(surf, 16);
-    AddIndex(surf, 15);
-    AddIndex(surf, 14);
-
-    // Top face
-    AddVertex(surf, -0.5f, 0.5f, 0.5f, 0, 1, 0, white, 0, 0);
-    AddVertex(surf, 0.5f, 0.5f, 0.5f, 0, 1, 0, white, 1, 0);
-    AddVertex(surf, -0.5f, 0.5f, -0.5f, 0, 1, 0, white, 0, 1);
-    AddVertex(surf, 0.5f, 0.5f, -0.5f, 0, 1, 0, white, 1, 1);
-    AddIndex(surf, 17);
-    AddIndex(surf, 18);
-    AddIndex(surf, 19);
-    AddIndex(surf, 20);
-    AddIndex(surf, 19);
-    AddIndex(surf, 18);
-
-    // Bottom face
-    AddVertex(surf, -0.5f, -0.5f, -0.5f, 0, -1, 0, white, 0, 0);
-    AddVertex(surf, 0.5f, -0.5f, -0.5f, 0, -1, 0, white, 1, 0);
-    AddVertex(surf, -0.5f, -0.5f, 0.5f, 0, -1, 0, white, 0, 1);
-    AddVertex(surf, 0.5f, -0.5f, 0.5f, 0, -1, 0, white, 1, 1);
-    AddIndex(surf, 21);
-    AddIndex(surf, 22);
-    AddIndex(surf, 23);
-    AddIndex(surf, 24);
-    AddIndex(surf, 23);
-    AddIndex(surf, 22);
-
-    // Update mesh
-    UpdateMesh(cube);
-
+    IMeshBuffer *surf = AddSurface(cube, &vertices[0], vertices.size(), &indices[0], indices.size(), SURFACE_STANDARD);
     return FixMeshSpecular(cube);
 #endif
   }

@@ -15,4 +15,3 @@ sphinx-build -b html -Dbreathe_projects.my_project=doc_out/xml . doc_out/sphinx
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).
-* Fix manual mesh creation crashing on Irrlicht 1.9.

@@ -1,18 +1,47 @@
+VERTEX_SIZE = 36
+INDEX_SIZE = 2
+
+function VerticesMemblock(vertices)
+    local memblock = CreateMemblock(#vertices * VERTEX_SIZE)
+    for v = 0, #vertices - 1 do
+        local vertex = vertices[v + 1]
+        PokeFloat(memblock, v * VERTEX_SIZE + 0, vertex[1])
+        PokeFloat(memblock, v * VERTEX_SIZE + 4, vertex[2])
+        PokeFloat(memblock, v * VERTEX_SIZE + 8, vertex[3])
+        PokeFloat(memblock, v * VERTEX_SIZE + 12, vertex[4])
+        PokeFloat(memblock, v * VERTEX_SIZE + 16, vertex[5])
+        PokeFloat(memblock, v * VERTEX_SIZE + 20, vertex[6])
+        PokeInt(memblock, v * VERTEX_SIZE + 24, vertex[7])
+        PokeFloat(memblock, v * VERTEX_SIZE + 28, vertex[8])
+        PokeFloat(memblock, v * VERTEX_SIZE + 32, vertex[9])
+    end
+    return memblock
+end
+
+function IndicesMemblock(indices)
+    local memblock = CreateMemblock(#indices * INDEX_SIZE)
+    for i = 0, #indices - 1 do
+        local index = indices[i + 1]
+        PokeShort(memblock, i * INDEX_SIZE, index)
+    end
+    return memblock
+end
+
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetAmbient(COLOR_WHITE)
 
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 0, -2)
 
+local vertices = VerticesMemblock({
+    -- x, y, z, nx, ny, nz, color, u, v
+    {0, 0.5, 0, 0, 0, -1, COLOR_RED, 0, 0},
+    {0.5, -0.5, 0, 0, 0, -1, COLOR_GREEN, 0, 0},
+    {-0.5, -0.5, 0, 0, 0, -1, COLOR_BLUE, 0, 0},
+})
+local indices = IndicesMemblock({1, 2, 3})
 local mesh = CreateMesh()
-local surf = AddSurface(mesh)
-AddVertex(surf, 0, 0.5, 0, 0, 0, -1, COLOR_RED, 0, 0)
-AddVertex(surf, 0.5, -0.5, 0, 0, 0, -1, COLOR_GREEN, 0, 0)
-AddVertex(surf, -0.5, -0.5, 0, 0, 0, -1, COLOR_BLUE, 0, 0)
-AddIndex(surf, 1)
-AddIndex(surf, 2)
-AddIndex(surf, 3)
-UpdateMesh(mesh)
+local surf = AddSurface(mesh, vertices, 3, indices, 3, SURFACE_STANDARD)
 
 local triangle = CreateModel(mesh)
 FreeMesh(mesh)
