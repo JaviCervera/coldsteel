@@ -5,6 +5,8 @@
 #include "../math.h"
 #include "../memblock.h"
 
+#define MIN_DISTANCE 0.0001f
+
 struct Audio_SoLoud : public Audio
 {
   Audio_SoLoud()
@@ -35,10 +37,19 @@ struct Audio_SoLoud : public Audio
     soloud.setPause(channel, false);
   }
 
-  void SetChannelPosition(Channel channel, float x, float y, float z, float radius)
+  void SetChannelPosition(Channel channel, float x, float y, float z)
   {
     soloud.set3dSourcePosition(channel, x, y, z);
-    soloud.set3dSourceMinMaxDistance(channel, 1, radius);
+  }
+
+  void SetChannelVelocity(Channel channel, float x, float y, float z)
+  {
+    soloud.set3dSourceVelocity(channel, x, y, z);
+  }
+
+  void SetChannelRadius(Channel channel, float radius)
+  {
+    soloud.set3dSourceMinMaxDistance(channel, MIN_DISTANCE, radius);
   }
 
   void SetChannelPitch(Channel channel, float pitch)
@@ -61,14 +72,23 @@ struct Audio_SoLoud : public Audio
     return soloud.isValidVoiceHandle(channel);
   }
 
-  void SetListener(float x, float y, float z, float yaw)
+  void SetListenerPosition(float x, float y, float z)
+  {
+    soloud.set3dListenerPosition(x, y, z);
+  }
+
+  void SetListenerVelocity(float x, float y, float z)
+  {
+    soloud.set3dListenerVelocity(x, y, z);
+  }
+
+  void SetListenerYaw(float yaw)
   {
     const float atX = Sin(yaw);
     const float atY = 0;
     const float atZ = Cos(yaw);
     soloud.set3dListenerAt(atX, atY, atZ);
     soloud.set3dListenerUp(0, 1, 0);
-    soloud.set3dListenerPosition(x, y, z);
   }
 
   bool PlayMusic(const char *filename, bool loop)
@@ -161,7 +181,7 @@ struct Audio_SoLoud : public Audio
   {
     ((SoLoud::AudioSource *)sound)->setLooping(loop);
     SoLoud::handle channel = soloud.play3d(*(SoLoud::AudioSource *)sound, x, y, z);
-    soloud.set3dSourceMinMaxDistance(channel, 1, radius);
+    soloud.set3dSourceMinMaxDistance(channel, MIN_DISTANCE, radius);
     return channel;
   }
 

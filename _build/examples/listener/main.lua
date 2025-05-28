@@ -72,14 +72,20 @@ local mxSpeed = 0
 local mySpeed = 0
 SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 
+local prev_listener_x = EntityX(cam)
+local prev_listener_y = EntityY(cam)
+local prev_listener_z = EntityZ(cam)
+local prev_sphere_x = EntityX(sphere)
+local prev_sphere_y = EntityY(sphere)
+local prev_sphere_z = EntityZ(sphere)
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Player yaw
     TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0)
 
     -- Camera pitch
     TurnEntity(cam, mySpeed * ROT_SPEED * DeltaTime(), 0, 0)
-    if (EntityPitch(cam) > MAX_PITCH) then SetEntityRotation(cam, MAX_PITCH, EntityYaw(cam), 0) end
-    if (EntityPitch(cam) < -MAX_PITCH) then SetEntityRotation(cam, -MAX_PITCH, EntityYaw(cam), 0) end
+    if (EntityLocalPitch(cam) > MAX_PITCH) then SetEntityRotation(cam, MAX_PITCH, EntityLocalYaw(cam), 0) end
+    if (EntityLocalPitch(cam) < -MAX_PITCH) then SetEntityRotation(cam, -MAX_PITCH, EntityLocalYaw(cam), 0) end
 
     -- Move player
     local movX = 0
@@ -95,8 +101,21 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(sphere, 0, 8 * DeltaTime(), 0)
     MoveEntity(sphere, 0, 0, -20)
     SetEntityPosition(light, EntityX(sphere), EntityY(sphere), EntityZ(sphere))
-    SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere), SOUND_RADIUS)
-    SetListener(EntityX(cam), EntityY(cam), EntityZ(cam), EntityYaw(cam))
+    SetChannelPosition(channel, EntityX(sphere), EntityY(sphere), EntityZ(sphere))
+    SetChannelVelocity(
+        channel,
+        EntityX(sphere) - prev_sphere_x,
+        EntityY(sphere) - prev_sphere_y,
+        EntityZ(sphere) - prev_sphere_z)
+    SetListenerPosition(EntityX(cam), EntityY(cam), EntityZ(cam))
+    SetListenerVelocity(EntityX(cam) - prev_listener_x, EntityY(cam) - prev_listener_y, EntityZ(cam) - prev_listener_z)
+    SetListenerYaw(EntityYaw(cam))
+    prev_listener_x = EntityX(cam)
+    prev_listener_y = EntityY(cam)
+    prev_listener_z = EntityZ(cam)
+    prev_sphere_x = EntityX(sphere)
+    prev_sphere_y = EntityY(sphere)
+    prev_sphere_z = EntityZ(sphere)
 
     DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)

@@ -12,13 +12,17 @@ struct Audio
   virtual void StopChannel(Channel channel) = 0;
   virtual void PauseChannel(Channel channel) = 0;
   virtual void ResumeChannel(Channel channel) = 0;
-  virtual void SetChannelPosition(Channel channel, float x, float y, float z, float radius) = 0;
+  virtual void SetChannelPosition(Channel channel, float x, float y, float z) = 0;
+  virtual void SetChannelVelocity(Channel channel, float x, float y, float z) = 0;
+  virtual void SetChannelRadius(Channel channel, float radius) = 0;
   virtual void SetChannelPitch(Channel channel, float pitch) = 0;
   virtual void SetChannelVolume(Channel channel, float volume) = 0;
   virtual void SetChannelPan(Channel channel, float pan) = 0;
   virtual bool ChannelPlaying(Channel channel) = 0;
 
-  virtual void SetListener(float x, float y, float z, float yaw) = 0;
+  virtual void SetListenerPosition(float x, float y, float z) = 0;
+  virtual void SetListenerVelocity(float x, float y, float z) = 0;
+  virtual void SetListenerYaw(float yaw) = 0;
 
   virtual bool PlayMusic(const char *filename, bool loop) = 0;
   virtual void StopMusic() = 0;

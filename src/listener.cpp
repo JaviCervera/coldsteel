@@ -4,9 +4,19 @@
 extern "C"
 {
 
-  EXPORT void CALL SetListener(float x, float y, float z, float yaw)
+  EXPORT void CALL SetListenerPosition(float x, float y, float z)
   {
-    Audio::Get().SetListener(x, y, z, yaw);
+    Audio::Get().SetListenerPosition(x, y, z);
+  }
+
+  EXPORT void CALL SetListenerVelocity(float x, float y, float z)
+  {
+    Audio::Get().SetListenerVelocity(x, y, z);
+  }
+
+  EXPORT void CALL SetListenerYaw(float yaw)
+  {
+    Audio::Get().SetListenerYaw(yaw);
   }
 
 } // extern "C"
