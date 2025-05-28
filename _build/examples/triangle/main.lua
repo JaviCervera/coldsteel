@@ -42,6 +42,8 @@ local vertices = VerticesMemblock({
 local indices = IndicesMemblock({1, 2, 3})
 local mesh = CreateMesh()
 local surf = AddSurface(mesh, vertices, 3, indices, 3, SURFACE_STANDARD)
+FreeMemblock(vertices)
+FreeMemblock(indices)
 
 local triangle = CreateModel(mesh)
 FreeMesh(mesh)
