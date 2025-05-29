@@ -25,14 +25,13 @@ file(
 	"lib/soloud/src/core/*.cpp"
 	"lib/tinyfiledialogs/tinyfiledialogs.c"
 	"lib/zip/zip.c"
-	"src/*.cpp"
-	"src/internal/*.cpp")
+	"src/*.cpp")
 file(
 	GLOB
 	COLDSTEEL_EXE_FILES
 	"lib/lua/*.c"
 	"src/*.cc"
-	"src/internal/*.cc"
+	"src/include/*.cc"
 	"src/runtime.rc")
 
 #Add header and lib directories
@@ -58,7 +57,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 
 #Add executable targets
 add_executable(coldsteel ${COLDSTEEL_FILES} ${COLDSTEEL_EXE_FILES})
-add_library(coldsteel_dll SHARED ${COLDSTEEL_FILES})
+#add_library(coldsteel_dll SHARED ${COLDSTEEL_FILES})
 
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
@@ -74,7 +73,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
 	endif (MSVC)
 	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
-	target_link_libraries(coldsteel_dll -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
+	#target_link_libraries(coldsteel_dll -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	add_definitions(-DWITH_COREAUDIO)
@@ -82,7 +81,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(coldsteel -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
-	target_link_libraries(coldsteel_dll -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
+	#target_link_libraries(coldsteel_dll -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
 	add_definitions(-DWITH_ALSA)
@@ -90,7 +89,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(coldsteel -lIrrlicht -lasound -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
-	target_link_libraries(coldsteel_dll -lIrrlicht -lasound -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
+	#target_link_libraries(coldsteel_dll -lIrrlicht -lasound -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	message("Platform is Emscripten")
 	add_definitions(-DWITH_OPENAL)

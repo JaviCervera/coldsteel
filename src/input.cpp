@@ -1,82 +1,83 @@
 #include "input.h"
-#include "internal/platform.h"
+#include "include/engine.h"
+#include "include/platform.h"
 
 extern "C"
 {
 
   EXPORT void CALL SetCursorVisible(bool_t visible)
   {
-    Platform::Get().SetCursorVisible(visible);
+    GetEngine().GetPlatform().SetCursorVisible(visible);
   }
 
   EXPORT void CALL SetCursorPosition(int x, int y)
   {
-    Platform::Get().SetCursorPosition(x, y);
+    GetEngine().GetPlatform().SetCursorPosition(x, y);
   }
 
   EXPORT int CALL CursorX()
   {
-    return Platform::Get().CursorX();
+    return GetEngine().GetPlatform().CursorX();
   }
 
   EXPORT int CALL CursorY()
   {
-    return Platform::Get().CursorY();
+    return GetEngine().GetPlatform().CursorY();
   }
 
   EXPORT int CALL CursorZ()
   {
-    return Platform::Get().CursorZ();
+    return GetEngine().GetPlatform().CursorZ();
   }
 
   EXPORT bool_t CALL ButtonDown(int button)
   {
-    return Platform::Get().ButtonDown(button);
+    return GetEngine().GetPlatform().ButtonDown(button);
   }
 
   EXPORT bool_t CALL ButtonHit(int button)
   {
-    return Platform::Get().ButtonHit(button);
+    return GetEngine().GetPlatform().ButtonHit(button);
   }
 
   EXPORT bool_t CALL KeyDown(int key)
   {
-    return Platform::Get().KeyDown(key);
+    return GetEngine().GetPlatform().KeyDown(key);
   }
 
   EXPORT bool_t CALL KeyHit(int key)
   {
-    return Platform::Get().KeyHit(key);
+    return GetEngine().GetPlatform().KeyHit(key);
   }
 
   EXPORT int CALL NumJoysticks()
   {
-    return Platform::Get().NumJoysticks();
+    return GetEngine().GetPlatform().NumJoysticks();
   }
 
   EXPORT const char *CALL JoystickName(int index)
   {
-    return Platform::Get().JoystickName(index - 1);
+    return GetEngine().GetPlatform().JoystickName(index - 1);
   }
 
   EXPORT int CALL NumJoystickAxes(int index)
   {
-    return Platform::Get().NumJoystickAxes(index - 1);
+    return GetEngine().GetPlatform().NumJoystickAxes(index - 1);
   }
 
   EXPORT int CALL NumJoystickButtons(int index)
   {
-    return Platform::Get().NumJoystickButtons(index - 1);
+    return GetEngine().GetPlatform().NumJoystickButtons(index - 1);
   }
 
   EXPORT bool_t CALL JoystickButtonDown(int index, int button)
   {
-    return Platform::Get().JoystickButtonDown(index - 1, button);
+    return GetEngine().GetPlatform().JoystickButtonDown(index - 1, button);
   }
 
   EXPORT float CALL JoystickAxis(int index, int axis)
   {
-    return Platform::Get().JoystickAxis(index - 1, axis - 1);
+    return GetEngine().GetPlatform().JoystickAxis(index - 1, axis - 1);
   }
 
 } // extern "C"

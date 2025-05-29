@@ -35,15 +35,12 @@
 #endif
 */
 #include "../lib/zip/zip.h"
-#include "core.h"
 #include "dialogs.h"
-#include "dir.h"
-#include "internal/audio.h"
-#include "internal/platform.h"
-#include "internal/scripting.h"
-//#include "screen.h"
-#include "string.h"
-//#include "xml.h"
+#include "impl/engine_impl.h"
+#include "include/audio.h"
+#include "include/platform.h"
+#include "include/scripting.h"
+#include "runtime_helper.h"
 
 static void Run();
 static void Build(const stringc &dir, bool precompile);
@@ -57,10 +54,7 @@ static void CopyFile(const stringc &src, const stringc &dst);
 
 static void Error(const char *msg)
 {
-  if (_Device())
-    _Device()->getLogger()->log(msg, ELL_ERROR);
-  else
-    puts(msg);
+  puts(msg);
   Notify("Error", msg, true);
   exit(-1);
 }
@@ -81,14 +75,14 @@ struct Options
   Options(Mode mode, const stringc &dir, bool precompile)
       : mode(mode), dir(dir), precompile(precompile) {}
 
-  static Options Parse(int argc, char *argv[])
+  static Options Parse(int argc, char *argv[], const RuntimeHelper &helper)
   {
     if (argc != 1 && argc != 3)
       Error("Usage: coldsteel mode project_dir (mode=run,build,build_web)");
     const Mode mode = (argc > 1) ? ParseMode(argv[1]) : MODE_RUN;
     stringc dir = (argc > 2) ? argv[2] : "";
     if (dir != "")
-      dir = RealDir(IsDir(dir) ? dir : ExtractDir(dir.c_str()));
+      dir = RealDir(IsDir(dir) ? dir : helper.ExtractDir(dir));
     if (dir.findLast('\\') == dir.size() - 1 || dir.findLast('/') == dir.size() - 1)
       dir = dir.subString(0, dir.size() - 1);
 #ifdef __APPLE__
@@ -112,12 +106,34 @@ private:
   }
 };
 
+static Engine_Impl *_engine = NULL;
+
+Engine &GetEngine(const char *working_dir)
+{
+  puts("GetEngineA");
+  if (!_engine)
+    _engine = new Engine_Impl(working_dir);
+  puts("GetEngineB");
+  return *_engine;
+}
+
+void FinishEngine()
+{
+  if (_engine)
+  {
+    delete _engine;
+    _engine = NULL;
+  }
+}
+
 int main(int argc, char *argv[])
 {
   const Options opts = Options::Parse(argc, argv);
 
-  Audio::Get().Init();
-  Platform::Get().Init(opts.dir.c_str());
+  puts("AAA");
+  GetEngine(opts.dir.c_str());
+  puts("Engine init");
+  atexit(FinishEngine);
   switch (opts.mode)
   {
   case MODE_RUN:
@@ -130,16 +146,46 @@ int main(int argc, char *argv[])
     BuildWeb(opts.dir, opts.precompile);
     break;
   }
-  Platform::Get().Finish();
-  Audio::Get().Finish();
   return 0;
+}
+
+static bool LoadScript(const char *filename, stringc &output)
+{
+  bool result = false;
+  irr::SIrrlichtCreationParameters params;
+  params.DriverType = irr::video::EDT_NULL;
+  params.LoggingLevel = irr::ELL_ERROR;
+  IrrlichtDevice *device = createDeviceEx(params);
+  irr::io::IFileSystem *fs = device->getFileSystem();
+  if (fs->existFile(filename) && fs->addFileArchive(filename, true, false, EFAT_ZIP))
+  {
+    IReadFile *file = device->getFileSystem()->createAndOpenFile(filename);
+    if (file)
+    {
+      char *chars = new char[file->getSize() + 1];
+      chars[file->getSize()] = '\0';
+      file->read(chars, file->getSize());
+      file->drop();
+      output = chars;
+      delete[] chars;
+      result = true;
+    }
+  }
+  device->drop();
+  return result;
 }
 
 static void Run()
 {
-  if (!Scripting::Get().Load("main.lua"))
+  stringc script;
+  if (!LoadScript("main.lua", script))
+  {
+    //Error(stringc("Cannot find file: ") + CurrentDir() + "/" + filename);
+    Error("Cannot find file: main.lua");
+  }
+  if (!Scripting::Get().Run("main.lua", script.c_str(), script.size()))
     Error(Scripting::Get().Error());
-  Platform::Get().RefreshScreen();
+  GetEngine().GetPlatform().RefreshScreen();
 }
 
 static array<stringc> DirContentsArr(const stringc &path)

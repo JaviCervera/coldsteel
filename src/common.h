@@ -45,4 +45,7 @@ inline const char *_CSTR(const wchar_t *wstring)
   return string;
 }
 
+struct Engine;
+Engine &GetEngine(const char *working_dir = NULL);
+
 #endif

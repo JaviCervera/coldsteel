@@ -38,23 +38,15 @@ struct Scripting_Lua : public Scripting
     lua_close(m_state);
   }
 
-  bool Load(const char *filename)
+  bool Run(const char *filename, const char *contents, size_t size)
   {
-    Memblock *memblock = LoadMemblock(filename);
-    if (!memblock)
-    {
-      m_error = stringc("Cannot find file: ") + CurrentDir() + "/" + filename;
-      return false;
-    }
-    if (luaL_loadbuffer(m_state, (const char *)memblock, MemblockSize(memblock), filename) || lua_pcall(m_state, 0, LUA_MULTRET, 0))
+    if (luaL_loadbuffer(m_state, contents, size, filename) || lua_pcall(m_state, 0, LUA_MULTRET, 0))
     {
       m_error = Replace(Replace(lua_tostring(m_state, -1), "\"", "`"), "'", "`");
-      FreeMemblock(memblock);
       return false;
     }
     else
     {
-      FreeMemblock(memblock);
       return true;
     }
   }

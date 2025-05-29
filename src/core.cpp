@@ -1,24 +1,22 @@
 #include "common.h"
-#include "internal/audio.h"
-#include "internal/platform.h"
+#include "include/engine.h"
+#include "include/platform.h"
 
 extern "C"
 {
 
   EXPORT float CALL DeltaTime()
   {
-    return Platform::Get().DeltaTime();
+    return GetEngine().GetPlatform().DeltaTime();
   }
 
   EXPORT int CALL Millisecs()
   {
-    return Platform::Get().Millisecs();
+    return GetEngine().GetPlatform().Millisecs();
   }
 
   EXPORT void CALL Exit(int code)
   {
-    Platform::Get().Finish();
-    Audio::Get().Finish();
     exit(code);
   }
 
@@ -29,7 +27,7 @@ extern "C"
 
   IrrlichtDevice *_Device()
   {
-    return (IrrlichtDevice *)Platform::Get().InternalHandle();
+    return (IrrlichtDevice *)GetEngine().GetPlatform().InternalHandle();
   }
 
 } // extern "C"

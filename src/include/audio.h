@@ -5,10 +5,6 @@ struct Sound;
 
 struct Audio
 {
-  static Audio &Get();
-  virtual void Init() = 0;
-  virtual void Finish() = 0;
-
   virtual void StopChannel(Channel channel) = 0;
   virtual void PauseChannel(Channel channel) = 0;
   virtual void ResumeChannel(Channel channel) = 0;

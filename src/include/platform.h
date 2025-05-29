@@ -2,11 +2,6 @@
 
 struct Platform
 {
-  static Platform &Get();
-
-  // Core
-  virtual void Init(const char *working_dir) = 0;
-  virtual void Finish() = 0;
   virtual float DeltaTime() const = 0;
   virtual int Millisecs() const = 0;
   virtual void Exit(int code) = 0;

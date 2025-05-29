@@ -1,11 +1,11 @@
 #include <irrlicht.h>
+#undef RGB
 #include "../color.h"
 #include "../dir.h" // TODO: Remove this
+#include "../include/platform.h"
 #include "../math.h"
 #include "../screen.h"
-#include "audio.h"
 #include "irr_color.h"
-#include "platform.h"
 #include "str.h"
 
 struct Joystick
@@ -16,38 +16,29 @@ struct Joystick
   Joystick(const irr::SJoystickInfo &info) : info(info) {}
 };
 
-class EventReceiver : public irr::IEventReceiver
+struct Platform_Irrlicht;
+
+struct EventReceiver : public irr::IEventReceiver
 {
+  EventReceiver(Platform_Irrlicht &platform) : m_platform(&platform) {}
+
   bool OnEvent(const irr::SEvent &event);
+
+private:
+  Platform_Irrlicht *m_platform;
 };
 
 struct Platform_Irrlicht : public Platform
 {
-  void Init(const char *working_dir)
+  Platform_Irrlicht(const char *working_dir) : m_last_mouse_x(0), m_last_mouse_y(0), m_wheel(0)
   {
-    if (!m_device)
-    {
-      irr::SIrrlichtCreationParameters params;
-      params.DriverType = irr::video::EDT_NULL;
-      params.LoggingLevel = irr::ELL_ERROR;
-      m_device = createDeviceEx(params);
-    }
-    InitJoysticks();
-    m_init_msecs = m_device->getTimer()->getRealTime();
-    m_last_msecs = 0;
-    m_delta = 0.0f;
-    if (working_dir && strcmp(working_dir, ""))
-      ChangeDir(working_dir);
-#ifndef EMSCRIPTEN
-    AddZip("data.bin");
-#endif
+    puts("Platform_Irrlicht");
+    Init(working_dir);
   }
 
-  void Finish()
+  ~Platform_Irrlicht()
   {
-    if (m_device)
-      m_device->drop();
-    m_device = NULL;
+    Finish();
   }
 
   float DeltaTime() const
@@ -78,6 +69,7 @@ struct Platform_Irrlicht : public Platform
 
   void OpenScreen(int width, int height, int depth, int flags, int samples, void *win)
   {
+    puts("OpenScreen");
     Finish();
 
     irr::SIrrlichtCreationParameters params;
@@ -87,10 +79,10 @@ struct Platform_Irrlicht : public Platform
     params.DriverType = irr::video::EDT_WEBGL1;
     params.LoggingLevel = irr::ELL_DEBUG;
 #else
-    params.DriverType = irr::video::EDT_OPENGL; // irr::video::EDT_OGLES2
+    params.DriverType = irr::video::EDT_OPENGL;
     params.LoggingLevel = irr::ELL_ERROR;
 #endif
-    params.EventReceiver = new EventReceiver;
+    params.EventReceiver = new EventReceiver(*this); // TODO: This leaks
     params.Fullscreen = (flags & SCREEN_FULLSCREEN) == SCREEN_FULLSCREEN;
     params.Stencilbuffer = true;
     params.Vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
@@ -123,7 +115,6 @@ struct Platform_Irrlicht : public Platform
   {
     if (!m_device)
       return;
-    Audio::Get().Update();
     ClearInputs();
     m_device->getVideoDriver()->endScene();
     m_should_close = !m_device->run() || !m_device->getVideoDriver();
@@ -312,8 +303,8 @@ private:
   bool m_should_close;
 
   int m_mouse_x_speed, m_mouse_y_speed;
-  int m_last_mouse_x = 0, m_last_mouse_y = 0;
-  int m_wheel = 0;
+  int m_last_mouse_x, m_last_mouse_y;
+  int m_wheel;
   bool m_mouse_buttons[3];
   bool m_mouse_buttons_hit[3];
   bool m_mouse_buttons_was_hit[3];
@@ -321,6 +312,33 @@ private:
   bool m_keys_hit[irr::KEY_KEY_CODES_COUNT];
   bool m_keys_was_hit[irr::KEY_KEY_CODES_COUNT];
   irr::core::array<Joystick> m_joysticks;
+
+  void Init(const char *working_dir)
+  {
+    if (!m_device)
+    {
+      irr::SIrrlichtCreationParameters params;
+      params.DriverType = irr::video::EDT_NULL;
+      params.LoggingLevel = irr::ELL_ERROR;
+      m_device = createDeviceEx(params);
+    }
+    InitJoysticks();
+    m_init_msecs = m_device->getTimer()->getRealTime();
+    m_last_msecs = 0;
+    m_delta = 0.0f;
+    if (working_dir && strcmp(working_dir, ""))
+      ChangeDir(working_dir);
+#ifndef EMSCRIPTEN
+    AddZip("data.bin");
+#endif
+  }
+
+  void Finish()
+  {
+    if (m_device)
+      m_device->drop();
+    m_device = NULL;
+  }
 
   void SetCursorMoved()
   {
@@ -369,58 +387,51 @@ private:
   friend class EventReceiver;
 };
 
-Platform &Platform::Get()
-{
-  static Platform_Irrlicht platform;
-  return platform;
-}
-
 inline bool EventReceiver::OnEvent(const irr::SEvent &event)
 {
-  Platform_Irrlicht &platform = (Platform_Irrlicht &)Platform::Get();
   switch (event.EventType)
   {
   case irr::EET_JOYSTICK_INPUT_EVENT:
   {
-    int index = platform.FindJoystickIndex(event.JoystickEvent.Joystick);
+    int index = m_platform->FindJoystickIndex(event.JoystickEvent.Joystick);
     if (index != -1)
-      ((Platform_Irrlicht &)Platform::Get()).m_joysticks[index].event = event.JoystickEvent;
+      m_platform->m_joysticks[index].event = event.JoystickEvent;
     break;
   }
   case irr::EET_KEY_INPUT_EVENT:
   {
-    if (event.KeyInput.PressedDown && !platform.m_keys_was_hit[event.KeyInput.Key])
-      platform.m_keys_hit[event.KeyInput.Key] = true;
-    platform.m_keys_was_hit[event.KeyInput.Key] = event.KeyInput.PressedDown;
-    platform.m_keys[event.KeyInput.Key] = event.KeyInput.PressedDown;
+    if (event.KeyInput.PressedDown && !m_platform->m_keys_was_hit[event.KeyInput.Key])
+      m_platform->m_keys_hit[event.KeyInput.Key] = true;
+    m_platform->m_keys_was_hit[event.KeyInput.Key] = event.KeyInput.PressedDown;
+    m_platform->m_keys[event.KeyInput.Key] = event.KeyInput.PressedDown;
     break;
   }
   case irr::EET_MOUSE_INPUT_EVENT:
     switch (event.MouseInput.Event)
     {
     case irr::EMIE_MOUSE_MOVED:
-      platform.SetCursorMoved();
+      m_platform->SetCursorMoved();
       break;
     case irr::EMIE_LMOUSE_PRESSED_DOWN:
-      platform.SetButtonDown(1, true);
+      m_platform->SetButtonDown(1, true);
       break;
     case irr::EMIE_RMOUSE_PRESSED_DOWN:
-      platform.SetButtonDown(2, true);
+      m_platform->SetButtonDown(2, true);
       break;
     case irr::EMIE_MMOUSE_PRESSED_DOWN:
-      platform.SetButtonDown(3, true);
+      m_platform->SetButtonDown(3, true);
       break;
     case irr::EMIE_LMOUSE_LEFT_UP:
-      platform.SetButtonDown(1, false);
+      m_platform->SetButtonDown(1, false);
       break;
     case irr::EMIE_RMOUSE_LEFT_UP:
-      platform.SetButtonDown(2, false);
+      m_platform->SetButtonDown(2, false);
       break;
     case irr::EMIE_MMOUSE_LEFT_UP:
-      platform.SetButtonDown(3, false);
+      m_platform->SetButtonDown(3, false);
       break;
     case irr::EMIE_MOUSE_WHEEL:
-      platform.IncCursorWheel(int(event.MouseInput.Wheel));
+      m_platform->IncCursorWheel(int(event.MouseInput.Wheel));
       break;
     default:
       break;

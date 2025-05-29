@@ -1,7 +1,7 @@
 #include <soloud.h>
 #include <soloud_wav.h>
 #include <soloud_wavstream.h>
-#include "audio.h"
+#include "../include/audio.h"
 #include "../math.h"
 #include "../memblock.h"
 
@@ -26,14 +26,12 @@ struct Position
 struct Audio_SoLoud : public Audio
 {
   Audio_SoLoud()
-      : soloud(), music(NULL), musicHandle(0) {}
-
-  void Init()
+      : soloud(), music(NULL), musicHandle(0)
   {
     soloud.init(SoLoud::Soloud::LEFT_HANDED_3D);
   }
 
-  void Finish()
+  ~Audio_SoLoud()
   {
     soloud.deinit();
   }
@@ -210,9 +208,3 @@ private:
   Position listener;
   map<SoLoud::handle, Position> positions; // Channel positions
 };
-
-Audio &Audio::Get()
-{
-  static Audio_SoLoud driver;
-  return driver;
-}

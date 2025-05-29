@@ -1,32 +1,33 @@
-#include "internal/audio.h"
+#include "include/audio.h"
+#include "include/engine.h"
 #include "music.h"
 
 EXPORT bool_t CALL PlayMusic(const char *filename, bool_t loop)
 {
-  return Audio::Get().PlayMusic(filename, loop);
+  return GetEngine().GetAudio().PlayMusic(filename, loop);
 }
 
 EXPORT void CALL StopMusic()
 {
-  Audio::Get().StopMusic();
+  GetEngine().GetAudio().StopMusic();
 }
 
 EXPORT void CALL PauseMusic()
 {
-  Audio::Get().PauseMusic();
+  GetEngine().GetAudio().PauseMusic();
 }
 
 EXPORT void CALL ResumeMusic()
 {
-  Audio::Get().ResumeMusic();
+  GetEngine().GetAudio().ResumeMusic();
 }
 
 EXPORT void CALL SetMusicVolume(float volume)
 {
-  Audio::Get().SetMusicVolume(volume);
+  GetEngine().GetAudio().SetMusicVolume(volume);
 }
 
 EXPORT bool_t CALL MusicPlaying()
 {
-  return Audio::Get().MusicPlaying();
+  return GetEngine().GetAudio().MusicPlaying();
 }
