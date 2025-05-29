@@ -26,13 +26,13 @@ file(
 	"lib/tinyfiledialogs/tinyfiledialogs.c"
 	"lib/zip/zip.c"
 	"src/*.cpp"
-	"src/driver/*.cpp")
+	"src/internal/*.cpp")
 file(
 	GLOB
 	COLDSTEEL_EXE_FILES
 	"lib/lua/*.c"
 	"src/*.cc"
-	"src/driver/*.cc"
+	"src/internal/*.cc"
 	"src/runtime.rc")
 
 #Add header and lib directories

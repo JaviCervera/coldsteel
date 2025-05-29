@@ -38,7 +38,7 @@
 #include "core.h"
 #include "dialogs.h"
 #include "dir.h"
-#include "driver/scripting.h"
+#include "internal/scripting.h"
 #include "screen.h"
 #include "string.h"
 #include "xml.h"

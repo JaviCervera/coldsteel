@@ -1,4 +1,4 @@
-#include "driver/audio.h"
+#include "internal/audio.h"
 #include "music.h"
 
 EXPORT bool_t CALL PlayMusic(const char *filename, bool_t loop)

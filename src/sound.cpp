@@ -1,4 +1,4 @@
-#include "driver/audio.h"
+#include "internal/audio.h"
 #include "sound.h"
 
 extern "C"

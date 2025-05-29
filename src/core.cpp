@@ -1,7 +1,7 @@
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
-#include "driver/audio.h"
+#include "internal/audio.h"
 #include "core.h"
 #include "dir.h"
 #include "input.h"
