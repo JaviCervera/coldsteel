@@ -19,14 +19,9 @@ extern "C"
     Audio::Get().ResumeChannel(channel);
   }
 
-  EXPORT void CALL SetChannelPosition(Channel channel, float x, float y, float z)
+  EXPORT void CALL SetChannel3DPosition(Channel channel, float x, float y, float z)
   {
-    Audio::Get().SetChannelPosition(channel, x, y, z);
-  }
-
-  EXPORT void CALL SetChannelVelocity(Channel channel, float x, float y, float z)
-  {
-    Audio::Get().SetChannelVelocity(channel, x, y, z);
+    Audio::Get().SetChannel3DPosition(channel, x, y, z);
   }
 
   EXPORT void CALL SetChannelRadius(Channel channel, float radius)

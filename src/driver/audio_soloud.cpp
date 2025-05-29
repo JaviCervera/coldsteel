@@ -7,6 +7,22 @@
 
 #define MIN_DISTANCE 0.0001f
 
+struct Position
+{
+  vector3df pos;
+  vector3df vel;
+
+  Position(const vector3df &pos = vector3df())
+      : pos(pos), vel() {}
+
+  Position &operator=(const Position &other)
+  {
+    vel += other.pos - pos;
+    pos = other.pos;
+    return *this;
+  }
+};
+
 struct Audio_SoLoud : public Audio
 {
   Audio_SoLoud()
@@ -37,14 +53,12 @@ struct Audio_SoLoud : public Audio
     soloud.setPause(channel, false);
   }
 
-  void SetChannelPosition(Channel channel, float x, float y, float z)
+  void SetChannel3DPosition(Channel channel, float x, float y, float z)
   {
+    positions[channel] = Position(vector3df(x, y, z));
+    const Position pos = positions[channel];
     soloud.set3dSourcePosition(channel, x, y, z);
-  }
-
-  void SetChannelVelocity(Channel channel, float x, float y, float z)
-  {
-    soloud.set3dSourceVelocity(channel, x, y, z);
+    soloud.set3dSourceVelocity(channel, pos.vel.X, pos.vel.Y, pos.vel.Z);
   }
 
   void SetChannelRadius(Channel channel, float radius)
@@ -72,23 +86,13 @@ struct Audio_SoLoud : public Audio
     return soloud.isValidVoiceHandle(channel);
   }
 
-  void SetListenerPosition(float x, float y, float z)
-  {
-    soloud.set3dListenerPosition(x, y, z);
-  }
-
-  void SetListenerVelocity(float x, float y, float z)
-  {
-    soloud.set3dListenerVelocity(x, y, z);
-  }
-
-  void SetListenerYaw(float yaw)
+  void SetListener(float x, float y, float z, float yaw)
   {
     const float atX = Sin(yaw);
     const float atY = 0;
     const float atZ = Cos(yaw);
-    soloud.set3dListenerAt(atX, atY, atZ);
-    soloud.set3dListenerUp(0, 1, 0);
+    listener = Position(vector3df(x, y, z));
+    soloud.set3dListenerParameters(x, y, z, atX, atY, atZ, 0, 1, 0, listener.vel.X, listener.vel.Y, listener.vel.Z);
   }
 
   bool PlayMusic(const char *filename, bool loop)
@@ -174,13 +178,17 @@ struct Audio_SoLoud : public Audio
   Channel PlaySound(Sound *sound, bool loop)
   {
     ((SoLoud::AudioSource *)sound)->setLooping(loop);
-    return soloud.play(*(SoLoud::AudioSource *)sound);
+    SoLoud::handle channel = soloud.play(*(SoLoud::AudioSource *)sound);
+    positions.remove(channel);
+    return channel;
   }
 
   Channel PlaySound3D(Sound *sound, float x, float y, float z, float radius, bool loop)
   {
     ((SoLoud::AudioSource *)sound)->setLooping(loop);
     SoLoud::handle channel = soloud.play3d(*(SoLoud::AudioSource *)sound, x, y, z);
+    positions.remove(channel);
+    positions[channel] = Position(vector3df(x, y, z));
     soloud.set3dSourceMinMaxDistance(channel, MIN_DISTANCE, radius);
     return channel;
   }
@@ -188,12 +196,19 @@ struct Audio_SoLoud : public Audio
   void Update()
   {
     soloud.update3dAudio();
+    listener.vel = vector3df();
+    for (map<SoLoud::handle, Position>::Iterator it = positions.getIterator(); !it.atEnd(); it++)
+    {
+      it->getValue() = vector3df();
+    }
   }
 
 private:
   SoLoud::Soloud soloud;
   SoLoud::WavStream *music;
   SoLoud::handle musicHandle;
+  Position listener;
+  map<SoLoud::handle, Position> positions; // Channel positions
 };
 
 Audio &Audio::Get()

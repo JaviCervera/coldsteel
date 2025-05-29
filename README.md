@@ -6,12 +6,11 @@
 
 ```shell
 doxygen
-sphinx-build -b html -Dbreathe_projects.my_project=doc_out/xml . doc_out/sphinx
+python gen_doc.py
 ```
 
 ## TODO
 
-* Audio velocity should be calculated internally.
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).

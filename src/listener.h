@@ -8,9 +8,7 @@ extern "C"
 {
 #endif
 
-  EXPORT void CALL SetListenerPosition(float x, float y, float z);
-  EXPORT void CALL SetListenerVelocity(float x, float y, float z);
-  EXPORT void CALL SetListenerYaw(float yaw);
+  EXPORT void CALL SetListener(float x, float y, float z, float yaw);
 
 #ifdef __cplusplus
 } /* extern "C" */
