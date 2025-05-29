@@ -179,13 +179,3 @@ extern "C"
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
-#ifndef SWIG
-void _ClearInputs();
-void _SetCursorMoved();
-void _SetButtonDown(int button, bool down);
-void _SetKeyDown(int key, bool down);
-void _SetJoysticks(const array<SJoystickInfo> &joysticks);
-void _SetJoystickEvent(const SEvent::SJoystickEvent &event);
-void _IncCursorWheel(int amount);
-#endif

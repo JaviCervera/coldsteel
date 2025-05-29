@@ -14,10 +14,6 @@ extern "C"
   EXPORT int CALL System(const char *command);
 
 #ifndef SWIG
-  void _Init(const char *workingDir);
-  void _Finish();
-  bool_t _Run();
-  void _SetDevice(IrrlichtDevice *device, const char *workingDir);
   IrrlichtDevice *_Device();
 #endif
 

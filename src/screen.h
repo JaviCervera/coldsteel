@@ -53,10 +53,6 @@ extern "C"
   EXPORT int CALL DesktopDepth();
   EXPORT bool_t CALL FeatureSupported(int feature);
 
-#ifndef SWIG
-  int _ScreenFrameMsecs();
-#endif
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

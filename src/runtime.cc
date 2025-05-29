@@ -38,10 +38,12 @@
 #include "core.h"
 #include "dialogs.h"
 #include "dir.h"
+#include "internal/audio.h"
+#include "internal/platform.h"
 #include "internal/scripting.h"
-#include "screen.h"
+//#include "screen.h"
 #include "string.h"
-#include "xml.h"
+//#include "xml.h"
 
 static void Run();
 static void Build(const stringc &dir, bool precompile);
@@ -113,7 +115,9 @@ private:
 int main(int argc, char *argv[])
 {
   const Options opts = Options::Parse(argc, argv);
-  _Init(opts.dir.c_str());
+
+  Audio::Get().Init();
+  Platform::Get().Init(opts.dir.c_str());
   switch (opts.mode)
   {
   case MODE_RUN:
@@ -126,7 +130,8 @@ int main(int argc, char *argv[])
     BuildWeb(opts.dir, opts.precompile);
     break;
   }
-  _Finish();
+  Platform::Get().Finish();
+  Audio::Get().Finish();
   return 0;
 }
 
@@ -134,8 +139,7 @@ static void Run()
 {
   if (!Scripting::Get().Load("main.lua"))
     Error(Scripting::Get().Error());
-  RefreshScreen();
-  CloseScreen();
+  Platform::Get().RefreshScreen();
 }
 
 static array<stringc> DirContentsArr(const stringc &path)

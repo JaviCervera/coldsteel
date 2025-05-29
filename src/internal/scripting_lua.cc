@@ -16,9 +16,8 @@ extern "C"
 
 extern "C" int luaopen_coldsteel(lua_State *l);
 
-class Scripting_Lua : public Scripting
+struct Scripting_Lua : public Scripting
 {
-public:
   Scripting_Lua()
   {
     // Create Lua state and register libs
