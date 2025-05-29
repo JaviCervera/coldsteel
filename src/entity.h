@@ -52,16 +52,10 @@ extern "C"
   EXPORT float CALL EntityPitch(ISceneNode *entity);
   EXPORT float CALL EntityYaw(ISceneNode *entity);
   EXPORT float CALL EntityRoll(ISceneNode *entity);
-  EXPORT float CALL EntityLocalPitch(ISceneNode *entity);
-  EXPORT float CALL EntityLocalYaw(ISceneNode *entity);
-  EXPORT float CALL EntityLocalRoll(ISceneNode *entity);
   EXPORT void CALL SetEntityScale(ISceneNode *entity, float x, float y, float z);
   EXPORT float CALL EntityScaleX(ISceneNode *entity);
   EXPORT float CALL EntityScaleY(ISceneNode *entity);
   EXPORT float CALL EntityScaleZ(ISceneNode *entity);
-  EXPORT float CALL EntityLocalScaleX(ISceneNode *entity);
-  EXPORT float CALL EntityLocalScaleY(ISceneNode *entity);
-  EXPORT float CALL EntityLocalScaleZ(ISceneNode *entity);
   EXPORT float CALL EntityWidth(ISceneNode *entity);
   EXPORT float CALL EntityHeight(ISceneNode *entity);
   EXPORT float CALL EntityDepth(ISceneNode *entity);
