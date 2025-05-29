@@ -1,30 +1,53 @@
-OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+MAX_PITCH = 80
+ROT_SPEED = 15
+MOVE_SPEED = 32
+GRAVITY = -9.81 * 4
+WORLD_GROUP = 1
+
+OpenScreen(DesktopWidth(), DesktopHeight(), DesktopDepth(), SCREEN_FULLSCREEN)
+SetCursorVisible(false)
+
+-- Create player entity
+local player = CreateEntity()
+SetEntityPosition(player, 32, 16, 32)
 
 -- Create and setup camera
 local cam = CreateCamera()
 SetCameraClearColor(cam, COLOR_BLACK)
-SetEntityPosition(cam, 0, 2, -2)
-SetEntityRotation(cam, 45, 0, 0)
+SetEntityParent(cam, player)
 
--- Create cube
-local boxTex = LoadTexture("box.png")
-local lightmapTex = LoadTexture("lightmap.png")
-local mesh = CreateCubeMesh()
-local cube = CreateModel(mesh)
-local mat = EntityMaterial(cube, 1)
-SetMaterialType(mat, MATERIAL_LIGHTMAP)
-SetMaterialTexture(mat, 1, boxTex)
-SetMaterialTexture(mat, 2, lightmapTex)
-FreeMesh(mesh)
+-- Load scene
+local scene = LoadModel("parking_lot.b3d")
+SetEntityCollision(scene, COLLISION_MESH, WORLD_GROUP)
 
--- Create light (it can darken the lightmap, but not brighten it)
-local light = CreateLight(LIGHT_POINT)
-SetEntityPosition(light, 2, 2, -2)
+local mxSpeed = 0
+local mySpeed = 0
+SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
-    TurnEntity(cube, 0, 64 * DeltaTime(), 0)
+    -- Player yaw
+    TurnEntity(player, 0, mxSpeed * ROT_SPEED * DeltaTime(), 0)
+
+    -- Camera pitch
+    TurnEntity(cam, mySpeed * ROT_SPEED * DeltaTime(), 0, 0)
+    if (EntityPitch(cam) > MAX_PITCH) then SetEntityRotation(cam, MAX_PITCH, EntityYaw(cam), 0) end
+    if (EntityPitch(cam) < -MAX_PITCH) then SetEntityRotation(cam, -MAX_PITCH, EntityYaw(cam), 0) end
+
+    -- Move player
+    local movX = 0
+    local movZ = 0
+    if (KeyDown(KEY_W)) then movZ = MOVE_SPEED * DeltaTime() end
+    if (KeyDown(KEY_S)) then movZ = -MOVE_SPEED * DeltaTime() end
+    if (KeyDown(KEY_A)) then movX = -MOVE_SPEED * DeltaTime() end
+    if (KeyDown(KEY_D)) then movX = MOVE_SPEED * DeltaTime() end
+    SlideEntity(player, movX, GRAVITY * DeltaTime(), movZ, 2, 16, 2, WORLD_GROUP)
 
     DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
+
+    -- Update mouse speed
+    mxSpeed = CursorX() - ScreenWidth()/2
+    mySpeed = CursorY() - ScreenHeight()/2
+    SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 end

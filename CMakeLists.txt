@@ -1,5 +1,5 @@
 #Minimum version
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 
 #Define project
 project(coldsteel)
