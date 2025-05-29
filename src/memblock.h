@@ -11,8 +11,6 @@ extern "C"
   typedef void Memblock;
 
   EXPORT Memblock *CALL CreateMemblock(int size);
-  EXPORT Memblock *CALL LoadMemblock(const char *filename);
-  EXPORT void CALL SaveMemblock(Memblock *memblock, const char *filename);
   EXPORT void CALL FreeMemblock(Memblock *memblock);
   EXPORT int CALL MemblockSize(const Memblock *memblock);
   EXPORT void CALL PokeByte(Memblock *memblock, int offset, int val);

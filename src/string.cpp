@@ -1,6 +1,5 @@
 #include <ctype.h>
 #include <stdlib.h>
-#include "core.h"
 #include "string.h"
 
 extern "C"
@@ -223,46 +222,6 @@ extern "C"
       const size_t size = endp - filename;
       retstr = Mid(filename, 1, size);
     }
-    return retstr.c_str();
-  }
-
-  EXPORT const char *CALL LoadString(const char *filename)
-  {
-    static stringc retstr;
-    IReadFile *file = _Device()->getFileSystem()->createAndOpenFile(filename);
-    if (file)
-    {
-      long size = file->getSize();
-      char *str = (char *)malloc(size + 1);
-      str[size] = 0;
-      file->read(str, size);
-      retstr = str;
-      free(str);
-      file->drop();
-    }
-    else
-    {
-      retstr = "";
-    }
-    return retstr.c_str();
-  }
-
-  EXPORT void CALL SaveString(const char *str, const char *filename, bool_t append)
-  {
-    IWriteFile *file = _Device()->getFileSystem()->createAndWriteFile(filename, append);
-    file->write(str, strlen(str));
-    file->drop();
-  }
-
-  EXPORT void CALL CopyToClipboard(const char *str)
-  {
-    _Device()->getOSOperator()->copyToClipboard(str);
-  }
-
-  EXPORT const char *CALL PasteFromClipboard()
-  {
-    static stringc retstr;
-    retstr = _Device()->getOSOperator()->getTextFromClipboard();
     return retstr.c_str();
   }
 

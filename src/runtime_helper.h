@@ -17,7 +17,7 @@ struct RuntimeHelper
     m_device->drop();
   }
 
-  bool LoadScript(const char *filename, irr::core::stringc &output) const
+  bool LoadString(const irr::core::stringc &filename, irr::core::stringc &output) const
   {
     bool result = false;
     irr::io::IFileSystem *fs = m_device->getFileSystem();
@@ -38,14 +38,16 @@ struct RuntimeHelper
     return result;
   }
 
-  irr::core::stringc ExtractDir(const irr::core::stringc &filename) const
+  void SaveString(const irr::core::stringc &str, const irr::core::stringc &filename)
   {
-    const char *fendp = strrchr(filename.c_str(), '/');
-    const char *bendp = strrchr(filename.c_str(), '\\');
-    const char *endp = (fendp >= bendp) ? fendp : bendp;
-    if (endp)
-      return filename.subString(0, endp - filename.c_str());
-    return "";
+    IWriteFile *file = m_device->getFileSystem()->createAndWriteFile(filename, false);
+    file->write(str.c_str(), str.size());
+    file->drop();
+  }
+
+  irr::core::stringc CurrentDir()
+  {
+    return m_device->getFileSystem()->getWorkingDirectory();
   }
 
 private:

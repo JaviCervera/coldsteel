@@ -41,6 +41,7 @@
 #include "include/platform.h"
 #include "include/scripting.h"
 #include "runtime_helper.h"
+#include "string.h"
 
 static void Run();
 static void Build(const stringc &dir, bool precompile);
@@ -75,14 +76,14 @@ struct Options
   Options(Mode mode, const stringc &dir, bool precompile)
       : mode(mode), dir(dir), precompile(precompile) {}
 
-  static Options Parse(int argc, char *argv[], const RuntimeHelper &helper)
+  static Options Parse(int argc, char *argv[])
   {
     if (argc != 1 && argc != 3)
       Error("Usage: coldsteel mode project_dir (mode=run,build,build_web)");
     const Mode mode = (argc > 1) ? ParseMode(argv[1]) : MODE_RUN;
     stringc dir = (argc > 2) ? argv[2] : "";
     if (dir != "")
-      dir = RealDir(IsDir(dir) ? dir : helper.ExtractDir(dir));
+      dir = RealDir(IsDir(dir) ? dir : ExtractDir(dir.c_str()));
     if (dir.findLast('\\') == dir.size() - 1 || dir.findLast('/') == dir.size() - 1)
       dir = dir.subString(0, dir.size() - 1);
 #ifdef __APPLE__
@@ -126,6 +127,8 @@ void FinishEngine()
   }
 }
 
+static RuntimeHelper runtime_helper;
+
 int main(int argc, char *argv[])
 {
   const Options opts = Options::Parse(argc, argv);
@@ -149,40 +152,11 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-static bool LoadScript(const char *filename, stringc &output)
-{
-  bool result = false;
-  irr::SIrrlichtCreationParameters params;
-  params.DriverType = irr::video::EDT_NULL;
-  params.LoggingLevel = irr::ELL_ERROR;
-  IrrlichtDevice *device = createDeviceEx(params);
-  irr::io::IFileSystem *fs = device->getFileSystem();
-  if (fs->existFile(filename) && fs->addFileArchive(filename, true, false, EFAT_ZIP))
-  {
-    IReadFile *file = device->getFileSystem()->createAndOpenFile(filename);
-    if (file)
-    {
-      char *chars = new char[file->getSize() + 1];
-      chars[file->getSize()] = '\0';
-      file->read(chars, file->getSize());
-      file->drop();
-      output = chars;
-      delete[] chars;
-      result = true;
-    }
-  }
-  device->drop();
-  return result;
-}
-
 static void Run()
 {
   stringc script;
-  if (!LoadScript("main.lua", script))
-  {
-    //Error(stringc("Cannot find file: ") + CurrentDir() + "/" + filename);
-    Error("Cannot find file: main.lua");
-  }
+  if (!runtime_helper.LoadString("main.lua", script))
+    Error((stringc("Cannot find file: ") + runtime_helper.CurrentDir() + "/main.lua").c_str());
   if (!Scripting::Get().Run("main.lua", script.c_str(), script.size()))
     Error(Scripting::Get().Error());
   GetEngine().GetPlatform().RefreshScreen();
@@ -296,10 +270,12 @@ static void Build(const stringc &dir, bool precompile)
 
 static void WriteJS(const stringc &out_dir, const stringc &out_file, size_t pkg_size)
 {
-  const stringc js = Replace(Replace(LoadString((BinDir() + "/coldsteel.js").c_str()), JS_SIZE_TPL, Replace(JS_SIZE_REP, "#SIZE", Str(pkg_size))), "coldsteel", out_file.c_str());
+  stringc str;
+  runtime_helper.LoadString(BinDir() + "/coldsteel.js", str);
+  const stringc js = Replace(Replace(str.c_str(), JS_SIZE_TPL, Replace(JS_SIZE_REP, "#SIZE", Str(pkg_size))), "coldsteel", out_file.c_str());
   const stringc dst = out_dir + "/" + out_file + ".js";
   printf("Writing js '%s' ...\n", dst.c_str());
-  SaveString(js.c_str(), dst.c_str(), false);
+  runtime_helper.SaveString(js, dst);
 }
 
 static void WriteWasm(const stringc &out_dir, const stringc &out_file)
@@ -312,10 +288,12 @@ static void WriteWasm(const stringc &out_dir, const stringc &out_file)
 
 static void WriteHtml(const stringc &out_dir, const stringc &out_file)
 {
-  const stringc html = Replace(Replace(LoadString((BinDir() + "/coldsteel.html").c_str()), "coldsteel", out_file.c_str()), "Emscripten-Generated Code", out_file.c_str());
+  stringc str;
+  runtime_helper.LoadString(BinDir() + "/coldsteel.html", str);
+  const stringc html = Replace(Replace(str.c_str(), "coldsteel", out_file.c_str()), "Emscripten-Generated Code", out_file.c_str());
   const stringc dst = out_dir + "/index.html";
   printf("Writing html '%s' ...\n", dst.c_str());
-  SaveString(html.c_str(), dst.c_str(), false);
+  runtime_helper.SaveString(html, dst);
 }
 
 static void BuildWeb(const stringc &dir, bool precompile)

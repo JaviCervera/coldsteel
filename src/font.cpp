@@ -5,7 +5,7 @@
 #include "core.h"
 #include "font.h"
 #include "math.h"
-#include "memblock.h"
+#include "memblock_files.h"
 #include "string.h"
 #include "texture.h"
 #include "pixmap.h"

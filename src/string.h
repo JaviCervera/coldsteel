@@ -29,10 +29,6 @@ extern "C"
   EXPORT const char *CALL StripDir(const char *filename);
   EXPORT const char *CALL ExtractExt(const char *filename);
   EXPORT const char *CALL ExtractDir(const char *filename);
-  EXPORT const char *CALL LoadString(const char *filename);
-  EXPORT void CALL SaveString(const char *str, const char *filename, bool_t append);
-  EXPORT void CALL CopyToClipboard(const char *str);
-  EXPORT const char *CALL PasteFromClipboard();
 
 #ifdef __cplusplus
 } /* extern "C" */

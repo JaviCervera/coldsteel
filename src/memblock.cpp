@@ -1,5 +1,4 @@
 #include <string.h>
-#include "core.h"
 #include "memblock.h"
 
 extern "C"
@@ -10,29 +9,6 @@ extern "C"
     char *memblock = (char *)calloc(1, size + 4);
     ((int *)memblock)[0] = (int)size;
     return (Memblock *)((int *)memblock + 1);
-  }
-
-  EXPORT Memblock *CALL LoadMemblock(const char *filename)
-  {
-    Memblock *memblock = NULL;
-    IReadFile *file = _Device()->getFileSystem()->createAndOpenFile(filename);
-    if (file)
-    {
-      memblock = CreateMemblock(file->getSize());
-      file->read(memblock, file->getSize());
-      file->drop();
-    }
-    return memblock;
-  }
-
-  EXPORT void CALL SaveMemblock(Memblock *memblock, const char *filename)
-  {
-    IWriteFile *file = _Device()->getFileSystem()->createAndWriteFile(filename);
-    if (file)
-    {
-      file->write(memblock, MemblockSize(memblock));
-      file->drop();
-    }
   }
 
   EXPORT void CALL FreeMemblock(Memblock *memblock)

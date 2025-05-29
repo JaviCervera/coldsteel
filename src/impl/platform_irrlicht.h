@@ -294,6 +294,11 @@ struct Platform_Irrlicht : public Platform
     return fixed_value;
   }
 
+  irr::IrrlichtDevice *Device()
+  {
+    return m_device;
+  }
+
 private:
   irr::IrrlichtDevice *m_device;
   irr::u32 m_init_msecs;
