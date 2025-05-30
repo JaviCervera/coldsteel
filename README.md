@@ -11,6 +11,9 @@ python gen_doc.py
 
 ## TODO
 
+* Remove Console module.
+* Remove Dialogs module.
+* Remove XML module.
 * Revert surface indices to zero-based (or we'll have one less max vertices per surface!)
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
