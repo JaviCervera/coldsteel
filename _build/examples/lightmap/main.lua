@@ -4,7 +4,13 @@ MOVE_SPEED = 32
 GRAVITY = -9.81 * 4
 WORLD_GROUP = 1
 
-OpenScreen(DesktopWidth(), DesktopHeight(), DesktopDepth(), SCREEN_FULLSCREEN)
+function DrawBanner()
+    local text = ":: Parking Lot gile[s] sample scene - By Mikkel Fredborg ::"
+    DrawRect(0, ScreenHeight() - 22, ScreenWidth(), 22, COLOR_BLACK)
+    DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 19, COLOR_WHITE)
+end
+
+OpenScreen(640, 480, DesktopDepth(), SCREEN_FULLSCREEN)
 SetCursorVisible(false)
 
 -- Create player entity
@@ -44,6 +50,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
 
     DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawBanner()
     RefreshScreen()
 
     -- Update mouse speed
