@@ -40,4 +40,3 @@ class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 %include "src/terrain.h"
 %include "src/texture.h"
 %include "src/world.h"
-%include "src/xml.h"

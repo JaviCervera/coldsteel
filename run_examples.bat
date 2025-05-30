@@ -19,4 +19,3 @@ coldsteel run _build\examples\texture_from_pixmap
 coldsteel run _build\examples\triangle
 coldsteel run _build\examples\viewport
 coldsteel run _build\examples\world_to_screen
-coldsteel run _build\examples\xml

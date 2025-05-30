@@ -40,7 +40,6 @@
 #include "internal/scripting.h"
 #include "screen.h"
 #include "string.h"
-#include "xml.h"
 
 static void Run();
 static void Build(const stringc &dir, bool precompile);

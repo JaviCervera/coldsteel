@@ -28,4 +28,3 @@
 #include "terrain.h"
 #include "texture.h"
 #include "world.h"
-#include "xml.h"

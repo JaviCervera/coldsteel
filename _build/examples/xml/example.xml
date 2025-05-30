@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<config>
-    <!-- This is a config file for the mesh viewer -->
-    <model file="dwarf.x" />
-    <messageText caption="Example Caption">
-        This is an example text from the XML.
-    </messageText>
-</config>
