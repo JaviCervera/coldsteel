@@ -1,4 +1,3 @@
-OpenConsole()
 local xml = ParseXML("example.xml")
 for i = 1, XMLNumChildren(xml) do
 	local child = XMLChild(xml, i)
