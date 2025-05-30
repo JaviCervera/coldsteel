@@ -36,7 +36,6 @@
 */
 #include "../lib/zip/zip.h"
 #include "core.h"
-#include "dialogs.h"
 #include "dir.h"
 #include "internal/scripting.h"
 #include "screen.h"
@@ -59,7 +58,9 @@ static void Error(const char *msg)
     _Device()->getLogger()->log(msg, ELL_ERROR);
   else
     puts(msg);
-  Notify("Error", msg, true);
+#ifdef _WIN32
+  MessageBoxA(NULL, msg, "Error", MB_OK | MB_ICONERROR);
+#endif
   exit(-1);
 }
 
