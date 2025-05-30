@@ -106,32 +106,32 @@ extern "C"
 
   EXPORT float CALL VertexX(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index - 1).X;
+    return surface->getPosition(index).X;
   }
 
   EXPORT float CALL VertexY(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index - 1).Y;
+    return surface->getPosition(index).Y;
   }
 
   EXPORT float CALL VertexZ(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index - 1).Z;
+    return surface->getPosition(index).Z;
   }
 
   EXPORT float CALL VertexNX(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index - 1).X;
+    return surface->getNormal(index).X;
   }
 
   EXPORT float CALL VertexNY(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index - 1).Y;
+    return surface->getNormal(index).Y;
   }
 
   EXPORT float CALL VertexNZ(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index - 1).Z;
+    return surface->getNormal(index).Z;
   }
 
   EXPORT int CALL VertexColor(IMeshBuffer *surface, int index)
@@ -139,11 +139,11 @@ extern "C"
     switch (surface->getVertexType())
     {
     case EVT_STANDARD:
-      return _IntColor(((S3DVertex *)surface->getVertices())[index - 1].Color);
+      return _IntColor(((S3DVertex *)surface->getVertices())[index].Color);
     case EVT_2TCOORDS:
-      return _IntColor(((S3DVertex2TCoords *)surface->getVertices())[index - 1].Color);
+      return _IntColor(((S3DVertex2TCoords *)surface->getVertices())[index].Color);
     case EVT_TANGENTS:
-      return _IntColor(((S3DVertexTangents *)surface->getVertices())[index - 1].Color);
+      return _IntColor(((S3DVertexTangents *)surface->getVertices())[index].Color);
     }
     return 0;
   }
@@ -152,11 +152,11 @@ extern "C"
   {
     if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS))
     {
-      return surface->getTCoords(index - 1).X;
+      return surface->getTCoords(index).X;
     }
     else
     {
-      return ((S3DVertex2TCoords *)surface->getVertices())[index - 1].TCoords2.X;
+      return ((S3DVertex2TCoords *)surface->getVertices())[index].TCoords2.X;
     }
   }
 
@@ -164,11 +164,11 @@ extern "C"
   {
     if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS))
     {
-      return surface->getTCoords(index - 1).Y;
+      return surface->getTCoords(index).Y;
     }
     else
     {
-      return ((S3DVertex2TCoords *)surface->getVertices())[index - 1].TCoords2.Y;
+      return ((S3DVertex2TCoords *)surface->getVertices())[index].TCoords2.Y;
     }
   }
 
@@ -182,8 +182,7 @@ extern "C"
       buffer->Indices.set_used(numIndices);
       for (int i = 0; i < numIndices; ++i)
       {
-        const u16 index = PeekShort(indices, i * sizeof(u16));
-        buffer->Indices[i] = index - 1; // Convert to zero-based index
+        buffer->Indices[i] = PeekShort(indices, i * sizeof(u16));
       }
       break;
     }
@@ -193,8 +192,7 @@ extern "C"
       buffer->Indices.set_used(numIndices);
       for (int i = 0; i < numIndices; ++i)
       {
-        const u16 index = PeekShort(indices, i * sizeof(u16));
-        buffer->Indices[i] = index - 1; // Convert to zero-based index
+        buffer->Indices[i] = PeekShort(indices, i * sizeof(u16));
       }
       break;
     }
@@ -204,8 +202,7 @@ extern "C"
       buffer->Indices.set_used(numIndices);
       for (int i = 0; i < numIndices; ++i)
       {
-        const u16 index = PeekShort(indices, i * sizeof(u16));
-        buffer->Indices[i] = index - 1; // Convert to zero-based index
+        buffer->Indices[i] = PeekShort(indices, i * sizeof(u16));
       }
       break;
     }
@@ -220,8 +217,8 @@ extern "C"
   EXPORT int CALL SurfaceIndex(IMeshBuffer *surface, int number)
   {
     return (surface->getIndexType() == EIT_16BIT)
-               ? (surface->getIndices()[number - 1] + 1)
-               : (((u32 *)surface->getIndices())[number - 1] + 1);
+               ? (surface->getIndices()[number] + 1)
+               : (((u32 *)surface->getIndices())[number] + 1);
   }
 
   EXPORT SMaterial *CALL SurfaceMaterial(IMeshBuffer *surface)

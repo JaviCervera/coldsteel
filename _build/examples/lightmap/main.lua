@@ -5,7 +5,7 @@ GRAVITY = -9.81 * 4
 WORLD_GROUP = 1
 
 function DrawBanner()
-    local text = ":: Parking Lot gile[s] sample scene - By Mikkel Fredborg ::"
+    local text = ":: Parking Lot gile[s] sample scene - by Mikkel Fredborg ::"
     DrawRect(0, ScreenHeight() - 22, ScreenWidth(), 22, COLOR_BLACK)
     DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 19, COLOR_WHITE)
 end

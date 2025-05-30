@@ -11,7 +11,6 @@ python gen_doc.py
 
 ## TODO
 
-* Revert surface indices to zero-based (or we'll have one less max vertices per surface!)
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).

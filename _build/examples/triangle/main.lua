@@ -39,7 +39,7 @@ local vertices = VerticesMemblock({
     {0.5, -0.5, 0, 0, 0, -1, COLOR_GREEN, 0, 0},
     {-0.5, -0.5, 0, 0, 0, -1, COLOR_BLUE, 0, 0},
 })
-local indices = IndicesMemblock({1, 2, 3})
+local indices = IndicesMemblock({0, 1, 2})
 local mesh = CreateMesh()
 local surf = AddSurface(mesh, vertices, 3, indices, 3, SURFACE_STANDARD)
 FreeMemblock(vertices)
