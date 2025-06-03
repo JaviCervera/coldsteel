@@ -24,9 +24,19 @@ SetMaterialTexture(mat, 1, LoadTexture("terrain-texture.jpg"))
 SetMaterialTexture(mat, 2, LoadTexture("detailmap3.jpg"))
 SetEntityCollision(terrain, COLLISION_MESH, WORLD_GROUP)
 
+-- Create water volume
+local water = CreateWaterVolume(2048, 2048, 64, 64, 0.25, 500, 1)
+SetEntityPosition(water, 0, 16, 0)
+mat = EntityMaterial(water, 1)
+SetMaterialType(mat, MATERIAL_ALPHA)
+SetMaterialTexture(mat, 1, LoadTexture("water.png"))
+SetMaterialFlag(mat, FLAG_BACKFACECULLING, false)
+
 local mxSpeed = 0
 local mySpeed = 0
 SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
+
+local angle = 0
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     -- Player yaw
@@ -45,6 +55,10 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if (KeyDown(KEY_A)) then movX = -MOVE_SPEED * DeltaTime() end
     if (KeyDown(KEY_D)) then movX = MOVE_SPEED * DeltaTime() end
     SlideEntity(player, movX, GRAVITY * DeltaTime(), movZ, 2, 16, 2, WORLD_GROUP)
+
+    -- Water texture animation
+    angle = angle + DeltaTime() * 30
+    SetMaterialTextureTransform(mat, 1, Cos(angle) * 0.25, Sin(angle) * 0.25, 0, 1, 1)
 
     DrawWorld()
     DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)

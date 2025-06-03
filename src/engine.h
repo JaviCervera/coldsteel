@@ -27,4 +27,5 @@
 #include "surface.h"
 #include "terrain.h"
 #include "texture.h"
+#include "water.h"
 #include "world.h"
