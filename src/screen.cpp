@@ -187,11 +187,6 @@ extern "C"
     return _Device()->getVideoModeList()->getDesktopDepth();
   }
 
-  EXPORT bool_t CALL FeatureSupported(int feature)
-  {
-    return _Device()->getVideoDriver()->queryFeature((E_VIDEO_DRIVER_FEATURE)feature);
-  }
-
   int _ScreenFrameMsecs()
   {
     return _screenFrameMsecs;
