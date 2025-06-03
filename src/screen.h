@@ -33,6 +33,9 @@ extern "C"
   EXPORT int CALL DesktopWidth();
   EXPORT int CALL DesktopHeight();
   EXPORT int CALL DesktopDepth();
+  EXPORT void CALL MinimizeWindow();
+  EXPORT void CALL MaximizeWindow();
+  EXPORT void CALL RestoreWindow();
 
 #ifndef SWIG
   int _ScreenFrameMsecs();

@@ -187,6 +187,21 @@ extern "C"
     return _Device()->getVideoModeList()->getDesktopDepth();
   }
 
+  EXPORT void CALL MinimizeWindow()
+  {
+    _Device()->minimizeWindow();
+  }
+
+  EXPORT void CALL MaximizeWindow()
+  {
+    _Device()->maximizeWindow();
+  }
+
+  EXPORT void CALL RestoreWindow()
+  {
+    _Device()->restoreWindow();
+  }
+
   int _ScreenFrameMsecs()
   {
     return _screenFrameMsecs;

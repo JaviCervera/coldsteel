@@ -11,8 +11,6 @@ python gen_doc.py
 
 ## TODO
 
-* Functions to list available video modes.
-* MaximizeWindow, RestoreWindow and MinimizeWindow.
 * Use Irrlicht in a dll.
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
 * Add Pelican gh page website.
