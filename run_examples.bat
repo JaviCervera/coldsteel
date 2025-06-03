@@ -17,5 +17,6 @@ coldsteel run _build\examples\terrain
 coldsteel run _build\examples\test
 coldsteel run _build\examples\texture_from_pixmap
 coldsteel run _build\examples\triangle
+coldsteel run _build\examples\vertex_lighting
 coldsteel run _build\examples\viewport
 coldsteel run _build\examples\world_to_screen
