@@ -17,13 +17,13 @@ SetCameraClearMode(cam, false, true)
 SetEntityParent(cam, player)
 
 -- Setup environment
-local top = LoadTexture("top.jpg")
-local bottom = LoadTexture("bottom.jpg")
-local left = LoadTexture("left.jpg")
-local right = LoadTexture("right.jpg")
-local front = LoadTexture("front.jpg")
-local back = LoadTexture("back.jpg")
-SetSkybox(top, bottom, left, right, front, back)
+SetSkybox(
+    LoadTexture("irrlicht2_up.jpg"),
+    LoadTexture("irrlicht2_dn.jpg"),
+    LoadTexture("irrlicht2_lf.jpg"),
+    LoadTexture("irrlicht2_rt.jpg"),
+    LoadTexture("irrlicht2_ft.jpg"),
+    LoadTexture("irrlicht2_bk.jpg"))
 SetAmbient(RGB(155, 155, 255))
 local light = CreateLight(LIGHT_POINT)
 SetEntityRotation(light, 45, 215, 0)

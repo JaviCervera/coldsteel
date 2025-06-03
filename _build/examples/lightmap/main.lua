@@ -19,8 +19,9 @@ SetEntityPosition(player, 32, 16, 32)
 
 -- Create and setup camera
 local cam = CreateCamera()
-SetCameraClearColor(cam, COLOR_BLACK)
+SetCameraClearMode(cam, false, true)
 SetEntityParent(cam, player)
+SetSkydome(LoadTexture("skydome.jpg"), 0.5, true)
 
 -- Load scene
 local scene = LoadModel("parking_lot.b3d")

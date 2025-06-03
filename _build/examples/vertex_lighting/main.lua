@@ -10,7 +10,7 @@ function DrawBanner()
     DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 19, COLOR_WHITE)
 end
 
-OpenScreen(640, 480, DesktopDepth(), 0) -- SCREEN_FULLSCREEN)
+OpenScreen(640, 480, DesktopDepth(), SCREEN_FULLSCREEN)
 SetCursorVisible(false)
 
 -- Create player entity
@@ -19,8 +19,9 @@ SetEntityPosition(player, 0, 16, 0)
 
 -- Create and setup camera
 local cam = CreateCamera()
-SetCameraClearColor(cam, COLOR_BLACK)
+SetCameraClearMode(cam, false, true)
 SetEntityParent(cam, player)
+SetSkydome(LoadTexture("skydome.jpg"), 1, true)
 
 -- Load scene
 local scene = LoadModel("ruin.b3d")
