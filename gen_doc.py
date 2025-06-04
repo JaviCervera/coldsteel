@@ -69,7 +69,7 @@ def main():
   <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="../styles.css"> <!-- Link to the CSS file -->
+      <link rel="stylesheet" href="styles.css">
       <title>ColdSteel Engine documentation</title>
   </head>
   <body>
@@ -77,7 +77,7 @@ def main():
   </body>
   </html>
   """
-  with open(f'doc_out/documentation.html', mode='w') as f:
+  with open(f'_build/help/index.html', mode='w') as f:
     f.write(html)
 
 # -------------------------------------

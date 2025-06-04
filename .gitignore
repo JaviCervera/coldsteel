@@ -38,6 +38,8 @@ _build/*
 !_build/README.md
 !_build/coldsteel.icns
 !_build/geany
+!_build/help
+_build/help/*.html
 !_build/examples
 !_build/Info.plist
 !_build/media
