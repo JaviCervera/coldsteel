@@ -11,7 +11,9 @@ python gen_doc.py
 
 ## TODO
 
-* Use Irrlicht in a dll.
+* Separate builder.dll, with the features only needed to build packages.
+* Compile with mingw.org version and check on Win95. If it doesn't work, buid with VC6 and Irrlicht 1.3.1 on a separate branch.
+* Use Irrlicht as a dll?
 * ColdSteelSDK should export all engine functions to the dlls.
 * Use custom Lua bindings instead of SWIG based ones (reduce file size).
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).
