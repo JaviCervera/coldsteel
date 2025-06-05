@@ -232,7 +232,7 @@ namespace video
 			EmissiveColor(0,0,0,0), SpecularColor(255,255,255,255),
 			Shininess(0.0f), MaterialTypeParam(0.0f), MaterialTypeParam2(0.0f), Thickness(1.0f),
 			ZBuffer(ECFN_LESSEQUAL), AntiAliasing(EAAM_SIMPLE), ColorMask(ECP_ALL),
-			ColorMaterial(ECM_NONE), BlendOperation(EBO_NONE),
+			ColorMaterial(ECM_DIFFUSE), BlendOperation(EBO_NONE),
 			PolygonOffsetFactor(0), PolygonOffsetDirection(EPO_FRONT),
 			Wireframe(false), PointCloud(false), GouraudShading(true),
 			Lighting(true), ZWriteEnable(true), BackfaceCulling(true), FrontfaceCulling(false),
@@ -366,7 +366,7 @@ namespace video
 		u8 ZBuffer;
 
 		//! Sets the antialiasing mode
-		/** Values are chosen from E_ANTI_ALIASING_MODE. Default is
+		/** Values are chosen from E_ANTI_ALIASING_MODE. Default is 
 		EAAM_SIMPLE|EAAM_LINE_SMOOTH, i.e. simple multi-sample
 		anti-aliasing and lime smoothing is enabled. */
 		u8 AntiAliasing;
@@ -380,7 +380,7 @@ namespace video
 
 		//! Defines the interpretation of vertex color in the lighting equation
 		/** Values should be chosen from E_COLOR_MATERIAL.
-		When lighting is enabled, vertex color can be used instead of the
+		When lighting is enabled, vertex color can be used instead of the 
 		material values for light modulation. This allows to easily change e.g. the
 		diffuse light behavior of each face. The default, ECM_DIFFUSE, will result in
 		a very similar rendering as with lighting turned off, just with light shading. */
@@ -549,7 +549,7 @@ namespace video
 				case EMF_COLOR_MASK:
 					ColorMask = value?ECP_ALL:ECP_NONE; break;
 				case EMF_COLOR_MATERIAL:
-					ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
+					ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;
 				case EMF_USE_MIP_MAPS:
 					UseMipMaps = value; break;
 				case EMF_BLEND_OPERATION:
