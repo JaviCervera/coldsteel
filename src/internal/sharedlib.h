@@ -2,16 +2,13 @@
 
 #include <string>
 
-#ifndef __stdcall
-#define __stdcall
-#endif
-
 #ifdef _WIN32
-extern "C" void *__stdcall LoadLibraryA(const char *);
-extern "C" void *__stdcall GetProcAddress(const void *, const char *);
-extern "C" int __stdcall FreeLibrary(void *);
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#define Handle HMODULE
 #else
 #include <dlfcn.h>
+#define Handle (void *)
 #endif
 
 class sharedlib_t
@@ -23,7 +20,7 @@ public:
   void *funcptr(const char *name) const;
 
 private:
-  void *handle;
+  Handle handle;
 };
 
 inline sharedlib_t::sharedlib_t(const char *libname)
@@ -54,7 +51,7 @@ inline void *sharedlib_t::funcptr(const char *funcname) const
   if (handle)
   {
 #if defined(_WIN32)
-    return GetProcAddress(handle, funcname);
+    return (void *)GetProcAddress(handle, funcname);
 #else
     std::string str = funcname;
     size_t atpos = str.find('@');

@@ -20,6 +20,7 @@ cd _CMAKE/_COLDSTEEL
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLEGACY_IRRLICHT=ON -DCMAKE_RC_FLAGS="-O coff" ../..
 mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
+move "libbuilder.dll" "..\..\_build\builder.dll"
 cd ../..
 
 pause

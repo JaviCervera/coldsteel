@@ -1,18 +1,16 @@
 extern "C"
 {
-#include "../../lib/lua/lstate.h"
 #include "../../lib/lua/lua.h"
 #include "../../lib/lua/lualib.h"
 #include "../../lib/lua/lauxlib.h"
-#include "../../lib/lua/lundump.h"
 }
-
 #include "../dir.h"
 #include "../memblock.h"
 #include "../string.h"
 #include "scripting.h"
 #include "sdk.h"
 #include "sharedlib.h"
+#undef LoadString
 
 extern "C" int luaopen_coldsteel(lua_State *l);
 
@@ -63,17 +61,6 @@ public:
   const char *Error() const
   {
     return m_error.c_str();
-  }
-
-  FILE *CreateCompiledFile(const char *file)
-  {
-    lua_State *L = lua_open();
-    if (luaL_loadfile(L, file))
-      return NULL;
-    FILE *f = tmpfile();
-    luaU_dump(L, clvalue(L->top - 1)->l.p, writer, f, true);
-    lua_close(L);
-    return f;
   }
 
 private:
@@ -222,11 +209,6 @@ private:
   static void PushPointer(void *context, void *val)
   {
     lua_pushlightuserdata((lua_State *)context, val);
-  }
-
-  static int writer(lua_State *, const void *p, size_t size, void *u)
-  {
-    return (fwrite(p, size, 1, (FILE *)u) != 1) && (size != 0);
   }
 };
 

@@ -1,12 +1,18 @@
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #ifdef __STRICT_ANSI__
 #undef __STRICT_ANSI__
 #define __DID_UNDEF__STRICT_ANSI__
 #endif
-#include "internal/builder.h"
+#include <stdlib.h>
+#define realpath(N, R) _fullpath((R), (N), MAX_PATH)
 #ifdef __DID_UNDEF__STRICT_ANSI__
 #define __STRICT_ANSI__
 #endif
-#undef LoadString
+#endif
+#include <sys/stat.h>
+#include "internal/builder.h"
 #include "internal/scripting.h"
 #include "core.h"
 #include "screen.h"
@@ -36,6 +42,10 @@ static stringc BinDir()
 #endif
   return ExtractDir(path);
 }
+
+#if defined _WIN32 && !defined S_ISDIR
+#define S_ISDIR(m) (((m) & _S_IFDIR) == _S_IFDIR)
+#endif
 
 static bool IsDir(const stringc &path)
 {
@@ -129,7 +139,7 @@ static void Build(const stringc &dir, bool precompile)
 {
   Builder builder(PrintInfo);
   if (!builder.IsReady())
-    Error("Could not initialize builder.");
+    Error("Could not initialize builder");
   builder.Build(dir.c_str(), precompile);
 }
 
@@ -137,7 +147,7 @@ static void BuildWeb(const stringc &dir, bool precompile)
 {
   Builder builder(PrintInfo);
   if (!builder.IsReady())
-    Error("Could not initialize builder.");
+    Error("Could not initialize builder");
   builder.BuildWeb(dir.c_str(), precompile);
 }
 

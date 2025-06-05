@@ -12,9 +12,7 @@ python gen_doc.py
 ## TODO
 
 * Documentation index.html should contain all modules. Each module should list all functions, each function should have its own html file.
-* Separate builder.dll, with the features only needed to build packages.
-* Compile with mingw.org version and check on Win95. If it doesn't work, buid with VC6 and Irrlicht 1.3.1 on a separate branch.
-* Use Irrlicht as a dll?
+* Build with VC6 and Irrlicht 1.3.1 on a separate branch.
 * ColdSteelSDK should export all engine functions to the dlls.
 * Use custom Lua bindings instead of SWIG based ones (reduce file size).
 * Add Doxygen documentation (maybe use Sphinx + Breathe?).

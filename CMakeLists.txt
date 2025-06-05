@@ -23,7 +23,6 @@ file(
 	"lib/soloud/src/backend/coreaudio/soloud_coreaudio.cpp"
 	"lib/soloud/src/backend/winmm/soloud_winmm.cpp"
 	"lib/soloud/src/core/*.cpp"
-	"lib/zip/zip.c"
 	"src/*.cpp"
 	"src/internal/*.cpp")
 file(
@@ -33,6 +32,12 @@ file(
 	"src/*.cc"
 	"src/internal/*.cc"
 	"src/runtime.rc")
+file(
+	GLOB
+	BUILDER_FILES
+	"lib/lua/*.c"
+	"lib/zip/zip.c"
+	"src_builder/builder.cpp")
 
 #Add header and lib directories
 if (LEGACY_IRRLICHT)
@@ -57,6 +62,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 
 #Add executable targets
 add_executable(coldsteel ${COLDSTEEL_FILES} ${COLDSTEEL_EXE_FILES})
+add_library(builder SHARED ${BUILDER_FILES})
 
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
@@ -79,6 +85,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(coldsteel -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(builder -ldl ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
 	add_definitions(-DWITH_ALSA)
@@ -86,6 +93,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(coldsteel -lIrrlicht -lasound -lGL -lX11 -lXxf86vm ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(builder -ldl ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	message("Platform is Emscripten")
 	add_definitions(-DWITH_OPENAL)

@@ -2,6 +2,9 @@
 #pragma once
 
 #include "common.h"
+#ifdef LoadString
+#undef LoadString
+#endif
 
 #ifdef __cplusplus
 extern "C"
