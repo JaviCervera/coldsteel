@@ -4,12 +4,11 @@ extern "C"
 #include "../../lib/lua/lualib.h"
 #include "../../lib/lua/lauxlib.h"
 }
-#include "../dir.h"
-#include "../memblock.h"
-#include "../string.h"
+#include "../../_build/sdk/sdk.h"
+#include "../engine.h"
 #include "scripting.h"
-#include "sdk.h"
 #include "sharedlib.h"
+#undef DrawText
 #undef LoadString
 
 extern "C" int luaopen_coldsteel(lua_State *l);
@@ -139,22 +138,7 @@ private:
     return 0;
   }
 
-  static ColdSteelSDK GetSDK()
-  {
-    ColdSteelSDK sdk;
-    sdk.RegisterFunction = RegisterFunction;
-    sdk.GetBoolArg = GetBoolArg;
-    sdk.GetIntArg = GetIntArg;
-    sdk.GetFloatArg = GetFloatArg;
-    sdk.GetStringArg = GetStringArg;
-    sdk.GetPointerArg = GetPointerArg;
-    sdk.PushBool = PushBool;
-    sdk.PushInt = PushInt;
-    sdk.PushFloat = PushFloat;
-    sdk.PushString = PushString;
-    sdk.PushPointer = PushPointer;
-    return sdk;
-  }
+  static ColdSteelSDK GetSDK();
 
   static void RegisterFunction(const char *name, int (*f)(void *))
   {
@@ -217,3 +201,5 @@ Scripting &Scripting::Get()
   static Scripting_Lua *instance = new Scripting_Lua();
   return *instance;
 }
+
+#include "get_sdk_impl.h"

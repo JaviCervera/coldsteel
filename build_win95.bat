@@ -5,6 +5,11 @@ set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 echo # Generating Lua wrapper ...
 swig.exe -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
+echo # Generating SDK header ...
+swig.exe -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
+haxe -m SdkBuilder --interp
+del coldsteel.xml
+
 echo # Creating folders for CMake ...
 mkdir _CMAKE\_IRRLICHT
 mkdir _CMAKE\_COLDSTEEL
