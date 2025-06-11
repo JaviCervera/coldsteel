@@ -21,7 +21,7 @@ extern "C"
     return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
   }
 
-#ifdef LEGACY_IRRLICHT
+#ifndef IRRLICHT_SVN
   struct Vertex
   {
     float x, y, z;    // Position
@@ -36,7 +36,7 @@ extern "C"
 
   EXPORT IMesh *CALL CreateCubeMesh()
   {
-#ifndef LEGACY_IRRLICHT
+#ifdef IRRLICHT_SVN
     return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1), ECMT_1BUF_24VTX_NP));
 #else
     array<Vertex> vertices;

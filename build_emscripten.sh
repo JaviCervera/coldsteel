@@ -17,7 +17,7 @@ emmake make NDEBUG=1
 cd ../..
 
 echo "# Building ColdSteel (Emscripten) ..."
-emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 emmake make NDEBUG=1
 mv coldsteel.html ../../_build/coldsteel.html

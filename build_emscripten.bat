@@ -15,7 +15,7 @@ call emmake make NDEBUG=1 -j8
 cd ../..
 
 echo # Building ColdSteel (Emscripten) ...
-call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 call emmake make NDEBUG=1 -j8
 move "coldsteel.html" "..\..\_build\coldsteel.html"

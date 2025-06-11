@@ -5,13 +5,7 @@ cmake_minimum_required(VERSION 3.5)
 project(coldsteel)
 
 #Options
-option(LEGACY_IRRLICHT "Compile with an old version of Irrlicht" OFF)
-
-if (LEGACY_IRRLICHT)
-  set(CMAKE_RC_COMPILER_INIT windres)
-  ENABLE_LANGUAGE(RC)
-  SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -i <SOURCE> -o <OBJECT>")
-endif (LEGACY_IRRLICHT)
+option(IRRLICHT_SVN "Compile with the SVN version of Irrlicht" OFF)
 
 #Define file groups
 file(
@@ -40,20 +34,21 @@ file(
 	"src_builder/builder.cpp")
 
 #Add header and lib directories
-if (LEGACY_IRRLICHT)
-add_definitions(-DLEGACY_IRRLICHT -DZIP_ENABLE_SHARABLE_FILE_OPEN)
-include_directories(
-	${INCLUDE_DIRECTORIES}
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-else (LEGACY_IRRLICHT)
+if (IRRLICHT_SVN)
+add_definitions(-DIRRLICHT_SVN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-endif (LEGACY_IRRLICHT)
+else (IRRLICHT_SVN)
+add_definitions(-DZIP_ENABLE_SHARABLE_FILE_OPEN)
+include_directories(
+	${INCLUDE_DIRECTORIES}
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
+endif (IRRLICHT_SVN)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
