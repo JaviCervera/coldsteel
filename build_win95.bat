@@ -14,8 +14,8 @@ echo # Creating folders for CMake ...
 mkdir _CMAKE\_COLDSTEEL
 
 echo # Building coldsteel (Desktop) ...
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" ../..
 mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
 move "libbuilder.dll" "..\..\_build\builder.dll"
