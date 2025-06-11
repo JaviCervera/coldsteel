@@ -1,3 +1,4 @@
+import sys.FileSystem;
 import sys.io.File;
 
 using Lambda;
@@ -6,6 +7,8 @@ using StringTools;
 class SdkBuilder {
 	public static function main():Void {
 		final root = Xml.parse(File.getContent("coldsteel.xml")).firstElement();
+		if (!FileSystem.isDirectory("_build/sdk"))
+			FileSystem.createDirectory("_build/sdk");
 		File.saveContent("_build/sdk/sdk.h", getSdkContent(root));
 		File.saveContent("src/internal/get_sdk_impl.h", getCreateSdkContent(root));
 	}
