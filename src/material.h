@@ -75,6 +75,10 @@ extern "C"
   EXPORT void CALL SetMaterialFlag(SMaterial *material, int flag, bool_t enable);
   EXPORT bool_t CALL MaterialFlag(SMaterial *material, int flag);
 
+#ifndef SWIG
+void _FixMaterial(SMaterial *material, bool fix_specular);
+#endif
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

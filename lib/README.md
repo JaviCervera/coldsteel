@@ -69,14 +69,6 @@ The modifications made to the engine are described here:
 #define NO__IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_
 ```
 
-### SMaterial.h
-
-Search for `ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;` and replace with:
-
-```c++
-ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
-```
-
 ### CIrrDeviceOSX.mm
 
 Search for `NSMenu* mainMenu = [[[NSMenu alloc] initWithTitle:@"MainMenu"] autorelease];` and add the following line right before it:

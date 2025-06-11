@@ -13,8 +13,10 @@ local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
 local mesh = CreateCubeMesh()
-SetMeshColor(mesh, COLOR_BROWN)
-SetMaterialFlag(SurfaceMaterial(MeshSurface(mesh, 1)), FLAG_VERTEXCOLORS, true)
+local mat = SurfaceMaterial(MeshSurface(mesh, 1))
+SetMaterialFlag(mat, FLAG_VERTEXCOLORS, false)
+SetMaterialDiffuse(mat, COLOR_BROWN)
+SetMaterialAmbient(mat, COLOR_BROWN)
 
 local cubes = {}
 local x = -7

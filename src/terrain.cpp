@@ -1,4 +1,5 @@
 #include "core.h"
+#include "material.h"
 #include "terrain.h"
 
 extern "C"
@@ -11,6 +12,7 @@ extern "C"
         width / terrain->getBoundingBox().getExtent().X,
         height / terrain->getBoundingBox().getExtent().Y,
         depth / terrain->getBoundingBox().getExtent().Z));
+    _FixMaterial(&terrain->getMaterial(0), true);
     return terrain;
   }
 

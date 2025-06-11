@@ -8,6 +8,7 @@ extern "C"
   EXPORT IBillboardSceneNode *CALL CreateSprite(ITexture *texture, int materialType)
   {
     IBillboardSceneNode *spr = _Device()->getSceneManager()->addBillboardSceneNode();
+    _FixMaterial(&spr->getMaterial(0), true);
     SetMaterialTexture(&spr->getMaterial(0), 1, texture);
     SetMaterialType(&spr->getMaterial(0), materialType);
     if (texture)

@@ -1,16 +1,24 @@
 #include "color.h"
 #include "core.h"
+#include "material.h"
 #include "mesh.h"
 #include "surface.h"
 
 extern "C"
 {
 
-  IMesh *FixMeshSpecular(IMesh *mesh);
+  static IMesh *FixMaterials(IMesh *mesh, bool fix_specular = true)
+  {
+    for (u32 i = 0; i < mesh->getMeshBufferCount(); ++i)
+    {
+      _FixMaterial(&mesh->getMeshBuffer(i)->getMaterial(), fix_specular);
+    }
+    return mesh;
+  }
 
   EXPORT IMesh *CALL CreateConeMesh(int segments)
   {
-    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
+    return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createConeMesh(0.5f, 1, segments));
   }
 
 #ifdef LEGACY_IRRLICHT
@@ -29,7 +37,7 @@ extern "C"
   EXPORT IMesh *CALL CreateCubeMesh()
   {
 #ifndef LEGACY_IRRLICHT
-    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1), ECMT_1BUF_24VTX_NP));
+    return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1), ECMT_1BUF_24VTX_NP));
 #else
     array<Vertex> vertices;
     vertices.set_used(24);
@@ -97,13 +105,13 @@ extern "C"
     indices[35] = 21;
     IMesh *cube = CreateMesh();
     IMeshBuffer *surf = AddSurface(cube, &vertices[0], vertices.size(), &indices[0], indices.size(), SURFACE_STANDARD);
-    return FixMeshSpecular(cube);
+    return FixMaterials(cube);
 #endif
   }
 
   EXPORT IMesh *CALL CreateCylinderMesh(int segments)
   {
-    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments));
+    return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createCylinderMesh(0.5f, 1, segments));
   }
 
   EXPORT IMesh *CALL CreateMesh()
@@ -113,24 +121,24 @@ extern "C"
 
   EXPORT IMesh *CALL CreateQuadMesh()
   {
-    IMesh *quad = FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1)));
+    IMesh *quad = FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createPlaneMesh(dimension2df(1, 1)));
     RotateMesh(quad, -90, 0, 0);
     return quad;
   }
 
   EXPORT IMesh *CALL CreateSimpleCubeMesh()
   {
-    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1)));
+    return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(vector3df(1, 1, 1)));
   }
 
   EXPORT IMesh *CALL CreateSphereMesh(int segments)
   {
-    return FixMeshSpecular(_Device()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments));
+    return FixMaterials(_Device()->getSceneManager()->getGeometryCreator()->createSphereMesh(0.5f, segments, segments));
   }
 
   EXPORT IMesh *CALL LoadMesh(const char *filename)
   {
-    return _Device()->getSceneManager()->getMesh(filename);
+    return FixMaterials(_Device()->getSceneManager()->getMesh(filename), false);
   }
 
   EXPORT IMesh *CALL LoadTerrainMesh(IImage *heightmap, IImage *pixmap, float width, float height, float depth)
@@ -140,7 +148,7 @@ extern "C"
       const dimension2df stretch = dimension2df(
           float(width) / heightmap->getDimension().Width,
           float(depth) / heightmap->getDimension().Height);
-      return _Device()->getSceneManager()->addTerrainMesh("*", pixmap, heightmap, stretch, height);
+      return FixMaterials(_Device()->getSceneManager()->addTerrainMesh("*", pixmap, heightmap, stretch, height));
     }
     return NULL;
   }
@@ -259,15 +267,6 @@ extern "C"
   bool_t _MeshAnimated(IMesh *mesh)
   {
     return _Device()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
-  }
-
-  IMesh *FixMeshSpecular(IMesh *mesh)
-  {
-    for (u32 i = 0; i < mesh->getMeshBufferCount(); ++i)
-    {
-      mesh->getMeshBuffer(i)->getMaterial().SpecularColor = SColor(255, 0, 0, 0);
-    }
-    return mesh;
   }
 
 } // extern "C"

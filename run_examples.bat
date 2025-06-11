@@ -14,7 +14,6 @@ coldsteel run _build\examples\shadows
 coldsteel run _build\examples\specular
 coldsteel run _build\examples\sprites
 coldsteel run _build\examples\terrain
-coldsteel run _build\examples\test
 coldsteel run _build\examples\texture_from_pixmap
 coldsteel run _build\examples\triangle
 coldsteel run _build\examples\vertex_lighting

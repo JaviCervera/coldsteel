@@ -30,18 +30,18 @@ SetEntityRotation(light, 45, 215, 0)
 
 -- Create floor
 local mesh = CreateCubeMesh()
+SetMeshColor(mesh, RGB(55, 55, 55))
 ScaleMesh(mesh, 50, 1, 50)
 local floor = CreateModel(mesh)
 SetEntityCollision(floor, COLLISION_BOX, WORLD_GROUP)
 SetEntityPosition(floor, 0, -0.5, 0)
-local mat = EntityMaterial(floor, 1)
-SetMaterialDiffuse(mat, COLOR_BLACK)
-SetMaterialAmbient(mat, RGB(55, 55, 55))
 FreeMesh(mesh)
 
 -- Create pillars
 mesh = CreateCubeMesh()
+SetMeshColor(mesh, RGB(120, 0, 0))
 ScaleMesh(mesh, 4, 8, 4)
+SetMaterialAmbient(SurfaceMaterial(MeshSurface(mesh, 1)), RGB(120, 0, 0))
 local xpos = {-10, -10, 10, 10}
 local zpos = {-10, 10, -10, 10}
 for i = 1, #xpos do
@@ -49,19 +49,13 @@ for i = 1, #xpos do
     SetModelCastShadows(pillar, true)
     SetEntityCollision(pillar, COLLISION_BOX, WORLD_GROUP)
     SetEntityPosition(pillar, xpos[i], 4, zpos[i])
-    mat = EntityMaterial(pillar, 1)
-    SetMaterialDiffuse(mat, RGB(120, 0, 0))
-    SetMaterialAmbient(mat, RGB(120, 0, 0))
 end
 FreeMesh(mesh)
 
 -- Create floating sphere
 mesh = CreateSphereMesh(32)
+SetMaterialEmissive(SurfaceMaterial(MeshSurface(mesh, 1)), RGB(155, 155, 255))
 local sphere = CreateModel(mesh)
-mat = EntityMaterial(sphere, 1)
-SetMaterialDiffuse(mat, RGB(155, 155, 255))
-SetMaterialEmissive(mat, RGB(155, 155, 255))
-SetMaterialAmbient(mat, RGB(155, 155, 255))
 FreeMesh(mesh)
 
 -- Play sound

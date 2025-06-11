@@ -1,4 +1,5 @@
 #include "color.h"
+#include "material.h"
 #include "surface.h"
 
 #define STD_VERTEX_SIZE 36
@@ -22,6 +23,7 @@ extern "C"
     default:
       buffer = new SMeshBuffer();
     }
+    _FixMaterial(&buffer->getMaterial(), true);
     SetVertices(buffer, vertices, numVertices);
     SetIndices(buffer, indices, numIndices);
     ((SMesh *)mesh)->addMeshBuffer(buffer);

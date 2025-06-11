@@ -3,6 +3,7 @@
 
 #include "color.h"
 #include "core.h"
+#include "material.h"
 #include "math.h"
 #include "mesh.h"
 #include "string.h"
@@ -25,7 +26,7 @@ extern "C"
         tile_count,
         tile_count);
     TranslateMesh(hill->getMesh(0), width / 2, 0, depth / 2);
-    //SetMeshColor(hill->getMesh(0), FadeColor(COLOR_WHITE, 64));
+    _FixMaterial(&hill->getMesh(0)->getMeshBuffer(0)->getMaterial(), true);
     ISceneNode *water = _Device()->getSceneManager()->addWaterSurfaceSceneNode(hill->getMesh(0), wave_height, wave_speed, wave_length);
     hill->drop();
     return water;

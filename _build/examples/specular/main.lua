@@ -9,10 +9,10 @@ SetCameraClearColor(cam, COLOR_BLACK)
 SetEntityPosition(cam, 0, 0, -2)
 
 local mesh = CreateSphereMesh(64)
+SetMeshColor(mesh, COLOR_ORANGE)
 local model = CreateModel(mesh)
 FreeMesh(mesh)
 local mat = EntityMaterial(model, 1)
-SetMaterialDiffuse(mat, COLOR_ORANGE)
 SetMaterialShininess(mat, 0.5)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do

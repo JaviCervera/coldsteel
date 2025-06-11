@@ -142,6 +142,8 @@ extern "C"
     E_MATERIAL_FLAG irrflag = _IrrlichtMaterialFlag(flag);
     if (irrflag != E_MATERIAL_FLAG(0))
       material->setFlag(irrflag, enable);
+    if (flag == FLAG_VERTEXCOLORS)
+      material->ColorMaterial = enable ? ECM_DIFFUSE_AND_AMBIENT : ECM_NONE;
   }
 
   EXPORT bool_t CALL MaterialFlag(SMaterial *material, int flag)
@@ -216,6 +218,13 @@ extern "C"
     }
     const map<int, E_MATERIAL_FLAG>::Node *found = flags.find(flag);
     return found ? found->getValue() : E_MATERIAL_FLAG(0);
+  }
+
+  void _FixMaterial(SMaterial *material, bool fix_specular)
+  {
+    SetMaterialFlag(material, FLAG_VERTEXCOLORS, true);
+    if (fix_specular)
+      SetMaterialSpecular(material, COLOR_BLACK);
   }
 
 } // extern "C"
