@@ -42,6 +42,7 @@ _build/*
 _build/help/*.html
 !_build/examples
 !_build/Info.plist
+!_build/Irrlicht.dll
 !_build/media
 _build/examples/*.build
 _CMAKE
