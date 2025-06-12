@@ -1471,12 +1471,22 @@ static const u8 DEFAULT_FONT[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+static Font *_default_font = NULL;
+
 static Font *_DefaultFont()
 {
-  static Font *_default_font = NULL;
   if (!_default_font)
   {
     _default_font = new Font(DEFAULT_FONT, 12);
   }
   return _default_font;
+}
+
+void _UnloadDefaultFont()
+{
+  if (_default_font)
+  {
+    delete _default_font;
+    _default_font = NULL;
+  }
 }

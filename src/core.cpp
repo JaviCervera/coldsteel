@@ -4,6 +4,7 @@
 #include "internal/audio.h"
 #include "core.h"
 #include "dir.h"
+#include "font.h"
 #include "input.h"
 #include "screen.h"
 
@@ -73,6 +74,7 @@ extern "C"
 
   void _SetDevice(IrrlichtDevice *device, const char *workingDir)
   {
+    _UnloadDefaultFont();
     if (_device)
       _device->drop();
     _device = device;

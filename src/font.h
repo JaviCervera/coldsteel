@@ -19,3 +19,7 @@ extern "C"
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+#ifndef SWIG
+void _UnloadDefaultFont();
+#endif
