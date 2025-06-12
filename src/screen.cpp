@@ -54,10 +54,78 @@ class EventReceiver : public IEventReceiver
   }
 };
 
+static EventReceiver _eventReceiver;
+static int _selectedDriver = DRIVER_OPENGL;
+static int _screenFrameMsecs = 0;
+static bool_t _run = true;
+
+static E_DRIVER_TYPE irrlichtDriver(int driver)
+{
+  switch (driver)
+  {
+  case DRIVER_SOFTWAREFAST:
+    return EDT_SOFTWARE;
+  case DRIVER_SOFTWARE:
+    return EDT_BURNINGSVIDEO;
+  case DRIVER_OPENGL:
+#ifdef EMSCRIPTEN
+    return EDT_WEBGL1;
+#else
+    return EDT_OPENGL;
+#endif
+  case DRIVER_DIRECT3D:
+    return EDT_DIRECT3D8;
+  default:
+    return EDT_BURNINGSVIDEO;
+  }
+}
+
 extern "C"
 {
-  static int _screenFrameMsecs = 0;
-  static bool_t _run = true;
+
+  EXPORT void CALL SetDriver(int driver)
+  {
+    if (driver >= DRIVER_SOFTWAREFAST && driver <= DRIVER_DIRECT3D)
+      _selectedDriver = driver;
+  }
+
+  EXPORT const char *CALL DriverName()
+  {
+    static stringc driverName;
+    switch (_Device()->getVideoDriver()->getDriverType())
+    {
+    case EDT_DIRECT3D9:
+      driverName = "Direct3D9";
+      break;
+    case EDT_DIRECT3D8:
+      driverName = "Direct3D8";
+      break;
+    case EDT_OPENGL:
+      driverName = "OpenGL";
+      break;
+#ifdef IRRLICHT_SVN
+    case EDT_OGLES1:
+      driverName = "GLES1";
+      break;
+    case EDT_OGLES2:
+      driverName = "GLES2";
+      break;
+    case EDT_WEBGL1:
+      driverName = "WebGL1";
+      break;
+#endif
+    case EDT_BURNINGSVIDEO:
+      driverName = "Software";
+      break;
+    case EDT_SOFTWARE:
+      driverName = "SoftwareFast";
+      break;
+    default:
+      driverName = "Unknown";
+      break;
+    }
+    return driverName.c_str();
+  }
 
   EXPORT void CALL OpenScreen(int width, int height, int depth, int flags)
   {
@@ -67,16 +135,15 @@ extern "C"
   EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win)
   {
     SIrrlichtCreationParameters params;
+    params.DriverType = irrlichtDriver(_selectedDriver);
     params.AntiAlias = samples;
     params.Bits = depth;
 #ifdef EMSCRIPTEN
-    params.DriverType = EDT_WEBGL1;
     params.LoggingLevel = ELL_DEBUG;
 #else
-    params.DriverType = EDT_OPENGL; // EDT_OGLES2
     params.LoggingLevel = ELL_ERROR;
 #endif
-    params.EventReceiver = new EventReceiver;
+    params.EventReceiver = &_eventReceiver;
     params.Fullscreen = (flags & SCREEN_FULLSCREEN) == SCREEN_FULLSCREEN;
     params.Stencilbuffer = true;
     params.Vsync = (flags & SCREEN_VSYNC) == SCREEN_VSYNC;
@@ -85,12 +152,21 @@ extern "C"
     params.WindowSize.Height = height;
 
     // Init device
-    _SetDevice(createDeviceEx(params), NULL);
-    _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
-    _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
-    _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
-
-    _Device()->getVideoDriver()->beginScene(false, false);
+    IrrlichtDevice *device = createDeviceEx(params);
+    if (device)
+    {
+      _SetDevice(device, NULL);
+      _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
+      _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
+      _Device()->getSceneManager()->setAmbientLight(_Color(RGB(255, 255, 255)));
+      _Device()->getVideoDriver()->beginScene(false, false);
+      _run = true;
+    }
+    else if (_selectedDriver > 0)
+    {
+      _selectedDriver--;
+      OpenScreenEx(width, height, depth, flags, samples, win);
+    }
   }
 
   EXPORT void CALL CloseScreen()

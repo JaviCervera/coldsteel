@@ -76,7 +76,11 @@ extern "C"
   {
     _UnloadDefaultFont();
     if (_device)
+    {
+      _device->closeDevice();
+      _device->run();
       _device->drop();
+    }
     _device = device;
     if (!_device)
     {

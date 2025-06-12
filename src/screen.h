@@ -3,6 +3,12 @@
 
 #include "common.h"
 
+// Drivers
+#define DRIVER_SOFTWAREFAST 0
+#define DRIVER_SOFTWARE 1
+#define DRIVER_OPENGL 2
+#define DRIVER_DIRECT3D 3
+
 // Flags
 #define SCREEN_FULLSCREEN 1
 #define SCREEN_RESIZABLE 2
@@ -13,6 +19,8 @@ extern "C"
 {
 #endif
 
+  EXPORT void CALL SetDriver(int driver);
+  EXPORT const char *CALL DriverName();
   EXPORT void CALL OpenScreen(int width, int height, int depth, int flags);
   EXPORT void CALL OpenScreenEx(int width, int height, int depth, int flags, int samples, void *win);
   EXPORT void CALL CloseScreen();

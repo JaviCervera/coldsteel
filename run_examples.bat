@@ -1,6 +1,7 @@
 coldsteel run _build\examples\box
 coldsteel run _build\examples\box_lightmap
 coldsteel run _build\examples\collision
+coldsteel run _build\examples\driver
 coldsteel run _build\examples\fog
 coldsteel run _build\examples\hello
 coldsteel run _build\examples\joystick
