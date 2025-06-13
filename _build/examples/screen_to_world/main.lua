@@ -17,9 +17,7 @@ SetEntityPosition(cam, 0, 0, -5)
 local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
-local mesh = CreateCubeMesh()
-local model = CreateModel(mesh)
-FreeMesh(mesh)
+local model = CreateCubeModel()
 
 local depth = 0
 local depth_dir = 1

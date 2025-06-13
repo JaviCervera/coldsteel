@@ -8,10 +8,8 @@ local cam = CreateCamera()
 SetCameraClearColor(cam, COLOR_BLACK)
 SetEntityPosition(cam, 0, 0, -2)
 
-local mesh = CreateSphereMesh(64)
-SetMeshColor(mesh, COLOR_ORANGE)
-local model = CreateModel(mesh)
-FreeMesh(mesh)
+local model = CreateSphereModel(64)
+SetMeshColor(ModelMesh(model), COLOR_ORANGE)
 local mat = EntityMaterial(model, 1)
 SetMaterialShininess(mat, 0.5)
 

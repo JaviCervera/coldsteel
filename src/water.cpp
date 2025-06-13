@@ -1,6 +1,4 @@
 /** @file */
-#pragma once
-
 #include "color.h"
 #include "core.h"
 #include "material.h"

@@ -17,10 +17,8 @@ local cam = CreateCamera()
 SetEntityPosition(cam, 0, 2, -2)
 SetEntityRotation(cam, 45, 0, 0)
 
-local mesh = CreateCubeMesh()
-local cube = CreateModel(mesh)
+local cube = CreateCubeModel()
 SetMaterialTexture(EntityMaterial(cube, 1), 1, tex)
-FreeMesh(mesh)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 30 * DeltaTime(), 60 * DeltaTime(), 0)

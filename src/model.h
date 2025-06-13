@@ -8,8 +8,13 @@ extern "C"
 {
 #endif
 
+  EXPORT IMeshSceneNode *CALL CreateConeModel(int segments);
+  EXPORT IMeshSceneNode *CALL CreateCubeModel();
+  EXPORT IMeshSceneNode *CALL CreateCylinderModel(int segments);
   EXPORT IMeshSceneNode *CALL CreateModel(IMesh *mesh);
   EXPORT IMeshSceneNode *CALL CreateOctreeModel(IMesh *mesh);
+  EXPORT IMeshSceneNode *CALL CreateQuadModel();
+  EXPORT IMeshSceneNode *CALL CreateSphereModel(int segments);
   EXPORT IMeshSceneNode *CALL LoadModel(const char *filename);
   EXPORT IMeshSceneNode *CALL LoadOctreeModel(const char *filename);
   EXPORT IMesh *CALL ModelMesh(IMeshSceneNode *entity);

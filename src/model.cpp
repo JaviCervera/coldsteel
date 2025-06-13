@@ -6,6 +6,30 @@
 extern "C"
 {
 
+  EXPORT IMeshSceneNode *CALL CreateConeModel(int segments)
+  {
+    IMesh *mesh = CreateConeMesh(segments);
+    IMeshSceneNode *node = CreateModel(mesh);
+    FreeMesh(mesh);
+    return node;
+  }
+
+  EXPORT IMeshSceneNode *CALL CreateCubeModel()
+  {
+    IMesh *mesh = CreateCubeMesh();
+    IMeshSceneNode *node = CreateModel(mesh);
+    FreeMesh(mesh);
+    return node;
+  }
+
+  EXPORT IMeshSceneNode *CALL CreateCylinderModel(int segments)
+  {
+    IMesh *mesh = CreateCylinderMesh(segments);
+    IMeshSceneNode *node = CreateModel(mesh);
+    FreeMesh(mesh);
+    return node;
+  }
+
   EXPORT IMeshSceneNode *CALL CreateModel(IMesh *mesh)
   {
     if (_MeshAnimated(mesh))
@@ -21,6 +45,22 @@ extern "C"
   EXPORT IMeshSceneNode *CALL CreateOctreeModel(IMesh *mesh)
   {
     return _Device()->getSceneManager()->addOctreeSceneNode(mesh);
+  }
+
+  EXPORT IMeshSceneNode *CALL CreateQuadModel()
+  {
+    IMesh *mesh = CreateQuadMesh();
+    IMeshSceneNode *node = CreateModel(mesh);
+    FreeMesh(mesh);
+    return node;
+  }
+
+  EXPORT IMeshSceneNode *CALL CreateSphereModel(int segments)
+  {
+    IMesh *mesh = CreateSphereMesh(segments);
+    IMeshSceneNode *node = CreateModel(mesh);
+    FreeMesh(mesh);
+    return node;
   }
 
   EXPORT IMeshSceneNode *CALL LoadModel(const char *filename)

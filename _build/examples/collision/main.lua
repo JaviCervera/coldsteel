@@ -10,18 +10,14 @@ local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
 -- Create cube
-local mesh = CreateCubeMesh()
-local cube = CreateModel(mesh)
+local cube = CreateCubeModel()
 SetEntityPosition(cube, 0, 0, 2)
 SetEntityCollision(cube, COLLISION_BOX, 1)
-FreeMesh(mesh)
 
 -- Create cone
-mesh = CreateConeMesh(8)
-RotateMesh(mesh, 90, 0, 0)
-local cone = CreateModel(mesh)
+local cone = CreateConeModel(8)
+RotateMesh(ModelMesh(cone), 90, 0, 0)
 SetEntityPosition(cone, 0, 0, -1)
-FreeMesh(mesh)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_LEFT) then TurnEntity(cone, 0, -32 * DeltaTime(), 0) end

@@ -79,9 +79,7 @@ local dirLight = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(dirLight, 45, -45, 0)
 
 -- Create cube
-local mesh = CreateCubeMesh()
-local cube = CreateModel(mesh)
-FreeMesh(mesh)
+local cube = CreateCubeModel()
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 0, 64 * DeltaTime(), 0)

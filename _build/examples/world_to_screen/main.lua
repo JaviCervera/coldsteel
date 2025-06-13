@@ -16,10 +16,8 @@ SetEntityPosition(cam, 0, 0, -5)
 local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 45, -45, 0)
 
-local mesh = CreateCubeMesh()
-local model = CreateModel(mesh)
+local model = CreateCubeModel()
 SetEntityName(model, "This is a cube")
-FreeMesh(mesh)
 
 local space_pressed = false
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do

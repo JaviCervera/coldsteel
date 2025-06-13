@@ -17,9 +17,7 @@ SetEntityPosition(cam2, 0, 2, -2)
 SetEntityRotation(cam2, 45, 0, 0)
 
 -- Create cube
-local mesh = CreateCubeMesh()
-local cube = CreateModel(mesh)
-FreeMesh(mesh)
+local cube = CreateCubeModel()
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 32 * DeltaTime(), 64 * DeltaTime(), 0)
