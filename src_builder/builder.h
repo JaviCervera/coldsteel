@@ -46,9 +46,6 @@ struct Builder
 #endif
     WriteZip(dir, RuntimeDir(out_dir, out_file), "data.bin", precompile);
     CopyRuntime(out_dir, out_file);
-#ifdef _WIN32
-    CopyIrrlichtDll(out_dir);
-#endif
   }
 
   void BuildWeb(const char *dir, bool precompile) const
@@ -227,22 +224,6 @@ private:
     }
     filecopy(src.c_str(), dst.c_str());
   }
-
-#ifdef _WIN32
-  void CopyIrrlichtDll(const std::string &out_dir) const
-  {
-    const std::string dll_file = "Irrlicht.dll";
-    const std::string src = BinDir() + "/" + dll_file;
-    const std::string dst = out_dir + "/" + dll_file;
-    if (m_print)
-    {
-      char msg[MSG_LEN];
-      sprintf(msg, "Writing '%s' ...", dst.c_str());
-      m_print(msg);
-    }
-    filecopy(src.c_str(), dst.c_str());
-  }
-#endif
 
   static std::string BinDir()
   {
