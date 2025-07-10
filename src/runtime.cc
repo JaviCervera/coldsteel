@@ -10,6 +10,8 @@
 #ifdef __DID_UNDEF__STRICT_ANSI__
 #define __STRICT_ANSI__
 #endif
+#else
+#include <unistd.h>
 #endif
 #include <sys/stat.h>
 #include "internal/builder.h"

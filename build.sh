@@ -4,6 +4,11 @@ cd `dirname $0`
 echo "# Generating Lua wrapper ..."
 swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
+echo # Generating SDK header ...
+swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
+haxe -m SdkBuilder --interp
+rm coldsteel.xml
+
 echo "# Creating folders for CMake ..."
 mkdir _CMAKE
 mkdir _CMAKE/_COLDSTEEL

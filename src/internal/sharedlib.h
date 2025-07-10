@@ -5,10 +5,10 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#define Handle HMODULE
+typedef HMODULE Handle;
 #else
 #include <dlfcn.h>
-#define Handle (void *)
+typedef void *Handle;
 #endif
 
 class sharedlib_t
