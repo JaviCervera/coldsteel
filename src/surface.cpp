@@ -108,32 +108,32 @@ extern "C"
 
   EXPORT float CALL VertexX(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index).X;
+    return surface->getPosition(index - 1).X;
   }
 
   EXPORT float CALL VertexY(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index).Y;
+    return surface->getPosition(index - 1).Y;
   }
 
   EXPORT float CALL VertexZ(IMeshBuffer *surface, int index)
   {
-    return surface->getPosition(index).Z;
+    return surface->getPosition(index - 1).Z;
   }
 
   EXPORT float CALL VertexNX(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index).X;
+    return surface->getNormal(index - 1).X;
   }
 
   EXPORT float CALL VertexNY(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index).Y;
+    return surface->getNormal(index - 1).Y;
   }
 
   EXPORT float CALL VertexNZ(IMeshBuffer *surface, int index)
   {
-    return surface->getNormal(index).Z;
+    return surface->getNormal(index - 1).Z;
   }
 
   EXPORT int CALL VertexColor(IMeshBuffer *surface, int index)
@@ -141,11 +141,11 @@ extern "C"
     switch (surface->getVertexType())
     {
     case EVT_STANDARD:
-      return _IntColor(((S3DVertex *)surface->getVertices())[index].Color);
+      return _IntColor(((S3DVertex *)surface->getVertices())[index - 1].Color);
     case EVT_2TCOORDS:
-      return _IntColor(((S3DVertex2TCoords *)surface->getVertices())[index].Color);
+      return _IntColor(((S3DVertex2TCoords *)surface->getVertices())[index - 1].Color);
     case EVT_TANGENTS:
-      return _IntColor(((S3DVertexTangents *)surface->getVertices())[index].Color);
+      return _IntColor(((S3DVertexTangents *)surface->getVertices())[index - 1].Color);
     }
     return 0;
   }
@@ -154,11 +154,11 @@ extern "C"
   {
     if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS))
     {
-      return surface->getTCoords(index).X;
+      return surface->getTCoords(index - 1).X;
     }
     else
     {
-      return ((S3DVertex2TCoords *)surface->getVertices())[index].TCoords2.X;
+      return ((S3DVertex2TCoords *)surface->getVertices())[index - 1].TCoords2.X;
     }
   }
 
@@ -166,11 +166,11 @@ extern "C"
   {
     if (set == 0 || (surface->getVertexType() != EVT_2TCOORDS))
     {
-      return surface->getTCoords(index).Y;
+      return surface->getTCoords(index - 1).Y;
     }
     else
     {
-      return ((S3DVertex2TCoords *)surface->getVertices())[index].TCoords2.Y;
+      return ((S3DVertex2TCoords *)surface->getVertices())[index - 1].TCoords2.Y;
     }
   }
 
@@ -219,8 +219,8 @@ extern "C"
   EXPORT int CALL SurfaceIndex(IMeshBuffer *surface, int number)
   {
     return (surface->getIndexType() == EIT_16BIT)
-               ? (surface->getIndices()[number] + 1)
-               : (((u32 *)surface->getIndices())[number] + 1);
+               ? surface->getIndices()[number - 1]
+               : ((u32 *)surface->getIndices())[number - 1];
   }
 
   EXPORT SMaterial *CALL SurfaceMaterial(IMeshBuffer *surface)
