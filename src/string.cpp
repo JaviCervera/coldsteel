@@ -41,7 +41,8 @@ extern "C"
   {
     static stringc retstr;
     retstr = str;
-    retstr = retstr.subString(retstr.size() - num, num);
+    if (num < retstr.size())
+      retstr = retstr.subString(retstr.size() - num, num);
     return retstr.c_str();
   }
 
