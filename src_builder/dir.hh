@@ -28,6 +28,10 @@
 #endif
 #endif
 
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
 namespace dir
 {
   inline std::vector<std::string> contents(const std::string &path)

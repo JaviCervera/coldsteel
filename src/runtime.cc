@@ -13,6 +13,9 @@
 #else
 #include <unistd.h>
 #endif
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
 #include <sys/stat.h>
 #include "internal/builder.h"
 #include "internal/scripting.h"
