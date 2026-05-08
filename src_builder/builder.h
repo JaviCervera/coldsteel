@@ -240,7 +240,7 @@ private:
   }
 
 #if defined(__APPLE__) && defined(__MACH__)
-  static void CreateBundle(const std::string &out_dir, const std::string &out_file)
+  void CreateBundle(const std::string &out_dir, const std::string &out_file) const
   {
     dir::create(RuntimeDir(out_dir, out_file));
     dir::create(ResourcesDir(out_dir, out_file));
