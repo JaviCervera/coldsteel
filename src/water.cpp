@@ -26,7 +26,6 @@ extern "C"
     TranslateMesh(hill->getMesh(0), width / 2, 0, depth / 2);
     _FixMaterial(&hill->getMesh(0)->getMeshBuffer(0)->getMaterial(), true);
     ISceneNode *water = _Device()->getSceneManager()->addWaterSurfaceSceneNode(hill->getMesh(0), wave_height, wave_speed, wave_length);
-    hill->drop();
     return water;
   }
 

@@ -4,7 +4,7 @@ cd `dirname $0`
 echo "# Generating Lua wrapper ..."
 swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
-echo # Generating SDK header ...
+echo "# Generating SDK header ..."
 swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
 haxe -m SdkBuilder --interp
 rm coldsteel.xml

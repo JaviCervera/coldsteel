@@ -8,6 +8,7 @@ extern "C"
   EXPORT ITerrainSceneNode *CALL LoadTerrain(const char *heightmap, float width, float height, float depth)
   {
     ITerrainSceneNode *terrain = _Device()->getSceneManager()->addTerrainSceneNode(heightmap, NULL);
+    if (!terrain) { return NULL; }
     terrain->setScale(vector3df(
         width / terrain->getBoundingBox().getExtent().X,
         height / terrain->getBoundingBox().getExtent().Y,
