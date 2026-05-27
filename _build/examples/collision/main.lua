@@ -1,5 +1,7 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
+local font = LoadFont("greenscr_12.xml")
+
 -- Create and setup camera
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 2, -2)
@@ -26,6 +28,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     if KeyDown(KEY_DOWN) then SlideEntity(cone, 0, 0, -DeltaTime(), 1, 1, 1, 1) end
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end
+

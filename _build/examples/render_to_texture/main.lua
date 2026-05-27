@@ -62,3 +62,4 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     DrawTextureEx(tex, 0, 0, ScreenWidth(), ScreenHeight(), COLOR_WHITE)
     RefreshScreen()
 end
+

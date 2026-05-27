@@ -4,7 +4,6 @@
 #include "internal/audio.h"
 #include "core.h"
 #include "dir.h"
-#include "font.h"
 #include "input.h"
 #include "screen.h"
 
@@ -74,9 +73,10 @@ extern "C"
 
   void _SetDevice(IrrlichtDevice *device, const char *workingDir)
   {
-    _UnloadDefaultFont();
+    io::path savedDir = "";
     if (_device)
     {
+      savedDir = _device->getFileSystem()->getWorkingDirectory();
       _device->closeDevice();
       _device->run();
       _device->drop();
@@ -98,6 +98,10 @@ extern "C"
     if (workingDir && strcmp(workingDir, ""))
     {
       ChangeDir(workingDir);
+    }
+    else if (savedDir != "")
+    {
+      ChangeDir(savedDir.c_str());
     }
 #ifndef EMSCRIPTEN
     AddZip("data.bin");

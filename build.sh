@@ -16,14 +16,17 @@ mkdir _CMAKE/_IRRLICHT
 
 echo "# Building Irrlicht (Desktop) ..."
 cd lib/irrlicht190_ogles
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -DIRRLICHT_SVN=ON -B ../../_CMAKE/_IRRLICHT
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -DIRRLICHT_SVN=ON -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 make -j8
 cd ../..
 
 echo "# Building coldsteel (Desktop) ..."
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
 make -j8
 mv coldsteel ../../_build/coldsteel
 cd ../..
+
+echo "# Building fonttool ..."
+g++ -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool fonttool/fonttool.cpp -lIrrlicht -lGL -lX11 -lXxf86vm -lpthread -s -static-libgcc -static-libstdc++

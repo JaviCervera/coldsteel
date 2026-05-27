@@ -1,5 +1,7 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
+local font = LoadFont("greenscr_12.xml")
+
 SetAmbient(COLOR_BLACK)
 local light = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(light, 30, 40, 0)
@@ -19,7 +21,9 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetMaterialSpecular(mat, MultiplyColor(COLOR_WHITE, MaterialShininess(mat) * 2))
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
-    DrawText(nil, "Shininess: " .. MaterialShininess(mat) .. " (LEFT and RIGHT to change)", 2, 16, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, "Shininess: " .. MaterialShininess(mat) .. " (LEFT and RIGHT to change)", 2, 16, COLOR_WHITE)
     RefreshScreen()
 end
+
+

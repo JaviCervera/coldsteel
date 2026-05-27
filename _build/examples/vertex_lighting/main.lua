@@ -7,11 +7,13 @@ WORLD_GROUP = 1
 function DrawBanner()
     local text = ":: Ruin gile[s] sample scene - by Mikkel Fredborg ::"
     DrawRect(0, ScreenHeight() - 22, ScreenWidth(), 22, COLOR_BLACK)
-    DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 19, COLOR_WHITE)
+    DrawText(font, text, (ScreenWidth() - TextWidth(font, text)) / 2, ScreenHeight() - 16, COLOR_WHITE)
 end
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_FULLSCREEN)
 SetCursorVisible(false)
+
+font = LoadFont("greenscr_12.xml")
 
 -- Create player entity
 local player = CreateEntity()
@@ -56,7 +58,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SlideEntity(player, movX, GRAVITY * DeltaTime(), movZ, 2, 16, 2, WORLD_GROUP)
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     DrawBanner()
     RefreshScreen()
 
@@ -65,3 +67,4 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     mySpeed = CursorY() - ScreenHeight()/2
     SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 end
+

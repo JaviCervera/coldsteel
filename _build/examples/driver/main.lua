@@ -41,6 +41,8 @@ end
 SetDriver(DRIVER_SOFTWAREFAST)
 OpenScreen(400, 60, DesktopDepth(), 0)
 SetScreenTitle("Up and down select, left and right change, Enter to confirm")
+local font = LoadFont("greenscr_12.xml")
+
 while not KeyHit(KEY_ENTER) do
     if KeyHit(KEY_ESC) or ScreenShouldClose() then Exit(0) end
     if row == 0 then
@@ -57,9 +59,9 @@ while not KeyHit(KEY_ENTER) do
     if KeyHit(KEY_DOWN) then row = (row + 1) % 3 end
 
     ClearScreen(COLOR_LIGHTGRAY)
-    DrawText(nil, FormatMsg("Video Driver: ", DRIVERS[driver + 1]), 8, 4, MsgColor(0, row))
-    DrawText(nil, FormatMsg("Mode: ", ScreenModeWidth(mode + 1) .. "x" .. ScreenModeHeight(mode + 1) .. "@" .. ScreenModeDepth(mode + 1)), 8, 20, MsgColor(1, row))
-    DrawText(nil, FormatMsg("Fullscreen: ", FULLSCREEN[fullscreen + 1]), 8, 36, MsgColor(2, row))
+    DrawText(font, FormatMsg("Video Driver: ", DRIVERS[driver + 1]), 8, 4, MsgColor(0, row))
+    DrawText(font, FormatMsg("Mode: ", ScreenModeWidth(mode + 1) .. "x" .. ScreenModeHeight(mode + 1) .. "@" .. ScreenModeDepth(mode + 1)), 8, 20, MsgColor(1, row))
+    DrawText(font, FormatMsg("Fullscreen: ", FULLSCREEN[fullscreen + 1]), 8, 36, MsgColor(2, row))
     RefreshScreen()
 end
 
@@ -67,6 +69,7 @@ local flags = SCREEN_RESIZABLE
 if fullscreen == 1 then flags = SCREEN_FULLSCREEN end
 SetDriver(driver)
 OpenScreen(ScreenModeWidth(mode + 1), ScreenModeHeight(mode + 1), ScreenModeDepth(mode + 1), flags)
+local font = LoadFont("greenscr_12.xml")
 
 -- Create and setup camera
 local cam = CreateCamera()
@@ -85,7 +88,9 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 0, 64 * DeltaTime(), 0)
 
     DrawWorld()
-    DrawText(nil, "Driver: " .. DriverName(), 2, 2, COLOR_WHITE)
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 16, COLOR_WHITE)
+    DrawText(font, "Driver: " .. DriverName(), 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 16, COLOR_WHITE)
     RefreshScreen()
 end
+
+

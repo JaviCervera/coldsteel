@@ -1,5 +1,5 @@
 /** @file
- * Functions for loading and drawing TrueType fonts.
+ * Functions for loading and drawing bitmap fonts.
  */
 #pragma once
 
@@ -13,13 +13,13 @@ extern "C"
   struct Font;
 
   /**
-   * Loads a font from a TrueType file.
+   * Loads a bitmap font from an Irrlicht XML font file (.xml).
+   * Use the fonttool utility to generate .xml/.png font files from TTF sources.
    *
-   * @param filename The path to the TrueType font file.
-   * @param height The font height in pixels.
-   * @return The loaded font.
+   * @param filename The path to the Irrlicht XML font file.
+   * @return The loaded font, or NULL on failure.
    */
-  EXPORT Font *CALL LoadFont(const char *filename, int height);
+  EXPORT Font *CALL LoadFont(const char *filename);
 
   /**
    * Frees a font.
@@ -59,8 +59,4 @@ extern "C"
 
 #ifdef __cplusplus
 } /* extern "C" */
-#endif
-
-#ifndef SWIG
-void _UnloadDefaultFont();
 #endif

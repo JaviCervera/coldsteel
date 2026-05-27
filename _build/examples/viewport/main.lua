@@ -1,5 +1,7 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
+local font = LoadFont("greenscr_12.xml")
+
 -- Setup lighting
 local dirLight = CreateLight(LIGHT_DIRECTIONAL)
 SetEntityRotation(dirLight, 45, -45, 0)
@@ -26,6 +28,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetCameraViewport(cam2, 0, ScreenHeight() / 2, ScreenWidth() / 2, ScreenHeight() / 2)
     ClearScreen(RGB(0, 0, 128))
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end
+

@@ -7,6 +7,8 @@ PRIM_RECT = 1
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
+local font = LoadFont("greenscr_12.xml")
+
 function CreatePrimitive(type, color, x, y, z, w)
     return {
         type = type,
@@ -50,9 +52,11 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     end
 
     -- Draw statistics texts
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
-    DrawText(nil, Str(#primitives) .. " primitives", 2, 14, RGB(255, 255, 255))
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, RGB(255, 255, 255))
+    DrawText(font, Str(#primitives) .. " primitives", 2, 14, RGB(255, 255, 255))
 
     -- Present changes on screen
     RefreshScreen()
 end
+
+

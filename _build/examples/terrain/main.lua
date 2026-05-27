@@ -7,6 +7,8 @@ WORLD_GROUP = 1
 OpenScreen(640, 480, DesktopDepth(), SCREEN_FULLSCREEN)
 SetCursorVisible(false)
 
+local font = LoadFont("greenscr_12.xml")
+
 -- Camera
 local player = CreateEntity()
 local cam = CreateCamera()
@@ -61,7 +63,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetMaterialTextureTransform(mat, 1, Cos(angle) * 0.25, Sin(angle) * 0.25, 0, 1, 1)
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_BLACK)
     RefreshScreen()
 
     -- Update mouse speed
@@ -69,3 +71,4 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     mySpeed = CursorY() - ScreenHeight()/2
     SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 end
+

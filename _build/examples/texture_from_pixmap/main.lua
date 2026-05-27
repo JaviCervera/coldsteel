@@ -1,5 +1,7 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 
+local font = LoadFont("greenscr_12.xml")
+
 local pixmap = CreatePixmap(128, 128)
 for y = 0, PixmapHeight(pixmap) - 1 do
     for x = 0, PixmapWidth(pixmap) - 1 do
@@ -24,6 +26,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cube, 30 * DeltaTime(), 60 * DeltaTime(), 0)
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end
+

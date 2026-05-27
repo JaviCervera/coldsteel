@@ -5,10 +5,12 @@ end
 function DrawBanner(cam)
     local text = ":: Press SPACE to change camera mode - Current mode: " .. CameraMode(cam) .. " ::"
     DrawRect(0, ScreenHeight() - 18, ScreenWidth(), 18, COLOR_BLACK)
-    DrawText(nil, text, (ScreenWidth() - TextWidth(nil, text)) / 2, ScreenHeight() - 18, COLOR_WHITE)
+    DrawText(font, text, (ScreenWidth() - TextWidth(font, text)) / 2, ScreenHeight() - 16, COLOR_WHITE)
 end
 
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+
+font = LoadFont("greenscr_12.xml")
 
 local cam = CreateCamera()
 SetEntityPosition(cam, 0, 0, -5)
@@ -39,15 +41,17 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetCameraViewport(cam, ScreenWidth() / 2 - 200, ScreenHeight() / 2 - 200, 400, 400)
     ClearScreen(COLOR_DARKGRAY)
     DrawWorld()
-    DrawText(nil, ScreenFPS() .. " FPS", 2, 2, COLOR_WHITE)
-    DrawText(nil, Int(PointX()) .. ", " .. Int(PointY()), 2, 16, COLOR_WHITE)
+    DrawText(font, ScreenFPS() .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Int(PointX()) .. ", " .. Int(PointY()), 2, 16, COLOR_WHITE)
     DrawRect(PointX() - 2, PointY() - 2, 4, 4, COLOR_RED)
     DrawText(
-        nil,
+        font,
         EntityName(model),
-        PointX() - TextWidth(nil, EntityName(model)) / 2,
+        PointX() - TextWidth(font, EntityName(model)) / 2,
         PointY(),
         COLOR_RED)
     DrawBanner(cam)
     RefreshScreen()
 end
+
+

@@ -7,6 +7,8 @@ SOUND_RADIUS = 25
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
 SetCursorVisible(false)
 
+local font = LoadFont("greenscr_12.xml")
+
 -- Create player entity
 local player = CreateEntity()
 SetEntityPosition(player, 0, 2, 0)
@@ -93,7 +95,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetListener(EntityX(cam), EntityY(cam), EntityZ(cam), EntityYaw(player))
 
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
+    DrawText(font, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 
     -- Update mouse speed
@@ -101,3 +103,4 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     mySpeed = CursorY() - ScreenHeight()/2
     SetCursorPosition(ScreenWidth()/2, ScreenHeight()/2)
 end
+
