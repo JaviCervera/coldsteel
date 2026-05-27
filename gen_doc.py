@@ -1,13 +1,11 @@
 from dataclasses import dataclass
+from html import escape
 import os
-import re
 from typing import List
 import xml.etree.ElementTree as ET
 
-import markdown
-from markdown.extensions import Extension
-
 DOCS_PATH = 'doc_out/xml'
+OUTPUT_PATH = '_build/help'
 
 @dataclass(frozen=True)
 class Param:
@@ -32,60 +30,128 @@ class File:
   def __bool__(self):
     return bool(self.description) or bool(self.definitions) or bool(self.functions)
 
-class AnchorHeaderExtension(Extension):
-  def extendMarkdown(self, md):
-    md.preprocessors.register(AnchorHeaderPreprocessor(md), 'anchor_headers', 175)
 
-class AnchorHeaderPreprocessor(markdown.preprocessors.Preprocessor):
-  def run(self, lines):
-    new_lines = []
-    for line in lines:
-        # Match headers (e.g., # Header, ## Header, etc.)
-        if line.startswith('#'):
-          # Create an anchor link from the header text
-          header_text = line.strip('# ').strip()
-          code_tag_start = '<code>' if header_text.startswith('`') else ''
-          code_tag_end = '</code>' if header_text.startswith('`') else ''
-          if code_tag_start:
-            header_text = header_text.strip('`')
-            anchor = re.sub(r'\s+', '-', header_text).lower()
-            anchor = anchor.split('(')[0]
-            line = f'<h{line.count("#")}>{code_tag_start}<a id="{anchor}" href="#{anchor}">{header_text}</a>{code_tag_end}</h{line.count("#")}>'
-          else:
-            line = f'<h{line.count("#")}>{header_text}</h{line.count("#")}>'
-        new_lines.append(line)
-    return new_lines
+def html_page(title, css_path, breadcrumbs_html, body_html):
+  return f"""<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"UTF-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  <link rel=\"stylesheet\" href=\"{css_path}\">
+  <title>{escape(title)}</title>
+</head>
+<body>
+  {f'<p>{breadcrumbs_html}</p>' if breadcrumbs_html else ''}
+  {body_html}
+</body>
+</html>
+"""
+
+
+def write_html(path, content):
+  with open(path, mode='w', encoding='utf-8') as f:
+    f.write(content)
+
+
+def function_signature(func):
+  params = ', '.join([f'{param.type} {param.name}' for param in func.params])
+  return f'{func.type} {func.name}({params})'
+
+
+def module_page(module, file):
+  title = f'ColdSteel - {module.capitalize()}'
+  breadcrumbs = f'<a href="../index.html">Index</a> &gt; {escape(module.capitalize())}'
+  body = [f'<h1>{escape(module.capitalize())}</h1>']
+
+  if file.description:
+    body.append(f'<p>{escape(file.description)}</p>')
+
+  if file.definitions:
+    body.append('<h2>Constants</h2>')
+    body.append('<ul>')
+    body.extend([f'<li>{escape(definition)}</li>' for definition in file.definitions])
+    body.append('</ul>')
+
+  if file.functions:
+    body.append('<h2>Functions</h2>')
+    body.append('<ul>')
+    body.extend([
+      f'<li><a href="../functions/{func.name.lower()}.html">{escape(function_signature(func))}</a></li>'
+      for func in file.functions
+    ])
+    body.append('</ul>')
+
+  return html_page(title, '../styles.css', breadcrumbs, '\n  '.join(body))
+
+
+def function_page(module, func):
+  module_name = module.capitalize()
+  breadcrumbs = (
+    f'<a href="../index.html">Index</a> &gt; '
+    f'<a href="../modules/{module}.html">{escape(module_name)}</a> &gt; '
+    f'{escape(func.name)}'
+  )
+  body = [
+    f'<h1>{escape(func.name)}</h1>',
+    f'<pre><code>{escape(function_signature(func))}</code></pre>'
+  ]
+
+  if func.description:
+    body.append(f'<p>{escape(func.description)}</p>')
+
+  if func.params:
+    body.append('<h2>Parameters</h2>')
+    body.append('<ul>')
+    body.extend([
+      f'<li><code>{escape(param.name)}</code> ({escape(param.type)}): {escape(param.description)}</li>'
+      for param in func.params
+    ])
+    body.append('</ul>')
+
+  if func.type != 'void':
+    body.append('<h2>Returns</h2>')
+    return_desc = f' - {escape(func.return_desc)}' if func.return_desc else ''
+    body.append(f'<p>{escape(func.type)}{return_desc}</p>')
+
+  return html_page(f'ColdSteel - {module_name} - {func.name}', '../styles.css', breadcrumbs, '\n  '.join(body))
+
+
+def index_page(modules):
+  rows = ['<h1>ColdSteel Engine Documentation</h1>', '<ul>']
+  rows.extend([
+    f'<li><a href="modules/{module}.html">{escape(module.capitalize())}</a></li>'
+    for module, _ in modules
+  ])
+  rows.append('</ul>')
+  return html_page('ColdSteel Engine Documentation', 'styles.css', '', '\n  '.join(rows))
+
 
 def main():
-  doc = '# ColdSteel Engine documentation\n\n'
+  modules_path = os.path.join(OUTPUT_PATH, 'modules')
+  functions_path = os.path.join(OUTPUT_PATH, 'functions')
+  os.makedirs(modules_path, exist_ok=True)
+  os.makedirs(functions_path, exist_ok=True)
+
+  modules = []
   for header in headers_to_parse():
-    module = os.path.basename(header[:header.find('_8h.xml')])
-    file = md_file(module, parse_file(header))
-    if file:
-      doc += f'{file}\n\n'
-  html = f"""
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="styles.css">
-      <title>ColdSteel Engine documentation</title>
-  </head>
-  <body>
-      {markdown.markdown(doc, extensions=[AnchorHeaderExtension()])}
-  </body>
-  </html>
-  """
-  with open(f'_build/help/index.html', mode='w') as f:
-    f.write(html)
+    module = os.path.basename(header[:header.find('_8h.xml')]).lower()
+    file = parse_file(header)
+    if not file:
+      continue
+
+    modules.append((module, file))
+    write_html(os.path.join(modules_path, f'{module}.html'), module_page(module, file))
+    for func in file.functions:
+      write_html(os.path.join(functions_path, f'{func.name.lower()}.html'), function_page(module, func))
+
+  write_html(os.path.join(OUTPUT_PATH, 'index.html'), index_page(modules))
 
 # -------------------------------------
 # XML Parsing
 # -------------------------------------
 
 def headers_to_parse():
-  return sorted([os.path.join(DOCS_PATH, f) for f in os.listdir(DOCS_PATH) if f.endswith('_8h.xml')])
+  return sorted([os.path.join(DOCS_PATH, f) for f in os.listdir(DOCS_PATH) if f.endswith('_8h.xml') and f != 'common_8h.xml'])
 
 
 def parse_file(filename):
@@ -163,43 +229,6 @@ def parse_type(type):
   if type == 'ITerrainSceneNode *':
     return 'Terrain'
   return type
-
-# -------------------------------------
-# Markdown generation
-# -------------------------------------
-
-def md_file(module, file):
-  if not file:
-    return ''
-  str = f'## {module.capitalize()}\n\n'
-  if file.description:
-    str += file.description + '\n\n'
-  if file.definitions:
-    str += '### Constants\n' + '\n'.join([f'#### `{d}`' for d in file.definitions])
-  if file.functions:
-    if str:
-      str += '\n\n'
-    str += '### Functions\n' + '\n'.join([md_func(f) for f in file.functions])
-  return str
-
-
-def md_func(func):
-  str = f'### `{func.name}({", ".join([f"{p.name}" for p in func.params])})`'
-  if func.description:
-    str += f'\n{func.description}'
-  if func.params:
-    str += '\n\nParameters:\n\n'
-    for param in func.params:
-      str += f'* {param.name} ({param.type})'
-      if param.description:
-        str += f': {param.description}'
-      str += '\n'
-  if func.type != 'void':
-    str += f'\n\nReturns:\n\n* {func.type}'
-    if func.return_desc:
-      str += f' - {func.return_desc}'
-    str += '\n'
-  return str
 
 
 if __name__ == '__main__':

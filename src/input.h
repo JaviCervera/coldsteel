@@ -1,4 +1,7 @@
-/** @file */
+/** @file
+ * Functions for reading keyboard, mouse, and joystick input. Constants KEY_* and BUTTON_*
+ * are defined for use with KeyDown, KeyHit, ButtonDown, and ButtonHit.
+ */
 #pragma once
 
 #include "common.h"
@@ -160,20 +163,121 @@ extern "C"
 {
 #endif
 
+  /**
+   * Shows or hides the mouse cursor.
+   *
+   * @param visible The new cursor visibility state.
+   */
   EXPORT void CALL SetCursorVisible(bool_t visible);
+
+  /**
+   * Moves the cursor to a screen position.
+   *
+   * @param x The screen X position.
+   * @param y The screen Y position.
+   */
   EXPORT void CALL SetCursorPosition(int x, int y);
+
+  /**
+   * Returns the cursor X screen position.
+   *
+   * @return The cursor X screen position.
+   */
   EXPORT int CALL CursorX();
+
+  /**
+   * Returns the cursor Y screen position.
+   *
+   * @return The cursor Y screen position.
+   */
   EXPORT int CALL CursorY();
+
+  /**
+   * Returns the cursor scroll wheel delta.
+   *
+   * @return The cursor scroll wheel delta.
+   */
   EXPORT int CALL CursorZ();
+
+  /**
+   * Returns whether a mouse button is currently held down.
+   *
+   * @param button The mouse button to query. Use the BUTTON_* constants.
+   * @return True while the given mouse button is held.
+   */
   EXPORT bool_t CALL ButtonDown(int button);
+
+  /**
+   * Returns whether a mouse button was pressed this frame.
+   *
+   * @param button The mouse button to query. Use the BUTTON_* constants.
+   * @return True on the frame the given mouse button was pressed.
+   */
   EXPORT bool_t CALL ButtonHit(int button);
+
+  /**
+   * Returns whether a key is currently held down.
+   *
+   * @param key The key to query. Use the KEY_* constants.
+   * @return True while the given key is held.
+   */
   EXPORT bool_t CALL KeyDown(int key);
+
+  /**
+   * Returns whether a key was pressed this frame.
+   *
+   * @param key The key to query. Use the KEY_* constants.
+   * @return True on the frame the given key was pressed.
+   */
   EXPORT bool_t CALL KeyHit(int key);
+
+  /**
+   * Returns the number of connected joysticks.
+   *
+   * @return The number of connected joysticks.
+   */
   EXPORT int CALL NumJoysticks();
+
+  /**
+   * Returns the name of a joystick.
+   *
+   * @param index The joystick index.
+   * @return The joystick name.
+   */
   EXPORT const char *CALL JoystickName(int index);
+
+  /**
+   * Returns the number of axes on a joystick.
+   *
+   * @param index The joystick index.
+   * @return The number of axes on the joystick.
+   */
   EXPORT int CALL NumJoystickAxes(int index);
+
+  /**
+   * Returns the number of buttons on a joystick.
+   *
+   * @param index The joystick index.
+   * @return The number of buttons on the joystick.
+   */
   EXPORT int CALL NumJoystickButtons(int index);
+
+  /**
+   * Returns whether a joystick button is currently held down.
+   *
+   * @param index The joystick index.
+   * @param button The joystick button to query.
+   * @return True while the given joystick button is held.
+   */
   EXPORT bool_t CALL JoystickButtonDown(int index, int button);
+
+  /**
+   * Returns the value of a joystick axis.
+   *
+   * @param index The joystick index.
+   * @param axis The axis index.
+   * @return The axis value in the range -1.0 to 1.0.
+   */
   EXPORT float CALL JoystickAxis(int index, int axis);
 
 #ifdef __cplusplus

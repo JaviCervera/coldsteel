@@ -40,6 +40,7 @@ _build/*
 !_build/geany
 !_build/help
 _build/help/*.html
+_build/help/*/*.html
 !_build/examples
 !_build/Info.plist
 !_build/Irrlicht.dll
