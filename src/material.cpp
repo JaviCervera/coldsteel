@@ -183,6 +183,11 @@ extern "C"
     if (types.empty())
     {
       types.set(EMT_SOLID, MATERIAL_SOLID);
+      // Map all Irrlicht lightmap variants to the closest ColdSteel type.
+      types.set(EMT_LIGHTMAP, MATERIAL_LIGHTMAP);
+      types.set(EMT_LIGHTMAP_ADD, MATERIAL_LIGHTMAP);
+      types.set(EMT_LIGHTMAP_M2, MATERIAL_LIGHTMAP2X);
+      types.set(EMT_LIGHTMAP_M4, MATERIAL_LIGHTMAP4X);
       types.set(EMT_LIGHTMAP_LIGHTING, MATERIAL_LIGHTMAP);
       types.set(EMT_LIGHTMAP_LIGHTING_M2, MATERIAL_LIGHTMAP2X);
       types.set(EMT_LIGHTMAP_LIGHTING_M4, MATERIAL_LIGHTMAP4X);
@@ -192,9 +197,12 @@ extern "C"
       types.set(EMT_TRANSPARENT_VERTEX_ALPHA, MATERIAL_VERTEXALPHA);
       types.set(EMT_TRANSPARENT_ALPHA_CHANNEL_REF, MATERIAL_MASKED);
       types.set(EMT_SPHERE_MAP, MATERIAL_SPHERE);
+      types.set(EMT_REFLECTION_2_LAYER, MATERIAL_REFLECTION);
       types.set(EMT_TRANSPARENT_REFLECTION_2_LAYER, MATERIAL_REFLECTION);
+      types.set(EMT_NORMAL_MAP_SOLID, MATERIAL_NORMAL);
       types.set(EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_NORMAL);
       types.set(EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_NORMALADD);
+      types.set(EMT_PARALLAX_MAP_SOLID, MATERIAL_PARALLAX);
       types.set(EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA, MATERIAL_PARALLAX);
       types.set(EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR, MATERIAL_PARALLAXADD);
     }
@@ -222,6 +230,7 @@ extern "C"
 
   void _FixMaterial(SMaterial *material, bool fix_specular)
   {
+    material->MaterialType = _IrrlichtMaterialType(_MaterialType(material->MaterialType));
     SetMaterialFlag(material, FLAG_VERTEXCOLORS, true);
     if (fix_specular)
       SetMaterialSpecular(material, COLOR_BLACK);
