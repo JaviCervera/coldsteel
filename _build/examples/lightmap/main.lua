@@ -26,7 +26,7 @@ SetSkydome(LoadTexture("skydome.jpg"), 0.5, true)
 
 -- Load scene
 local scene = LoadModel("parking_lot.b3d")
-SetEntityCollision(scene, COLLISION_MESH, WORLD_GROUP)
+SetEntityCollision(scene, COLLISION_OCTREE, WORLD_GROUP)
 
 local mxSpeed = 0
 local mySpeed = 0
