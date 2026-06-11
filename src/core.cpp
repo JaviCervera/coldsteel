@@ -1,11 +1,36 @@
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_OSX
+#include <objc/objc.h>
+#include <objc/runtime.h>
+#include <objc/message.h>
+#endif
+#endif
 #include "internal/audio.h"
 #include "core.h"
 #include "dir.h"
 #include "input.h"
 #include "screen.h"
+
+#if defined(__APPLE__) && TARGET_OS_OSX
+__attribute__((constructor))
+static void MacOSAppActivationSetup()
+{
+    Class nsAppClass = objc_getClass("NSApplication");
+    if (!nsAppClass) return;
+    SEL sharedAppSel = sel_registerName("sharedApplication");
+    id (*sharedAppMsg)(id, SEL) = (id (*)(id, SEL))objc_msgSend;
+    id app = sharedAppMsg((id)nsAppClass, sharedAppSel);
+    if (!app) return;
+    void (*setPolicyMsg)(id, SEL, long) = (void (*)(id, SEL, long))objc_msgSend;
+    setPolicyMsg(app, sel_registerName("setActivationPolicy:"), 0L);
+    void (*activateMsg)(id, SEL, int) = (void (*)(id, SEL, int))objc_msgSend;
+    activateMsg(app, sel_registerName("activateIgnoringOtherApps:"), 1);
+}
+#endif
 
 static IrrlichtDevice *_device = NULL;
 static u32 _initMillisecs;
