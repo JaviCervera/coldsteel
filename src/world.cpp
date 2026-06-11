@@ -111,12 +111,12 @@ extern "C"
       matrix.transformVect(dest);
       camera->setTarget(dest);
 
-      // Set viewport and projection
+      // Set render target
+      _Device()->getVideoDriver()->setRenderTarget(data->renderTarget, false, false);
+
+      // Set viewport and projection (must be after setRenderTarget, which resets the viewport on some drivers)
       const recti viewport = SetCameraViewportAndProjection(camera);
       _Device()->getVideoDriver()->setViewPort(viewport);
-
-      // Set render target & clear buffers
-      _Device()->getVideoDriver()->setRenderTarget(data->renderTarget, false, false);
       if (data->clearFlags & 1)
         _Device()->getVideoDriver()->draw2DRectangle(
           _Color(data->clearColor),
