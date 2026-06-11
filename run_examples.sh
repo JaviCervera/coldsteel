@@ -9,6 +9,7 @@ _build/coldsteel run _build/examples/joystick
 _build/coldsteel run _build/examples/lighting
 _build/coldsteel run _build/examples/lightmap
 _build/coldsteel run _build/examples/listener
+_build/coldsteel run _build/examples/pixmap
 _build/coldsteel run _build/examples/primitives
 _build/coldsteel run _build/examples/render_to_texture
 _build/coldsteel run _build/examples/screen_to_world
@@ -16,6 +17,7 @@ _build/coldsteel run _build/examples/shadows
 _build/coldsteel run _build/examples/specular
 _build/coldsteel run _build/examples/sprites
 _build/coldsteel run _build/examples/terrain
+_build/coldsteel run _build/examples/texture
 _build/coldsteel run _build/examples/texture_from_pixmap
 _build/coldsteel run _build/examples/triangle
 _build/coldsteel run _build/examples/vertex_lighting
