@@ -1,6 +1,15 @@
 #!/bin/sh
 cd `dirname $0`
 
+# Detect OS and set C++ compiler
+if [ "$(uname)" = "Darwin" ]; then
+    CXX="clang++"
+    FONTTOOL_LIBS="-lIrrlicht -framework Cocoa -framework IOKit -framework OpenGL -lobjc -lpthread -s"
+else
+    CXX="g++"
+    FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lpthread -s -static-libgcc -static-libstdc++"
+fi
+
 echo "# Generating Lua wrapper ..."
 swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
 
@@ -29,4 +38,4 @@ mv coldsteel ../../_build/coldsteel
 cd ../..
 
 echo "# Building fonttool ..."
-g++ -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool fonttool/fonttool.cpp -lIrrlicht -lGL -lX11 -lXxf86vm -lpthread -s -static-libgcc -static-libstdc++
+$CXX -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool fonttool/fonttool.cpp $FONTTOOL_LIBS

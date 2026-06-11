@@ -1,0 +1,23 @@
+#!/bin/sh
+_build/coldsteel run _build/examples/box
+_build/coldsteel run _build/examples/box_lightmap
+_build/coldsteel run _build/examples/collision
+_build/coldsteel run _build/examples/driver
+_build/coldsteel run _build/examples/fog
+_build/coldsteel run _build/examples/hello
+_build/coldsteel run _build/examples/joystick
+_build/coldsteel run _build/examples/lighting
+_build/coldsteel run _build/examples/lightmap
+_build/coldsteel run _build/examples/listener
+_build/coldsteel run _build/examples/primitives
+_build/coldsteel run _build/examples/render_to_texture
+_build/coldsteel run _build/examples/screen_to_world
+_build/coldsteel run _build/examples/shadows
+_build/coldsteel run _build/examples/specular
+_build/coldsteel run _build/examples/sprites
+_build/coldsteel run _build/examples/terrain
+_build/coldsteel run _build/examples/texture_from_pixmap
+_build/coldsteel run _build/examples/triangle
+_build/coldsteel run _build/examples/vertex_lighting
+_build/coldsteel run _build/examples/viewport
+_build/coldsteel run _build/examples/world_to_screen
