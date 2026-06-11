@@ -27,7 +27,7 @@ SetSkydome(LoadTexture("skydome.jpg"), 1, true)
 
 -- Load scene
 local scene = LoadModel("ruin.b3d")
-SetEntityCollision(scene, COLLISION_MESH, WORLD_GROUP)
+SetEntityCollision(scene, COLLISION_OCTREE, WORLD_GROUP)
 for i = 6, EntityNumMaterials(scene) do
     -- The last materials should use texture masking
     local mat = EntityMaterial(scene, i)
