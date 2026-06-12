@@ -70,6 +70,12 @@ namespace dir
 
   inline void create(const std::string &path)
   {
+    struct stat statbuf;
+    if (stat(path.c_str(), &statbuf) != -1 && S_ISDIR(statbuf.st_mode))
+      return;
+    size_t pos = path.rfind('/');
+    if (pos != std::string::npos && pos > 0)
+      create(path.substr(0, pos));
 #ifdef _WIN32
     _mkdir(path.c_str());
 #else

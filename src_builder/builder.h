@@ -79,6 +79,8 @@ private:
     zip_close(zip);
 
     FILE *f = fopen(zip_path.c_str(), "rb");
+    if (!f)
+      return 0;
     fseek(f, 0, SEEK_END);
     const size_t size = ftell(f);
     fclose(f);
