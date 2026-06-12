@@ -8,6 +8,7 @@ extern "C"
 #include "../engine.h"
 #include "scripting.h"
 #include "sharedlib.h"
+#include "utils.h"
 #undef DrawText
 #undef LoadString
 
@@ -105,7 +106,7 @@ private:
     if (lua_gettop(L) > 0)
     {
       const stringc libname = lua_tostring(L, 1);
-      sharedlib_t *lib = new sharedlib_t(libname.c_str());
+      sharedlib_t *lib = new sharedlib_t((BinDir() + "/" + libname.c_str()).c_str());
       if (!lib->isopen())
       {
         lua_pushstring(L, (stringc("Library '") + libname + "' could not be loaded.").c_str());

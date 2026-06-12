@@ -35,6 +35,11 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -B _CM
 cd _CMAKE/_COLDSTEEL
 make -j8
 mv coldsteel ../../_build/coldsteel
+if [ "$(uname)" = "Darwin" ]; then
+    mv libbuilder.dylib ../../_build/builder.dylib
+else
+    mv libbuilder.so ../../_build/builder.so
+fi
 cd ../..
 
 echo "# Building fonttool ..."
