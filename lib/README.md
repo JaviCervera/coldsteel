@@ -104,3 +104,11 @@ FileSystem->addFileArchive("data.bin", true, false, io::EFAT_ZIP);
 ### CIrrDeviceWin32.cpp
 
 Search for `case EDT_WEBGL1:` and replace with `case video::EDT_WEBGL1:`.
+
+### lundump.c / ldump.c
+
+To make precompiled Lua bytecode portable across platforms (Windows, Linux, macOS, Emscripten), the bytecode format was changed to always use 4 bytes for the string length field instead of `sizeof(size_t)`:
+
+- `luaU_header()`: Changed `sizeof(size_t)` header byte to `sizeof(int)` (always 4).
+- `DumpString()`: Uses `DumpInt` (4 bytes) instead of `DumpVar` for the string length.
+- `LoadString()`: Uses `LoadInt` (4 bytes) instead of `LoadVar` for the string length.

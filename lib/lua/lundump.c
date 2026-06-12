@@ -75,15 +75,15 @@ static lua_Number LoadNumber(LoadState* S)
 
 static TString* LoadString(LoadState* S)
 {
- size_t size;
- LoadVar(S,size);
+ int size;
+ size=LoadInt(S);
  if (size==0)
   return NULL;
  else
  {
-  char* s=luaZ_openspace(S->L,S->b,size);
-  LoadBlock(S,s,size);
-  return luaS_newlstr(S->L,s,size-1);		/* remove trailing '\0' */
+  char* s=luaZ_openspace(S->L,S->b,(size_t)size);
+  LoadBlock(S,s,(size_t)size);
+  return luaS_newlstr(S->L,s,(size_t)(size-1));		/* remove trailing '\0' */
  }
 }
 
@@ -220,7 +220,7 @@ void luaU_header (char* h)
  *h++=(char)LUAC_FORMAT;
  *h++=(char)*(char*)&x;				/* endianness */
  *h++=(char)sizeof(int);
- *h++=(char)sizeof(size_t);
+ *h++=(char)sizeof(int);  /* always 4 on all platforms for portable bytecode */
  *h++=(char)sizeof(Instruction);
  *h++=(char)sizeof(lua_Number);
  *h++=(char)(((lua_Number)0.5)==0);		/* is lua_Number integral? */
