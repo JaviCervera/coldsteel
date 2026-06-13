@@ -224,6 +224,14 @@ extern "C"
    */
   EXPORT float CALL MeshDepth(IMesh *mesh);
 
+  /**
+   * Saves a mesh to an OBJ file.
+   *
+   * @param mesh The mesh to save.
+   * @param filename The output OBJ file path.
+   */
+  EXPORT bool_t CALL SaveMesh(IMesh *mesh, const char *filename);
+
 #ifndef SWIG
   bool_t _MeshAnimated(IMesh *mesh);
 #endif

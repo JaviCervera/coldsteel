@@ -264,6 +264,27 @@ extern "C"
     return mesh->getBoundingBox().getExtent().Z;
   }
 
+  EXPORT bool_t CALL SaveMesh(IMesh *mesh, const char *filename)
+  {
+    if (mesh && filename)
+    {
+      IMeshWriter *writer = _Device()->getSceneManager()->createMeshWriter(EMWT_OBJ);
+      if (writer)
+      {
+        IWriteFile *file = _Device()->getFileSystem()->createAndWriteFile(filename);
+        if (file)
+        {
+          bool_t result = (bool_t)writer->writeMesh(file, mesh);
+          file->drop();
+          writer->drop();
+          return result;
+        }
+        writer->drop();
+      }
+    }
+    return FALSE;
+  }
+
   bool_t _MeshAnimated(IMesh *mesh)
   {
     return _Device()->getSceneManager()->getMeshCache()->getMeshIndex(mesh) != -1;
