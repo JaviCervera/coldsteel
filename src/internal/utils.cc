@@ -16,9 +16,11 @@
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif
-#include <climits>
-#include <sys/stat.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
+#include <sys/stat.h>
 
 #if defined _WIN32 && !defined S_ISDIR
 #define S_ISDIR(m) (((m) & _S_IFDIR) == _S_IFDIR)

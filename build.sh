@@ -7,7 +7,7 @@ if [ "$(uname)" = "Darwin" ]; then
     FONTTOOL_LIBS="-lIrrlicht -framework Cocoa -framework IOKit -framework OpenGL -lobjc -lpthread -s"
 else
     CXX="g++"
-    FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lpthread -s -static-libgcc -static-libstdc++"
+    FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lEGL -lpthread -s -static-libgcc -static-libstdc++"
 fi
 
 echo "# Generating Lua wrapper ..."
