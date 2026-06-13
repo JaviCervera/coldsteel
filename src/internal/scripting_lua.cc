@@ -106,9 +106,15 @@ private:
     if (lua_gettop(L) > 0)
     {
       const stringc libname = lua_tostring(L, 1);
-      sharedlib_t *lib = new sharedlib_t((BinDir() + "/" + libname.c_str()).c_str());
+      sharedlib_t *lib = new sharedlib_t((stringc(CurrentDir()) + "/" + libname.c_str()).c_str());
       if (!lib->isopen())
       {
+        delete lib;
+        lib = new sharedlib_t((BinDir() + "/" + libname.c_str()).c_str());
+      }
+      if (!lib->isopen())
+      {
+        delete lib;
         lua_pushstring(L, (stringc("Library '") + libname + "' could not be loaded.").c_str());
         lua_error(L);
         return 0;
