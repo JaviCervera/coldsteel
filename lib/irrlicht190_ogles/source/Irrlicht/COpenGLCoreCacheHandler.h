@@ -70,6 +70,7 @@ class COpenGLCoreCacheHandler
 
 			if (index < MATERIAL_MAX_TEXTURES && index < TextureCount)
 			{
+				// CacheHandler.Driver->testGLError(__LINE__); // useful when debugging new features
 				if ( esa == EST_ACTIVE_ALWAYS )
 					CacheHandler.setActiveTexture(GL_TEXTURE0 + index);
 
@@ -97,13 +98,27 @@ class COpenGLCoreCacheHandler
 								glBindTexture(prevTextureType, 0);
 
 #if ( defined(IRR_COMPILE_GL_COMMON) || defined(IRR_COMPILE_GLES_COMMON) )
+#ifdef GL_VERSION_3_2
+								// Note: I exclude GL_TEXTURE_2D_MULTISAMPLE in all glEnable/glDisable calls because they cause GL_INVALID_VALUE errors
+								//       But I'm not sure which other types really needed this, like does this work correct with cubemaps?
+								if ( prevTextureType != GL_TEXTURE_2D_MULTISAMPLE )
+									glDisable(prevTextureType);
+								if ( curTextureType != GL_TEXTURE_2D_MULTISAMPLE )
+									glEnable(curTextureType);
+#else
 								glDisable(prevTextureType);
 								glEnable(curTextureType);
+#endif
 #endif
 							}
 #if ( defined(IRR_COMPILE_GL_COMMON) || defined(IRR_COMPILE_GLES_COMMON) )
 							else if (!prevTexture)
-								glEnable(curTextureType);
+							{
+#ifdef GL_VERSION_3_2
+								if ( curTextureType != GL_TEXTURE_2D_MULTISAMPLE )
+#endif
+									glEnable(curTextureType);
+							}
 #endif
 
 							glBindTexture(curTextureType, static_cast<const TOpenGLTexture*>(texture)->getOpenGLTextureName());
@@ -125,7 +140,10 @@ class COpenGLCoreCacheHandler
 						glBindTexture(prevTextureType, 0);
 
 #if ( defined(IRR_COMPILE_GL_COMMON) || defined(IRR_COMPILE_GLES_COMMON) )
-						glDisable(prevTextureType);
+#ifdef GL_VERSION_3_2
+						if ( prevTextureType != GL_TEXTURE_2D_MULTISAMPLE )
+#endif
+							glDisable(prevTextureType);
 #endif
 					}
 
@@ -136,6 +154,7 @@ class COpenGLCoreCacheHandler
 				}
 
 				status = true;
+				// CacheHandler.Driver->testGLError(__LINE__); // useful when debugging new features
 			}
 
 			return (status && type == DriverType);
@@ -150,9 +169,7 @@ class COpenGLCoreCacheHandler
 			{
 				if (Texture[i] == texture)
 				{
-					Texture[i] = 0;
-
-					texture->drop();
+					set(i, nullptr);
 				}
 			}
 		}
@@ -163,11 +180,7 @@ class COpenGLCoreCacheHandler
 			{
 				if (Texture[i])
 				{
-					const TOpenGLTexture* prevTexture = Texture[i];
-
-					Texture[i] = 0;
-
-					prevTexture->drop();
+					set(i, nullptr);
 				}
 			}
 		}
@@ -417,7 +430,7 @@ public:
 
 	// Color Mask.
 
-	void getColorMask(u8& mask)
+	void getColorMask(u8& mask) const
 	{
 		mask = ColorMask[0];
 	}
@@ -472,6 +485,11 @@ public:
 
 	// Depth calls.
 
+	void getDepthFunc(GLenum& mode) const
+	{
+		mode = DepthFunc;
+	}
+
 	void setDepthFunc(GLenum mode)
 	{
 		if (DepthFunc != mode)
@@ -481,7 +499,7 @@ public:
 		}
 	}
 
-	void getDepthMask(bool& depth)
+	void getDepthMask(bool& depth) const
 	{
 		depth = DepthMask;
 	}
@@ -499,7 +517,7 @@ public:
 		}
 	}
 
-    void getDepthTest(bool& enable)
+    void getDepthTest(bool& enable) const
     {
         enable = DepthTest;
     }

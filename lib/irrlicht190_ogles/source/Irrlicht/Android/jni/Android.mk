@@ -43,7 +43,6 @@ LOCAL_SRC_FILES := \
 					CBillboardSceneNode.cpp \
 					CBoneSceneNode.cpp \
 					CBSPMeshFileLoader.cpp \
-					CBurningShader_Raster_Reference.cpp \
 					CCameraSceneNode.cpp \
 					CColladaFileLoader.cpp \
 					CColladaMeshWriter.cpp \
@@ -59,7 +58,6 @@ LOCAL_SRC_FILES := \
 					CDefaultGUIElementFactory.cpp \
 					CDefaultSceneNodeAnimatorFactory.cpp \
 					CDefaultSceneNodeFactory.cpp \
-					CDepthBuffer.cpp \
 					CDMFLoader.cpp \
 					CDummyTransformationSceneNode.cpp \
 					CEmptySceneNode.cpp \
@@ -216,12 +214,9 @@ LOCAL_SRC_FILES := \
 					CTRFlat.cpp \
 					CTRFlatWire.cpp \
 					CTRGouraud.cpp \
-					CTRGouraud2.cpp \
-					CTRGouraudAlphaNoZ2.cpp \
 					CTRGouraudWire.cpp \
 					CTriangleBBSelector.cpp \
 					CTriangleSelector.cpp \
-					CTRGouraudNoZ2.cpp \
 					CTRNormalMap.cpp \
 					CTRParallaxMap.cpp \
 					CTRStencilShadow.cpp \

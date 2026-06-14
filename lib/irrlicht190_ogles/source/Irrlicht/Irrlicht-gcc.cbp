@@ -623,7 +623,6 @@
 		<Unit filename="CBlit.h" />
 		<Unit filename="CBoneSceneNode.cpp" />
 		<Unit filename="CBoneSceneNode.h" />
-		<Unit filename="CBurningShader_Raster_Reference.cpp" />
 		<Unit filename="CCSMLoader.cpp" />
 		<Unit filename="CCSMLoader.h" />
 		<Unit filename="CCameraSceneNode.cpp" />
@@ -659,7 +658,6 @@
 		<Unit filename="CDefaultSceneNodeAnimatorFactory.h" />
 		<Unit filename="CDefaultSceneNodeFactory.cpp" />
 		<Unit filename="CDefaultSceneNodeFactory.h" />
-		<Unit filename="CDepthBuffer.cpp" />
 		<Unit filename="CDepthBuffer.h" />
 		<Unit filename="CDummyTransformationSceneNode.cpp" />
 		<Unit filename="CDummyTransformationSceneNode.h" />
@@ -970,9 +968,6 @@
 		<Unit filename="CTRFlat.cpp" />
 		<Unit filename="CTRFlatWire.cpp" />
 		<Unit filename="CTRGouraud.cpp" />
-		<Unit filename="CTRGouraud2.cpp" />
-		<Unit filename="CTRGouraudAlphaNoZ2.cpp" />
-		<Unit filename="CTRGouraudNoZ2.cpp" />
 		<Unit filename="CTRGouraudWire.cpp" />
 		<Unit filename="CTRNormalMap.cpp" />
 		<Unit filename="CTRParallaxMap.cpp" />
@@ -1289,6 +1284,7 @@
 		<Unit filename="libpng/pngset.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="libpng/pngstruct.h" />
 		<Unit filename="libpng/pngtrans.c">
 			<Option compilerVar="CC" />
 		</Unit>

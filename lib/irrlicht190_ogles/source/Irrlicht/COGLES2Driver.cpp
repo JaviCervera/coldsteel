@@ -2412,13 +2412,13 @@ COGLES2Driver::~COGLES2Driver()
 	}
 
 	ITexture* COGLES2Driver::addRenderTargetTexture(const core::dimension2d<u32>& size,
-		const io::path& name, const ECOLOR_FORMAT format)
+		const io::path& name, const ECOLOR_FORMAT format, u32 multiSamples, bool mipmap)
 	{
-		//disable mip-mapping
+		// set mip-mapping flags
 		bool generateMipLevels = getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
-		setTextureCreationFlag(ETCF_CREATE_MIP_MAPS, false);
+		setTextureCreationFlag(ETCF_CREATE_MIP_MAPS, mipmap);
 
-		COGLES2Texture* renderTargetTexture = new COGLES2Texture(name, size, ETT_2D, format, this);
+		COGLES2Texture* renderTargetTexture = new COGLES2Texture(name, size, ETT_2D, format, multiSamples, this);
 		addTexture(renderTargetTexture);
 		renderTargetTexture->drop();
 
@@ -2428,11 +2428,11 @@ COGLES2Driver::~COGLES2Driver()
 		return renderTargetTexture;
 	}
 
-	ITexture* COGLES2Driver::addRenderTargetTextureCubemap(const irr::u32 sideLen, const io::path& name, const ECOLOR_FORMAT format)
+	ITexture* COGLES2Driver::addRenderTargetTextureCubemap(const irr::u32 sideLen, const io::path& name, const ECOLOR_FORMAT format, bool mipmap)
 	{
-		//disable mip-mapping
+		// set mip-mapping flags
 		bool generateMipLevels = getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
-		setTextureCreationFlag(ETCF_CREATE_MIP_MAPS, false);
+		setTextureCreationFlag(ETCF_CREATE_MIP_MAPS, mipmap);
 
 		bool supportForFBO = (Feature.ColorAttachment > 0);
 
@@ -2445,7 +2445,7 @@ COGLES2Driver::~COGLES2Driver()
 			destSize = destSize.getOptimalSize((size == size.getOptimalSize()), false, false);
 		}
 
-		COGLES2Texture* renderTargetTexture = new COGLES2Texture(name, destSize, ETT_CUBEMAP, format, this);
+		COGLES2Texture* renderTargetTexture = new COGLES2Texture(name, destSize, ETT_CUBEMAP, format, 0, this);
 		addTexture(renderTargetTexture);
 		renderTargetTexture->drop();
 

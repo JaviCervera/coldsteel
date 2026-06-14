@@ -289,7 +289,7 @@ namespace video
 
 		We (mostly) avoid dynamic memory in SMaterial, so the extra memory
 		will still be allocated. But by lowering MATERIAL_MAX_TEXTURES_USED the
-		material comparisons can be faster. Also several other places in the
+		material comparisons can be faster. Also several other places in the 
 		engine can be faster when reducing this value to the limit you need.
 
 		NOTE: This should only be changed once and before any call to createDevice.
@@ -309,7 +309,7 @@ namespace video
 			EmissiveColor(0,0,0,0), SpecularColor(255,255,255,255),
 			Shininess(0.0f), MaterialTypeParam(0.0f), MaterialTypeParam2(0.0f), Thickness(1.0f),
 			AntiAliasing(EAAM_SIMPLE), ZBuffer(ECFN_LESSEQUAL), ZWriteEnable(EZW_AUTO),
-			ColorMask(ECP_ALL),	ColorMaterial(ECM_NONE),
+			ColorMask(ECP_ALL),	ColorMaterial(ECM_DIFFUSE), 
 			PolygonOffsetDepthBias(0.f), PolygonOffsetSlopeScale(0.f),
 			PolygonOffsetFactor(0), PolygonOffsetDirection(EPO_FRONT),
 			BlendOperation(EBO_NONE), BlendFactor(0.0f),
@@ -399,7 +399,7 @@ namespace video
 		u8 ZBuffer;
 
 		//! Is the zbuffer writable or is it read-only. Default: EZW_AUTO.
-		/** If this parameter is not EZW_OFF, you probably also want to set ZBuffer
+		/** If this parameter is not EZW_OFF, you probably also want to set ZBuffer 
 		to values other than ECFN_DISABLED (which disables the zbuffer completely) */
 		E_ZWRITE ZWriteEnable:3;
 
@@ -454,12 +454,12 @@ namespace video
 
 		//! Store the blend factors
 		/** textureBlendFunc/textureBlendFuncSeparate functions should be used to write
-		properly blending factors to this parameter.
-		Due to historical reasons this parameter is not used for material type
+		properly blending factors to this parameter. 
+		Due to historical reasons this parameter is not used for material type 
 		EMT_ONETEXTURE_BLEND which uses MaterialTypeParam instead for the blend factor.
 		It's generally used only for materials without any blending otherwise (like EMT_SOLID).
-		It's main use is to allow having shader materials which can enable/disable
-		blending after they have been created.
+		It's main use is to allow having shader materials which can enable/disable 
+		blending after they have been created. 
 		When you set this you usually also have to set BlendOperation to a value != EBO_NONE
 		(setting it to EBO_ADD is probably the most common one value). */
 		f32 BlendFactor;
@@ -613,7 +613,7 @@ namespace video
 				case EMF_COLOR_MASK:
 					ColorMask = value?ECP_ALL:ECP_NONE; break;
 				case EMF_COLOR_MATERIAL:
-        ColorMaterial = value?ECM_DIFFUSE_AND_AMBIENT:ECM_NONE; break;
+					ColorMaterial = value?ECM_DIFFUSE:ECM_NONE; break;
 				case EMF_USE_MIP_MAPS:
 					UseMipMaps = value; break;
 				case EMF_BLEND_OPERATION:

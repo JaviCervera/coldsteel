@@ -130,7 +130,7 @@ public:
 			TOpenGLTexture* currentTexture = (depthStencil && depthStencil->getDriverType() == DriverType) ? static_cast<TOpenGLTexture*>(depthStencil) : 0;
 
 			if (currentTexture)
-			{	
+			{
 				if (currentTexture->getType() == ETT_2D)
 				{
 					GLuint textureID = currentTexture->getOpenGLTextureName();
@@ -193,7 +193,8 @@ public:
 					if (textureID != 0)
 					{
 						AssignedTextures[i] = GL_COLOR_ATTACHMENT0 + i;
-						GLenum textarget = currentTexture->getType() == ETT_2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP_POSITIVE_X + (int)CubeSurfaces[i];
+
+						GLenum textarget = currentTexture->getOpenGLTextureTarget(CubeSurfaces.empty() ? 0 : (u32)CubeSurfaces[i]);
 						Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, AssignedTextures[i], textarget, textureID, 0);
 #ifdef _DEBUG
 						Driver->testGLError(__LINE__);
@@ -202,7 +203,7 @@ public:
 					else if (AssignedTextures[i] != GL_NONE)
 					{
 						AssignedTextures[i] = GL_NONE;
-						Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, AssignedTextures[i], GL_TEXTURE_2D, 0, 0);
+						Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, AssignedTextures[i], currentTexture->getOpenGLTextureTarget(), 0, 0);
 
 						os::Printer::log("Error: Could not set render target.", ELL_ERROR);
 					}
@@ -230,7 +231,9 @@ public:
 
 				if (IImage::isDepthFormat(textureFormat))
 				{
-					GLuint textureID = static_cast<TOpenGLTexture*>(DepthStencil)->getOpenGLTextureName();
+					TOpenGLTexture* currentDepthStencil = static_cast<TOpenGLTexture*>(DepthStencil);
+					GLenum depthStencilTexTarget = currentDepthStencil->getOpenGLTextureTarget();
+					GLuint textureID = currentDepthStencil->getOpenGLTextureName();
 
 #ifdef _IRR_EMSCRIPTEN_PLATFORM_	// The WEBGL_depth_texture extension does not allow attaching stencil+depth separate.
 					if (textureFormat == ECF_D24S8)
@@ -245,11 +248,11 @@ public:
 						AssignedStencil = false;
 					}
 #else
-					Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureID, 0);
+					Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthStencilTexTarget, textureID, 0);
 
 					if (textureFormat == ECF_D24S8)
 					{
-						Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, textureID, 0);
+						Driver->irrGlFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, depthStencilTexTarget, textureID, 0);
 
 						AssignedStencil = true;
 					}
@@ -329,6 +332,13 @@ public:
 		}
 
 		return 0;
+	}
+
+	virtual SExposedRenderTargetData getExposedRenderTargetData() const IRR_OVERRIDE
+	{
+		SExposedRenderTargetData data;
+		data.OpenGL.FramebufferName = BufferID;
+		return data;
 	}
 
 protected:

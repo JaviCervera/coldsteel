@@ -57,7 +57,7 @@ public:
 		IRR_DEBUG_BREAK_IF(images.size() == 0)
 
 		DriverType = Driver->getDriverType();
-		TextureType = TextureTypeIrrToGL(Type);
+		TextureType = TextureTypeIrrToGL(Type, MultiSamples); // MultiSamples currently always 0 here, if it's ever needed we can pass it also to constructor
 		HasMipMaps = Driver->getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
 		KeepImage = Driver->getTextureCreationFlag(ETCF_ALLOW_MEMORY_COPY);
 
@@ -103,18 +103,6 @@ public:
 		glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-#ifdef GL_GENERATE_MIPMAP_HINT
-		if (HasMipMaps)
-		{
-			if (Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_SPEED))
-				glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
-			else if (Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_QUALITY))
-				glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-			else
-				glHint(GL_GENERATE_MIPMAP_HINT, GL_DONT_CARE);
-		}
-#endif
-
 #if !defined(IRR_OPENGL_HAS_glGenerateMipmap) && defined(GL_GENERATE_MIPMAP)
 		if (HasMipMaps)
 		{
@@ -151,15 +139,17 @@ public:
 		Driver->testGLError(__LINE__);
 	}
 
-	COpenGLCoreTexture(const io::path& name, const core::dimension2d<u32>& size, E_TEXTURE_TYPE type, ECOLOR_FORMAT format, TOpenGLDriver* driver)
+	COpenGLCoreTexture(const io::path& name, const core::dimension2d<u32>& size, E_TEXTURE_TYPE type, ECOLOR_FORMAT format, u32 multiSamples, TOpenGLDriver* driver)
 		: ITexture(name, type),
 		Driver(driver), TextureType(GL_TEXTURE_2D),
-		TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_RGBA), PixelType(GL_UNSIGNED_BYTE), Converter(0), LockReadOnly(false), LockImage(0), LockLayer(0), KeepImage(false),
+		TextureName(0), InternalFormat(GL_RGBA), PixelFormat(GL_RGBA), PixelType(GL_UNSIGNED_BYTE), Converter(0),
+		LockReadOnly(false), LockImage(0), LockLayer(0), KeepImage(false),
 		MipLevelStored(0), LegacyAutoGenerateMipMaps(false)
 	{
 		DriverType = Driver->getDriverType();
-		TextureType = TextureTypeIrrToGL(Type);
-		HasMipMaps = false;
+		MultiSamples = multiSamples;
+		TextureType = TextureTypeIrrToGL(Type, MultiSamples);
+		HasMipMaps = Driver->getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
 		IsRenderTarget = true;
 
 		OriginalColorFormat = format;
@@ -181,29 +171,51 @@ public:
 
 		glGenTextures(1, &TextureName);
 
+#if !defined(IRR_OPENGL_HAS_glGenerateMipmap) && defined(GL_GENERATE_MIPMAP)
+		if (HasMipMaps)
+		{
+			LegacyAutoGenerateMipMaps = Driver->getTextureCreationFlag(ETCF_AUTO_GENERATE_MIP_MAPS)  &&
+										Driver->queryFeature(EVDF_MIP_MAP_AUTO_UPDATE);
+			glTexParameteri(TextureType, GL_GENERATE_MIPMAP, LegacyAutoGenerateMipMaps ? GL_TRUE : GL_FALSE);
+		}
+#endif
+
 		const COpenGLCoreTexture* prevTexture = Driver->getCacheHandler()->getTextureCache().get(0);
 		Driver->getCacheHandler()->getTextureCache().set(0, this);
 
-
-		glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(TextureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(TextureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+#ifdef GL_VERSION_3_2
+		if ( TextureType != GL_TEXTURE_2D_MULTISAMPLE )
+#endif
+		{
+			glTexParameteri(TextureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(TextureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(TextureType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(TextureType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #if defined(GL_VERSION_1_2)
-		glTexParameteri(TextureType, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(TextureType, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 #endif
 
-		StatesCache.WrapU = ETC_CLAMP_TO_EDGE;
-		StatesCache.WrapV = ETC_CLAMP_TO_EDGE;
-		StatesCache.WrapW = ETC_CLAMP_TO_EDGE;
+			StatesCache.WrapU = ETC_CLAMP_TO_EDGE;
+			StatesCache.WrapV = ETC_CLAMP_TO_EDGE;
+			StatesCache.WrapW = ETC_CLAMP_TO_EDGE;
+		}
 
-		switch (Type)
+		switch (TextureType)
 		{
-		case ETT_2D:
+		case GL_TEXTURE_2D:
 			glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Size.Width, Size.Height, 0, PixelFormat, PixelType, 0);
 			break;
-		case ETT_CUBEMAP:
+#ifdef GL_VERSION_3_2
+		case GL_TEXTURE_2D_MULTISAMPLE:
+		{
+			Driver->testGLError(__LINE__);
+			const GLboolean fixedsamplelocations = GL_TRUE;
+			Driver->irrGlTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, (GLsizei)MultiSamples, InternalFormat, Size.Width, Size.Height, fixedsamplelocations);
+			Driver->testGLError(__LINE__);
+			break;
+		}
+#endif
+		case GL_TEXTURE_CUBE_MAP:
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, InternalFormat, Size.Width, Size.Height, 0, PixelFormat, PixelType, 0);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, InternalFormat, Size.Width, Size.Height, 0, PixelFormat, PixelType, 0);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, InternalFormat, Size.Width, Size.Height, 0, PixelFormat, PixelType, 0);
@@ -271,18 +283,11 @@ public:
 #ifdef IRR_COMPILE_GL_COMMON
 				IImage* tmpImage = LockImage;	// not sure yet if the size required by glGetTexImage is always correct, if not we might have to allocate a different tmpImage and convert colors later on.
 
+				const COpenGLCoreTexture* prevTexture = Driver->getCacheHandler()->getTextureCache().get(0);
 				Driver->getCacheHandler()->getTextureCache().set(0, this);
 				Driver->testGLError(__LINE__);
 
-				GLenum tmpTextureType = TextureType;
-
-				if (tmpTextureType == GL_TEXTURE_CUBE_MAP)
-				{
-					IRR_DEBUG_BREAK_IF(layer > 5)
-
-					tmpTextureType = GL_TEXTURE_CUBE_MAP_POSITIVE_X + layer;
-				}
-
+				GLenum tmpTextureType = getOpenGLTextureTarget(layer);
 				glGetTexImage(tmpTextureType, MipLevelStored, PixelFormat, PixelType, tmpImage->getData());
 				Driver->testGLError(__LINE__);
 
@@ -306,9 +311,12 @@ public:
 
 					delete[] tmpBuffer;
 				}
+
+				Driver->getCacheHandler()->getTextureCache().set(0, prevTexture);
+
 #elif (defined(IRR_COMPILE_GLES2_COMMON)	|| defined(IRR_COMPILE_GLES_COMMON))
 // TODO: on ES2 we can likely also work with glCopyTexImage2D instead of rendering which should be faster.
-				COpenGLCoreTexture* tmpTexture = new COpenGLCoreTexture("OGL_CORE_LOCK_TEXTURE", Size, ETT_2D, ColorFormat, Driver);
+				COpenGLCoreTexture* tmpTexture = new COpenGLCoreTexture("OGL_CORE_LOCK_TEXTURE", Size, ETT_2D, ColorFormat, 0, Driver);
 
 				GLuint tmpFBO = 0;
 				Driver->irrGlGenFramebuffers(1, &tmpFBO);
@@ -434,6 +442,15 @@ public:
 		else
 		{
 #ifdef IRR_OPENGL_HAS_glGenerateMipmap
+	#ifdef GL_GENERATE_MIPMAP_HINT
+			if (Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_SPEED))
+				glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
+			else if (Driver->getTextureCreationFlag(ETCF_OPTIMIZED_FOR_QUALITY))
+				glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+			else
+				glHint(GL_GENERATE_MIPMAP_HINT, GL_DONT_CARE);
+	#endif
+
 	#if !defined(IRR_COMPILE_GLES2_COMMON)
 			glEnable(GL_TEXTURE_2D);	// Hack some ATI cards need this glEnable according to https://www.khronos.org/opengl/wiki/Common_Mistakes
 	#endif
@@ -444,8 +461,27 @@ public:
 		Driver->getCacheHandler()->getTextureCache().set(0, prevTexture);
 	}
 
+	virtual SExposedTextureData getExposedTextureData() const IRR_OVERRIDE
+	{
+		SExposedTextureData data;
+		data.OpenGL.TextureType = TextureType;
+		data.OpenGL.TextureName = TextureName;
+		return data;
+	}
+
 	GLenum getOpenGLTextureType() const
 	{
+		return TextureType;
+	}
+
+	GLenum getOpenGLTextureTarget(u32 layer=0) const
+	{
+		if (TextureType == GL_TEXTURE_CUBE_MAP)
+		{
+			IRR_DEBUG_BREAK_IF(layer > 5)
+
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_X + layer;
+		}
 		return TextureType;
 	}
 
@@ -570,14 +606,7 @@ protected:
 		u32 width = Size.Width >> level;
 		u32 height = Size.Height >> level;
 
-		GLenum tmpTextureType = TextureType;
-
-		if (tmpTextureType == GL_TEXTURE_CUBE_MAP)
-		{
-			IRR_DEBUG_BREAK_IF(layer > 5)
-
-			tmpTextureType = GL_TEXTURE_CUBE_MAP_POSITIVE_X + layer;
-		}
+		GLenum tmpTextureType = getOpenGLTextureTarget(layer);
 
 		if (!IImage::isCompressedFormat(ColorFormat))
 		{
@@ -630,12 +659,18 @@ protected:
 		}
 	}
 
-	GLenum TextureTypeIrrToGL(E_TEXTURE_TYPE type) const
+	GLenum TextureTypeIrrToGL(E_TEXTURE_TYPE type, u32 multiSamples) const
 	{
 		switch ( type)
 		{
 		case ETT_2D:
-			return GL_TEXTURE_2D;
+			if ( multiSamples == 0 )
+				return GL_TEXTURE_2D;
+#ifdef GL_VERSION_3_2
+			else
+				return GL_TEXTURE_2D_MULTISAMPLE;
+#endif
+			break;
 		case ETT_CUBEMAP:
 			return GL_TEXTURE_CUBE_MAP;
 		}

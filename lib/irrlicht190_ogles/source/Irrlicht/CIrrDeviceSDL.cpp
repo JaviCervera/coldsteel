@@ -8,7 +8,6 @@
 
 #include "CIrrDeviceSDL.h"
 #include "IEventReceiver.h"
-#include "IFileSystem.h"
 #include "irrList.h"
 #include "os.h"
 #include "CTimer.h"
@@ -269,10 +268,6 @@ CIrrDeviceSDL::CIrrDeviceSDL(const SIrrlichtCreationParameters& param)
 
 	// create cursor control
 	CursorControl = new CCursorControl(this);
-
-	#ifdef EMSCRIPTEN
-	FileSystem->addFileArchive("data.bin", true, false, io::EFAT_ZIP);
-	#endif
 
 	// create driver
 	createDriver();
@@ -709,6 +704,8 @@ bool CIrrDeviceSDL::run()
 				irrevent.KeyInput.PressedDown = (SDL_event.type == SDL_KEYDOWN);
 				irrevent.KeyInput.Shift = (SDL_event.key.keysym.mod & KMOD_SHIFT) != 0;
 				irrevent.KeyInput.Control = (SDL_event.key.keysym.mod & KMOD_CTRL ) != 0;
+				irrevent.KeyInput.AutoRepeat = false; // Note: Newer SDL might have this info
+				irrevent.KeyInput.Extended = false;
 				postEventFromUser(irrevent);
 			}
 			break;
@@ -864,7 +861,7 @@ bool CIrrDeviceSDL::activateJoysticks(core::array<SJoystickInfo> & joystickInfo)
 	for(joystick = 0; joystick < (int)joystickInfo.size(); ++joystick)
 	{
 		char logString[256];
-		(void)sprintf(logString, "Found joystick %d, %d axes, %d buttons '%s'",
+		(void)snprintf_irr(logString, sizeof(logString), "Found joystick %d, %d axes, %d buttons '%s'",
 		joystick, joystickInfo[joystick].Axes,
 		joystickInfo[joystick].Buttons, joystickInfo[joystick].Name.c_str());
 		os::Printer::log(logString, ELL_INFORMATION);

@@ -416,6 +416,8 @@ s32 CIrrDeviceAndroid::handleInput(android_app* app, AInputEvent* androidEvent)
 		{
 			SEvent event;
 			event.EventType = EET_KEY_INPUT_EVENT;
+			event.KeyInput.AutoRepeat = false; // not supported in this device
+			event.KeyInput.Extended = false;   // not supported in this device
 
 			int32_t keyCode = AKeyEvent_getKeyCode(androidEvent);
 			// os::Printer::log("keyCode: ", core::stringc(keyCode).c_str(), ELL_DEBUG);

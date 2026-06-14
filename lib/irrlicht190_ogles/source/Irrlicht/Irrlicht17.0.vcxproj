@@ -216,9 +216,16 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Static lib - Debug|x64'">$(DXSDK_DIR)Lib\x64;$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib\amd64</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Static lib - Release|x64'">$(DXSDK_DIR)Lib\x64;$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib\amd64</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -238,6 +245,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -320,6 +329,8 @@
       <CompileAs>Default</CompileAs>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -361,6 +372,7 @@
       </DisableSpecificWarnings>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -394,6 +406,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -459,6 +472,8 @@
       </DebugInformationFormat>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -494,6 +509,7 @@
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -524,6 +540,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4577</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -622,6 +639,7 @@
     <ClInclude Include="..\..\include\ITimer.h" />
     <ClInclude Include="..\..\include\IVertexBuffer.h" />
     <ClInclude Include="..\..\include\Keycodes.h" />
+    <ClInclude Include="..\..\include\SExposedTextureData.h" />
     <ClInclude Include="..\..\include\SIrrCreationParameters.h" />
     <ClInclude Include="..\..\include\SKeyMap.h" />
     <ClInclude Include="..\..\include\EDriverTypes.h" />
@@ -780,6 +798,8 @@
     <ClInclude Include="burning_shader_compile_start.h" />
     <ClInclude Include="burning_shader_compile_triangle.h" />
     <ClInclude Include="burning_shader_compile_verify.h" />
+    <ClInclude Include="burning_shader_glsl_emu_define.h" />
+    <ClInclude Include="burning_shader_glsl_emu_undefine.h" />
     <ClInclude Include="CB3DMeshWriter.h" />
     <ClInclude Include="CBlit.h" />
     <ClInclude Include="CBufferRenderNode.h" />
@@ -928,12 +948,10 @@
     <ClInclude Include="CD3D9ParallaxMapRenderer.h" />
     <ClInclude Include="CD3D9ShaderMaterialRenderer.h" />
     <ClInclude Include="CD3D9Texture.h" />
-    <ClInclude Include="CDepthBuffer.h" />
     <ClInclude Include="CSoftware2MaterialRenderer.h" />
     <ClInclude Include="CSoftwareDriver2.h" />
     <ClInclude Include="CSoftwareTexture2.h" />
     <ClInclude Include="IBurningShader.h" />
-    <ClInclude Include="IDepthBuffer.h" />
     <ClInclude Include="S4DVertex.h" />
     <ClInclude Include="SoftwareDriver2_compile_config.h" />
     <ClInclude Include="SoftwareDriver2_helper.h" />
@@ -1078,7 +1096,6 @@
     <ClCompile Include="CQ3LevelMesh.cpp" />
     <ClCompile Include="CSkinnedMesh.cpp" />
     <ClCompile Include="CSTLMeshFileLoader.cpp" />
-    <ClCompile Include="CTRGouraudNoZ2.cpp" />
     <ClCompile Include="CTRParallaxMap.cpp" />
     <ClCompile Include="CTR_transparent_reflection_2_layer.cpp" />
     <ClCompile Include="CWGLManager.cpp" />
@@ -1178,12 +1195,8 @@
     <ClCompile Include="CD3D9ParallaxMapRenderer.cpp" />
     <ClCompile Include="CD3D9ShaderMaterialRenderer.cpp" />
     <ClCompile Include="CD3D9Texture.cpp" />
-    <ClCompile Include="CBurningShader_Raster_Reference.cpp" />
-    <ClCompile Include="CDepthBuffer.cpp" />
     <ClCompile Include="CSoftwareDriver2.cpp" />
     <ClCompile Include="CSoftwareTexture2.cpp" />
-    <ClCompile Include="CTRGouraud2.cpp" />
-    <ClCompile Include="CTRGouraudAlphaNoZ2.cpp" />
     <ClCompile Include="CTRNormalMap.cpp" />
     <ClCompile Include="CTRStencilShadow.cpp" />
     <ClCompile Include="CTRTextureBlend.cpp" />

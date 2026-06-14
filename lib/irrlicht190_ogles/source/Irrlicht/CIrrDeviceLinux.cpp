@@ -1007,6 +1007,8 @@ bool CIrrDeviceLinux::run()
 				irrevent.KeyInput.Control = (event.xkey.state & ControlMask) != 0;
 				irrevent.KeyInput.Shift = (event.xkey.state & ShiftMask) != 0;
 				irrevent.KeyInput.Key = getKeyCode(event);
+				irrevent.KeyInput.AutoRepeat = false; // TODO: can maybe use XPeekEvent to check if same key got pressed again to get that info
+			    irrevent.KeyInput.Extended = false;
 
 				postEventFromUser(irrevent);
 				break;
@@ -1062,6 +1064,8 @@ bool CIrrDeviceLinux::run()
 					irrevent.KeyInput.Control = (event.xkey.state & ControlMask) != 0;
 					irrevent.KeyInput.Shift = (event.xkey.state & ShiftMask) != 0;
 					irrevent.KeyInput.Key = getKeyCode(event);
+					irrevent.KeyInput.AutoRepeat = false;
+					irrevent.KeyInput.Extended = false;
 
 					postEventFromUser(irrevent);
 				}
@@ -1772,7 +1776,7 @@ bool CIrrDeviceLinux::activateJoysticks(core::array<SJoystickInfo> & joystickInf
 	for (joystick = 0; joystick < joystickInfo.size(); ++joystick)
 	{
 		char logString[256];
-		(void)sprintf(logString, "Found joystick %u, %u axes, %u buttons '%s'",
+		(void)snprintf_irr(logString, sizeof(logString), "Found joystick %u, %u axes, %u buttons '%s'",
 			joystick, joystickInfo[joystick].Axes,
 			joystickInfo[joystick].Buttons, joystickInfo[joystick].Name.c_str());
 		os::Printer::log(logString, ELL_INFORMATION);
