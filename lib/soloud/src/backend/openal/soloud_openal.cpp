@@ -44,7 +44,9 @@ namespace SoLoud
 #else
 #include "AL/al.h"
 #include "AL/alc.h"
+#if !defined(__EMSCRIPTEN__)
 #include "AL/alext.h"
+#endif
 #endif
 
 #define NUM_BUFFERS 2

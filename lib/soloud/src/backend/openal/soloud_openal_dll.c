@@ -32,7 +32,9 @@ freely, subject to the following restrictions:
 #else
 #include "AL/al.h"
 #include "AL/alc.h"
+#if !defined(__EMSCRIPTEN__)
 #include "AL/alext.h"
+#endif
 #endif
 
 #if defined(_MSC_VER)
