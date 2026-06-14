@@ -15,14 +15,14 @@ mkdir _CMAKE\_IRRLICHT
 mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
-cd lib/irrlicht185
+cd lib/irrlicht190_ogles
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make -j8
 cd ../..
 
 echo # Building coldsteel (Desktop) ...
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 cd _CMAKE/_COLDSTEEL
 mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
@@ -30,6 +30,6 @@ move "libbuilder.dll" "..\..\_build\builder.dll"
 cd ../..
 
 echo # Building fonttool ...
-g++ -m32 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht185/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -s -static-libgcc -static-libstdc++
+g++ -m32 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -s -static-libgcc -static-libstdc++
 
 pause

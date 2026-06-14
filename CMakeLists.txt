@@ -35,7 +35,7 @@ file(
 
 #Add header and lib directories
 if (IRRLICHT_SVN)
-add_definitions(-DIRRLICHT_SVN)
+add_definitions(-DIRRLICHT_SVN -DZIP_ENABLE_SHARABLE_FILE_OPEN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
