@@ -68,7 +68,7 @@ static E_DRIVER_TYPE irrlichtDriver(int driver)
   case DRIVER_SOFTWARE:
     return EDT_BURNINGSVIDEO;
   case DRIVER_OPENGL:
-#ifdef EMSCRIPTEN
+#ifdef __EMSCRIPTEN__
     return EDT_WEBGL1;
 #else
     return EDT_OPENGL;
@@ -144,7 +144,7 @@ extern "C"
     params.DriverType = irrlichtDriver(_selectedDriver);
     params.AntiAlias = samples;
     params.Bits = depth;
-#ifdef EMSCRIPTEN
+#ifdef __EMSCRIPTEN__
     params.LoggingLevel = ELL_DEBUG;
 #else
     params.LoggingLevel = ELL_ERROR;

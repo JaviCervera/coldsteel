@@ -8,6 +8,7 @@
 
 #include "CIrrDeviceSDL.h"
 #include "IEventReceiver.h"
+#include "IFileSystem.h"
 #include "irrList.h"
 #include "os.h"
 #include "CTimer.h"
@@ -268,6 +269,11 @@ CIrrDeviceSDL::CIrrDeviceSDL(const SIrrlichtCreationParameters& param)
 
 	// create cursor control
 	CursorControl = new CCursorControl(this);
+
+	// add data.bin archive on Emscripten
+#ifdef __EMSCRIPTEN__
+	FileSystem->addFileArchive("data.bin", true, false, io::EFAT_ZIP);
+#endif
 
 	// create driver
 	createDriver();

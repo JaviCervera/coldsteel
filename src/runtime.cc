@@ -1,3 +1,7 @@
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+#include <stdio.h>
 #include "internal/builder.h"
 #include "internal/scripting.h"
 #include "internal/utils.h"
@@ -105,8 +109,18 @@ static void BuildWeb(const stringc &dir, bool precompile)
   builder.BuildWeb(dir.c_str(), precompile);
 }
 
-int main(int argc, char *argv[])
+int main(
+#ifdef __EMSCRIPTEN__
+  void
+#else
+  int argc, char *argv[]
+#endif
+)
 {
+#ifdef __EMSCRIPTEN__
+  int argc = 1;
+  char *argv[] = {(char*)""};
+#endif
   const Options opts = Options::Parse(argc, argv);
   _Init(opts.dir.c_str());
   switch (opts.mode)

@@ -23,8 +23,8 @@ extern "C"
 #endif
 
 #define MSG_LEN 1024
-#define JS_SIZE_TPL "[{filename:\"/data.bin\",start:0,end:0}],remote_package_size:0"
-#define JS_SIZE_REP "[{filename:\"/data.bin\",start:0,end:#SIZE}],remote_package_size:#SIZE"
+#define JS_SIZE_TPL "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":0}],\"remote_package_size\":0"
+#define JS_SIZE_REP "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":#SIZE}],\"remote_package_size\":#SIZE"
 
 struct Builder
 {
