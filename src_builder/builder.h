@@ -23,8 +23,10 @@ extern "C"
 #endif
 
 #define MSG_LEN 1024
-#define JS_SIZE_TPL "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":0}],\"remote_package_size\":0"
-#define JS_SIZE_REP "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":#SIZE}],\"remote_package_size\":#SIZE"
+#define JS_SIZE_TPL_QUOTED "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":0}],\"remote_package_size\":0"
+#define JS_SIZE_REP_QUOTED "{\"files\":[{\"filename\":\"/data.bin\",\"start\":0,\"end\":#SIZE}],\"remote_package_size\":#SIZE"
+#define JS_SIZE_TPL_UNQUOTED "{files:[{filename:\"/data.bin\",start:0,end:0}],remote_package_size:0"
+#define JS_SIZE_REP_UNQUOTED "{files:[{filename:\"/data.bin\",start:0,end:#SIZE}],remote_package_size:#SIZE"
 
 struct Builder
 {
@@ -158,13 +160,13 @@ private:
 
   void WriteJS(const std::string &out_dir, const std::string &out_file, size_t pkg_size) const
   {
-    const std::string js = strmanip::replaceall(
-        strmanip::replaceall(
-            strmanip::read(BinDir() + "/coldsteel.js"),
-            JS_SIZE_TPL,
-            strmanip::replaceall(JS_SIZE_REP, "#SIZE", strmanip::fromnumber(pkg_size, "%li"))),
-        "coldsteel",
-        out_file);
+    const std::string size_str = strmanip::fromnumber(pkg_size, "%li");
+    std::string js = strmanip::read(BinDir() + "/coldsteel.js");
+    js = strmanip::replaceall(js, JS_SIZE_TPL_QUOTED,
+        strmanip::replaceall(JS_SIZE_REP_QUOTED, "#SIZE", size_str));
+    js = strmanip::replaceall(js, JS_SIZE_TPL_UNQUOTED,
+        strmanip::replaceall(JS_SIZE_REP_UNQUOTED, "#SIZE", size_str));
+    js = strmanip::replaceall(js, "coldsteel", out_file);
     const std::string dst = out_dir + "/" + out_file + ".js";
     if (m_print)
     {
