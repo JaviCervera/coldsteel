@@ -1,4 +1,4 @@
-# ![icon](logo.png) ColdSteel
+![icon](logo.png)
 
 [![build_emscripten](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml/badge.svg)](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml)
 
