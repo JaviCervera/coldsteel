@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
+#include <irrString.h>
 
-std::string RealDir(const std::string &dir);
-std::string BinDir();
-bool IsDir(const std::string &path);
+irr::core::stringc RealDir(const irr::core::stringc &dir);
+irr::core::stringc BinDir();
+bool IsDir(const irr::core::stringc &path);

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "string.hh"
+#include <irrString.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -37,7 +37,7 @@ inline size_t filesize(const char *filename)
 {
   struct stat statbuf;
   if (stat(filename, &statbuf) == -1)
-    return 0; // does not exist
+    return 0;
   else
     return statbuf.st_size;
 }
@@ -47,7 +47,8 @@ static void filecopy(const char *src, const char *dst)
 #ifdef _WIN32
   CopyFileA(src, dst, false);
 #else
-  system((std::string("cp \"") + src + "\" \"" + dst + "\"").c_str());
+  const irr::core::stringc cmd = irr::core::stringc("cp \"") + src + "\" \"" + dst + "\"";
+  system(cmd.c_str());
 #endif
 }
 

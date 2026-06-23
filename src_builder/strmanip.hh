@@ -1,7 +1,7 @@
 #pragma once
 
-#include "string.hh"
-#include "vector.hh"
+#include <irrString.h>
+#include <irrArray.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,121 +16,121 @@
 namespace strmanip
 {
   template <typename T>
-  std::string fromnumber(const T &val, const char *format)
+  irr::core::stringc fromnumber(const T &val, const char *format)
   {
     char buf[32];
     sprintf(buf, format, val);
-    return std::string(buf);
+    return irr::core::stringc(buf);
   }
 
-  inline std::string fromint(int val)
+  inline irr::core::stringc fromint(int val)
   {
     return fromnumber(val, "%i");
   }
 
-  inline std::string fromdouble(double val)
+  inline irr::core::stringc fromdouble(double val)
   {
     return fromnumber(val, "%f");
   }
 
   template <typename T>
-  T tonumber(const std::string &str, const char *format)
+  T tonumber(const irr::core::stringc &str, const char *format)
   {
     T ret = 0;
     sscanf(str.c_str(), format, &ret);
     return ret;
   }
 
-  inline int toint(const std::string &str)
+  inline int toint(const irr::core::stringc &str)
   {
     return tonumber<int>(str, "%i");
   }
 
-  inline float tofloat(const std::string &str)
+  inline float tofloat(const irr::core::stringc &str)
   {
     return tonumber<float>(str, "%f");
   }
 
-  inline double todouble(const std::string &str)
+  inline double todouble(const irr::core::stringc &str)
   {
     return tonumber<double>(str, "%lf");
   }
 
-  inline std::string replaceall(const std::string &str, const std::string &find, const std::string &rep)
+  inline irr::core::stringc replaceall(const irr::core::stringc &str, const irr::core::stringc &find, const irr::core::stringc &rep)
   {
-    std::string strcopy = str;
-    size_t find_pos = strcopy.find(find);
-    while (find_pos != std::string::npos)
-    {
-      strcopy.replace(find_pos, find.length(), rep);
-      find_pos = strcopy.find(find, find_pos + rep.length());
-    }
-    return strcopy;
+    irr::core::stringc result = str;
+    result.replace(find, rep);
+    return result;
   }
 
-  inline std::string stripext(const std::string &filename)
+  inline irr::core::stringc stripext(const irr::core::stringc &filename)
   {
-    return filename.substr(0, filename.rfind('.'));
+    irr::s32 pos = filename.findLast('.');
+    if (pos != -1)
+      return filename.subString(0, pos);
+    return filename;
   }
 
-  inline std::string stripdir(const std::string &filename)
+  inline irr::core::stringc stripdir(const irr::core::stringc &filename)
   {
-    size_t find_pos = filename.rfind('\\');
-    if (find_pos == std::string::npos)
-      find_pos = filename.rfind('/');
-    return (find_pos != std::string::npos)
-               ? filename.substr(find_pos + 1, filename.length() - find_pos - 1)
-               : filename;
+    irr::s32 pos = filename.findLast('\\');
+    if (pos == -1)
+      pos = filename.findLast('/');
+    if (pos != -1)
+      return filename.subString(pos + 1, filename.size() - pos - 1);
+    return filename;
   }
 
-  inline std::string extractext(const std::string &filename)
+  inline irr::core::stringc extractext(const irr::core::stringc &filename)
   {
-    size_t find_pos = filename.rfind('.');
-    return (find_pos != std::string::npos)
-               ? filename.substr(find_pos + 1, filename.length() - find_pos - 1)
-               : "";
+    irr::s32 pos = filename.findLast('.');
+    if (pos != -1)
+      return filename.subString(pos + 1, filename.size() - pos - 1);
+    return "";
   }
 
-  inline std::string extractdir(const std::string &filename)
+  inline irr::core::stringc extractdir(const irr::core::stringc &filename)
   {
-    size_t find_pos = filename.rfind('\\');
-    if (find_pos == std::string::npos)
-      find_pos = filename.rfind('/');
-    return filename.substr(0, find_pos);
+    irr::s32 pos = filename.findLast('\\');
+    if (pos == -1)
+      pos = filename.findLast('/');
+    if (pos != -1)
+      return filename.subString(0, pos);
+    return filename;
   }
 
-  inline std::string read(const std::string &filename)
+  inline irr::core::stringc read(const irr::core::stringc &filename)
   {
     FILE *f = fopen(filename.c_str(), "rb");
     if (!f)
-      return "";
+      return irr::core::stringc();
     fseek(f, 0, SEEK_END);
     long size = ftell(f);
     fseek(f, 0, SEEK_SET);
     char *buf = (char *)malloc(size + 1);
     fread(buf, sizeof(char), size, f);
     buf[size] = '\0';
-    std::string str(buf);
+    irr::core::stringc str(buf);
     free(buf);
     return str;
   }
 
-  inline void write(const std::string &str, const std::string &filename, bool append = true)
+  inline void write(const irr::core::stringc &str, const irr::core::stringc &filename, bool append = true)
   {
     FILE *f = fopen(filename.c_str(), append ? "ab" : "wb");
     if (!f)
       return;
-    fwrite(str.c_str(), sizeof(char), str.length(), f);
+    fwrite(str.c_str(), sizeof(char), str.size(), f);
     fclose(f);
   }
 
-  inline std::vector<std::string> split(const std::string &str, char delim)
+  inline irr::core::array<irr::core::stringc> split(const irr::core::stringc &str, char delim)
   {
-    std::vector<std::string> arr;
-    if (str.length() == 0 || delim == 0)
+    irr::core::array<irr::core::stringc> arr;
+    if (str.size() == 0 || delim == 0)
       return arr;
-    std::string out;
-    for (size_t i = 0; i < str.length(); ++i)
+    irr::core::stringc out;
+    for (irr::u32 i = 0; i < str.size(); ++i)
     {
       const char c = str[i];
       if (c == delim)
@@ -147,77 +147,73 @@ namespace strmanip
     return arr;
   }
 
-  // todo: optimize this
-  inline std::string upper(const std::string &str)
+  inline irr::core::stringc upper(const irr::core::stringc &str)
   {
-    std::string out;
-    for (size_t i = 0; i < str.length(); ++i)
-      out += toupper(str[i]);
+    irr::core::stringc out;
+    for (irr::u32 i = 0; i < str.size(); ++i)
+      out.append(toupper(str[i]));
     return out;
   }
 
-  // todo optimize this
-  inline std::string lower(const std::string &str)
+  inline irr::core::stringc lower(const irr::core::stringc &str)
   {
-    std::string out;
-    for (size_t i = 0; i < str.length(); ++i)
-      out += tolower(str[i]);
+    irr::core::stringc out;
+    for (irr::u32 i = 0; i < str.size(); ++i)
+      out.append(tolower(str[i]));
     return out;
   }
 
-  inline std::string ltrim(const std::string &str)
+  inline irr::core::stringc ltrim(const irr::core::stringc &str)
   {
-    // count spaces at the beginning
-    size_t i = 0;
-    while (i < str.length() && isspace(str[i]))
+    irr::u32 i = 0;
+    while (i < str.size() && isspace(str[i]))
       ++i;
-
-    // return trimmed string
-    return str.substr(i);
+    return str.subString(i, str.size() - i);
   }
 
-  inline std::string rtrim(const std::string &str)
+  inline irr::core::stringc rtrim(const irr::core::stringc &str)
   {
-    // look for first non space on the right
-    int i = str.length() - 1;
-    size_t pos = std::string::npos;
-    while (i > 0 && pos == std::string::npos)
+    irr::s32 i = (irr::s32)str.size() - 1;
+    irr::s32 pos = -1;
+    while (i >= 0 && pos == -1)
     {
-      if (!isspace(str[i]))
+      if (!isspace(str[(irr::u32)i]))
         pos = i + 1;
       --i;
     }
-
-    if (pos == std::string::npos)
-      pos = str.length();
-
-    // return trimmed string
-    return str.substr(0, pos);
+    if (pos == -1)
+      pos = (irr::s32)str.size();
+    return str.subString(0, pos);
   }
 
-  inline std::string trim(const std::string &str)
+  inline irr::core::stringc trim(const irr::core::stringc &str)
   {
     return rtrim(ltrim(str));
   }
 
-  inline std::string lset(const std::string &str, size_t length, char c)
+  inline irr::core::stringc lset(const irr::core::stringc &str, irr::u32 length, char c)
   {
-    std::string out = str;
-    if (out.length() > length)
+    if (str.size() > length)
     {
-      out.resize(length);
+      return str.subString(0, (irr::s32)length);
     }
-    else if (out.length() < length)
+    else if (str.size() < length)
     {
-      out = std::string(length - out.length(), c) + out;
+      irr::core::stringc prefix;
+      for (irr::u32 i = 0; i < length - str.size(); ++i)
+        prefix.append(c);
+      return prefix + str;
     }
-    return out;
+    return str;
   }
 
-  inline std::string rset(const std::string &str, size_t length, char c)
+  inline irr::core::stringc rset(const irr::core::stringc &str, irr::u32 length, char c)
   {
-    std::string out = str;
-    out.resize(length, c);
+    irr::core::stringc out = str;
+    if (out.size() > length)
+      out = out.subString(0, (irr::s32)length);
+    while (out.size() < length)
+      out.append(c);
     return out;
   }
 } // namespace strmanip

@@ -49,9 +49,7 @@ struct Options
     stringc dir = (argc > 2) ? argv[2] : "";
     if (dir != "")
     {
-      const std::string sdir(dir.c_str());
-      const std::string resolved = RealDir(IsDir(sdir) ? sdir : std::string(ExtractDir(sdir.c_str())));
-      dir = resolved.c_str();
+      dir = RealDir(IsDir(dir) ? dir : core::stringc(ExtractDir(dir.c_str())));
     }
     if (dir.findLast('\\') == dir.size() - 1 || dir.findLast('/') == dir.size() - 1)
       dir = dir.subString(0, dir.size() - 1);

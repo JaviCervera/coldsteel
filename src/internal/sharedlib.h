@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <irrString.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -26,11 +26,11 @@ private:
 inline sharedlib_t::sharedlib_t(const char *libname)
 {
 #if defined(_WIN32)
-  handle = LoadLibraryA((libname + std::string(".dll")).c_str());
+  handle = LoadLibraryA((irr::core::stringc(libname) + ".dll").c_str());
 #elif defined(__APPLE__)
-  handle = dlopen((libname + std::string(".dylib")).c_str(), RTLD_LAZY);
+  handle = dlopen((irr::core::stringc(libname) + ".dylib").c_str(), RTLD_LAZY);
 #elif defined(__linux__)
-  handle = dlopen((libname + std::string(".so")).c_str(), RTLD_LAZY);
+  handle = dlopen((irr::core::stringc(libname) + ".so").c_str(), RTLD_LAZY);
 #endif
 }
 
@@ -53,12 +53,12 @@ inline void *sharedlib_t::funcptr(const char *funcname) const
 #if defined(_WIN32)
     return (void *)GetProcAddress(handle, funcname);
 #else
-    std::string str = funcname;
-    size_t atpos = str.find('@');
-    if (atpos != std::string::npos)
-      str = str.substr(0, atpos);
+    irr::core::stringc str = funcname;
+    irr::s32 atpos = str.find("@");
+    if (atpos != -1)
+      str = str.subString(0, atpos);
     if (str[0] == '_')
-      str = str.substr(1, std::string::npos);
+      str = str.subString(1, str.size() - 1);
     return dlsym(handle, str.c_str());
 #endif
   }

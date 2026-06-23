@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "sharedlib.h"
 
 struct Builder
@@ -9,7 +8,7 @@ struct Builder
 
   Builder(PrintCallback cb, const char *bindir)
       : m_print(cb),
-        m_lib((std::string(bindir) + "/builder").c_str()),
+        m_lib((irr::core::stringc(bindir) + "/builder").c_str()),
         m_build_func(BuildFunc(m_lib.funcptr("Build@12"))),
         m_build_web_func(BuildFunc(m_lib.funcptr("BuildWeb@12")))
   {

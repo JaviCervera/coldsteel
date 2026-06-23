@@ -15,9 +15,7 @@ extern "C"
 #endif
 #include "dir.hh"
 #include "file.hh"
-#include "string.hh"
 #include "strmanip.hh"
-#include "vector.hh"
 #ifdef __DID_UNDEF__STRICT_ANSI__
 #define __STRICT_ANSI__
 #endif
@@ -39,8 +37,8 @@ struct Builder
 
   void Build(const char *dir, bool precompile) const
   {
-    const std::string out_file = strmanip::stripdir(dir);
-    const std::string out_dir = std::string(dir) + ".build";
+    const irr::core::stringc out_file = strmanip::stripdir(dir);
+    const irr::core::stringc out_dir = irr::core::stringc(dir) + ".build";
     if (filetype(out_dir.c_str()) != fdir)
       dir::create(out_dir);
 #if defined(__APPLE__) && defined(__MACH__)
@@ -52,8 +50,8 @@ struct Builder
 
   void BuildWeb(const char *dir, bool precompile) const
   {
-    const std::string out_file = strmanip::stripdir(dir);
-    const std::string out_dir = std::string(dir) + ".build";
+    const irr::core::stringc out_file = strmanip::stripdir(dir);
+    const irr::core::stringc out_dir = irr::core::stringc(dir) + ".build";
     if (filetype(out_dir.c_str()) != fdir)
       dir::create(out_dir);
     const size_t pkg_size = WriteZip(dir, out_dir, out_file + ".data", precompile);
@@ -65,10 +63,10 @@ struct Builder
 private:
   PrintCallback m_print;
 
-  size_t WriteZip(const std::string &path, const std::string &out_dir, const std::string &out_file, bool precompile) const
+  size_t WriteZip(const irr::core::stringc &path, const irr::core::stringc &out_dir, const irr::core::stringc &out_file, bool precompile) const
   {
     char msg[MSG_LEN];
-    const std::string zip_path = out_dir + "/" + out_file;
+    const irr::core::stringc zip_path = out_dir + "/" + out_file;
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -89,14 +87,14 @@ private:
     return size;
   }
 
-  void AddZipFiles(zip_t *zip, const std::string &path, const std::string &root_dir, bool precompile) const
+  void AddZipFiles(zip_t *zip, const irr::core::stringc &path, const irr::core::stringc &root_dir, bool precompile) const
   {
-    const std::vector<std::string> contents = dir::contents(path);
-    for (size_t i = 0; i < contents.size(); ++i)
+    const irr::core::array<irr::core::stringc> contents = dir::contents(path);
+    for (irr::u32 i = 0; i < contents.size(); ++i)
     {
-      if (contents[i].substr(0, 1) == ".")
+      if (contents[i].subString(0, 1) == ".")
         continue;
-      const std::string filepath = path + "/" + contents[i];
+      const irr::core::stringc filepath = path + "/" + contents[i];
       if (filetype(filepath.c_str()) == fdir)
       {
         AddZipFiles(zip, filepath, root_dir, precompile);
@@ -104,7 +102,7 @@ private:
       }
       if (strmanip::extractext(filepath) == "lua" && precompile)
       {
-        const std::string rel_filepath = strmanip::replaceall(filepath, root_dir + "/", "");
+        const irr::core::stringc rel_filepath = strmanip::replaceall(filepath, root_dir + "/", "");
         if (m_print)
         {
           char msg[MSG_LEN];
@@ -128,7 +126,7 @@ private:
       }
       if (strmanip::extractext(filepath) != "hx" && strmanip::extractext(filepath) != "hxml")
       {
-        const std::string rel_filepath = strmanip::replaceall(filepath, root_dir + "/", "");
+        const irr::core::stringc rel_filepath = strmanip::replaceall(filepath, root_dir + "/", "");
         if (m_print)
         {
           char msg[MSG_LEN];
@@ -142,7 +140,7 @@ private:
     }
   }
 
-  static FILE *CreateCompiledFile(const std::string &file)
+  static FILE *CreateCompiledFile(const irr::core::stringc &file)
   {
     lua_State *L = lua_open();
     if (luaL_loadfile(L, file.c_str()))
@@ -158,16 +156,16 @@ private:
     return (fwrite(p, size, 1, (FILE *)u) != 1) && (size != 0);
   }
 
-  void WriteJS(const std::string &out_dir, const std::string &out_file, size_t pkg_size) const
+  void WriteJS(const irr::core::stringc &out_dir, const irr::core::stringc &out_file, size_t pkg_size) const
   {
-    const std::string size_str = strmanip::fromnumber(pkg_size, "%li");
-    std::string js = strmanip::read(BinDir() + "/coldsteel.js");
+    const irr::core::stringc size_str = strmanip::fromnumber(pkg_size, "%li");
+    irr::core::stringc js = strmanip::read(BinDir() + "/coldsteel.js");
     js = strmanip::replaceall(js, JS_SIZE_TPL_QUOTED,
         strmanip::replaceall(JS_SIZE_REP_QUOTED, "#SIZE", size_str));
     js = strmanip::replaceall(js, JS_SIZE_TPL_UNQUOTED,
         strmanip::replaceall(JS_SIZE_REP_UNQUOTED, "#SIZE", size_str));
     js = strmanip::replaceall(js, "coldsteel", out_file);
-    const std::string dst = out_dir + "/" + out_file + ".js";
+    const irr::core::stringc dst = out_dir + "/" + out_file + ".js";
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -177,10 +175,10 @@ private:
     strmanip::write(js, dst, false);
   }
 
-  void WriteWasm(const std::string &out_dir, const std::string &out_file) const
+  void WriteWasm(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
-    const std::string src = BinDir() + "/coldsteel.wasm";
-    const std::string dst = out_dir + "/" + out_file + ".wasm";
+    const irr::core::stringc src = BinDir() + "/coldsteel.wasm";
+    const irr::core::stringc dst = out_dir + "/" + out_file + ".wasm";
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -190,16 +188,16 @@ private:
     filecopy(src.c_str(), dst.c_str());
   }
 
-  void WriteHtml(const std::string &out_dir, const std::string &out_file) const
+  void WriteHtml(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
-    const std::string html = strmanip::replaceall(
+    const irr::core::stringc html = strmanip::replaceall(
         strmanip::replaceall(
             strmanip::read(BinDir() + "/coldsteel.html"),
             "coldsteel",
             out_file),
         "Emscripten-Generated Code",
         out_file);
-    const std::string dst = out_dir + "/index.html";
+    const irr::core::stringc dst = out_dir + "/index.html";
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -209,17 +207,17 @@ private:
     strmanip::write(html, dst, false);
   }
 
-  void CopyRuntime(const std::string &out_dir, const std::string &out_file) const
+  void CopyRuntime(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
 #ifdef _WIN32
-    const std::string runtime_file = "coldsteel.exe";
-    const std::string out_file_with_ext = out_file + ".exe";
+    const irr::core::stringc runtime_file = "coldsteel.exe";
+    const irr::core::stringc out_file_with_ext = out_file + ".exe";
 #else
-    const std::string runtime_file = "coldsteel";
-    const std::string out_file_with_ext = out_file;
+    const irr::core::stringc runtime_file = "coldsteel";
+    const irr::core::stringc out_file_with_ext = out_file;
 #endif
-    const std::string src = BinDir() + "/" + runtime_file;
-    const std::string dst = RuntimeDir(out_dir, out_file_with_ext) + "/" + out_file_with_ext;
+    const irr::core::stringc src = BinDir() + "/" + runtime_file;
+    const irr::core::stringc dst = RuntimeDir(out_dir, out_file_with_ext) + "/" + out_file_with_ext;
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -229,12 +227,12 @@ private:
     filecopy(src.c_str(), dst.c_str());
   }
 
-  static std::string BinDir()
+  static irr::core::stringc BinDir()
   {
     return strmanip::extractdir(dir::bin_filename());
   }
 
-  static std::string RuntimeDir(const std::string &out_dir, const std::string &out_file)
+  static irr::core::stringc RuntimeDir(const irr::core::stringc &out_dir, const irr::core::stringc &out_file)
   {
 #if defined(__APPLE__) && defined(__MACH__)
     return out_dir + "/" + out_file + ".app/Contents/MacOS";
@@ -244,7 +242,7 @@ private:
   }
 
 #if defined(__APPLE__) && defined(__MACH__)
-  void CreateBundle(const std::string &out_dir, const std::string &out_file) const
+  void CreateBundle(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
     dir::create(RuntimeDir(out_dir, out_file));
     dir::create(ResourcesDir(out_dir, out_file));
@@ -252,15 +250,15 @@ private:
     CopyIcns(out_dir, out_file);
   }
 
-  static std::string ResourcesDir(const std::string &out_dir, const std::string &out_file)
+  static irr::core::stringc ResourcesDir(const irr::core::stringc &out_dir, const irr::core::stringc &out_file)
   {
     return out_dir + "/" + out_file + ".app/Contents/Resources";
   }
 
-  void WritePlist(const std::string &out_dir, const std::string &out_file) const
+  void WritePlist(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
-    const std::string plist = strmanip::replaceall(strmanip::read(BinDir() + "/Info.plist"), "$NAME", out_file);
-    const std::string dst = PlistPath(out_dir, out_file);
+    const irr::core::stringc plist = strmanip::replaceall(strmanip::read(BinDir() + "/Info.plist"), "$NAME", out_file);
+    const irr::core::stringc dst = PlistPath(out_dir, out_file);
     if (m_print)
     {
       char msg[MSG_LEN];
@@ -270,15 +268,15 @@ private:
     strmanip::write(plist, dst, false);
   }
 
-  static std::string PlistPath(const std::string &out_dir, const std::string &out_file)
+  static irr::core::stringc PlistPath(const irr::core::stringc &out_dir, const irr::core::stringc &out_file)
   {
     return out_dir + "/" + out_file + ".app/Contents/Info.plist";
   }
 
-  void CopyIcns(const std::string &out_dir, const std::string &out_file) const
+  void CopyIcns(const irr::core::stringc &out_dir, const irr::core::stringc &out_file) const
   {
-    const std::string src = BinDir() + "/coldsteel.icns";
-    const std::string dst = ResourcesDir(out_dir, out_file) + "/" + out_file + ".icns";
+    const irr::core::stringc src = BinDir() + "/coldsteel.icns";
+    const irr::core::stringc dst = ResourcesDir(out_dir, out_file) + "/" + out_file + ".icns";
     if (m_print)
     {
       char msg[MSG_LEN];

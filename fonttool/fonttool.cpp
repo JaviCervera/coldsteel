@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <cstring>
 #include <cmath>
-#include <string>
 
 using namespace irr;
 using namespace core;
@@ -54,22 +53,26 @@ static const char *toNarrow(const wchar_t *ws)
     return buf;
 }
 
-static std::string getBaseName(const std::string &path)
+static stringc getBaseName(const stringc &path)
 {
-    size_t last = path.find_last_of("/\\");
-    std::string base = (last != std::string::npos) ? path.substr(last + 1) : path;
-    size_t dot = base.find_last_of('.');
-    if (dot != std::string::npos)
-        base = base.substr(0, dot);
+    s32 slash = path.findLast('/');
+    s32 back = path.findLast('\\');
+    s32 last = (back > slash) ? back : slash;
+    stringc base = (last != -1) ? path.subString(last + 1, path.size() - last - 1) : path;
+    s32 dot = base.findLast('.');
+    if (dot != -1)
+        base = base.subString(0, dot);
     return base;
 }
 
-static std::string getDirName(const std::string &path)
+static stringc getDirName(const stringc &path)
 {
-    size_t last = path.find_last_of("/\\");
-    if (last != std::string::npos)
-        return path.substr(0, last + 1);
-    return std::string("./");
+    s32 slash = path.findLast('/');
+    s32 back = path.findLast('\\');
+    s32 last = (back > slash) ? back : slash;
+    if (last != -1)
+        return path.subString(0, last + 1);
+    return stringc("./");
 }
 
 struct CharInfo
@@ -241,12 +244,12 @@ static bool saveFont(const char *ttf_path, int font_size, int atlas_w, int atlas
     }
     delete[] alpha;
 
-    std::string base_name = getBaseName(std::string(ttf_path));
-    std::string dir_name = getDirName(std::string(ttf_path));
+    stringc base_name = getBaseName(stringc(ttf_path));
+    stringc dir_name = getDirName(stringc(ttf_path));
 
     char size_suffix[32];
     sprintf(size_suffix, "_%d_%d", font_size, atlas_w);
-    std::string out_base = dir_name + base_name + size_suffix;
+    stringc out_base = dir_name + base_name + size_suffix;
 
     char png_path[1024];
     sprintf(png_path, "%s.png", out_base.c_str());

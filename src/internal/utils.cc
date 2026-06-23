@@ -19,29 +19,31 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
+#include <irrString.h>
 #include <sys/stat.h>
 
 #if defined _WIN32 && !defined S_ISDIR
 #define S_ISDIR(m) (((m) & _S_IFDIR) == _S_IFDIR)
 #endif
 
-static std::string ExtractDir(const std::string &path)
+static irr::core::stringc ExtractDir(const irr::core::stringc &path)
 {
-  size_t pos = path.find_last_of("/\\");
-  if (pos != std::string::npos)
-    return path.substr(0, pos);
+  irr::s32 slash = path.findLast('/');
+  irr::s32 back = path.findLast('\\');
+  irr::s32 pos = (back > slash) ? back : slash;
+  if (pos != -1)
+    return path.subString(0, pos);
   return ".";
 }
 
-std::string RealDir(const std::string &dir)
+irr::core::stringc RealDir(const irr::core::stringc &dir)
 {
   char out_dir[FILENAME_MAX];
   realpath(dir.c_str(), out_dir);
-  return out_dir;
+  return irr::core::stringc(out_dir);
 }
 
-std::string BinDir()
+irr::core::stringc BinDir()
 {
   char path[FILENAME_MAX];
 #if defined(_WIN32)
@@ -55,7 +57,7 @@ std::string BinDir()
   return ExtractDir(path);
 }
 
-bool IsDir(const std::string &path)
+bool IsDir(const irr::core::stringc &path)
 {
   struct stat statbuf;
   if (stat(path.c_str(), &statbuf) == -1)

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "string.hh"
-#include "vector.hh"
+#include <irrString.h>
+#include <irrArray.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,48 +34,45 @@
 
 namespace dir
 {
-  inline std::vector<std::string> contents(const std::string &path)
+  inline irr::core::array<irr::core::stringc> contents(const irr::core::stringc &path)
   {
-    std::vector<std::string> arr;
+    irr::core::array<irr::core::stringc> arr;
 
-    // open directory
     DIR *d = (DIR *)opendir(path.c_str());
     if (d == NULL)
       return arr;
 
-    // copy directory contents
     struct dirent *entry;
     while ((entry = (struct dirent *)readdir(d)))
     {
-      arr.push_back(entry->d_name);
+      arr.push_back(irr::core::stringc(entry->d_name));
     }
 
-    // close directory
     closedir(d);
 
     return arr;
   }
 
-  inline std::string current()
+  inline irr::core::stringc current()
   {
     char buf[FILENAME_MAX];
     _getcwd(buf, FILENAME_MAX);
-    return std::string(buf);
+    return irr::core::stringc(buf);
   }
 
-  inline bool change(const std::string &path)
+  inline bool change(const irr::core::stringc &path)
   {
     return _chdir(path.c_str()) == 0;
   }
 
-  inline void create(const std::string &path)
+  inline void create(const irr::core::stringc &path)
   {
     struct stat statbuf;
     if (stat(path.c_str(), &statbuf) != -1 && S_ISDIR(statbuf.st_mode))
       return;
-    size_t pos = path.rfind('/');
-    if (pos != std::string::npos && pos > 0)
-      create(path.substr(0, pos));
+    irr::s32 pos = path.findLast('/');
+    if (pos != -1 && pos > 0)
+      create(path.subString(0, pos));
 #ifdef _WIN32
     _mkdir(path.c_str());
 #else
@@ -83,19 +80,19 @@ namespace dir
 #endif
   }
 
-  inline void remove(const std::string &path)
+  inline void remove(const irr::core::stringc &path)
   {
     _rmdir(path.c_str());
   }
 
-  inline std::string real_path(const std::string &path)
+  inline irr::core::stringc real_path(const irr::core::stringc &path)
   {
     char out_path[FILENAME_MAX];
     realpath(path.c_str(), out_path);
-    return std::string(out_path);
+    return irr::core::stringc(out_path);
   }
 
-  static std::string bin_filename()
+  static irr::core::stringc bin_filename()
   {
     char path[FILENAME_MAX];
 #if defined(_WIN32)
@@ -106,6 +103,6 @@ namespace dir
 #else
     path[readlink("/proc/self/exe", path, FILENAME_MAX)] = 0;
 #endif
-    return path;
+    return irr::core::stringc(path);
   }
 } // namespace dir
