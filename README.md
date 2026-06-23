@@ -11,7 +11,6 @@ python gen_doc.py
 
 ## TODO
 
-* Restore GUI functions and samples.
 * Use `Entity`, `Camera`, etc on Haxe wrapper instead of `ISceneNode`, `ICameraSceneNode`, etc.
 * Unify build scripts (no separate desktop, web, haxe wrapper, doc).
 * Fix lighting on Emscripten.

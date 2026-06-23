@@ -10,6 +10,7 @@ class ILightSceneNode : public ISceneNode { protected: ILightSceneNode(); };
 class IMeshSceneNode : public ISceneNode { protected: IMeshSceneNode(); };
 class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode(); };
 class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
+class IGUIElement { protected: IGUIElement(); };
 
 %include "src/common.h"
 %include "src/bitwise.h"
@@ -21,6 +22,7 @@ class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 %include "src/entity.h"
 %include "src/font.h"
 %include "src/graphics.h"
+%include "src/gui.h"
 %include "src/input.h"
 %include "src/light.h"
 %include "src/listener.h"

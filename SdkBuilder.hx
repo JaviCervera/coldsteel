@@ -85,6 +85,7 @@ class SdkBuilder {
 			case "IMeshSceneNode": return "Model *";
 			case "ITerrainSceneNode": return "Terrain *";
 			case "ITexture": return "Texture *";
+			case "IGUIElement": return "Control *";
 			case "SMaterial": return "Material *";
 			default: return '${srcType} *';
 		};
