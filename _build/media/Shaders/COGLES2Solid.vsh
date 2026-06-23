@@ -41,7 +41,7 @@ varying float vFogCoord;
 
 void dirLight(in int index, in vec3 position, in vec3 normal, inout vec4 ambient, inout vec4 diffuse, inout vec4 specular)
 {
-	vec3 L = normalize(-(uNMatrix * vec4(uLightDirection[index], 0.0)).xyz);
+	vec3 L = normalize(-uLightDirection[index]);
 
 	ambient += uLightAmbient[index];
 

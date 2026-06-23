@@ -126,7 +126,36 @@ extern "C"
 
       // Draw
       _Device()->getSceneManager()->setActiveCamera(camera);
+
+#ifdef __EMSCRIPTEN__
+      // Workaround for Irrlicht OGLES2 fixed-function light direction bug:
+      // Direction is not transformed to eye space and not negated for OpenGL's
+      // "toward the light" convention. Pre-multiply by view rotation and negate.
+      array<ISceneNode *> lights;
+      _Device()->getSceneManager()->getSceneNodesFromType(ESNT_LIGHT, lights);
+      array<ILightSceneNode *> fixNodes;
+      array<vector3df> fixDirs;
+      matrix4 viewMat = camera->getViewMatrix();
+      for (u32 j = 0; j < lights.size(); ++j)
+      {
+        ILightSceneNode *light = (ILightSceneNode *)lights[j];
+        SLight &data = light->getLightData();
+        if (data.Type == ELT_DIRECTIONAL || data.Type == ELT_SPOT)
+        {
+          fixNodes.push_back(light);
+          fixDirs.push_back(data.Direction);
+          viewMat.rotateVect(data.Direction);
+          data.Direction = -data.Direction;
+        }
+      }
+#endif
+
       _Device()->getSceneManager()->drawAll();
+
+#ifdef __EMSCRIPTEN__
+      for (u32 j = 0; j < fixNodes.size(); ++j)
+        fixNodes[j]->getLightData().Direction = fixDirs[j];
+#endif
     }
     _Device()->getVideoDriver()->setViewPort(prev_viewport);
     _Device()->getVideoDriver()->setRenderTarget(NULL, false, false);
