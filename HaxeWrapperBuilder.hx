@@ -21,7 +21,28 @@ class HaxeWrapperBuilder {
 	}
 
 	private static function getHaxeExtends(className:String):String {
-		return (className.endsWith('SceneNode') && className != 'ISceneNode') ? ' extends ISceneNode' : '';
+		return switch (className) {
+			case 'Camera' | 'Model' | 'Sprite' | 'Terrain' | 'Light': ' extends Entity';
+			default: '';
+		};
+	}
+
+	public static function getHaxeType(srcType:String):String {
+		return switch (srcType) {
+			case 'IBillboardSceneNode': return 'Sprite';
+			case 'ICameraSceneNode': return 'Camera';
+			case 'IImage': return 'Pixmap';
+			case 'ILightSceneNode': return 'Light';
+			case 'IMesh': return 'Mesh';
+			case 'IMeshBuffer': return 'Surface';
+			case 'ISceneNode': return 'Entity';
+			case 'IMeshSceneNode': return 'Model';
+			case 'ITerrainSceneNode': return 'Terrain';
+			case 'ITexture': return 'Texture';
+			case 'IGUIElement': return 'Control';
+			case 'SMaterial': return 'Material';
+			default: return srcType;
+		};
 	}
 
 	private static function getHaxeCsClass(constants:Iterable<Constant>, functions:Iterable<Function>):String {
@@ -51,7 +72,11 @@ class HaxeWrapperBuilder {
 		final primitives = ['Void', 'Bool', 'Int', 'Float', 'String', 'Any'];
 		final fullList = functions.flatMap(f -> [f.type].concat(f.params.map(p -> p.type)));
 		final classes = [];
-		fullList.iter(c -> if (!classes.contains(c) && !primitives.contains(c)) classes.push(c));
+		fullList.iter(c -> {
+			final mapped = getHaxeType(c);
+			if (!classes.contains(mapped) && !primitives.contains(mapped))
+				classes.push(mapped);
+		});
 		return classes;
 	}
 
@@ -105,7 +130,7 @@ private class Function {
 	}
 
 	public function toString():String {
-		return '$name(${params.map(p -> p.toString()).join(', ')}):$type';
+		return '${HaxeWrapperBuilder.getHaxeType(name)}(${params.map(p -> p.toString()).join(', ')}):${HaxeWrapperBuilder.getHaxeType(type)}';
 	}
 }
 
@@ -123,7 +148,7 @@ private class Param {
 	}
 
 	public function toString():String {
-		return '$name:$type';
+		return '$name:${HaxeWrapperBuilder.getHaxeType(type)}';
 	}
 }
 

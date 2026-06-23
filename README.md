@@ -11,7 +11,6 @@ python gen_doc.py
 
 ## TODO
 
-* Use `Entity`, `Camera`, etc on Haxe wrapper instead of `ISceneNode`, `ICameraSceneNode`, etc.
 * Unify build scripts (no separate desktop, web, haxe wrapper, doc).
 * Fix lighting on Emscripten.
 * Add Pelican gh page website.
