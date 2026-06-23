@@ -32,8 +32,14 @@ When [Emscripten](https://emscripten.org) is installed the web build runs automa
 ./build.sh
 ```
 
-Requires g++/clang++, SWIG, CMake, Haxe, Python 3, Doxygen.
+Requires g++/clang++, SWIG, CMake, Haxe, Python 3, Doxygen.  
 When [Emscripten](https://emscripten.org) is installed the web build runs automatically.
+
+To build only the web target (used by CI):
+
+```
+./build.sh --emscripten
+```
 
 Build outputs go to `_build/`.
 

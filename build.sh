@@ -10,6 +10,41 @@ else
     FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lEGL -lpthread -s -static-libgcc -static-libstdc++"
 fi
 
+emscripten_build() {
+  mkdir -p _CMAKE/_IRRLICHT_EMSCRIPTEN
+  mkdir -p _CMAKE/_COLDSTEEL_EMSCRIPTEN
+
+  echo "# Building Irrlicht (Emscripten) ..."
+  cd lib/irrlicht190_ogles
+  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -DCMAKE_CXX_FLAGS="-sUSE_SDL=1" -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+  cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+  emmake make NDEBUG=1 CPATH=""
+  cd ../..
+
+  echo "# Building ColdSteel (Emscripten) ..."
+  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  emmake make NDEBUG=1
+  mv coldsteel.html ../../_build/coldsteel.html
+  mv coldsteel.js ../../_build/coldsteel.js
+  mv coldsteel.data ../../_build/coldsteel.data
+  mv coldsteel.wasm ../../_build/coldsteel.wasm
+  cd ../..
+}
+
+case "${1:-}" in
+  --emscripten|--web)
+    echo "# Generating Lua wrapper ..."
+    swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
+    if ! command -v emcmake >/dev/null 2>&1; then
+      echo "Emscripten SDK not found!" >&2
+      exit 1
+    fi
+    emscripten_build
+    exit 0
+    ;;
+esac
+
 # ---- Desktop build ----
 
 echo "# Generating Lua wrapper ..."
@@ -49,25 +84,7 @@ $CXX -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAK
 # ---- Web (Emscripten) build ----
 
 if command -v emcmake >/dev/null 2>&1; then
-  mkdir -p _CMAKE/_IRRLICHT_EMSCRIPTEN
-  mkdir -p _CMAKE/_COLDSTEEL_EMSCRIPTEN
-
-  echo "# Building Irrlicht (Emscripten) ..."
-  cd lib/irrlicht190_ogles
-  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -DCMAKE_CXX_FLAGS="-sUSE_SDL=1" -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
-  cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
-  emmake make NDEBUG=1 CPATH=""
-  cd ../..
-
-  echo "# Building ColdSteel (Emscripten) ..."
-  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
-  cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
-  emmake make NDEBUG=1
-  mv coldsteel.html ../../_build/coldsteel.html
-  mv coldsteel.js ../../_build/coldsteel.js
-  mv coldsteel.data ../../_build/coldsteel.data
-  mv coldsteel.wasm ../../_build/coldsteel.wasm
-  cd ../..
+  emscripten_build
 else
   echo "# Emscripten SDK not found, skipping web build ..."
 fi

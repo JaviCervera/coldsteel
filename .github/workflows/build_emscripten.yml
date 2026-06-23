@@ -16,4 +16,4 @@ jobs:
       - name: Build with Emscripten 🔧
         run: |
           source ./emsdk-main/emsdk_env.sh
-          ./build_emscripten.sh
+          ./build.sh --emscripten
