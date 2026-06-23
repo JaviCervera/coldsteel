@@ -206,6 +206,8 @@ def parse_type(type):
     return 'Material'
   if type == 'IGUIElement *':
     return 'Control'
+  if type == 'Font *':
+    return 'Font'
   if type == 'IGUIFont *':
     return 'Font'
   if type == 'ILightSceneNode *':
