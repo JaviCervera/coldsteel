@@ -79,11 +79,15 @@ extern "C"
 
   EXPORT int CALL EntityNumChildren(ISceneNode *entity)
   {
+    if (entity == NULL)
+      entity = _Device()->getSceneManager()->getRootSceneNode();
     return entity->getChildren().size();
   }
 
   EXPORT ISceneNode *CALL EntityChild(ISceneNode *entity, int index)
   {
+    if (entity == NULL)
+      entity = _Device()->getSceneManager()->getRootSceneNode();
     return *(entity->getChildren().begin() + (index - 1));
   }
 
