@@ -267,6 +267,7 @@ extern "C"
       break;
     case CONTROL_TEXT:
       ((IGUIStaticText *)control)->setOverrideColor(_Color(color));
+      break;
     }
   }
 
@@ -279,6 +280,7 @@ extern "C"
       break;
     case CONTROL_TEXT:
       ((IGUIStaticText *)control)->enableOverrideColor(false);
+      break;
     }
   }
 
@@ -487,6 +489,7 @@ extern "C"
     {
     case CONTROL_COMBOBOX:
       ((IGUIComboBox *)control)->removeItem(index - 1);
+      break;
     case CONTROL_MENU:
       ((IGUIContextMenu *)control)->removeItem(index - 1);
       break;
@@ -505,6 +508,7 @@ extern "C"
     {
     case CONTROL_COMBOBOX:
       ((IGUIComboBox *)control)->clear();
+      break;
     case CONTROL_MENU:
       ((IGUIContextMenu *)control)->removeAllItems();
       break;
