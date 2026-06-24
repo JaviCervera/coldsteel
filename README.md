@@ -32,7 +32,7 @@ When [Emscripten](https://emscripten.org) is installed the web build runs automa
 ./build.sh
 ```
 
-Requires g++/clang++, SWIG, CMake, Haxe, Python 3, Doxygen.  
+Requires g++/clang++, SWIG, CMake, Haxe, Python 3, Doxygen.
 When [Emscripten](https://emscripten.org) is installed the web build runs automatically.
 
 To build only the web target (used by CI):
@@ -45,6 +45,9 @@ Build outputs go to `_build/`.
 
 ## TODO
 
-* Fix lighting on Emscripten.
+* Particle functions.
+* Top aligned text in EditBox.
+* Built in editor.
+* Expose shader API.
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).
