@@ -126,7 +126,16 @@ private class Function {
 		final attributelistElem = XmlParser.elements(element, 'attributelist')[0];
 		final parmlistElem = XmlParser.elements(attributelistElem, 'parmlist')[0];
 		final params = (parmlistElem != null) ? XmlParser.elements(parmlistElem, 'parm') : [];
-		return new Function(XmlParser.attribute(element, 'name'), XmlParser.type(XmlParser.attribute(element, 'type')), params.map(p -> Param.fromXml(p)));
+		final baseType = XmlParser.attribute(element, 'type');
+		final decl = XmlParser.attribute(element, 'decl');
+		return new Function(XmlParser.attribute(element, 'name'), XmlParser.type(resolveReturnType(baseType, decl)), params.map(p -> Param.fromXml(p)));
+	}
+
+	private static function resolveReturnType(baseType:String, decl:String):String {
+		final parenIdx = decl.indexOf(')');
+		if (parenIdx < 0) return baseType;
+		final suffix = decl.substr(parenIdx + 1);
+		return suffix.indexOf('.p.') >= 0 ? 'p.$baseType' : baseType;
 	}
 
 	public function toString():String {
