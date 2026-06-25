@@ -2,6 +2,11 @@
 #include <emscripten.h>
 #endif
 #include <stdio.h>
+#ifdef _WIN32
+extern "C" int __stdcall MessageBoxA(void*, const char*, const char*, unsigned int);
+#define MB_OK 0
+#define MB_ICONERROR 0x00000010
+#endif
 #include "internal/builder.h"
 #include "internal/scripting.h"
 #include "internal/utils.h"

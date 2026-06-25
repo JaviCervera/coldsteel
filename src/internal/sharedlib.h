@@ -3,13 +3,16 @@
 #include <irrString.h>
 
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-typedef HMODULE Handle;
+extern "C" {
+void* __stdcall LoadLibraryA(const char*);
+void* __stdcall GetProcAddress(void*, const char*);
+int   __stdcall FreeLibrary(void*);
+}
 #else
 #include <dlfcn.h>
-typedef void *Handle;
 #endif
+
+typedef void *Handle;
 
 class sharedlib_t
 {
