@@ -73,6 +73,9 @@ cd ../..
 if [ "$LUAJIT" = "1" ]; then
   echo "# Building LuaJIT ..."
   mkdir -p _CMAKE/_LUAJIT
+  if [ "$(uname)" = "Darwin" ]; then
+    export MACOSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | awk -F. '{print $1"."$2}')
+  fi
   make -C lib/luajit-2.1/src -j8 BUILDMODE=static
   cp lib/luajit-2.1/src/libluajit.a _CMAKE/_LUAJIT/libluajit.a
   rm -f lib/luajit-2.1/src/*.o lib/luajit-2.1/src/host/*.o
