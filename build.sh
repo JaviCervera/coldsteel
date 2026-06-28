@@ -32,7 +32,11 @@ emscripten_build() {
   cd ../..
 }
 
+LUAJIT=0
 case "${1:-}" in
+  --luajit)
+    LUAJIT=1
+    ;;
   --emscripten|--web)
     echo "# Generating Lua wrapper ..."
     swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
@@ -66,8 +70,22 @@ cd ../../_CMAKE/_IRRLICHT
 make -j8
 cd ../..
 
+if [ "$LUAJIT" = "1" ]; then
+  echo "# Building LuaJIT ..."
+  mkdir -p _CMAKE/_LUAJIT
+  make -C lib/luajit-2.1/src -j8 BUILDMODE=static
+  cp lib/luajit-2.1/src/libluajit.a _CMAKE/_LUAJIT/libluajit.a
+  rm -f lib/luajit-2.1/src/*.o lib/luajit-2.1/src/host/*.o
+  rm -f lib/luajit-2.1/src/libluajit.a
+  rm -f lib/luajit-2.1/src/host/minilua lib/luajit-2.1/src/host/buildvm
+fi
+
 echo "# Building coldsteel (Desktop) ..."
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL
+if [ "$LUAJIT" = "1" ]; then
+  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -DLUAJIT=ON -B _CMAKE/_COLDSTEEL
+else
+  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL
+fi
 cd _CMAKE/_COLDSTEEL
 make -j8
 mv coldsteel ../../_build/coldsteel
@@ -83,9 +101,9 @@ $CXX -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAK
 
 # ---- Web (Emscripten) build ----
 
-if command -v emcmake >/dev/null 2>&1; then
+if [ "$LUAJIT" != "1" ] && command -v emcmake >/dev/null 2>&1; then
   emscripten_build
-else
+elif [ "$LUAJIT" != "1" ]; then
   echo "# Emscripten SDK not found, skipping web build ..."
 fi
 

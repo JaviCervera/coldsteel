@@ -2,6 +2,8 @@
 
 rem set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 
+set LUAJIT=0
+if "%1"=="--luajit" set LUAJIT=1
 if "%1"=="--emscripten" goto emscripten
 if "%1"=="--web" goto emscripten
 
@@ -21,13 +23,31 @@ if not exist _CMAKE\_COLDSTEEL mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
 cd lib/irrlicht190_ogles
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make -j8
 cd ../..
 
+if %LUAJIT%==1 (
+  echo # Building LuaJIT ...
+  if not exist _CMAKE\_LUAJIT mkdir _CMAKE\_LUAJIT
+  cd lib/luajit-2.1/src
+  mingw32-make -j8 BUILDMODE=static
+  cd ../../..
+  copy lib\luajit-2.1\src\libluajit.a _CMAKE\_LUAJIT\libluajit.a >nul
+  del /q lib\luajit-2.1\src\*.o 2>nul
+  del /q lib\luajit-2.1\src\host\*.o 2>nul
+  del /q lib\luajit-2.1\src\libluajit.a 2>nul
+  del /q lib\luajit-2.1\src\host\minilua.exe 2>nul
+  del /q lib\luajit-2.1\src\host\buildvm.exe 2>nul
+)
+
 echo # Building coldsteel (Desktop) ...
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SVN=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+if %LUAJIT%==1 (
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -DLUAJIT=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+) else (
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+)
 cd _CMAKE/_COLDSTEEL
 mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
@@ -39,8 +59,9 @@ g++ -m32 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _
 
 rem ---- Web (Emscripten) build ----
 
-where emcmake >nul 2>nul
-if %errorlevel% equ 0 (
+if %LUAJIT%==0 (
+  where emcmake >nul 2>nul
+  if %errorlevel% equ 0 (
   if not exist _CMAKE\_IRRLICHT_EMSCRIPTEN mkdir _CMAKE\_IRRLICHT_EMSCRIPTEN
   if not exist _CMAKE\_COLDSTEEL_EMSCRIPTEN mkdir _CMAKE\_COLDSTEEL_EMSCRIPTEN
 
@@ -62,6 +83,7 @@ if %errorlevel% equ 0 (
   cd ../..
 ) else (
   echo # Emscripten SDK not found, skipping web build ...
+)
 )
 
 rem ---- Haxe wrappers ----

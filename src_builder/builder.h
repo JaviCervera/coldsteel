@@ -2,11 +2,9 @@
 
 extern "C"
 {
-#include "../../lib/lua/lstate.h"
-#include "../../lib/lua/lua.h"
-#include "../../lib/lua/lualib.h"
-#include "../../lib/lua/lauxlib.h"
-#include "../../lib/lua/lundump.h"
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
 }
 #include "../lib/zip/zip.h"
 #ifdef __STRICT_ANSI__
@@ -142,11 +140,14 @@ private:
 
   static FILE *CreateCompiledFile(const irr::core::stringc &file)
   {
-    lua_State *L = lua_open();
+    lua_State *L = luaL_newstate();
     if (luaL_loadfile(L, file.c_str()))
+    {
+      lua_close(L);
       return NULL;
+    }
     FILE *f = tmpfile();
-    luaU_dump(L, clvalue(L->top - 1)->l.p, writer, f, true);
+    lua_dump(L, writer, f);
     lua_close(L);
     return f;
   }

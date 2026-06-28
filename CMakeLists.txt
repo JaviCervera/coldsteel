@@ -6,6 +6,12 @@ project(coldsteel)
 
 #Options
 option(IRRLICHT_SVN "Compile with the SVN version of Irrlicht" OFF)
+option(LUAJIT "Use LuaJIT instead of Lua" OFF)
+
+#LuaJIT is not compatible with Emscripten
+if (LUAJIT AND ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	message(FATAL_ERROR "LuaJIT is not compatible with Emscripten.")
+endif()
 
 #Define file groups
 file(
@@ -22,16 +28,23 @@ file(
 file(
 	GLOB
 	COLDSTEEL_EXE_FILES
-	"lib/lua/*.c"
 	"src/*.cc"
 	"src/internal/*.cc"
 	"src/runtime.rc")
 file(
 	GLOB
-	BUILDER_FILES
-	"lib/lua/*.c"
+	BUILDER_BASE_FILES
 	"lib/zip/zip.c"
 	"src_builder/builder.cpp")
+
+#Handle Lua sources (LuaJIT uses a prebuilt static library instead)
+if (LUAJIT)
+	set(COLDSTEEL_LUA_SOURCES "")
+	set(BUILDER_LUA_SOURCES "")
+else()
+	file(GLOB COLDSTEEL_LUA_SOURCES "lib/lua/*.c")
+	file(GLOB BUILDER_LUA_SOURCES "lib/lua/*.c")
+endif()
 
 #Add header and lib directories
 if (IRRLICHT_SVN)
@@ -39,14 +52,12 @@ add_definitions(-DIRRLICHT_SVN -DZIP_ENABLE_SHARABLE_FILE_OPEN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
 else (IRRLICHT_SVN)
 add_definitions(-DZIP_ENABLE_SHARABLE_FILE_OPEN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/lua
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
 endif (IRRLICHT_SVN)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
@@ -56,8 +67,28 @@ else (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 
 #Add executable targets
-add_executable(coldsteel ${COLDSTEEL_FILES} ${COLDSTEEL_EXE_FILES})
-add_library(builder SHARED ${BUILDER_FILES})
+add_executable(coldsteel ${COLDSTEEL_FILES} ${COLDSTEEL_EXE_FILES} ${COLDSTEEL_LUA_SOURCES})
+add_library(builder SHARED ${BUILDER_BASE_FILES} ${BUILDER_LUA_SOURCES})
+
+#Lua include directories (target-specific)
+if (LUAJIT)
+	target_include_directories(coldsteel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/luajit-2.1/src)
+	target_include_directories(builder PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/luajit-2.1/src)
+else()
+	target_include_directories(coldsteel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
+	target_include_directories(builder PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
+endif()
+
+#Link LuaJIT static library (prebuilt by build script)
+if (LUAJIT)
+	set(LUAJIT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_LUAJIT/libluajit.a")
+	if (NOT EXISTS ${LUAJIT_LIB})
+		message("Run build script with --luajit first.")
+		message(FATAL_ERROR "LuaJIT library not found at ${LUAJIT_LIB}.")
+	endif()
+	target_link_libraries(coldsteel ${LUAJIT_LIB})
+	target_link_libraries(builder ${LUAJIT_LIB})
+endif()
 
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
@@ -95,7 +126,9 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 		lib/soloud/src/backend/openal/soloud_openal.cpp
 		lib/soloud/src/backend/openal/soloud_openal_dll.c)
 	set_source_files_properties(lib/soloud/src/backend/openal/soloud_openal_dll.c PROPERTIES LANGUAGE CXX)
-	target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DLUA_USE_LONGJMP)
+	if (NOT LUAJIT)
+		target_compile_definitions(coldsteel PRIVATE ${COMPILE_DEFINITIONS} -DLUA_USE_LONGJMP)
+	endif()
 	set(CMAKE_EXECUTABLE_SUFFIX ".html")
 	set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fno-exceptions -fno-rtti -fstrict-aliasing	-U__STRICT_ANSI__")
 	set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} "-lIrrlicht -lGL --preload-file ../../data.bin@/ -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1 -s USE_SDL=1 -s ASYNCIFY -s MINIFY_HTML=0")
