@@ -116,33 +116,31 @@ private:
       {
         delete lib;
         lua_pushstring(L, (stringc("Library '") + libname + "' could not be loaded.").c_str());
-        lua_error(L);
-        return 0;
+        return 1;
       }
       int (*loader)(ColdSteelSDK *) = (int (*)(ColdSteelSDK *))lib->funcptr((libname + "_load").c_str());
       if (!loader)
       {
         lua_pushstring(L, (stringc("Library '") + libname + "' does not contain '" + libname + "_load' function.").c_str());
-        lua_error(L);
-        return 0;
+        return 1;
       }
       if (!loader(&((Scripting_Lua &)Get()).m_sdk))
       {
         lua_pushstring(L, (stringc("Function '") + libname + "_load' returned 0.").c_str());
-        lua_error(L);
-        return 0;
+        return 1;
       }
     }
     else
     {
       lua_pushstring(L, "'load' requires library argument.");
-      lua_error(L);
+      return 1;
     }
 #else
     lua_pushstring(L, "'load' is not supported on the web.");
-    lua_error(L);
+    return 1;
 #endif
-    return 0;
+    lua_pushstring(L, "");
+    return 1;
   }
 
   static ColdSteelSDK GetSDK();
@@ -174,7 +172,22 @@ private:
 
   static const void *GetPointerArg(void *context, int index)
   {
-    return lua_topointer((lua_State *)context, index);
+    struct SWIG_Ptr
+    {
+      void *type;
+      int own;
+      void *ptr;
+    };
+
+    lua_State *L = (lua_State *)context;
+    if (lua_islightuserdata(L, index))
+      return lua_touserdata(L, index);
+    if (lua_isuserdata(L, index))
+    {
+      struct SWIG_Ptr *ud = (struct SWIG_Ptr *)lua_touserdata(L, index);
+      return ud ? ud->ptr : NULL;
+    }
+    return NULL;
   }
 
   static void PushBool(void *context, int val)
