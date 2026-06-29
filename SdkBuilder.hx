@@ -30,7 +30,7 @@ class SdkBuilder {
 	}
 
 	private static function getSdkTypes(funcs:Iterable<Function>):Array<String> {
-		final excluded = ["void", "int", "float", "const char *"];
+		final excluded = ["void", "void *", "int", "float", "const char *"];
 		final types = new Array<String>();
 		for (f in funcs) {
 			final cppType = getCppType(f.type);
@@ -42,8 +42,10 @@ class SdkBuilder {
     for (t in types)
       if (t == 'Memblock *')
         result.push("typedef void Memblock;");
+      else if (t.endsWith("*"))
+        result.push('typedef struct ${t.substr(0, t.length - 1).trim()} ${t.substr(0, t.length - 1).trim()};');
       else
-        result.push(t.endsWith("*") ? 'struct ${t.substr(0, t.length - 1).trim()};' : 'typedef int $t;');
+        result.push('typedef int $t;');
     for (f in funcs)
       result.push('typedef ${getCppFuncType(f.type)}(*${f.name}Func)(${getSdkParams(f.params)});');
     return result;
@@ -66,6 +68,7 @@ class SdkBuilder {
 		final space = type.endsWith("*") ? "" : " ";
 		return '$type$space';
 	}
+
 
 	private static function getCppType(srcType:String):String {
 		return switch (srcType) {
@@ -175,7 +178,13 @@ private class Function {
 		final attributelistElem = XmlParser.elements(element, 'attributelist')[0];
 		final parmlistElem = XmlParser.elements(attributelistElem, 'parmlist')[0];
 		final params = (parmlistElem != null) ? XmlParser.elements(parmlistElem, 'parm') : [];
-		return new Function(XmlParser.attribute(element, 'name'), XmlParser.type(XmlParser.attribute(element, 'type')), params.map(p -> Param.fromXml(p)));
+		final typeAttr = XmlParser.attribute(element, 'type');
+		final declAttr = XmlParser.attribute(element, 'decl');
+		return new Function(
+			XmlParser.attribute(element, 'name'),
+			XmlParser.type(XmlParser.applyReturnQualifiers(typeAttr, declAttr)),
+			params.map(p -> Param.fromXml(p))
+		);
 	}
 
 	public function toString():String {
@@ -217,7 +226,33 @@ private class XmlParser {
 		return [for (el in it) el];
 	}
 
-	public static function type(type:String):String {
+  public static function applyReturnQualifiers(type:String, decl:String):String {
+    if (decl == null || decl.length == 0)
+      return type;
+    final lastParen = decl.lastIndexOf(")");
+    if (lastParen < 0)
+      return type;
+    final suffix = decl.substr(lastParen + 1);
+    if (!suffix.startsWith(".") || suffix.length < 1)
+      return type;
+    final quals = suffix.substr(1);
+    var prefix = "";
+    var i = 0;
+    while (i < quals.length) {
+      if (quals.substr(i).startsWith("p.")) {
+        prefix += "p.";
+        i += 2;
+      } else if (quals.substr(i).startsWith("q(const).")) {
+        prefix += "q(const).";
+        i += 10;
+      } else {
+        break;
+      }
+    }
+    return prefix + type;
+  }
+
+  public static function type(type:String):String {
 		if (type == 'void') {
 			return 'Void';
 		} else if (type == 'bool' || type == 'bool_t') {
