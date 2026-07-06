@@ -5,6 +5,8 @@
 #include "listener.h"
 #include "screen.h"
 
+#include "../lib/irrlicht190_ogles/include/IGUIFileOpenDialog.h"
+
 class EventReceiver : public IEventReceiver
 {
   virtual bool OnEvent(const SEvent &event)
@@ -52,6 +54,27 @@ class EventReceiver : public IEventReceiver
         break;
       case EGET_COMBO_BOX_CHANGED:
         _PostEvent(CONTROL_ACTION, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_FILE_SELECTED:
+        _SetDialogResult(((IGUIFileOpenDialog *)event.GUIEvent.Caller)->getFileName());
+        _PostEvent(CONTROL_FILESELECTED, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_DIRECTORY_SELECTED:
+        break;
+      case EGET_FILE_CHOOSE_DIALOG_CANCELLED:
+        _PostEvent(CONTROL_FILECANCELLED, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_MESSAGEBOX_OK:
+        _PostEvent(CONTROL_MESSAGEBOX_OK, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_MESSAGEBOX_CANCEL:
+        _PostEvent(CONTROL_MESSAGEBOX_CANCEL, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_MESSAGEBOX_YES:
+        _PostEvent(CONTROL_MESSAGEBOX_YES, event.GUIEvent.Caller, -1);
+        break;
+      case EGET_MESSAGEBOX_NO:
+        _PostEvent(CONTROL_MESSAGEBOX_NO, event.GUIEvent.Caller, -1);
         break;
       default:
         break;
@@ -349,3 +372,4 @@ extern "C"
   }
 
 } // extern "C"
+// force change - build test

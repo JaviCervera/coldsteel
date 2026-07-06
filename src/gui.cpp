@@ -3,6 +3,7 @@
 #include "gui.h"
 
 #include "../lib/irrlicht190_ogles/source/Irrlicht/CGUIEditBox.h"
+#include "../lib/irrlicht190_ogles/include/IGUIFileOpenDialog.h"
 
 struct CursorAccess : CGUIEditBox
 {
@@ -23,6 +24,24 @@ extern "C"
 
   static array<Event> _events;
   static Event _currentEvent(0, NULL, -1);
+
+  static wchar_t _dialogResultW[1024];
+  static char _dialogResult[1024];
+
+  void _SetDialogResult(const wchar_t *filename)
+  {
+    if (filename)
+    {
+      wcsncpy(_dialogResultW, filename, 1024);
+      _dialogResultW[1023] = 0;
+      wcstombs(_dialogResult, _dialogResultW, 1024);
+      _dialogResult[1023] = 0;
+    }
+    else
+    {
+      _dialogResult[0] = 0;
+    }
+  }
 
   IGUIEnvironment *_asGUI();
   IGUIElement *_asResolveParent(IGUIElement *parent);
@@ -107,6 +126,28 @@ extern "C"
   EXPORT IGUIElement *CALL CreateWindow(int x, int y, int width, int height, bool_t modal, IGUIElement *parent)
   {
     return _asGUI()->addWindow(recti(x, y, x + width, y + height), modal, NULL, _asResolveParent(parent));
+  }
+
+  EXPORT IGUIElement *CALL CreateFileOpenDialog(const char *title, const char *startDir)
+  {
+    IGUIFileOpenDialog *dialog = _asGUI()->addFileOpenDialog(
+        title ? _WSTR(title) : L"Open File",
+        true, NULL, -1, false,
+        startDir ? (io::path::char_type *)startDir : NULL);
+    return dialog;
+  }
+
+  EXPORT const char *CALL DialogResult()
+  {
+    return _dialogResult;
+  }
+
+  EXPORT IGUIElement *CALL CreateMessageBox(const char *caption, const char *text, int flags)
+  {
+    return _asGUI()->addMessageBox(
+        _WSTR(caption ? caption : "Message"),
+        _WSTR(text ? text : ""),
+        true, flags, NULL, -1, NULL);
   }
 
   EXPORT void CALL FreeControl(IGUIElement *control)

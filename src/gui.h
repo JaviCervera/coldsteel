@@ -29,6 +29,28 @@
 #define CONTROL_ACTION 3
 /**@}*/
 
+/** @name File dialog events */
+/**@{*/
+#define CONTROL_FILESELECTED 4
+#define CONTROL_FILECANCELLED 5
+/**@}*/
+
+/** @name Message box events */
+/**@{*/
+#define CONTROL_MESSAGEBOX_YES     6
+#define CONTROL_MESSAGEBOX_NO      7
+#define CONTROL_MESSAGEBOX_OK      8
+#define CONTROL_MESSAGEBOX_CANCEL  9
+/**@}*/
+
+/** @name Message box button flags */
+/**@{*/
+#define EMBF_OK      0x1
+#define EMBF_CANCEL  0x2
+#define EMBF_YES     0x4
+#define EMBF_NO      0x8
+/**@}*/
+
 /** @name EditBox types */
 /**@{*/
 #define EDITBOX_SIMPLE 0
@@ -397,6 +419,44 @@ extern "C"
   EXPORT int CALL ControlColor(IGUIElement *control);
 
   /**
+   * Creates a modal file open dialog.
+   *
+   * @param title The dialog title, or NULL for a default title.
+   * @param startDir The initial directory to show, or NULL for the current directory.
+   * @return The file dialog control.
+   *
+   * The dialog blocks interaction with other windows until dismissed.
+   * When a file is selected, a CONTROL_FILESELECTED event is posted and
+   * DialogResult() returns the chosen path. When cancelled, a
+   * CONTROL_FILECANCELLED event is posted.
+   */
+  EXPORT IGUIElement *CALL CreateFileOpenDialog(const char *title, const char *startDir);
+
+  /**
+   * Returns the path selected in the most recent file dialog.
+   *
+   * @return The selected file path, or NULL if no file has been selected yet.
+   *
+   * Valid only after a CONTROL_FILESELECTED event. The returned string
+   * is valid until the next file dialog event.
+   */
+  EXPORT const char *CALL DialogResult();
+
+  /**
+   * Creates a modal message box.
+   *
+   * @param caption The title bar text.
+   * @param text The message body text.
+   * @param flags Bitwise OR of EMBF_* constants specifying which buttons to show.
+   * @return The message box window control.
+   *
+   * The dialog blocks interaction with other windows until dismissed.
+   * When a button is clicked, the corresponding CONTROL_MESSAGEBOX_*
+   * event is posted.
+   */
+  EXPORT IGUIElement *CALL CreateMessageBox(const char *caption, const char *text, int flags);
+
+  /**
    * Returns the cursor position of an edit box.
    *
    * @param control The edit box control.
@@ -626,6 +686,7 @@ extern "C"
 
 #ifndef SWIG
   void _PostEvent(int type, IGUIElement *control, int menuId);
+  void _SetDialogResult(const wchar_t *filename);
 #endif
 
 #ifdef __cplusplus

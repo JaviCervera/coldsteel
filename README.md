@@ -47,6 +47,7 @@ Build outputs go to `_build/`.
 
 * UI colors.
 * Built in editor.
+* Find a way to support "load" in Emscripten.
 * Expose shader API.
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).
