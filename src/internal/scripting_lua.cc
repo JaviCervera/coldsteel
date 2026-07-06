@@ -124,9 +124,13 @@ private:
         lua_pushstring(L, (stringc("Library '") + libname + "' does not contain '" + libname + "_load' function.").c_str());
         return 1;
       }
-      if (!loader(&((Scripting_Lua &)Get()).m_sdk))
+      const int moduleVersion = loader(&((Scripting_Lua &)Get()).m_sdk);
+      if (moduleVersion != COLDSTEEL_SDK_VERSION)
       {
-        lua_pushstring(L, (stringc("Function '") + libname + "_load' returned 0.").c_str());
+        char buf[256];
+        snprintf(buf, sizeof(buf), "Library '%s' was built for SDK version %d but ColdSteel expects %d.",
+                 libname.c_str(), moduleVersion, COLDSTEEL_SDK_VERSION);
+        lua_pushstring(L, buf);
         return 1;
       }
     }

@@ -5,6 +5,8 @@ using Lambda;
 using StringTools;
 
 class SdkBuilder {
+	public static inline var SDK_VERSION = 100;
+
 	public static function main():Void {
 		final root = Xml.parse(File.getContent("coldsteel.xml")).firstElement();
 		if (!FileSystem.isDirectory("_build/sdk"))
@@ -96,16 +98,18 @@ class SdkBuilder {
 	}
 
 	private static function getSdkHeader():String {
-		return "
+		return '
 #ifndef COLDSTEEL_SDK_H_INCLUDED
 #define COLDSTEEL_SDK_H_INCLUDED
 
+#define COLDSTEEL_SDK_VERSION $SDK_VERSION
+
 #ifdef __cplusplus
-extern \"C\"
+extern "C"
 {
 #endif
 
-";
+';
 	}
 
 	private static function getSdkHeader2():String {

@@ -43,6 +43,61 @@ To build only the web target (used by CI):
 
 Build outputs go to `_build/`.
 
+## Creating a module
+
+ColdSteel can be extended with C/C++ shared libraries (`.dll`/`.dylib`/`.so`) that are loaded at runtime.
+
+### Module structure
+
+A module is a shared library that exports one entry point: `<name>_load`. ColdSteel calls it when Lua runs `load("<name>")`.
+
+```c
+// mymodule.c
+#include "sdk.h"
+
+static ColdSteelSDK *g_sdk = NULL;
+
+static int MyFunc(void *context)
+{
+    int a = g_sdk->GetIntArg(context, 1);
+    int b = g_sdk->GetIntArg(context, 2);
+    g_sdk->PushInt(context, a + b);
+    return 1;
+}
+
+extern "C" int mymodule_load(ColdSteelSDK *sdk)
+{
+    g_sdk = sdk;
+    g_sdk->RegisterFunction("MyFunc", MyFunc);
+    return COLDSTEEL_SDK_VERSION;
+}
+```
+
+### Compiling
+
+Point your compiler at the ColdSteel SDK headers and link nothing else — the SDK struct provides all engine access.
+
+```bash
+g++ -shared -o mymodule.so mymodule.c -I path/to/coldsteel/_build/sdk
+```
+
+(Replace `.so` with `.dll` on Windows or `.dylib` on macOS.)
+
+### Using from Lua
+
+```lua
+load("mymodule")
+print(MyFunc(3, 4))   --> 7
+```
+
+If the module was compiled against a different `COLDSTEEL_SDK_VERSION` than the running ColdSteel, `load` will fail with a clear error message.
+
+### Notes
+
+- The `_load` function **must** return `COLDSTEEL_SDK_VERSION` — otherwise loading fails.
+- The `context` pointer passed to your registered function is the Lua state; use the SDK's `Get*Arg` / `Push*` helpers to marshal arguments and return values.
+- The return value of your registered function is the number of values you pushed onto the Lua stack.
+
 ## TODO
 
 * Built in editor.
