@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.5)
 project(coldsteel)
 
 #Options
-option(IRRLICHT_SVN "Compile with the SVN version of Irrlicht" OFF)
 option(LUAJIT "Use LuaJIT instead of Lua" OFF)
 
 #LuaJIT is not compatible with Emscripten
@@ -53,19 +52,11 @@ else()
 endif()
 
 #Add header and lib directories
-if (IRRLICHT_SVN)
-add_definitions(-DIRRLICHT_SVN -DZIP_ENABLE_SHARABLE_FILE_OPEN)
+add_definitions(-DZIP_ENABLE_SHARABLE_FILE_OPEN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-else (IRRLICHT_SVN)
-add_definitions(-DZIP_ENABLE_SHARABLE_FILE_OPEN)
-include_directories(
-	${INCLUDE_DIRECTORIES}
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht185/include
-	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
-endif (IRRLICHT_SVN)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)
 else (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")

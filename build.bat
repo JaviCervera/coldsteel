@@ -44,9 +44,9 @@ if %LUAJIT%==1 (
 
 echo # Building coldsteel (Desktop) ...
 if %LUAJIT%==1 (
-  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -DLUAJIT=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release - -DLUAJIT=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 ) else (
-  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release - -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 )
 cd _CMAKE/_COLDSTEEL
 mingw32-make -j8
@@ -74,7 +74,7 @@ if %LUAJIT%==0 (
   cd ../..
 
   echo # Building ColdSteel ^(Emscripten^) ...
-  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release - -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
   cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
   call emmake make NDEBUG=1 -j8
   move "coldsteel.html" "..\..\_build\coldsteel.html"
@@ -127,7 +127,7 @@ call emmake make NDEBUG=1 -j8
 cd ../..
 
 echo # Building ColdSteel (Emscripten) ...
-call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SVN=ON -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release - -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 call emmake make NDEBUG=1 -j8
 move "coldsteel.html" "..\..\_build\coldsteel.html"

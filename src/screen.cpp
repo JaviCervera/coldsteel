@@ -144,11 +144,7 @@ static E_DRIVER_TYPE irrlichtDriver(int driver)
     return EDT_OPENGL;
 #endif
   case DRIVER_DIRECT3D:
-#ifdef IRRLICHT_SVN
     return EDT_DIRECT3D9;
-#else
-    return EDT_DIRECT3D8;
-#endif
   default:
     return EDT_BURNINGSVIDEO;
   }
@@ -171,15 +167,10 @@ extern "C"
     case EDT_DIRECT3D9:
       driverName = "Direct3D9";
       break;
-#ifndef IRRLICHT_SVN
-    case EDT_DIRECT3D8:
-      driverName = "Direct3D8";
-      break;
-#endif
+
     case EDT_OPENGL:
       driverName = "OpenGL";
       break;
-#ifdef IRRLICHT_SVN
     case EDT_OGLES1:
       driverName = "GLES1";
       break;
@@ -189,7 +180,6 @@ extern "C"
     case EDT_WEBGL1:
       driverName = "WebGL1";
       break;
-#endif
     case EDT_BURNINGSVIDEO:
       driverName = "Software";
       break;
