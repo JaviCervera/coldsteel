@@ -83,6 +83,18 @@ g++ -shared -o mymodule.so mymodule.c -I path/to/coldsteel/_build/sdk
 
 (Replace `.so` with `.dll` on Windows or `.dylib` on macOS.)
 
+### Emscripten (Web)
+
+Modules work on the web target too. Compile with the same Emscripten SDK used to build ColdSteel:
+
+```bash
+emcc -shared -o mymodule.wasm mymodule.c -I path/to/coldsteel/_build/sdk
+```
+
+Deploy `mymodule.wasm` as a static asset alongside the game output (`.js`, `.wasm`, `.html`, `.data`). ColdSteel fetches it at runtime when `load()` is called.
+
+The Lua usage is identical to the desktop version.
+
 ### Using from Lua
 
 ```lua

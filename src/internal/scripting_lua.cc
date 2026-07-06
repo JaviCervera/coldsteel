@@ -12,6 +12,22 @@ extern "C"
 #undef DrawText
 #undef LoadString
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+
+EM_JS(int, cs_load_wasm_module, (const char *url, const char *path), {
+  return Asyncify.handleSleep(function(wakeUp) {
+    fetch(UTF8ToString(url))
+      .then(function(r) { return r.arrayBuffer(); })
+      .then(function(bytes) {
+        FS.writeFile(UTF8ToString(path), new Uint8Array(bytes));
+        wakeUp(0);
+      })
+      .catch(function() { wakeUp(1); });
+  });
+});
+#endif
+
 extern "C" int luaopen_coldsteel(lua_State *l);
 
 class Scripting_Lua : public Scripting
@@ -102,16 +118,25 @@ private:
 
   static int LuaLoad(lua_State *L)
   {
-#ifndef _EMSCRIPTEN
     if (lua_gettop(L) > 0)
     {
       const stringc libname = lua_tostring(L, 1);
+#ifdef __EMSCRIPTEN__
+      const stringc wasmPath = stringc("/") + libname;
+      if (cs_load_wasm_module((libname + ".wasm").c_str(), (wasmPath + ".wasm").c_str()))
+      {
+        lua_pushstring(L, (stringc("Library '") + libname + ".wasm' could not be fetched.").c_str());
+        return 1;
+      }
+      sharedlib_t *lib = new sharedlib_t(wasmPath.c_str());
+#else
       sharedlib_t *lib = new sharedlib_t((stringc(CurrentDir()) + "/" + libname.c_str()).c_str());
       if (!lib->isopen())
       {
         delete lib;
         lib = new sharedlib_t((BinDir() + "/" + libname.c_str()).c_str());
       }
+#endif
       if (!lib->isopen())
       {
         delete lib;
@@ -139,10 +164,6 @@ private:
       lua_pushstring(L, "'load' requires library argument.");
       return 1;
     }
-#else
-    lua_pushstring(L, "'load' is not supported on the web.");
-    return 1;
-#endif
     lua_pushstring(L, "");
     return 1;
   }

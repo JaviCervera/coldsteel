@@ -34,6 +34,8 @@ inline sharedlib_t::sharedlib_t(const char *libname)
   handle = dlopen((irr::core::stringc(libname) + ".dylib").c_str(), RTLD_LAZY);
 #elif defined(__linux__)
   handle = dlopen((irr::core::stringc(libname) + ".so").c_str(), RTLD_LAZY);
+#elif defined(__EMSCRIPTEN__)
+  handle = dlopen((irr::core::stringc(libname) + ".wasm").c_str(), RTLD_LAZY);
 #endif
 }
 
