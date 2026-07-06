@@ -6,6 +6,11 @@
 #include <irrString.h>
 #include <irrArray.h>
 
+#include "../src/screen.h"
+#include "../src/gui.h"
+#undef EXPORT
+#undef CALL
+
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 #define CALL __stdcall
@@ -14,50 +19,8 @@
 #define CALL
 #endif
 
-#define SCREEN_RESIZABLE 2
-#define EDITBOX_MULTILINE 2
 #define KEY_TAB 0x09
 #define KEY_ESC 0x1B
-
-#define CONTROL_BUTTON 1
-#define CONTROL_TABBAR 9
-#define CONTROL_ACTION 3
-#define CONTROL_FILESELECTED 4
-#define CONTROL_FILECANCELLED 5
-#define CONTROL_MESSAGEBOX_YES 6
-#define CONTROL_MESSAGEBOX_NO 7
-#define CONTROL_MESSAGEBOX_CANCEL 9
-
-#define EMBF_OK 0x1
-#define EMBF_CANCEL 0x2
-#define EMBF_YES 0x4
-#define EMBF_NO 0x8
-
-#define SKINCOLOR_3D_DARK_SHADOW 0
-#define SKINCOLOR_3D_SHADOW 1
-#define SKINCOLOR_3D_FACE 2
-#define SKINCOLOR_3D_HIGH_LIGHT 3
-#define SKINCOLOR_3D_LIGHT 4
-#define SKINCOLOR_ACTIVE_BORDER 5
-#define SKINCOLOR_ACTIVE_CAPTION 6
-#define SKINCOLOR_APP_WORKSPACE 7
-#define SKINCOLOR_BUTTON_TEXT 8
-#define SKINCOLOR_GRAY_TEXT 9
-#define SKINCOLOR_HIGH_LIGHT 10
-#define SKINCOLOR_HIGH_LIGHT_TEXT 11
-#define SKINCOLOR_INACTIVE_BORDER 12
-#define SKINCOLOR_INACTIVE_CAPTION 13
-#define SKINCOLOR_TOOLTIP 14
-#define SKINCOLOR_TOOLTIP_BACKGROUND 15
-#define SKINCOLOR_SCROLLBAR 16
-#define SKINCOLOR_WINDOW 17
-#define SKINCOLOR_WINDOW_SYMBOL 18
-#define SKINCOLOR_ICON 19
-#define SKINCOLOR_ICON_HIGH_LIGHT 20
-#define SKINCOLOR_GRAY_WINDOW_SYMBOL 21
-#define SKINCOLOR_EDITABLE 22
-#define SKINCOLOR_GRAY_EDITABLE 23
-#define SKINCOLOR_FOCUSED_EDITABLE 24
 
 #define COLOR_GREEN -16711936
 
@@ -258,6 +221,7 @@ extern "C"
 
   EXPORT void CALL editor_run()
   {
+    g_sdk->SetDriver(DRIVER_SOFTWAREFAST);
     g_sdk->OpenScreen(640, 480, g_sdk->DesktopDepth(), SCREEN_RESIZABLE);
     g_sdk->SetScreenFPS(60);
     g_sdk->SetScreenTitle("ColdSteel - <untitled>");
