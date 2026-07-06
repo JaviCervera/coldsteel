@@ -1,4 +1,5 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
+SetScreenFPS(16)
 SetScreenTitle("ColdSteel - <untitled>")
 
 local liberationSans = LoadFont("segoe_ui.xml")
