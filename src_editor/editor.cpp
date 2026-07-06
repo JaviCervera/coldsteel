@@ -3,10 +3,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <iterator>
+#include <irrString.h>
+#include <irrArray.h>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -65,14 +63,14 @@
 
 static ColdSteelSDK *g_sdk = NULL;
 static Font *g_fixedsys = NULL;
-static std::string g_bindir;
+static irr::core::stringc g_bindir;
 
 static bool isEmpty(const char *s)
 {
   return !s || !s[0];
 }
 
-static bool isDirty(Control *tabbar, const std::vector<std::string> &saved, int idx)
+static bool isDirty(Control *tabbar, const irr::core::array<irr::core::stringc> &saved, int idx)
 {
   if (idx <= 0 || idx > (int)saved.size())
     return false;
@@ -83,31 +81,31 @@ static bool isDirty(Control *tabbar, const std::vector<std::string> &saved, int 
   if (!eb)
     return false;
   const char *text = g_sdk->ControlText(eb);
-  if (saved[idx - 1].empty())
+  if (saved[idx - 1] == "")
     return text && text[0];
-  return text != saved[idx - 1];
+  return saved[idx - 1] != text;
 }
 
-static void updateTabLabel(Control *tabbar, const std::vector<std::string> &names,
-                           const std::vector<std::string> &saved, int idx)
+static void updateTabLabel(Control *tabbar, const irr::core::array<irr::core::stringc> &names,
+                           const irr::core::array<irr::core::stringc> &saved, int idx)
 {
   if (idx <= 0)
     return;
   Control *tab = g_sdk->ControlChild(tabbar, idx);
   if (!tab)
     return;
-  std::string label;
-  if (idx <= (int)names.size() && !names[idx - 1].empty())
+  irr::core::stringc label;
+  if (idx <= (int)names.size() && names[idx - 1] != "")
     label = names[idx - 1];
   else
     label = "<untitled>";
   if (isDirty(tabbar, saved, idx))
-    label = "* " + label;
+    label = irr::core::stringc("* ") + label;
   g_sdk->SetControlText(tab, label.c_str());
 }
 
-static int newTab(Control *tabbar, std::vector<std::string> &names,
-                  std::vector<std::string> &saved,
+static int newTab(Control *tabbar, irr::core::array<irr::core::stringc> &names,
+                  irr::core::array<irr::core::stringc> &saved,
                   int headerHeight, const char *filename, const char *content)
 {
   int idx = g_sdk->AddControlItem(tabbar, "<untitled>", 0);
@@ -118,10 +116,10 @@ static int newTab(Control *tabbar, std::vector<std::string> &names,
   g_sdk->SetControlFont(eb, g_fixedsys);
   g_sdk->SetControlColor(eb, g_sdk->MultiplyColor(COLOR_GREEN, 0.5f));
 
-  if (idx > (int)names.size())
-    names.resize(idx, std::string());
-  if (idx > (int)saved.size())
-    saved.resize(idx, std::string());
+  while (idx > (int)names.size())
+    names.push_back(irr::core::stringc());
+  while (idx > (int)saved.size())
+    saved.push_back(irr::core::stringc());
 
   if (filename)
     names[idx - 1] = filename;
@@ -141,14 +139,14 @@ static int newTab(Control *tabbar, std::vector<std::string> &names,
 
   if (filename)
   {
-    std::string title = std::string("ColdSteel - ") + filename;
+    irr::core::stringc title = irr::core::stringc("ColdSteel - ") + filename;
     g_sdk->SetScreenTitle(title.c_str());
   }
   return idx;
 }
 
-static void saveTab(Control *tabbar, std::vector<std::string> &names,
-                    std::vector<std::string> &saved, int idx, const char *path)
+static void saveTab(Control *tabbar, irr::core::array<irr::core::stringc> &names,
+                    irr::core::array<irr::core::stringc> &saved, int idx, const char *path)
 {
   if (idx <= 0)
     return;
@@ -159,13 +157,13 @@ static void saveTab(Control *tabbar, std::vector<std::string> &names,
   if (!eb)
     return;
 
-  std::ofstream file(path);
-  if (!file.is_open())
+  FILE *file = fopen(path, "w");
+  if (!file)
     return;
   const char *text = g_sdk->ControlText(eb);
   if (text)
-    file << text;
-  file.close();
+    fprintf(file, "%s", text);
+  fclose(file);
 
   if (idx <= (int)names.size())
     names[idx - 1] = path;
@@ -173,20 +171,20 @@ static void saveTab(Control *tabbar, std::vector<std::string> &names,
     saved[idx - 1] = text ? text : "";
 
   updateTabLabel(tabbar, names, saved, idx);
-  std::string title = std::string("ColdSteel - ") + path;
+  irr::core::stringc title = irr::core::stringc("ColdSteel - ") + path;
   g_sdk->SetScreenTitle(title.c_str());
 }
 
-static void performClose(Control *tabbar, std::vector<std::string> &names,
-                         std::vector<std::string> &saved, int idx)
+static void performClose(Control *tabbar, irr::core::array<irr::core::stringc> &names,
+                         irr::core::array<irr::core::stringc> &saved, int idx)
 {
   if (idx <= 0 || idx > g_sdk->ControlNumItems(tabbar))
     return;
   g_sdk->RemoveControlItem(tabbar, idx);
   if (idx <= (int)names.size())
-    names.erase(names.begin() + idx - 1);
+    names.erase(idx - 1);
   if (idx <= (int)saved.size())
-    saved.erase(saved.begin() + idx - 1);
+    saved.erase(idx - 1);
   if (g_sdk->ControlNumItems(tabbar) == 0)
   {
     newTab(tabbar, names, saved, 0, NULL, NULL);
@@ -209,8 +207,8 @@ static void performClose(Control *tabbar, std::vector<std::string> &names,
   }
 }
 
-static void closeAllTabs(Control *tabbar, std::vector<std::string> &names,
-                         std::vector<std::string> &saved)
+static void closeAllTabs(Control *tabbar, irr::core::array<irr::core::stringc> &names,
+                         irr::core::array<irr::core::stringc> &saved)
 {
   g_sdk->RemoveControlItems(tabbar);
   names.clear();
@@ -261,7 +259,7 @@ extern "C"
   EXPORT void CALL editor_run()
   {
     g_sdk->OpenScreen(640, 480, g_sdk->DesktopDepth(), SCREEN_RESIZABLE);
-    g_sdk->SetScreenFPS(16);
+    g_sdk->SetScreenFPS(60);
     g_sdk->SetScreenTitle("ColdSteel - <untitled>");
 
     Font *liberationSans = g_sdk->LoadFont((g_bindir + "/editor/segoe_ui.xml").c_str());
@@ -339,12 +337,12 @@ extern "C"
     g_sdk->SetTabBarHeight(tabbar, 20);
     g_sdk->SetTabFocusNavigation(0);
 
-    std::vector<std::string> tabNames;
-    std::vector<std::string> tabSaved;
+    irr::core::array<irr::core::stringc> tabNames;
+    irr::core::array<irr::core::stringc> tabSaved;
 
     int dialogState = 0; // 0=none, 1=SAVE_AS, 2=CLOSE_PROMPT, 3=OVERWRITE
     int dialogTabIdx = 0;
-    std::string dialogFilename;
+    irr::core::stringc dialogFilename;
     bool dialogCloseAfter = false;
 
     newTab(tabbar, tabNames, tabSaved, headerHeight, NULL, NULL);
@@ -511,19 +509,19 @@ extern "C"
                     const char *cwd = g_sdk->CurrentDir();
                     if (editText && editText[0] && strcmp(editText, cwd) != 0)
                     {
-                      std::string fullPath;
+                      irr::core::stringc fullPath;
                       if (editText[0] == '/')
                         fullPath = editText;
                       else
-                        fullPath = std::string(cwd) + "/" + editText;
+                        fullPath = irr::core::stringc(cwd) + "/" + editText;
 
                       int tabIdx = dialogTabIdx;
                       if (tabIdx > 0)
                       {
-                        std::ifstream test(fullPath.c_str());
-                        if (test.is_open())
+                        FILE *test = fopen(fullPath.c_str(), "r");
+                        if (test)
                         {
-                          test.close();
+                          fclose(test);
                           dialogState = 3;
                           dialogFilename = fullPath;
                           g_sdk->CreateMessageBox("Save As", "File exists. Overwrite?",
@@ -554,10 +552,10 @@ extern "C"
             if (title && strcmp(title, "Save As...") == 0)
             {
               int tabIdx = dialogTabIdx;
-              std::ifstream test(path);
-              if (test.is_open())
+              FILE *test = fopen(path, "r");
+              if (test)
               {
-                test.close();
+                fclose(test);
                 dialogState = 3;
                 dialogFilename = path;
                 g_sdk->CreateMessageBox("Save As", "File exists. Overwrite?",
@@ -573,14 +571,22 @@ extern "C"
             }
             else
             {
-              std::ifstream file(path);
-              if (file.is_open())
+              FILE *file = fopen(path, "r");
+              if (file)
               {
-                std::string content((std::istreambuf_iterator<char>(file)),
-                                    std::istreambuf_iterator<char>());
-                file.close();
+                fseek(file, 0, SEEK_END);
+                long len = ftell(file);
+                fseek(file, 0, SEEK_SET);
+                char *buf = (char *)malloc(len + 1);
+                if (buf)
+                {
+                  fread(buf, 1, len, file);
+                  buf[len] = '\0';
+                }
+                fclose(file);
                 newTab(tabbar, tabNames, tabSaved, headerHeight,
-                       path, content.c_str());
+                       path, buf);
+                free(buf);
               }
             }
           }
@@ -602,7 +608,7 @@ extern "C"
           else if (dialogState == 2)
           {
             int tabIdx = dialogTabIdx;
-            if (tabIdx <= (int)tabNames.size() && !tabNames[tabIdx - 1].empty())
+            if (tabIdx <= (int)tabNames.size() && tabNames[tabIdx - 1] != "")
             {
               saveTab(tabbar, tabNames, tabSaved, tabIdx,
                       tabNames[tabIdx - 1].c_str());
@@ -652,10 +658,11 @@ extern "C"
               g_sdk->SetFocusedControl(eb);
               const char *text = g_sdk->ControlText(eb);
               int pos = g_sdk->EditBoxCursorPos(eb);
-              std::string newText;
+              irr::core::stringc newText;
               if (text)
               {
-                newText = std::string(text).substr(0, pos) + "    " + std::string(text).substr(pos);
+                irr::core::stringc s(text);
+                newText = s.subString(0, pos) + "    " + s.subString(pos, s.size() - pos);
               }
               else
               {
