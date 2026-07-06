@@ -56,8 +56,13 @@ struct Editor
   }
 
 private:
+#ifdef _WIN32
+  typedef int (__stdcall *LoadFunc)(ColdSteelSDK *, const char *);
+  typedef void (__stdcall *RunFunc)();
+#else
   typedef int (*LoadFunc)(ColdSteelSDK *, const char *);
   typedef void (*RunFunc)();
+#endif
   sharedlib_t m_lib;
   LoadFunc m_load_func;
   RunFunc m_run_func;
