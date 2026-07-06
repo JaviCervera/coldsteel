@@ -45,7 +45,6 @@ Build outputs go to `_build/`.
 
 ## TODO
 
-* UI colors.
 * Built in editor.
 * Find a way to support "load" in Emscripten.
 * Expose shader API.

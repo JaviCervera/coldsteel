@@ -308,6 +308,21 @@ extern "C"
     }
   }
 
+  EXPORT void CALL SetSkinColor(int which, int color)
+  {
+    IGUISkin *skin = _asGUI()->getSkin();
+    if (skin && which >= 0 && which < EGDC_COUNT)
+      skin->setColor((EGUI_DEFAULT_COLOR)which, _Color(color));
+  }
+
+  EXPORT int CALL GetSkinColor(int which)
+  {
+    IGUISkin *skin = _asGUI()->getSkin();
+    if (skin && which >= 0 && which < EGDC_COUNT)
+      return _IntColor(skin->getColor((EGUI_DEFAULT_COLOR)which));
+    return RGB(0, 0, 0);
+  }
+
   EXPORT void CALL SetControlColor(IGUIElement *control, int color)
   {
     switch (ControlType(control))
@@ -345,6 +360,25 @@ extern "C"
     default:
       return RGB(0, 0, 0);
     }
+  }
+
+  EXPORT void CALL SetControlBackgroundColor(IGUIElement *control, int color)
+  {
+    if (control && ControlType(control) == CONTROL_TEXT)
+      ((IGUIStaticText *)control)->setBackgroundColor(_Color(color));
+  }
+
+  EXPORT void CALL ClearControlBackgroundColor(IGUIElement *control)
+  {
+    if (control && ControlType(control) == CONTROL_TEXT)
+      ((IGUIStaticText *)control)->setDrawBackground(false);
+  }
+
+  EXPORT int CALL ControlBackgroundColor(IGUIElement *control)
+  {
+    if (control && ControlType(control) == CONTROL_TEXT)
+      return _IntColor(((IGUIStaticText *)control)->getBackgroundColor());
+    return RGB(0, 0, 0);
   }
 
   EXPORT int CALL EditBoxCursorPos(IGUIElement *control)

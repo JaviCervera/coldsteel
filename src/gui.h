@@ -21,6 +21,36 @@
 #define CONTROL_WINDOW 12
 /**@}*/
 
+/** @name Skin color slots */
+/**@{*/
+#define SKINCOLOR_3D_DARK_SHADOW      0
+#define SKINCOLOR_3D_SHADOW           1
+#define SKINCOLOR_3D_FACE             2
+#define SKINCOLOR_3D_HIGH_LIGHT       3
+#define SKINCOLOR_3D_LIGHT            4
+#define SKINCOLOR_ACTIVE_BORDER       5
+#define SKINCOLOR_ACTIVE_CAPTION      6
+#define SKINCOLOR_APP_WORKSPACE       7
+#define SKINCOLOR_BUTTON_TEXT         8
+#define SKINCOLOR_GRAY_TEXT           9
+#define SKINCOLOR_HIGH_LIGHT          10
+#define SKINCOLOR_HIGH_LIGHT_TEXT     11
+#define SKINCOLOR_INACTIVE_BORDER     12
+#define SKINCOLOR_INACTIVE_CAPTION    13
+#define SKINCOLOR_TOOLTIP             14
+#define SKINCOLOR_TOOLTIP_BACKGROUND  15
+#define SKINCOLOR_SCROLLBAR           16
+#define SKINCOLOR_WINDOW              17
+#define SKINCOLOR_WINDOW_SYMBOL       18
+#define SKINCOLOR_ICON                19
+#define SKINCOLOR_ICON_HIGH_LIGHT     20
+#define SKINCOLOR_GRAY_WINDOW_SYMBOL  21
+#define SKINCOLOR_EDITABLE            22
+#define SKINCOLOR_GRAY_EDITABLE       23
+#define SKINCOLOR_FOCUSED_EDITABLE    24
+#define SKINCOLOR_COUNT               25
+/**@}*/
+
 /** @name Gadget events */
 /**@{*/
 #define CONTROL_LOSTFOCUS 0
@@ -396,6 +426,27 @@ extern "C"
   EXPORT Font *CALL ControlFont(IGUIElement *control);
 
   /**
+   * Sets a skin color slot.
+   *
+   * Skin colors control the global appearance of all GUI controls. For
+   * example, SKINCOLOR_3D_FACE controls the background color of menus,
+   * toolbars, buttons, and dialog backgrounds. The available slots are
+   * defined by the SKINCOLOR_* constants.
+   *
+   * @param which The skin color slot as one of the SKINCOLOR_* constants.
+   * @param color The new color.
+   */
+  EXPORT void CALL SetSkinColor(int which, int color);
+
+  /**
+   * Returns the value of a skin color slot.
+   *
+   * @param which The skin color slot as one of the SKINCOLOR_* constants.
+   * @return The current color of the given slot, or black if the slot is invalid.
+   */
+  EXPORT int CALL GetSkinColor(int which);
+
+  /**
    * Sets the override color of an edit box or text control.
    *
    * @param control The edit box or text control.
@@ -417,6 +468,32 @@ extern "C"
    * @return The override color, or black if no override is set.
    */
   EXPORT int CALL ControlColor(IGUIElement *control);
+
+  /**
+   * Sets the background color of a text control.
+   *
+   * Only applies to static text controls. Use SetSkinColor to change the
+   * background color of edit boxes, windows, buttons, and other controls.
+   *
+   * @param control The text control.
+   * @param color The background color.
+   */
+  EXPORT void CALL SetControlBackgroundColor(IGUIElement *control, int color);
+
+  /**
+   * Clears the background color override of a text control.
+   *
+   * @param control The text control.
+   */
+  EXPORT void CALL ClearControlBackgroundColor(IGUIElement *control);
+
+  /**
+   * Returns the background color override of a text control.
+   *
+   * @param control The text control.
+   * @return The background color, or black if no override is set.
+   */
+  EXPORT int CALL ControlBackgroundColor(IGUIElement *control);
 
   /**
    * Creates a modal file open dialog.

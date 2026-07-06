@@ -5,6 +5,33 @@ local liberationSans = LoadFont("segoe_ui.xml")
 local fixedsys = LoadFont("fixedsys.xml")
 SetControlFont(nil, liberationSans)
 
+-- Dark theme skin colors
+SetSkinColor(SKINCOLOR_WINDOW, RGB(60, 60, 60))
+SetSkinColor(SKINCOLOR_3D_FACE, RGB(50, 50, 50))
+SetSkinColor(SKINCOLOR_3D_DARK_SHADOW, RGB(30, 30, 30))
+SetSkinColor(SKINCOLOR_3D_SHADOW, RGB(40, 40, 40))
+SetSkinColor(SKINCOLOR_3D_HIGH_LIGHT, RGB(72, 72, 72))
+SetSkinColor(SKINCOLOR_3D_LIGHT, RGB(80, 80, 80))
+SetSkinColor(SKINCOLOR_BUTTON_TEXT, RGB(210, 210, 210))
+SetSkinColor(SKINCOLOR_GRAY_TEXT, RGB(120, 120, 120))
+SetSkinColor(SKINCOLOR_HIGH_LIGHT, RGB(80, 120, 180))
+SetSkinColor(SKINCOLOR_HIGH_LIGHT_TEXT, RGB(255, 255, 255))
+SetSkinColor(SKINCOLOR_WINDOW_SYMBOL, RGB(200, 200, 200))
+SetSkinColor(SKINCOLOR_GRAY_WINDOW_SYMBOL, RGB(100, 100, 100))
+SetSkinColor(SKINCOLOR_EDITABLE, RGB(0, 0, 0))
+SetSkinColor(SKINCOLOR_FOCUSED_EDITABLE, RGB(10, 10, 10))
+SetSkinColor(SKINCOLOR_GRAY_EDITABLE, RGB(20, 20, 20))
+SetSkinColor(SKINCOLOR_SCROLLBAR, RGB(40, 40, 40))
+SetSkinColor(SKINCOLOR_ACTIVE_CAPTION, RGB(210, 210, 210))
+SetSkinColor(SKINCOLOR_INACTIVE_CAPTION, RGB(140, 140, 140))
+SetSkinColor(SKINCOLOR_TOOLTIP_BACKGROUND, RGB(70, 70, 70))
+SetSkinColor(SKINCOLOR_TOOLTIP, RGB(220, 220, 220))
+SetSkinColor(SKINCOLOR_ACTIVE_BORDER, RGB(100, 100, 100))
+SetSkinColor(SKINCOLOR_INACTIVE_BORDER, RGB(50, 50, 50))
+SetSkinColor(SKINCOLOR_APP_WORKSPACE, RGB(40, 40, 40))
+SetSkinColor(SKINCOLOR_ICON, RGB(200, 200, 200))
+SetSkinColor(SKINCOLOR_ICON_HIGH_LIGHT, RGB(255, 255, 255))
+
 local icons = {
     LoadTexture("toolbar/new.png"),
     LoadTexture("toolbar/open.png"),
@@ -79,6 +106,7 @@ function newTab(filename, content)
     local tab = ControlChild(tabbar, idx)
     local editBox = CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, tab)
     SetControlFont(editBox, fixedsys)
+    SetControlColor(editBox, MultiplyColor(COLOR_GREEN, 0.5))
     tabFilenames[idx] = filename
     if content then
         SetControlText(editBox, content)
@@ -366,7 +394,7 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) and not shouldExit do
     end
 
     resizeTabs()
-    ClearScreen(RGB(210, 210, 210))
+    ClearScreen(RGB(40, 40, 40))
     DrawGUI()
     RefreshScreen()
 end
