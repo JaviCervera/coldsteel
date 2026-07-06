@@ -44,7 +44,9 @@ local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
 -- Create tabbar
 local tabbar = CreateTabbar(0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20, nil)
 AddControlItem(tabbar, "<untitled>", 0)
-SetControlFont(CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1)), fixedsys)
+local editBox = CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1))
+SetControlFont(editBox, fixedsys)
+SetFocusedControl(editBox)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
 	SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)

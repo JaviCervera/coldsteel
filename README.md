@@ -45,7 +45,7 @@ Build outputs go to `_build/`.
 
 ## TODO
 
-* Top aligned text in EditBox.
+* UI colors.
 * Built in editor.
 * Expose shader API.
 * Add Pelican gh page website.

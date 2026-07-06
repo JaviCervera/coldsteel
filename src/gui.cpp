@@ -42,6 +42,7 @@ extern "C"
   EXPORT IGUIElement *CALL CreateEditBox(int x, int y, int width, int height, int type, IGUIElement *parent)
   {
     IGUIEditBox *box = _asGUI()->addEditBox(L"", recti(x, y, x + width, y + height), true, _asResolveParent(parent));
+    box->setTextAlignment(EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
     if (type == EDITBOX_PASSWORD)
       box->setPasswordBox(true, L'*');
     else if (type == EDITBOX_MULTILINE)
@@ -561,6 +562,16 @@ extern "C"
   EXPORT int CALL GUIEventMenuId()
   {
     return _currentEvent.menuId;
+  }
+
+  EXPORT void CALL SetFocusedControl(IGUIElement *control)
+  {
+    _asGUI()->setFocus(control);
+  }
+
+  EXPORT IGUIElement *CALL FocusedControl()
+  {
+    return _asGUI()->getFocus();
   }
 
   IGUIEnvironment *_asGUI()

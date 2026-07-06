@@ -552,6 +552,20 @@ extern "C"
   EXPORT void CALL DrawGUI();
 
   /**
+   * Sets the keyboard focus to a control.
+   *
+   * @param control The control to focus.
+   */
+  EXPORT void CALL SetFocusedControl(IGUIElement *control);
+
+  /**
+   * Returns the control that has keyboard focus.
+   *
+   * @return The focused control, or NULL if no control is focused.
+   */
+  EXPORT IGUIElement *CALL FocusedControl();
+
+  /**
    * Prepares the next queued GUI event for reading. Call this before GUIEventType, GUIEventControl, and GUIEventMenuId.
    *
    * @return True if an event was available, false if the queue was empty.
