@@ -377,7 +377,7 @@ extern "C"
                 dialogState = 2;
                 dialogTabIdx = active;
                 g_sdk->CreateMessageBox("ColdSteel", "Save changes?",
-                                        EMBF_YES | EMBF_NO | EMBF_CANCEL);
+                                        MESSAGEBOX_YES | MESSAGEBOX_NO | MESSAGEBOX_CANCEL);
               }
               else if (active > 0)
               {
@@ -452,7 +452,7 @@ extern "C"
                   dialogState = 2;
                   dialogTabIdx = active;
                   g_sdk->CreateMessageBox("ColdSteel", "Save changes?",
-                                          EMBF_YES | EMBF_NO | EMBF_CANCEL);
+                                          MESSAGEBOX_YES | MESSAGEBOX_NO | MESSAGEBOX_CANCEL);
                 }
                 else if (active > 0)
                 {
@@ -489,7 +489,7 @@ extern "C"
                           dialogState = 3;
                           dialogFilename = fullPath;
                           g_sdk->CreateMessageBox("Save As", "File exists. Overwrite?",
-                                                  EMBF_YES | EMBF_NO);
+                                                  MESSAGEBOX_YES | MESSAGEBOX_NO);
                         }
                         else
                         {
@@ -523,7 +523,7 @@ extern "C"
                 dialogState = 3;
                 dialogFilename = path;
                 g_sdk->CreateMessageBox("Save As", "File exists. Overwrite?",
-                                        EMBF_YES | EMBF_NO);
+                                        MESSAGEBOX_YES | MESSAGEBOX_NO);
               }
               else
               {

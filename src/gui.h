@@ -75,10 +75,10 @@
 
 /** @name Message box button flags */
 /**@{*/
-#define EMBF_OK      0x1
-#define EMBF_CANCEL  0x2
-#define EMBF_YES     0x4
-#define EMBF_NO      0x8
+#define MESSAGEBOX_OK      0x1
+#define MESSAGEBOX_CANCEL  0x2
+#define MESSAGEBOX_YES     0x4
+#define MESSAGEBOX_NO      0x8
 /**@}*/
 
 /** @name EditBox types */
@@ -543,7 +543,7 @@ extern "C"
    *
    * @param caption The title bar text.
    * @param text The message body text.
-   * @param flags Bitwise OR of EMBF_* constants specifying which buttons to show.
+   * @param flags Bitwise OR of MESSAGEBOX_* constants specifying which buttons to show.
    * @return The message box window control.
    *
    * The dialog blocks interaction with other windows until dismissed.
