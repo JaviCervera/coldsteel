@@ -45,7 +45,6 @@ Build outputs go to `_build/`.
 
 ## TODO
 
-* Particle functions.
 * Top aligned text in EditBox.
 * Built in editor.
 * Expose shader API.

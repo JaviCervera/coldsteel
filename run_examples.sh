@@ -10,6 +10,7 @@ _build/coldsteel run _build/examples/joystick
 _build/coldsteel run _build/examples/lighting
 _build/coldsteel run _build/examples/lightmap
 _build/coldsteel run _build/examples/listener
+_build/coldsteel run _build/examples/particles
 _build/coldsteel run _build/examples/pixmap
 _build/coldsteel run _build/examples/primitives
 _build/coldsteel run _build/examples/render_to_texture

@@ -19,6 +19,7 @@
 #include "math.h"
 #include "mesh.h"
 #include "model.h"
+#include "particle.h"
 #include "music.h"
 #include "pixmap.h"
 #include "screen.h"

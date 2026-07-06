@@ -9,6 +9,7 @@ class ICameraSceneNode : public ISceneNode { protected: ICameraSceneNode(); };
 class ILightSceneNode : public ISceneNode { protected: ILightSceneNode(); };
 class IMeshSceneNode : public ISceneNode { protected: IMeshSceneNode(); };
 class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode(); };
+class IParticleSystemSceneNode : public ISceneNode { protected: IParticleSystemSceneNode(); };
 class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 class IGUIElement { protected: IGUIElement(); };
 
@@ -37,6 +38,7 @@ class IGUIElement { protected: IGUIElement(); };
 %include "src/screen.h"
 %include "src/sound.h"
 %include "src/sprite.h"
+%include "src/particle.h"
 %include "src/string.h"
 %include "src/surface.h"
 %include "src/terrain.h"

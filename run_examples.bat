@@ -9,6 +9,7 @@ coldsteel run _build\examples\joystick
 coldsteel run _build\examples\lighting
 coldsteel run _build\examples\lightmap
 coldsteel run _build\examples\listener
+coldsteel run _build\examples\particles
 coldsteel run _build\examples\pixmap
 coldsteel run _build\examples\primitives
 coldsteel run _build\examples\render_to_texture

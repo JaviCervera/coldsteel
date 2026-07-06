@@ -228,6 +228,8 @@ def parse_type(type):
     return 'Sound'
   if type == 'IBillboardSceneNode *':
     return 'Sprite'
+  if type == 'IParticleSystemSceneNode *':
+    return 'ParticleSystem'
   if type == 'ITerrainSceneNode *':
     return 'Terrain'
   return type

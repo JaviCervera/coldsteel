@@ -22,7 +22,7 @@ class HaxeWrapperBuilder {
 
 	private static function getHaxeExtends(className:String):String {
 		return switch (className) {
-			case 'Camera' | 'Model' | 'Sprite' | 'Terrain' | 'Light': ' extends Entity';
+			case 'Camera' | 'Model' | 'ParticleSystem' | 'Sprite' | 'Terrain' | 'Light': ' extends Entity';
 			default: '';
 		};
 	}
@@ -36,8 +36,9 @@ class HaxeWrapperBuilder {
 			case 'IMesh': return 'Mesh';
 			case 'IMeshBuffer': return 'Surface';
 			case 'ISceneNode': return 'Entity';
-			case 'IMeshSceneNode': return 'Model';
-			case 'ITerrainSceneNode': return 'Terrain';
+      case 'IMeshSceneNode': return 'Model';
+      case 'IParticleSystemSceneNode': return 'ParticleSystem';
+      case 'ITerrainSceneNode': return 'Terrain';
 			case 'ITexture': return 'Texture';
 			case 'IGUIElement': return 'Control';
 			case 'SMaterial': return 'Material';

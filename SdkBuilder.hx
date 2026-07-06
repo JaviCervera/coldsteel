@@ -85,8 +85,9 @@ class SdkBuilder {
 			case "IMesh": return "Mesh *";
 			case "IMeshBuffer": return "Surface *";
 			case "ISceneNode": return "Entity *";
-			case "IMeshSceneNode": return "Model *";
-			case "ITerrainSceneNode": return "Terrain *";
+      case "IMeshSceneNode": return "Model *";
+      case "IParticleSystemSceneNode": return "ParticleSystem *";
+      case "ITerrainSceneNode": return "Terrain *";
 			case "ITexture": return "Texture *";
 			case "IGUIElement": return "Control *";
 			case "SMaterial": return "Material *";
