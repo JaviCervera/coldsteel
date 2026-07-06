@@ -43,25 +43,110 @@ local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
 
 -- Create tabbar
 local tabbar = CreateTabbar(0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20, nil)
-AddControlItem(tabbar, "<untitled>", 0)
-local editBox = CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1))
-SetControlFont(editBox, fixedsys)
-SetFocusedControl(editBox)
 SetTabFocusNavigation(false)
 
-while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
-  if KeyHit(KEY_TAB) then
+function newTab()
+    local idx = AddControlItem(tabbar, "<untitled>", 0)
+    local tab = ControlChild(tabbar, idx)
+    local editBox = CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, tab)
+    SetControlFont(editBox, fixedsys)
+    SelectControlItem(tabbar, idx)
     SetFocusedControl(editBox)
-    local text = ControlText(editBox)
-    local pos = EditBoxCursorPos(editBox)
-    local newText = text:sub(1, pos) .. "    " .. text:sub(pos + 1)
-    SetControlText(editBox, newText)
-    SetEditBoxCursorPos(editBox, pos + 4)
-  end
-    SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
-    for i = 1, ControlNumChildren(tabbar) do
-        SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+    return idx
+end
+
+function closeTab(index)
+    if index <= 0 or index > ControlNumItems(tabbar) then return end
+    RemoveControlItem(tabbar, index)
+    if ControlNumItems(tabbar) == 0 then
+        newTab()
+    else
+        local active = SelectedControlItem(tabbar)
+        if active == 0 then
+            active = 1
+            SelectControlItem(tabbar, 1)
+        end
+        local editBox = ControlChild(ControlChild(tabbar, active), 1)
+        SetFocusedControl(editBox)
     end
+end
+
+function closeAllTabs()
+    RemoveControlItems(tabbar)
+    newTab()
+end
+
+function focusActiveTab()
+    local active = SelectedControlItem(tabbar)
+    if active > 0 then
+        local tab = ControlChild(tabbar, active)
+        local editBox = ControlChild(tab, 1)
+        SetFocusedControl(editBox)
+    end
+end
+
+function resizeTabs()
+    SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+    for i = 1, ControlNumItems(tabbar) do
+        local tab = ControlChild(tabbar, i)
+        local editBox = ControlChild(tab, 1)
+        if editBox then
+            SetControlShape(editBox, 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+        end
+    end
+end
+
+-- Create initial tab
+newTab()
+
+local shouldExit = false
+
+while not ScreenShouldClose() and not KeyHit(KEY_ESC) and not shouldExit do
+    while PrepareNextGUIEvent() do
+        local eventType = GUIEventType()
+        local eventCtrl = GUIEventControl()
+        local menuId = GUIEventMenuId()
+
+        if eventType == CONTROL_ACTION then
+            if menuId ~= -1 then
+                if menuId == 101 then
+                    newTab()
+                elseif menuId == 106 then
+                    closeTab(SelectedControlItem(tabbar))
+                elseif menuId == 107 then
+                    closeAllTabs()
+                elseif menuId == 110 then
+                    shouldExit = true
+                end
+            else
+                if ControlType(eventCtrl) == CONTROL_TABBAR then
+                    focusActiveTab()
+                elseif ControlType(eventCtrl) == CONTROL_BUTTON then
+                    local btnId = ControlId(eventCtrl)
+                    if btnId == 101 then
+                        newTab()
+                    elseif btnId == 104 then
+                        closeTab(SelectedControlItem(tabbar))
+                    end
+                end
+            end
+        end
+    end
+
+    if KeyHit(KEY_TAB) then
+        local active = SelectedControlItem(tabbar)
+        if active > 0 then
+            local editBox = ControlChild(ControlChild(tabbar, active), 1)
+            SetFocusedControl(editBox)
+            local text = ControlText(editBox)
+            local pos = EditBoxCursorPos(editBox)
+            local newText = text:sub(1, pos) .. "    " .. text:sub(pos + 1)
+            SetControlText(editBox, newText)
+            SetEditBoxCursorPos(editBox, pos + 4)
+        end
+    end
+
+    resizeTabs()
     ClearScreen(RGB(210, 210, 210))
     DrawGUI()
     RefreshScreen()

@@ -518,7 +518,7 @@ extern "C"
    * Returns the selected item index in a combobox, list box, or tab bar control.
    *
    * @param control The combobox, list box, or tab bar control.
-   * @return The selected item index, or -1 if no item is selected.
+   * @return The selected item index (1-based), or 0 if no item is selected.
    */
   EXPORT int CALL SelectedControlItem(IGUIElement *control);
 

@@ -480,9 +480,12 @@ extern "C"
     case CONTROL_LISTBOX:
       return ((IGUIListBox *)control)->getSelected();
     case CONTROL_TABBAR:
-      return ((IGUITabControl *)control)->getActiveTab();
+    {
+      s32 idx = ((IGUITabControl *)control)->getActiveTab();
+      return (idx >= 0) ? idx + 1 : 0;
     }
-    return -1;
+    }
+    return 0;
   }
 
   EXPORT void CALL SetControlItemText(IGUIElement *control, int index, const char *text)
