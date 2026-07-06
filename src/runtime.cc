@@ -8,6 +8,7 @@ extern "C" int __stdcall MessageBoxA(void*, const char*, const char*, unsigned i
 #define MB_ICONERROR 0x00000010
 #endif
 #include "internal/builder.h"
+#include "internal/editor.h"
 #include "internal/scripting.h"
 #include "internal/utils.h"
 #include "core.h"
@@ -42,9 +43,10 @@ struct Options
   Mode mode;
   stringc dir;
   bool precompile;
+  bool no_args;
 
-  Options(Mode mode, const stringc &dir, bool precompile)
-      : mode(mode), dir(dir), precompile(precompile) {}
+  Options(Mode mode, const stringc &dir, bool precompile, bool no_args)
+      : mode(mode), dir(dir), precompile(precompile), no_args(no_args) {}
 
   static Options Parse(int argc, char *argv[])
   {
@@ -62,7 +64,7 @@ struct Options
     if (dir == "")
       dir = BinDir().c_str();
 #endif
-    return Options(mode, dir, true);
+    return Options(mode, dir, true, argc == 1);
   }
 
 private:
@@ -83,10 +85,24 @@ private:
 // Main program
 // ====================================
 
-static void Run()
+static void Run(bool no_args)
 {
   if (!Scripting::Get().Load("main.lua"))
+  {
+    if (no_args)
+    {
+      Editor editor(BinDir().c_str());
+      if (editor.IsReady()
+          && editor.Init((ColdSteelSDK *)Scripting::Get().GetSDKPtr(), BinDir().c_str()))
+      {
+        editor.Run();
+        RefreshScreen();
+        CloseScreen();
+        return;
+      }
+    }
     Error(Scripting::Get().Error());
+  }
   RefreshScreen();
   CloseScreen();
 }
@@ -129,7 +145,7 @@ int main(
   switch (opts.mode)
   {
   case MODE_RUN:
-    Run();
+    Run(opts.no_args);
     break;
   case MODE_BUILD:
     Build(opts.dir, opts.precompile);

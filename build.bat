@@ -52,6 +52,7 @@ cd _CMAKE/_COLDSTEEL
 mingw32-make -j8
 move "coldsteel.exe" "..\..\_build\coldsteel.exe"
 move "libbuilder.dll" "..\..\_build\builder.dll"
+move "libeditor.dll" "..\..\_build\editor.dll"
 cd ../..
 
 echo # Building fonttool ...

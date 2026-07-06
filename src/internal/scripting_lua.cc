@@ -79,6 +79,8 @@ public:
     return m_error.c_str();
   }
 
+  void *GetSDKPtr() { return &m_sdk; }
+
 private:
   lua_State *m_state;
   stringc m_error;

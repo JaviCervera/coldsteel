@@ -36,6 +36,10 @@ file(
 	BUILDER_BASE_FILES
 	"lib/zip/zip.c"
 	"src_builder/builder.cpp")
+file(
+	GLOB
+	EDITOR_FILES
+	"src_editor/editor.cpp")
 
 #Handle Lua sources (LuaJIT uses a prebuilt static library instead)
 if (LUAJIT)
@@ -69,6 +73,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 #Add executable targets
 add_executable(coldsteel ${COLDSTEEL_FILES} ${COLDSTEEL_EXE_FILES} ${COLDSTEEL_LUA_SOURCES})
 add_library(builder SHARED ${BUILDER_BASE_FILES} ${BUILDER_LUA_SOURCES})
+add_library(editor SHARED ${EDITOR_FILES})
 
 #Lua include directories (target-specific)
 if (LUAJIT)
@@ -78,6 +83,7 @@ else()
 	target_include_directories(coldsteel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
 	target_include_directories(builder PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/lua)
 endif()
+target_include_directories(editor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/_build/sdk)
 
 #Link LuaJIT static library (prebuilt by build script)
 if (LUAJIT)
@@ -110,6 +116,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
 	target_link_libraries(coldsteel -lIrrlicht "-framework AudioToolbox" "-framework Cocoa" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
 	target_link_libraries(builder -ldl ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(editor -ldl ${TARGET_LINK_LIBRARIES})
 	add_custom_command(TARGET coldsteel POST_BUILD COMMAND codesign --force --sign - $<TARGET_FILE:coldsteel>)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
@@ -119,6 +126,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 	target_link_libraries(coldsteel -lIrrlicht -lasound -lGL -lX11 -lXxf86vm -lEGL ${TARGET_LINK_LIBRARIES})
 	target_link_libraries(builder -ldl ${TARGET_LINK_LIBRARIES})
+	target_link_libraries(editor -ldl ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	message("Platform is Emscripten")
 	add_definitions(-DWITH_OPENAL -DSOLOUD_STATIC_OPENAL)

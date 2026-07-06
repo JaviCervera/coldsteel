@@ -37,6 +37,7 @@ _build/*
 !_build/LICENSE
 !_build/README.md
 !_build/coldsteel.icns
+!_build/editor
 !_build/geany
 !_build/help
 _build/help/*.html

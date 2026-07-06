@@ -97,6 +97,11 @@ if [ "$(uname)" = "Darwin" ]; then
 else
     mv libbuilder.so ../../_build/builder.so
 fi
+if [ "$(uname)" = "Darwin" ]; then
+    mv libeditor.dylib ../../_build/editor.dylib
+else
+    mv libeditor.so ../../_build/editor.so
+fi
 cd ../..
 
 echo "# Building fonttool ..."

@@ -6,4 +6,5 @@ public:
   static Scripting &Get();
   virtual bool Load(const char *filename) = 0;
   virtual const char *Error() const = 0;
+  virtual void *GetSDKPtr() = 0;
 };
