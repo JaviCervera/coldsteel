@@ -100,6 +100,7 @@ static void Run(bool no_args)
         CloseScreen();
         return;
       }
+      puts((stringc("ColdSteel: ") + editor.LastError()).c_str());
     }
     Error(Scripting::Get().Error());
   }
