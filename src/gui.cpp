@@ -2,6 +2,14 @@
 #include "core.h"
 #include "gui.h"
 
+#include "../lib/irrlicht190_ogles/source/Irrlicht/CGUIEditBox.h"
+
+struct CursorAccess : CGUIEditBox
+{
+  static s32 get(CGUIEditBox *box) { return static_cast<CursorAccess*>(box)->CursorPos; }
+  static void set(CGUIEditBox *box, s32 pos) { static_cast<CursorAccess*>(box)->CursorPos = pos; }
+};
+
 extern "C"
 {
 
@@ -298,6 +306,19 @@ extern "C"
     }
   }
 
+  EXPORT int CALL EditBoxCursorPos(IGUIElement *control)
+  {
+    if (control && control->getType() == EGUIET_EDIT_BOX)
+      return CursorAccess::get(static_cast<CGUIEditBox*>(control));
+    return 0;
+  }
+
+  EXPORT void CALL SetEditBoxCursorPos(IGUIElement *control, int pos)
+  {
+    if (control && control->getType() == EGUIET_EDIT_BOX)
+      CursorAccess::set(static_cast<CGUIEditBox*>(control), pos);
+  }
+
   EXPORT void CALL SetControlChecked(IGUIElement *control, bool_t checked)
   {
     switch (ControlType(control))
@@ -572,6 +593,21 @@ extern "C"
   EXPORT IGUIElement *CALL FocusedControl()
   {
     return _asGUI()->getFocus();
+  }
+
+  EXPORT void CALL SetTabFocusNavigation(bool_t accept)
+  {
+    u32 flags = _asGUI()->getFocusBehavior();
+    if (accept)
+      flags |= EFF_SET_ON_TAB;
+    else
+      flags &= ~EFF_SET_ON_TAB;
+    _asGUI()->setFocusBehavior(flags);
+  }
+
+  EXPORT bool_t CALL TabFocusNavigation()
+  {
+    return (_asGUI()->getFocusBehavior() & EFF_SET_ON_TAB) != 0;
   }
 
   IGUIEnvironment *_asGUI()

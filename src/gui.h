@@ -397,6 +397,22 @@ extern "C"
   EXPORT int CALL ControlColor(IGUIElement *control);
 
   /**
+   * Returns the cursor position of an edit box.
+   *
+   * @param control The edit box control.
+   * @return The cursor position (character index).
+   */
+  EXPORT int CALL EditBoxCursorPos(IGUIElement *control);
+
+  /**
+   * Sets the cursor position of an edit box.
+   *
+   * @param control The edit box control.
+   * @param pos The new cursor position (character index).
+   */
+  EXPORT void CALL SetEditBoxCursorPos(IGUIElement *control, int pos);
+
+  /**
    * Sets the checked state of a button or checkbox control.
    *
    * @param control The button or checkbox control.
@@ -564,6 +580,21 @@ extern "C"
    * @return The focused control, or NULL if no control is focused.
    */
   EXPORT IGUIElement *CALL FocusedControl();
+
+  /**
+   * Sets whether pressing Tab moves keyboard focus to the next control.
+   *
+   * @param accept True to allow Tab focus navigation (default),
+   *               false to let Tab be handled as a regular key.
+   */
+  EXPORT void CALL SetTabFocusNavigation(bool_t accept);
+
+  /**
+   * Returns whether pressing Tab moves keyboard focus to the next control.
+   *
+   * @return True if Tab changes focus, false if Tab is a regular key.
+   */
+  EXPORT bool_t CALL TabFocusNavigation();
 
   /**
    * Prepares the next queued GUI event for reading. Call this before GUIEventType, GUIEventControl, and GUIEventMenuId.

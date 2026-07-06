@@ -47,8 +47,17 @@ AddControlItem(tabbar, "<untitled>", 0)
 local editBox = CreateEditBox(0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20, EDITBOX_MULTILINE, ControlChild(tabbar, 1))
 SetControlFont(editBox, fixedsys)
 SetFocusedControl(editBox)
+SetTabFocusNavigation(false)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
+  if KeyHit(KEY_TAB) then
+    SetFocusedControl(editBox)
+    local text = ControlText(editBox)
+    local pos = EditBoxCursorPos(editBox)
+    local newText = text:sub(1, pos) .. "\t" .. text:sub(pos + 1)
+    SetControlText(editBox, newText)
+    SetEditBoxCursorPos(editBox, pos + 1)
+  end
 	SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
 	for i = 1, ControlNumChildren(tabbar) do
 		SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
