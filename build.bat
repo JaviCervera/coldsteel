@@ -1,6 +1,6 @@
 @echo off
 
-rem set PATH=%~dp0TDM-GCC-32\bin;%PATH%
+set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 
 set LUAJIT=0
 if "%1"=="--luajit" set LUAJIT=1
@@ -56,7 +56,7 @@ move "libeditor.dll" "..\..\_build\editor.dll"
 cd ../..
 
 echo # Building fonttool ...
-g++ -m32 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -s -static-libgcc -static-libstdc++
+g++ -m32 -march=i586 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0 -s -static-libgcc -static-libstdc++
 
 rem ---- Web (Emscripten) build ----
 

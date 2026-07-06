@@ -35,11 +35,13 @@ file(
 	GLOB
 	BUILDER_BASE_FILES
 	"lib/zip/zip.c"
-	"src_builder/builder.cpp")
+	"src_builder/builder.cpp"
+	"src/win95_fix.cpp")
 file(
 	GLOB
 	EDITOR_FILES
-	"src_editor/editor.cpp")
+	"src_editor/editor.cpp"
+	"src/win95_fix.cpp")
 
 #Handle Lua sources (LuaJIT uses a prebuilt static library instead)
 if (LUAJIT)
@@ -99,15 +101,16 @@ endif()
 #Add platform specific options
 add_definitions(-D_IRR_STATIC_LIB_)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	add_definitions(-DWIN32 -DWITH_WINMM -DDISABLE_SIMD)
+	add_definitions(-DWIN32 -DWITH_WINMM -DDISABLE_SIMD -DWINVER=0x0400 -D_WIN32_WINNT=0x0400)
 	if (MSVC)
 		message("Platform is Windows (MSVC)")
 		#add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	else (MSVC)
 		message("Platform is Windows (MinGW)")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -fno-exceptions -fno-rtti")
-		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static")
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=i586")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i586 -std=c++98 -fno-exceptions -fno-rtti")
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s -static -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -static -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0")
 	endif (MSVC)
 	target_link_libraries(coldsteel -lIrrlicht -lopengl32 -lwinmm ${TARGET_LINK_LIBRARIES})
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

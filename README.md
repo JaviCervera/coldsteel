@@ -2,7 +2,7 @@
 
 [![build_emscripten](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml/badge.svg)](https://github.com/JaviCervera/coldsteel/actions/workflows/build_emscripten.yml)
 
-ColdSteel is a multi-platform 3D game engine released under the GPL3 license, based on Lua, Irrlicht and SoLoud.
+A 3D game engine for Windows 95, macOS, Linux and the web (using Emscripten) released under the GPL3 license. Based on Irrlicht, Lua and SoLoud.
 
 ## Features
 
