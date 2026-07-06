@@ -6,10 +6,10 @@ local fixedsys = LoadFont("fixedsys.xml")
 SetControlFont(nil, liberationSans)
 
 local icons = {
-	LoadTexture("toolbar/new.png"),
-	LoadTexture("toolbar/open.png"),
-	LoadTexture("toolbar/save.png"),
-	LoadTexture("toolbar/close.png")
+    LoadTexture("toolbar/new.png"),
+    LoadTexture("toolbar/open.png"),
+    LoadTexture("toolbar/save.png"),
+    LoadTexture("toolbar/close.png")
 }
 
 -- Create menu
@@ -35,8 +35,8 @@ local helpMenu = CreateMenu("Help", mainMenu)
 -- Create toolbar
 local toolbar = CreateToolbar(nil)
 for i = 1, #icons do
-	AddControlItem(toolbar, "   ", 100 + i)
-	SetControlTexture(ControlChild(toolbar, i), icons[i], true)
+    AddControlItem(toolbar, "   ", 100 + i)
+    SetControlTexture(ControlChild(toolbar, i), icons[i], true)
 end
 
 local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
@@ -54,15 +54,15 @@ while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     SetFocusedControl(editBox)
     local text = ControlText(editBox)
     local pos = EditBoxCursorPos(editBox)
-    local newText = text:sub(1, pos) .. "\t" .. text:sub(pos + 1)
+    local newText = text:sub(1, pos) .. "    " .. text:sub(pos + 1)
     SetControlText(editBox, newText)
-    SetEditBoxCursorPos(editBox, pos + 1)
+    SetEditBoxCursorPos(editBox, pos + 4)
   end
-	SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
-	for i = 1, ControlNumChildren(tabbar) do
-		SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
-	end
-	ClearScreen(RGB(210, 210, 210))
-	DrawGUI()
-	RefreshScreen()
+    SetControlShape(tabbar, 0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+    for i = 1, ControlNumChildren(tabbar) do
+        SetControlShape(ControlChild(ControlChild(tabbar, i), 1), 0, 0, ScreenWidth(), ScreenHeight() - headerHeight - 20)
+    end
+    ClearScreen(RGB(210, 210, 210))
+    DrawGUI()
+    RefreshScreen()
 end

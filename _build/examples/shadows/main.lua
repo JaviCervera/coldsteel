@@ -13,9 +13,9 @@ SetLightRadius(light, 800)
 local texture = LoadTexture("wall.jpg")
 local room = LoadModel("room.3ds")
 for i = 1, EntityNumMaterials(room) do
-	local mat = EntityMaterial(room, i)
-	SetMaterialSpecular(mat, COLOR_BLACK)
-	SetMaterialTexture(mat, 1, texture)
+    local mat = EntityMaterial(room, i)
+    SetMaterialSpecular(mat, COLOR_BLACK)
+    SetMaterialTexture(mat, 1, texture)
 end
 
 local dwarf = LoadModel("dwarf.x")
@@ -24,9 +24,9 @@ SetEntityScale(dwarf, 2, 2, 2)
 SetModelCastShadows(dwarf, true)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
-	TurnEntity(light, 0, 90 * DeltaTime(), 0)
-	SetEntityPosition(light, 0, 150, 0)
-	MoveEntity(light, 0, 0, -250)
-	DrawWorld()
-	RefreshScreen()
+    TurnEntity(light, 0, 90 * DeltaTime(), 0)
+    SetEntityPosition(light, 0, 150, 0)
+    MoveEntity(light, 0, 0, -250)
+    DrawWorld()
+    RefreshScreen()
 end
