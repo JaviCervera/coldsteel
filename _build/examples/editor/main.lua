@@ -70,6 +70,7 @@ local headerHeight = ControlHeight(mainMenu) + ControlHeight(toolbar)
 
 -- Create tabbar
 local tabbar = CreateTabbar(0, headerHeight, ScreenWidth(), ScreenHeight() - headerHeight - 20, nil)
+SetTabBarHeight(tabbar, 20)
 SetTabFocusNavigation(false)
 
 -- Per-tab state

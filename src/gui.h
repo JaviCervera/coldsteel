@@ -496,6 +496,25 @@ extern "C"
   EXPORT int CALL ControlBackgroundColor(IGUIElement *control);
 
   /**
+   * Sets the tab button height of a tab bar control.
+   *
+   * The default tab height is 32 pixels. Pass a smaller value for
+   * more compact tabs.
+   *
+   * @param control The tab bar control.
+   * @param height The new tab height in pixels.
+   */
+  EXPORT void CALL SetTabBarHeight(IGUIElement *control, int height);
+
+  /**
+   * Returns the tab button height of a tab bar control.
+   *
+   * @param control The tab bar control.
+   * @return The tab height in pixels.
+   */
+  EXPORT int CALL TabBarHeight(IGUIElement *control);
+
+  /**
    * Creates a modal file open dialog.
    *
    * @param title The dialog title, or NULL for a default title.

@@ -419,6 +419,19 @@ extern "C"
     return false;
   }
 
+  EXPORT void CALL SetTabBarHeight(IGUIElement *control, int height)
+  {
+    if (control && ControlType(control) == CONTROL_TABBAR)
+      ((IGUITabControl *)control)->setTabHeight(height);
+  }
+
+  EXPORT int CALL TabBarHeight(IGUIElement *control)
+  {
+    if (control && ControlType(control) == CONTROL_TABBAR)
+      return ((IGUITabControl *)control)->getTabHeight();
+    return 0;
+  }
+
   EXPORT void CALL SetControlValue(IGUIElement *control, int value)
   {
     if (ControlType(control) == CONTROL_SCROLLBAR)
