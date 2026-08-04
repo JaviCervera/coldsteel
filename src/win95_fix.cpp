@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 typedef unsigned long DWORD;
 typedef long LONG;
 typedef int BOOL;
@@ -121,3 +123,5 @@ extern "C" BOOL __stdcall GetCursorInfo(PCURSORINFO pci)
     GetCursorPos(&pci->ptScreenPos);
     return TRUE;
 }
+
+#endif

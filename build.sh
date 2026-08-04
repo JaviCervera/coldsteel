@@ -22,7 +22,7 @@ emscripten_build() {
   cd ../..
 
   echo "# Building ColdSteel (Emscripten) ..."
-  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release - -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
   cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
   emmake make NDEBUG=1
   mv coldsteel.html ../../_build/coldsteel.html
@@ -85,9 +85,9 @@ fi
 
 echo "# Building coldsteel (Desktop) ..."
 if [ "$LUAJIT" = "1" ]; then
-  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel - -DLUAJIT=ON -B _CMAKE/_COLDSTEEL
+  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DLUAJIT=ON -B _CMAKE/_COLDSTEEL
 else
-  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel - -B _CMAKE/_COLDSTEEL
+  cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL
 fi
 cd _CMAKE/_COLDSTEEL
 make -j8
