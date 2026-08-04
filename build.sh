@@ -18,13 +18,13 @@ emscripten_build() {
   cd lib/irrlicht190_ogles
   emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -DCMAKE_CXX_FLAGS="-sUSE_SDL=1" -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
   cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
-  emmake make NDEBUG=1 CPATH=""
+  emmake make NDEBUG=1 CPATH="" -j8
   cd ../..
 
   echo "# Building ColdSteel (Emscripten) ..."
   emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
   cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
-  emmake make NDEBUG=1
+  emmake make NDEBUG=1 -j8
   mv coldsteel.html ../../_build/coldsteel.html
   mv coldsteel.js ../../_build/coldsteel.js
   mv coldsteel.data ../../_build/coldsteel.data
