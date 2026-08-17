@@ -59,7 +59,7 @@ extern "C"
    * Sets the texture at the given texture layer.
    *
    * @param material The material whose texture will be set.
-   * @param index The 0-based texture layer index.
+   * @param index The 1-based texture layer index.
    * @param texture The texture to assign to the layer.
    */
   EXPORT void CALL SetMaterialTexture(SMaterial *material, int index, ITexture *texture);
@@ -68,7 +68,7 @@ extern "C"
    * Returns the texture at the given texture layer.
    *
    * @param material The material to query.
-   * @param index The 0-based texture layer index.
+   * @param index The 1-based texture layer index.
    * @return The texture assigned to the layer.
    */
   EXPORT ITexture *CALL MaterialTexture(SMaterial *material, int index);
@@ -77,7 +77,7 @@ extern "C"
    * Sets a 2D transform on the texture at the given layer.
    *
    * @param material The material whose texture transform will be set.
-   * @param index The 0-based texture layer index.
+   * @param index The 1-based texture layer index.
    * @param xoffset The horizontal offset in UV space.
    * @param yoffset The vertical offset in UV space.
    * @param angle The rotation angle in degrees.
