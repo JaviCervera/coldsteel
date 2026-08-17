@@ -1,5 +1,5 @@
 name: build_emscripten
-on: [push]
+on: [workflow_dispatch]
 jobs:
   build_emscripten:
     runs-on: ubuntu-latest
