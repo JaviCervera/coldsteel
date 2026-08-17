@@ -1,3 +1,4 @@
+coldsteel run _build\examples\bake_lightmaps
 coldsteel run _build\examples\box
 coldsteel run _build\examples\box_lightmap
 coldsteel run _build\examples\collision

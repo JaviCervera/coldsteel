@@ -1,4 +1,5 @@
 #!/bin/sh
+_build/coldsteel run _build/examples/bake_lightmaps
 _build/coldsteel run _build/examples/box
 _build/coldsteel run _build/examples/box_lightmap
 _build/coldsteel run _build/examples/collision

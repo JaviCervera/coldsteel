@@ -40,7 +40,7 @@ SetLightDiffuse(sun, COLOR_WHITE)
 
 local lamp = CreateLight(LIGHT_POINT)
 SetEntityPosition(lamp, -3, 4, -2)
-SetLightDiffuse(lamp, COLOR_YELLOW)
+SetLightDiffuse(lamp, COLOR_RED)
 SetLightRadius(lamp, 8)
 SetLightAttenuation(lamp, 1, 0.05, 0.02)
 
@@ -57,6 +57,6 @@ end
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(cam, 0, 45 * DeltaTime(), 0)
     DrawWorld()
-    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_BLACK)
+    DrawText(nil, Str(ScreenFPS()) .. " FPS", 2, 2, COLOR_WHITE)
     RefreshScreen()
 end
