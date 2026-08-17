@@ -26,7 +26,6 @@ namespace
     vector3df position;   // world
     vector3df direction;  // world, normalized
     SColorf diffuse;
-    f32 radius;
     vector3df attenuation;
     f32 cosInner, cosOuter, falloff;
     bool castShadow;
@@ -221,7 +220,6 @@ namespace
         LMLight l;
         l.type = ln->getLightType();
         l.diffuse = ld.DiffuseColor;
-        l.radius = ln->getRadius();
         l.attenuation = ld.Attenuation;
         l.falloff = ld.Falloff;
         l.castShadow = ld.CastShadows;
@@ -453,10 +451,7 @@ namespace
       else
       {
         rayDir = l.position - p;
-        const f32 distSq = rayDir.getLengthSQ();
-        if (distSq >= l.radius * l.radius)
-          continue;
-        rayDist = sqrtf(distSq);
+        rayDist = rayDir.getLength();
         if (rayDist < LM_EPS)
           continue;
         rayDir /= rayDist;
