@@ -27,6 +27,7 @@ class Shader { protected: Shader(); };
 %include "src/gui.h"
 %include "src/input.h"
 %include "src/light.h"
+%include "src/lightmap.h"
 %include "src/listener.h"
 %include "src/log.h"
 %include "src/material.h"

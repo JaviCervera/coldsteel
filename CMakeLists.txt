@@ -56,6 +56,7 @@ add_definitions(-DZIP_ENABLE_SHARABLE_FILE_OPEN)
 include_directories(
 	${INCLUDE_DIRECTORIES}
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/irrlicht190_ogles/include
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/stb
 	${CMAKE_CURRENT_SOURCE_DIR}/lib/soloud/include)
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 	link_directories(${LINK_DIRECTORIES} ${CMAKE_CURRENT_SOURCE_DIR}/_CMAKE/_IRRLICHT_EMSCRIPTEN)

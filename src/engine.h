@@ -12,6 +12,7 @@
 #include "gui.h"
 #include "input.h"
 #include "light.h"
+#include "lightmap.h"
 #include "listener.h"
 #include "log.h"
 #include "material.h"

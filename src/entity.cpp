@@ -189,6 +189,7 @@ extern "C"
   EXPORT void CALL SetEntityRotation(ISceneNode *entity, float pitch, float yaw, float roll)
   {
     entity->setRotation(vector3df(pitch, yaw, roll));
+    entity->updateAbsolutePosition();
   }
 
   EXPORT void CALL TurnEntity(ISceneNode *entity, float pitch, float yaw, float roll)
@@ -225,6 +226,7 @@ extern "C"
   EXPORT void CALL SetEntityScale(ISceneNode *entity, float x, float y, float z)
   {
     entity->setScale(vector3df(x, y, z));
+    entity->updateAbsolutePosition();
   }
 
   EXPORT float CALL EntityScaleX(ISceneNode *entity)
