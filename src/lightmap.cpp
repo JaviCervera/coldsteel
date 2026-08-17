@@ -7,6 +7,7 @@
 
 #include "core.h"
 #include "log.h"
+#include <ITexture.h>
 
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "stb_rect_pack.h"
@@ -18,6 +19,9 @@ namespace
   const f32 LM_PAD = 1.0f;    // texel padding between triangles
   const f32 LM_BIAS_TEXELS = 2.0f; // shadow ray offset, in texels
   const f32 LM_EPS = 0.0001f; // degenerate test
+  const f32 LM_PI = 3.141592653589793f;
+  const f32 LM_INV_PI = 0.3183098861837907f;
+  const u32 LM_NO_TRI = 0xFFFFFFFFu;
   const int LM_MAX_LEAF = 4;  // max triangles per BVH leaf
 
   struct LMLight
@@ -40,6 +44,12 @@ namespace
     int atlasX, atlasY;         // position in the atlas
     SMeshBufferLightMap *dst;   // target buffer
     u32 firstVertex;            // first vertex of this triangle in dst
+    vector3df centroid;         // world centroid (radiosity source)
+    f32 area;                   // world area (radiosity source)
+    SColorf diffuse;            // material diffuse color (reflectance base)
+    video::ITexture *tex0;      // diffuse texture, may be NULL
+    SColorf albedo;             // reflectance used for bounces
+    core::array<SColorf> texels; // per-texel radiance (uMin..uMax x vMin..vMax)
   };
 
   struct LMNodePart
@@ -167,7 +177,7 @@ namespace
     return index;
   }
 
-  bool BvhOccluded(const LMBvh &bvh, u32 selfTri, const core::line3df &line)
+  bool BvhOccluded(const LMBvh &bvh, u32 selfTri, const core::line3df &line, u32 ignoreTri = LM_NO_TRI)
   {
     const vector3df vec = line.getVector(); // direction from origin toward the light
     int stack[256];
@@ -184,7 +194,7 @@ namespace
         for (int i = 0; i < node.count; ++i)
         {
           const u32 t = bvh.order[node.start + i];
-          if (t == selfTri)
+          if (t == selfTri || t == ignoreTri)
             continue;
           const LMTri &tri = (*bvh.tris)[t];
           if (vec.dotProduct(tri.normal) <= 0.f)
@@ -351,6 +361,11 @@ namespace
         tri.atlasY = 0;
         tri.dst = dst;
         tri.firstVertex = first;
+        tri.centroid = (a + b + c) / 3.f;
+        tri.area = len * 0.5f;
+        tri.diffuse = nodeMat.DiffuseColor;
+        tri.tex0 = nodeMat.getTexture(0);
+        tri.albedo = nodeMat.DiffuseColor;
         tris.push_back(tri);
         part.lightmapped = true;
       }
@@ -498,6 +513,228 @@ namespace
     return c;
   }
 
+  SColorf AverageTexels(const LMTri &tri)
+  {
+    SColorf s;
+    s.r = s.g = s.b = 0.f;
+    const u32 n = tri.texels.size();
+    if (n)
+    {
+      for (u32 i = 0; i < n; ++i)
+      {
+        s.r += tri.texels[i].r;
+        s.g += tri.texels[i].g;
+        s.b += tri.texels[i].b;
+      }
+      s.r /= (f32)n;
+      s.g /= (f32)n;
+      s.b /= (f32)n;
+    }
+    return s;
+  }
+
+  vector3df TexelPoint(const LMTri &tri, int tx, int ty, f32 density)
+  {
+    int axisU, axisV, axisW;
+    GetPlaneAxes(tri.plane, axisU, axisV, axisW);
+    const f32 uw = ((f32)tx + 0.5f) / density;
+    const f32 vw = ((f32)ty + 0.5f) / density;
+    const f32 nd = tri.normal.dotProduct(tri.a);
+    vector3df p;
+    SetAxis(p, axisU, uw);
+    SetAxis(p, axisV, vw);
+    SetAxis(p, axisW,
+            (nd - Axis(tri.normal, axisU) * uw - Axis(tri.normal, axisV) * vw) / Axis(tri.normal, axisW));
+    return p;
+  }
+
+  void AddClamp(SColorf &cell, const SColorf &delta)
+  {
+    cell.r += delta.r;
+    cell.g += delta.g;
+    cell.b += delta.b;
+    if (cell.r > 1.f) cell.r = 1.f;
+    if (cell.g > 1.f) cell.g = 1.f;
+    if (cell.b > 1.f) cell.b = 1.f;
+    if (cell.r < 0.f) cell.r = 0.f;
+    if (cell.g < 0.f) cell.g = 0.f;
+    if (cell.b < 0.f) cell.b = 0.f;
+  }
+
+  SColorf SampleTextureAverage(ITexture *tex)
+  {
+    SColorf avg;
+    avg.r = avg.g = avg.b = 1.f;
+    if (!tex)
+      return avg;
+    void *data = tex->lock(ETLM_READ_ONLY);
+    if (!data)
+      return avg;
+    const ECOLOR_FORMAT fmt = tex->getColorFormat();
+    const u32 w = tex->getSize().Width;
+    const u32 h = tex->getSize().Height;
+    const u32 pitch = tex->getPitch();
+    u64 sr = 0, sg = 0, sb = 0;
+    u64 count = 0;
+    for (u32 y = 0; y < h; ++y)
+    {
+      const u8 *row = (const u8 *)data + (u32)y * pitch;
+      switch (fmt)
+      {
+        case ECF_A8R8G8B8:
+          for (u32 x = 0; x < w; ++x)
+          {
+            const u8 *p = row + (u32)x * 4;
+            sr += p[2];
+            sg += p[1];
+            sb += p[0];
+          }
+          count += w;
+          break;
+        case ECF_R8G8B8:
+          for (u32 x = 0; x < w; ++x)
+          {
+            const u8 *p = row + (u32)x * 3;
+            sr += p[0];
+            sg += p[1];
+            sb += p[2];
+          }
+          count += w;
+          break;
+        case ECF_R5G6B5:
+          for (u32 x = 0; x < w; ++x)
+          {
+            const u16 v = *(const u16 *)(row + (u32)x * 2);
+            sr += (v >> 11) & 31;
+            sg += (v >> 5) & 63;
+            sb += v & 31;
+          }
+          count += w;
+          break;
+        case ECF_A1R5G5B5:
+          for (u32 x = 0; x < w; ++x)
+          {
+            const u16 v = *(const u16 *)(row + (u32)x * 2);
+            sr += (v >> 10) & 31;
+            sg += (v >> 5) & 31;
+            sb += v & 31;
+          }
+          count += w;
+          break;
+        default:
+          tex->unlock();
+          avg.r = avg.g = avg.b = 1.f;
+          return avg;
+      }
+    }
+    tex->unlock();
+    if (count)
+    {
+      if (fmt == ECF_R5G6B5)
+      {
+        avg.r = (f32)(sr / count) / 31.f;
+        avg.g = (f32)(sg / count) / 63.f;
+        avg.b = (f32)(sb / count) / 31.f;
+      }
+      else if (fmt == ECF_A1R5G5B5)
+      {
+        avg.r = (f32)(sr / count) / 31.f;
+        avg.g = (f32)(sg / count) / 31.f;
+        avg.b = (f32)(sb / count) / 31.f;
+      }
+      else
+      {
+        avg.r = (f32)(sr / count) / 255.f;
+        avg.g = (f32)(sg / count) / 255.f;
+        avg.b = (f32)(sb / count) / 255.f;
+      }
+    }
+    return avg;
+  }
+
+  struct LMTextureAvg
+  {
+    ITexture *tex;
+    SColorf avg;
+  };
+
+  void ComputeAlbedos(core::array<LMTri> &tris, bool useTextureAlbedo)
+  {
+    core::array<LMTextureAvg> cache;
+    for (u32 i = 0; i < tris.size(); ++i)
+    {
+      LMTri &tri = tris[i];
+      SColorf alb = tri.diffuse;
+      if (useTextureAlbedo && tri.tex0)
+      {
+        SColorf tavg;
+        bool found = false;
+        for (u32 k = 0; k < cache.size(); ++k)
+        {
+          if (cache[k].tex == tri.tex0)
+          {
+            tavg = cache[k].avg;
+            found = true;
+            break;
+          }
+        }
+        if (!found)
+        {
+          tavg = SampleTextureAverage(tri.tex0);
+          LMTextureAvg e;
+          e.tex = tri.tex0;
+          e.avg = tavg;
+          cache.push_back(e);
+        }
+        alb.r *= tavg.r;
+        alb.g *= tavg.g;
+        alb.b *= tavg.b;
+      }
+      tri.albedo = alb;
+    }
+  }
+
+  SColorf GatherBounce(const vector3df &p, const vector3df &n, u32 selfTri,
+                       const core::array<LMTri> &tris, const core::array<SColorf> &avg,
+                       const LMBvh &bvh, f32 bias)
+  {
+    SColorf out;
+    out.r = out.g = out.b = 0.f;
+    for (u32 j = 0; j < tris.size(); ++j)
+    {
+      if (j == selfTri)
+        continue;
+      const LMTri &src = tris[j];
+      // radiosity leaving the source = albedo * accumulated irradiance
+      const f32 B = src.albedo.r * avg[j].r, Bg = src.albedo.g * avg[j].g, Bb = src.albedo.b * avg[j].b;
+      if (B <= 0.f && Bg <= 0.f && Bb <= 0.f)
+        continue;
+      const vector3df d = src.centroid - p;
+      f32 d2 = d.getLengthSQ();
+      const f32 minD2 = src.area * LM_INV_PI; // clamp to avoid the singularity for touching patches
+      if (d2 < minD2)
+        d2 = minD2;
+      const f32 dist = sqrtf(d2);
+      const vector3df dir = d / dist;
+      const f32 cosi = n.dotProduct(dir);
+      if (cosi <= 0.f)
+        continue;
+      const f32 cosj = src.normal.dotProduct(-dir);
+      if (cosj <= 0.f)
+        continue;
+      const f32 ff = cosi * cosj * src.area / (LM_PI * d2);
+      if (ff <= 0.f)
+        continue;
+      const vector3df origin = p + n * bias;
+      if (BvhOccluded(bvh, selfTri, core::line3df(origin, src.centroid), j))
+        continue;
+      out.r += B * ff;
+      out.g += Bg * ff;
+      out.b += Bb * ff;
+    }
+    return out;
+  }
+
   void DropParts(core::array<LMNodePart> &parts)
   {
     for (u32 i = 0; i < parts.size(); ++i)
@@ -509,12 +746,15 @@ namespace
 extern "C"
 {
 
-  EXPORT IImage *CALL BakeLightmaps(ISceneNode *root, float texelDensity, int maxAtlasSize)
+  EXPORT IImage *CALL BakeLightmaps(ISceneNode *root, float texelDensity, int maxAtlasSize,
+                                    int bounces, bool useTextureAlbedo)
   {
     if (texelDensity <= 0.f)
       texelDensity = 8.f;
     if (maxAtlasSize <= 0)
       maxAtlasSize = 2048;
+    if (bounces < 0)
+      bounces = 0;
 
     core::array<LMNodePart> parts;
     core::array<LMLight> lights;
@@ -575,42 +815,75 @@ extern "C"
 
     const SColorf ambient = _Device()->getSceneManager()->getAmbientLight();
     const f32 atlasF = (f32)atlasSize;
+
+    ComputeAlbedos(tris, useTextureAlbedo != 0);
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      const LMTri &tri = tris[ti];
+      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+      const u32 h = (u32)(tri.vMax - tri.vMin + 1);
+      tris[ti].texels.set_used(w * h);
+    }
+    core::array<SColorf> avg;
+    avg.set_used(tris.size());
+
     for (u32 ti = 0; ti < tris.size(); ++ti)
     {
       LMTri &tri = tris[ti];
-      int axisU, axisV, axisW;
-      GetPlaneAxes(tri.plane, axisU, axisV, axisW);
       const vector3df corners[3] = { tri.a, tri.b, tri.c };
       for (int k = 0; k < 3; ++k)
       {
+        int axisU, axisV, axisW;
+        GetPlaneAxes(tri.plane, axisU, axisV, axisW);
         f32 u, v;
         PlaneCoord(corners[k], axisU, axisV, u, v);
         S3DVertex2TCoords &vv = tri.dst->Vertices[tri.firstVertex + k];
         vv.TCoords2.X = (u * texelDensity - (f32)tri.uMin + (f32)tri.atlasX) / atlasF;
         vv.TCoords2.Y = (v * texelDensity - (f32)tri.vMin + (f32)tri.atlasY) / atlasF;
       }
-      const f32 nd = tri.normal.dotProduct(tri.a);
+      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
       for (int ty = tri.vMin; ty <= tri.vMax; ++ty)
       {
         for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
         {
-          const f32 uw = ((f32)tx + 0.5f) / texelDensity;
-          const f32 vw = ((f32)ty + 0.5f) / texelDensity;
-          vector3df p;
-          SetAxis(p, axisU, uw);
-          SetAxis(p, axisV, vw);
-          SetAxis(p, axisW,
-                  (nd - Axis(tri.normal, axisU) * uw - Axis(tri.normal, axisV) * vw) / Axis(tri.normal, axisW));
-          SColorf col = ShadePoint(p, tri.normal, lights, bvh, ti, dirMaxDist, bias);
-          col.r += ambient.r;
-          col.g += ambient.g;
-          col.b += ambient.b;
-          if (col.r > 1.f) col.r = 1.f;
-          if (col.g > 1.f) col.g = 1.f;
-          if (col.b > 1.f) col.b = 1.f;
-          if (col.r < 0.f) col.r = 0.f;
-          if (col.g < 0.f) col.g = 0.f;
-          if (col.b < 0.f) col.b = 0.f;
+          SColorf col =
+              ShadePoint(TexelPoint(tri, tx, ty, texelDensity), tri.normal, lights, bvh, ti, dirMaxDist, bias);
+          AddClamp(col, ambient);
+          tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))] = col;
+        }
+      }
+      avg[ti] = AverageTexels(tri);
+    }
+
+    // Progressive radiosity: reflect each surface's radiance onto every other surface.
+    for (int pass = 0; pass < bounces; ++pass)
+    {
+      for (u32 ti = 0; ti < tris.size(); ++ti)
+      {
+        LMTri &tri = tris[ti];
+        const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+        for (int ty = tri.vMin; ty <= tri.vMax; ++ty)
+        {
+          for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
+          {
+            SColorf &cell = tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))];
+            AddClamp(cell,
+                     GatherBounce(TexelPoint(tri, tx, ty, texelDensity), tri.normal, ti, tris, avg, bvh, bias));
+          }
+        }
+        avg[ti] = AverageTexels(tri);
+      }
+    }
+
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      const LMTri &tri = tris[ti];
+      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+      for (int ty = tri.vMin; ty <= tri.vMax; ++ty)
+      {
+        for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
+        {
+          const SColorf &col = tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))];
           pixmap->setPixel(tri.atlasX + (tx - tri.uMin), tri.atlasY + (ty - tri.vMin),
                            SColor(255, (u32)(col.r * 255.f), (u32)(col.g * 255.f), (u32)(col.b * 255.f)));
         }

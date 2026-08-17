@@ -1,5 +1,5 @@
 OpenScreen(640, 480, DesktopDepth(), SCREEN_RESIZABLE)
-SetAmbient(COLOR_DARKGRAY)
+SetAmbient(COLOR_BLACK)
 
 local tex = LoadTexture("tex.png")
 
@@ -42,10 +42,10 @@ local lamp = CreateLight(LIGHT_POINT)
 SetEntityPosition(lamp, -3, 4, -2)
 SetLightDiffuse(lamp, COLOR_RED)
 SetLightRadius(lamp, 8)
-SetLightAttenuation(lamp, 1, 0.05, 0.02)
+SetLightAttenuation(lamp, 2, 0.1, 0.04)
 
--- Bake direct lighting into a single lightmap atlas
-local atlas = BakeLightmaps(nil, 8, 2048)
+-- Bake direct lighting + one radiosity bounce into a single lightmap atlas
+local atlas = BakeLightmaps(nil, 8, 1024, 1)
 if atlas ~= nil then
     --SavePixmap(atlas, "lightmap_bake.png")
     LogInfo("Baked lightmap atlas " .. PixmapWidth(atlas) .. "x" .. PixmapHeight(atlas))
