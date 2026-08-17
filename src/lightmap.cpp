@@ -256,11 +256,11 @@ namespace
     for (u32 i = 0; i < src->getMeshBufferCount(); ++i)
     {
       IMeshBuffer *mb = src->getMeshBuffer(i);
-      const video::SMaterial &mat = mb->getMaterial();
+      const video::SMaterial &nodeMat = part.node->getMaterial(i);
       const bool bake =
           mb->getVertexType() == EVT_STANDARD && mb->getIndexType() == EIT_16BIT &&
           mb->getPrimitiveType() == EPT_TRIANGLES && mb->getIndexCount() >= 3 &&
-          mb->getIndexCount() <= 65535 && mb->getVertexCount() >= 3 && !mat.isTransparent();
+          mb->getIndexCount() <= 65535 && mb->getVertexCount() >= 3 && !nodeMat.isTransparent();
       if (!bake)
       {
         part.newMesh->addMeshBuffer(mb); // keep a reference to the source buffer
@@ -269,7 +269,7 @@ namespace
       const S3DVertex *vtx = (const S3DVertex *)mb->getVertices();
       const u16 *idx = mb->getIndices();
       SMeshBufferLightMap *dst = new SMeshBufferLightMap();
-      dst->getMaterial() = mat;
+      dst->getMaterial() = nodeMat;
       part.newMesh->addMeshBuffer(dst);
       dst->drop();
       const u32 triCount = mb->getIndexCount() / 3;
