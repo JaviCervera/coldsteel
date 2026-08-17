@@ -5,7 +5,7 @@ using Lambda;
 using StringTools;
 
 class SdkBuilder {
-	public static inline var SDK_VERSION = 100;
+	public static inline var SDK_VERSION = 101;
 
 	public static function main():Void {
 		final root = Xml.parse(File.getContent("coldsteel.xml")).firstElement();

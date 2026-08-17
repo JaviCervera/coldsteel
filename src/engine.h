@@ -23,6 +23,7 @@
 #include "music.h"
 #include "pixmap.h"
 #include "screen.h"
+#include "shader.h"
 #include "sound.h"
 #include "sprite.h"
 #include "string.h"

@@ -5,7 +5,6 @@
 extern "C"
 {
 
-  E_MATERIAL_TYPE _IrrlichtMaterialType(int type);
   int _MaterialType(E_MATERIAL_TYPE type);
   E_MATERIAL_FLAG _IrrlichtMaterialFlag(int flag);
 
@@ -83,6 +82,26 @@ extern "C"
   EXPORT float CALL MaterialShininess(SMaterial *material)
   {
     return Clamp(material->Shininess / 128, 0, 1);
+  }
+
+  EXPORT void CALL SetMaterialParam1(SMaterial *material, float param)
+  {
+    material->MaterialTypeParam = param;
+  }
+
+  EXPORT float CALL MaterialParam1(SMaterial *material)
+  {
+    return material->MaterialTypeParam;
+  }
+
+  EXPORT void CALL SetMaterialParam2(SMaterial *material, float param)
+  {
+    material->MaterialTypeParam2 = param;
+  }
+
+  EXPORT float CALL MaterialParam2(SMaterial *material)
+  {
+    return material->MaterialTypeParam2;
   }
 
   EXPORT void CALL SetMaterialRenderMode(SMaterial *material, int mode)

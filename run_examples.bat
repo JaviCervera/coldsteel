@@ -14,6 +14,7 @@ coldsteel run _build\examples\primitives
 coldsteel run _build\examples\render_to_texture
 coldsteel run _build\examples\screen_to_world
 coldsteel run _build\examples\shadows
+coldsteel run _build\examples\shaders
 coldsteel run _build\examples\specular
 coldsteel run _build\examples\sprites
 coldsteel run _build\examples\terrain

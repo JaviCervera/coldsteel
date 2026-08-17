@@ -183,6 +183,38 @@ extern "C"
   EXPORT float CALL MaterialShininess(SMaterial *material);
 
   /**
+   * Sets the first custom material parameter.
+   *
+   * @param material The material whose parameter will be set.
+   * @param param The custom parameter value.
+   */
+  EXPORT void CALL SetMaterialParam1(SMaterial *material, float param);
+
+  /**
+   * Returns the first custom material parameter.
+   *
+   * @param material The material to query.
+   * @return The current parameter value.
+   */
+  EXPORT float CALL MaterialParam1(SMaterial *material);
+
+  /**
+   * Sets the second custom material parameter.
+   *
+   * @param material The material whose parameter will be set.
+   * @param param The custom parameter value.
+   */
+  EXPORT void CALL SetMaterialParam2(SMaterial *material, float param);
+
+  /**
+   * Returns the second custom material parameter.
+   *
+   * @param material The material to query.
+   * @return The current parameter value.
+   */
+  EXPORT float CALL MaterialParam2(SMaterial *material);
+
+  /**
    * Sets the render mode.
    *
    * @param material The material whose render mode will be set.
@@ -250,6 +282,7 @@ extern "C"
 
 #ifndef SWIG
 void _FixMaterial(SMaterial *material, bool fix_specular);
+E_MATERIAL_TYPE _IrrlichtMaterialType(int type);
 #endif
 
 #ifdef __cplusplus

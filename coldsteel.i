@@ -12,6 +12,7 @@ class IBillboardSceneNode : public ISceneNode { protected: IBillboardSceneNode()
 class IParticleSystemSceneNode : public ISceneNode { protected: IParticleSystemSceneNode(); };
 class ITerrainSceneNode : public ISceneNode { protected: ITerrainSceneNode(); };
 class IGUIElement { protected: IGUIElement(); };
+class Shader { protected: Shader(); };
 
 %include "src/common.h"
 %include "src/bitwise.h"
@@ -36,6 +37,7 @@ class IGUIElement { protected: IGUIElement(); };
 %include "src/music.h"
 %include "src/pixmap.h"
 %include "src/screen.h"
+%include "src/shader.h"
 %include "src/sound.h"
 %include "src/sprite.h"
 %include "src/particle.h"

@@ -113,7 +113,5 @@ If the module was compiled against a different `COLDSTEEL_SDK_VERSION` than the 
 ## TODO
 
 * Built in editor.
-* Find a way to support "load" in Emscripten.
-* Expose shader API.
 * Add Pelican gh page website.
 * Add itch.io page with precompiled binary for Win95 (7z self-extract archive?).
