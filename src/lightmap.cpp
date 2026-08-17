@@ -26,6 +26,7 @@ namespace
     vector3df position;   // world
     vector3df direction;  // world, normalized
     SColorf diffuse;
+    f32 radius;
     vector3df attenuation;
     f32 cosInner, cosOuter, falloff;
     bool castShadow;
@@ -220,6 +221,7 @@ namespace
         LMLight l;
         l.type = ln->getLightType();
         l.diffuse = ld.DiffuseColor;
+        l.radius = ln->getRadius();
         l.attenuation = ld.Attenuation;
         l.falloff = ld.Falloff;
         l.castShadow = ld.CastShadows;
@@ -465,6 +467,13 @@ namespace
         const f32 denom = l.attenuation.X + l.attenuation.Y * rayDist + l.attenuation.Z * rayDist * rayDist;
         if (denom > LM_EPS)
           factor = ndl / denom;
+        if (l.radius > 0.f)
+        {
+          const f32 t = 1.f - rayDist / l.radius;
+          if (t <= 0.f)
+            continue;
+          factor *= t * t * (3.f - 2.f * t); // smooth range falloff, reaches 0 at radius
+        }
       }
       if (l.type == ELT_SPOT)
       {
