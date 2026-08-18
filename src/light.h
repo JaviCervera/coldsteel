@@ -114,7 +114,9 @@ extern "C"
   EXPORT float CALL LightRadius(ILightSceneNode *light);
 
   /**
-   * Sets the attenuation factors of a light.
+   * Sets the attenuation factors of a light. Also recalculates the light
+   * radius so that LightRadius reflects the distance at which the light
+   * strength becomes negligible.
    *
    * @param light The light whose attenuation will be set.
    * @param constant The constant attenuation factor.

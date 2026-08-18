@@ -3,6 +3,31 @@
 #include "light.h"
 #include "world.h"
 
+static const float kLightCutoff = 0.01f; // light strength at the radius edge
+
+static float QuadraticFromRadius(float radius)
+{
+  return (1.f / kLightCutoff - 1.f) / (radius * radius);
+}
+
+static float RadiusFromAttenuation(float constant, float linear, float quadratic)
+{
+  if (quadratic > 0.f)
+  {
+    const float disc = linear * linear + 4.f * quadratic * (1.f / kLightCutoff - constant);
+    if (disc <= 0.f)
+      return 0.f;
+    const float r = (-linear + sqrtf(disc)) / (2.f * quadratic);
+    return r > 0.f ? r : 0.f;
+  }
+  if (linear > 0.f)
+  {
+    const float r = (1.f / kLightCutoff - constant) / linear;
+    return r > 0.f ? r : 0.f;
+  }
+  return 0.f;
+}
+
 extern "C"
 {
 
@@ -73,9 +98,7 @@ extern "C"
     if (radius <= 0.f)
       return;
     light->setRadius(radius);
-    const float cutoff = 0.01f; // light strength at the radius edge
-    const float quadratic = (1.f / cutoff - 1.f) / (radius * radius);
-    light->getLightData().Attenuation = vector3df(1.f, 0.f, quadratic);
+    light->getLightData().Attenuation = vector3df(1.f, 0.f, QuadraticFromRadius(radius));
   }
 
   EXPORT float CALL LightRadius(ILightSceneNode *light)
@@ -85,6 +108,9 @@ extern "C"
 
   EXPORT void CALL SetLightAttenuation(ILightSceneNode *light, float constant, float linear, float quadratic)
   {
+    const float radius = RadiusFromAttenuation(constant, linear, quadratic);
+    if (radius > 0.f)
+      light->setRadius(radius);
     light->getLightData().Attenuation = vector3df(constant, linear, quadratic);
   }
 

@@ -43,7 +43,7 @@ SetLightDiffuse(sun, COLOR_WHITE)
 local lamp = CreateLight(LIGHT_POINT)
 SetEntityPosition(lamp, -3, 4, -2)
 SetLightDiffuse(lamp, COLOR_RED)
-SetLightRadius(lamp, 32)
+SetLightRadius(lamp, 48)
 
 -- Bake vertex lighting first (fast), then the texture lightmap. Baking the vertex lightmap before
 -- the texture lightmap keeps both the vertex colors and the lightmap UVs on the meshes.
