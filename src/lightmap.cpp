@@ -7,6 +7,7 @@
 
 #include "core.h"
 #include "log.h"
+#include "material.h"
 #include <ITexture.h>
 
 #define STB_RECT_PACK_IMPLEMENTATION
@@ -24,6 +25,13 @@ namespace
   const u32 LM_NO_TRI = 0xFFFFFFFFu;
   const int LM_MAX_LEAF = 4;  // max triangles per BVH leaf
 
+  // Sampling target: bake radiance per lightmap texel (texture atlas) or per vertex (colors).
+  enum LMMode
+  {
+    LM_TEXTURE,
+    LM_VERTEX
+  };
+
   struct LMLight
   {
     E_LIGHT_TYPE type;
@@ -38,6 +46,7 @@ namespace
   struct LMTri
   {
     vector3df a, b, c; // world corners
+    vector3df vn[3];   // world vertex normals, normalized (vertex bake)
     vector3df normal;  // world, normalized
     int plane;         // dominant axis of the normal
     int uMin, vMin, uMax, vMax; // texel rect (padded, inclusive)
@@ -49,7 +58,7 @@ namespace
     SColorf diffuse;            // material diffuse color (reflectance base)
     video::ITexture *tex0;      // diffuse texture, may be NULL
     SColorf albedo;             // reflectance used for bounces
-    core::array<SColorf> texels; // per-texel radiance (uMin..uMax x vMin..vMax)
+    core::array<SColorf> samples; // per-sample radiance (texels or 3 vertex colors)
   };
 
   struct LMNodePart
@@ -106,6 +115,18 @@ namespace
     u = Axis(p, axisU);
     v = Axis(p, axisV);
   }
+
+  struct LMVertexRef
+  {
+    const S3DVertex *v1;
+    const S3DVertex2TCoords *v2;
+
+    vector3df Pos(u16 i) const { return v2 ? v2[i].Pos : v1[i].Pos; }
+    vector3df Normal(u16 i) const { return v2 ? v2[i].Normal : v1[i].Normal; }
+    SColor Color(u16 i) const { return v2 ? v2[i].Color : v1[i].Color; }
+    vector2df TCoords(u16 i) const { return v2 ? v2[i].TCoords : v1[i].TCoords; }
+    vector2df TCoords2(u16 i) const { return v2 ? v2[i].TCoords2 : vector2df(0.f, 0.f); }
+  };
 
   int CmpX(const void *pa, const void *pb)
   {
@@ -257,7 +278,7 @@ namespace
     }
   }
 
-  void BakeNode(LMNodePart &part, f32 density, core::array<LMTri> &tris)
+  void BakeNode(LMNodePart &part, f32 density, LMMode mode, core::array<LMTri> &tris)
   {
     IMesh *src = part.node->getMesh();
     const core::matrix4 &abs = part.node->getAbsoluteTransformation();
@@ -265,8 +286,9 @@ namespace
     {
       IMeshBuffer *mb = src->getMeshBuffer(i);
       const video::SMaterial &nodeMat = part.node->getMaterial(i);
+      const video::E_VERTEX_TYPE vtype = mb->getVertexType();
       const bool bake =
-          mb->getVertexType() == EVT_STANDARD && mb->getIndexType() == EIT_16BIT &&
+          (vtype == EVT_STANDARD || vtype == EVT_2TCOORDS) && mb->getIndexType() == EIT_16BIT &&
           mb->getPrimitiveType() == EPT_TRIANGLES && mb->getIndexCount() >= 3 &&
           mb->getIndexCount() <= 65535 && mb->getVertexCount() >= 3 && !nodeMat.isTransparent();
       if (!bake)
@@ -274,7 +296,9 @@ namespace
         part.newMesh->addMeshBuffer(mb); // keep a reference to the source buffer
         continue;
       }
-      const S3DVertex *vtx = (const S3DVertex *)mb->getVertices();
+      LMVertexRef verts;
+      verts.v1 = (vtype == EVT_STANDARD) ? (const S3DVertex *)mb->getVertices() : NULL;
+      verts.v2 = (vtype == EVT_2TCOORDS) ? (const S3DVertex2TCoords *)mb->getVertices() : NULL;
       const u16 *idx = mb->getIndices();
       SMeshBufferLightMap *dst = new SMeshBufferLightMap();
       dst->getMaterial() = nodeMat;
@@ -286,9 +310,9 @@ namespace
         const u16 i0 = idx[t * 3 + 0];
         const u16 i1 = idx[t * 3 + 1];
         const u16 i2 = idx[t * 3 + 2];
-        vector3df a = vtx[i0].Pos;
-        vector3df b = vtx[i1].Pos;
-        vector3df c = vtx[i2].Pos;
+        vector3df a = verts.Pos(i0);
+        vector3df b = verts.Pos(i1);
+        vector3df c = verts.Pos(i2);
         abs.transformVect(a);
         abs.transformVect(b);
         abs.transformVect(c);
@@ -333,16 +357,24 @@ namespace
         if (uMax < uMin) uMax = uMin;
         if (vMax < vMin) vMax = vMin;
         const u32 first = (u32)dst->Vertices.size();
+        vector3df wn[3];
         for (int k = 0; k < 3; ++k)
         {
-          const S3DVertex &sv = vtx[idx[t * 3 + k]];
+          const u16 vi = idx[t * 3 + k];
           S3DVertex2TCoords nv;
-          nv.Pos = sv.Pos;
-          nv.Normal = sv.Normal;
-          nv.Color = sv.Color;
-          nv.TCoords = sv.TCoords;
-          nv.TCoords2 = vector2df(0.f, 0.f);
+          nv.Pos = verts.Pos(vi);
+          nv.Normal = verts.Normal(vi);
+          nv.Color = verts.Color(vi);
+          nv.TCoords = verts.TCoords(vi);
+          nv.TCoords2 = verts.TCoords2(vi);
           dst->Vertices.push_back(nv);
+          vector3df wNormal = verts.Normal(vi);
+          abs.rotateVect(wNormal);
+          const f32 nl = wNormal.getLength();
+          if (nl < LM_EPS || mode != LM_VERTEX)
+            wn[k] = n;
+          else
+            wn[k] = wNormal / nl;
         }
         dst->Indices.push_back((u16)first);
         dst->Indices.push_back((u16)(first + 1));
@@ -351,6 +383,9 @@ namespace
         tri.a = a;
         tri.b = b;
         tri.c = c;
+        tri.vn[0] = wn[0];
+        tri.vn[1] = wn[1];
+        tri.vn[2] = wn[2];
         tri.normal = n;
         tri.plane = plane;
         tri.uMin = uMin;
@@ -446,7 +481,7 @@ namespace
     }
   }
 
-  SColorf ShadePoint(const vector3df &p, const vector3df &n, const core::array<LMLight> &lights,
+  SColorf ShadePoint(const vector3df &p, const vector3df &n, const vector3df &fn, const core::array<LMLight> &lights,
                      const LMBvh &bvh, u32 selfTri, f32 dirMaxDist, f32 bias)
   {
     SColorf c;
@@ -501,7 +536,7 @@ namespace
       }
       if (l.castShadow)
       {
-        const vector3df origin = p + n * bias;
+        const vector3df origin = p + fn * bias;
         const vector3df end = origin + rayDir * rayDist;
         if (BvhOccluded(bvh, selfTri, core::line3df(origin, end)))
           continue;
@@ -511,26 +546,6 @@ namespace
       c.b += l.diffuse.b * factor;
     }
     return c;
-  }
-
-  SColorf AverageTexels(const LMTri &tri)
-  {
-    SColorf s;
-    s.r = s.g = s.b = 0.f;
-    const u32 n = tri.texels.size();
-    if (n)
-    {
-      for (u32 i = 0; i < n; ++i)
-      {
-        s.r += tri.texels[i].r;
-        s.g += tri.texels[i].g;
-        s.b += tri.texels[i].b;
-      }
-      s.r /= (f32)n;
-      s.g /= (f32)n;
-      s.b /= (f32)n;
-    }
-    return s;
   }
 
   vector3df TexelPoint(const LMTri &tri, int tx, int ty, f32 density)
@@ -559,6 +574,83 @@ namespace
     if (cell.r < 0.f) cell.r = 0.f;
     if (cell.g < 0.f) cell.g = 0.f;
     if (cell.b < 0.f) cell.b = 0.f;
+  }
+
+  inline SColor LMColor(const SColorf &c)
+  {
+    f32 r = c.r, g = c.g, b = c.b;
+    if (r > 1.f) r = 1.f;
+    if (r < 0.f) r = 0.f;
+    if (g > 1.f) g = 1.f;
+    if (g < 0.f) g = 0.f;
+    if (b > 1.f) b = 1.f;
+    if (b < 0.f) b = 0.f;
+    return SColor(255, (u32)(r * 255.f), (u32)(g * 255.f), (u32)(b * 255.f));
+  }
+
+  u32 LMSampleCount(const LMTri &tri, LMMode mode)
+  {
+    if (mode == LM_VERTEX)
+      return 3;
+    return (u32)((tri.uMax - tri.uMin + 1) * (tri.vMax - tri.vMin + 1));
+  }
+
+  void LMSamplePos(const LMTri &tri, LMMode mode, u32 si, f32 density, vector3df &p, vector3df &n)
+  {
+    if (mode == LM_VERTEX)
+    {
+      const vector3df corners[3] = { tri.a, tri.b, tri.c };
+      p = corners[si] + (tri.centroid - corners[si]) * 0.04f;
+      n = tri.vn[si];
+    }
+    else
+    {
+      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+      const int tx = tri.uMin + (int)(si % w);
+      const int ty = tri.vMin + (int)(si / w);
+      p = TexelPoint(tri, tx, ty, density);
+      n = tri.normal;
+    }
+  }
+
+  SColorf LMSampleAverage(const LMTri &tri)
+  {
+    SColorf s;
+    s.r = s.g = s.b = 0.f;
+    const u32 n = tri.samples.size();
+    if (n)
+    {
+      for (u32 i = 0; i < n; ++i)
+      {
+        s.r += tri.samples[i].r;
+        s.g += tri.samples[i].g;
+        s.b += tri.samples[i].b;
+      }
+      s.r /= (f32)n;
+      s.g /= (f32)n;
+      s.b /= (f32)n;
+    }
+    return s;
+  }
+
+  void LMAssignUVs(core::array<LMTri> &tris, f32 density, u32 atlasSize)
+  {
+    const f32 atlasF = (f32)atlasSize;
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      const LMTri &tri = tris[ti];
+      const vector3df corners[3] = { tri.a, tri.b, tri.c };
+      for (int k = 0; k < 3; ++k)
+      {
+        int axisU, axisV, axisW;
+        GetPlaneAxes(tri.plane, axisU, axisV, axisW);
+        f32 u, v;
+        PlaneCoord(corners[k], axisU, axisV, u, v);
+        S3DVertex2TCoords &vv = tri.dst->Vertices[tri.firstVertex + k];
+        vv.TCoords2.X = (u * density - (f32)tri.uMin + (f32)tri.atlasX) / atlasF;
+        vv.TCoords2.Y = (v * density - (f32)tri.vMin + (f32)tri.atlasY) / atlasF;
+      }
+    }
   }
 
   SColorf SampleTextureAverage(ITexture *tex)
@@ -694,7 +786,7 @@ namespace
     }
   }
 
-  SColorf GatherBounce(const vector3df &p, const vector3df &n, u32 selfTri,
+  SColorf GatherBounce(const vector3df &p, const vector3df &n, const vector3df &fn, u32 selfTri,
                        const core::array<LMTri> &tris, const core::array<SColorf> &avg,
                        const LMBvh &bvh, f32 bias)
   {
@@ -725,7 +817,7 @@ namespace
       const f32 ff = cosi * cosj * src.area / (LM_PI * d2);
       if (ff <= 0.f)
         continue;
-      const vector3df origin = p + n * bias;
+      const vector3df origin = p + fn * bias;
       if (BvhOccluded(bvh, selfTri, core::line3df(origin, src.centroid), j))
         continue;
       out.r += B * ff;
@@ -739,6 +831,109 @@ namespace
   {
     for (u32 i = 0; i < parts.size(); ++i)
       parts[i].newMesh->drop();
+  }
+
+  bool LMGather(ISceneNode *root, f32 density, LMMode mode, int maxAtlasSize, u32 &atlasSize,
+                bool useTextureAlbedo, const char *api,
+                core::array<LMNodePart> &parts, core::array<LMTri> &tris,
+                core::array<LMLight> &lights, LMBvh &bvh, core::array<LMRef> &pool,
+                f32 &dirMaxDist, f32 &bias)
+  {
+    char msg[256];
+    CollectNodes(root, parts, lights);
+    if (parts.empty())
+    {
+      sprintf(msg, "%s: no static mesh nodes found.", api);
+      _Device()->getLogger()->log(msg, ELL_WARNING);
+      return false;
+    }
+    for (u32 i = 0; i < parts.size(); ++i)
+      BakeNode(parts[i], density, mode, tris);
+    if (tris.empty())
+    {
+      DropParts(parts);
+      sprintf(msg, "%s: no lightmapped geometry found.", api);
+      _Device()->getLogger()->log(msg, ELL_WARNING);
+      return false;
+    }
+    aabbox3df sceneBox;
+    {
+      const LMTri &t0 = tris[0];
+      sceneBox = aabbox3df(t0.a, t0.a);
+    }
+    for (u32 i = 0; i < tris.size(); ++i)
+    {
+      sceneBox.addInternalPoint(tris[i].a);
+      sceneBox.addInternalPoint(tris[i].b);
+      sceneBox.addInternalPoint(tris[i].c);
+    }
+    const f32 extent = sceneBox.getExtent().getLength();
+    dirMaxDist = extent * 2.f + 10.f;
+    if (mode == LM_VERTEX)
+    {
+      const f32 vb = extent * 0.001f;
+      bias = vb < 0.05f ? 0.05f : vb;
+    }
+    else
+      bias = LM_BIAS_TEXELS / density;
+    if (mode == LM_TEXTURE)
+    {
+      if (!PackTris(tris, maxAtlasSize, atlasSize))
+      {
+        DropParts(parts);
+        sprintf(msg, "%s: atlas overflow, increase maxAtlasSize or lower texelDensity.", api);
+        _Device()->getLogger()->log(msg, ELL_WARNING);
+        return false;
+      }
+    }
+    bvh.tris = &tris;
+    bvh.order.set_used(tris.size());
+    for (u32 i = 0; i < tris.size(); ++i)
+      bvh.order[i] = i;
+    pool.set_used(tris.size());
+    BvhBuildIndex(bvh, pool, 0, (int)tris.size());
+    ComputeAlbedos(tris, useTextureAlbedo);
+    return true;
+  }
+
+  void LMRadiosity(core::array<LMTri> &tris, LMMode mode, f32 density,
+                   const core::array<LMLight> &lights, const LMBvh &bvh,
+                   f32 dirMaxDist, f32 bias, int bounces)
+  {
+    const SColorf ambient = _Device()->getSceneManager()->getAmbientLight();
+    core::array<SColorf> avg;
+    avg.set_used(tris.size());
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      LMTri &tri = tris[ti];
+      tri.samples.set_used(LMSampleCount(tri, mode));
+      const u32 n = tri.samples.size();
+      for (u32 si = 0; si < n; ++si)
+      {
+        vector3df p, norm;
+        LMSamplePos(tri, mode, si, density, p, norm);
+        SColorf col = ShadePoint(p, norm, tris[ti].normal, lights, bvh, ti, dirMaxDist, bias);
+        AddClamp(col, ambient);
+        tri.samples[si] = col;
+      }
+      avg[ti] = LMSampleAverage(tri);
+    }
+    // Progressive radiosity: reflect each surface's radiance onto every other surface.
+    for (int pass = 0; pass < bounces; ++pass)
+    {
+      for (u32 ti = 0; ti < tris.size(); ++ti)
+      {
+        LMTri &tri = tris[ti];
+        const u32 n = tri.samples.size();
+        for (u32 si = 0; si < n; ++si)
+        {
+          vector3df p, norm;
+          LMSamplePos(tri, mode, si, density, p, norm);
+          AddClamp(tri.samples[si], GatherBounce(p, norm, tris[ti].normal, ti, tris, avg, bvh, bias));
+        }
+        avg[ti] = LMSampleAverage(tri);
+      }
+    }
   }
 
 } // namespace
@@ -757,55 +952,18 @@ extern "C"
       bounces = 0;
 
     core::array<LMNodePart> parts;
-    core::array<LMLight> lights;
-    CollectNodes(root, parts, lights);
-    if (parts.empty())
-    {
-      _Device()->getLogger()->log("BakeLightmap: no static mesh nodes found.", ELL_WARNING);
-      return NULL;
-    }
-
     core::array<LMTri> tris;
-    for (u32 i = 0; i < parts.size(); ++i)
-      BakeNode(parts[i], texelDensity, tris);
-    if (tris.empty())
-    {
-      DropParts(parts);
-      _Device()->getLogger()->log("BakeLightmap: no lightmapped geometry found.", ELL_WARNING);
-      return NULL;
-    }
-
-    aabbox3df sceneBox;
-    {
-      const LMTri &t0 = tris[0];
-      sceneBox = aabbox3df(t0.a, t0.a);
-    }
-    for (u32 i = 0; i < tris.size(); ++i)
-    {
-      sceneBox.addInternalPoint(tris[i].a);
-      sceneBox.addInternalPoint(tris[i].b);
-      sceneBox.addInternalPoint(tris[i].c);
-    }
-    const f32 dirMaxDist = sceneBox.getExtent().getLength() * 2.f + 10.f;
-    const f32 bias = LM_BIAS_TEXELS / texelDensity;
-
-    u32 atlasSize = 0;
-    if (!PackTris(tris, maxAtlasSize, atlasSize))
-    {
-      DropParts(parts);
-      _Device()->getLogger()->log(
-          "BakeLightmap: atlas overflow, increase maxAtlasSize or lower texelDensity.", ELL_WARNING);
-      return NULL;
-    }
-
+    core::array<LMLight> lights;
     LMBvh bvh;
-    bvh.tris = &tris;
-    bvh.order.set_used(tris.size());
-    for (u32 i = 0; i < tris.size(); ++i)
-      bvh.order[i] = i;
     core::array<LMRef> pool;
-    pool.set_used(tris.size());
-    BvhBuildIndex(bvh, pool, 0, (int)tris.size());
+    u32 atlasSize = 0;
+    f32 dirMaxDist = 0.f, bias = 0.f;
+    if (!LMGather(root, texelDensity, LM_TEXTURE, maxAtlasSize, atlasSize, useTextureAlbedo,
+                  "BakeLightmap", parts, tris, lights, bvh, pool, dirMaxDist, bias))
+      return NULL;
+
+    LMRadiosity(tris, LM_TEXTURE, texelDensity, lights, bvh, dirMaxDist, bias, bounces);
+    LMAssignUVs(tris, texelDensity, atlasSize);
 
     const ECOLOR_FORMAT format =
         _Device()->getVideoDriver()->getTextureCreationFlag(ETCF_ALWAYS_32_BIT)
@@ -813,68 +971,6 @@ extern "C"
             : ECF_A1R5G5B5;
     IImage *pixmap = _Device()->getVideoDriver()->createImage(format, dimension2du(atlasSize, atlasSize));
 
-    const SColorf ambient = _Device()->getSceneManager()->getAmbientLight();
-    const f32 atlasF = (f32)atlasSize;
-
-    ComputeAlbedos(tris, useTextureAlbedo != 0);
-    for (u32 ti = 0; ti < tris.size(); ++ti)
-    {
-      const LMTri &tri = tris[ti];
-      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
-      const u32 h = (u32)(tri.vMax - tri.vMin + 1);
-      tris[ti].texels.set_used(w * h);
-    }
-    core::array<SColorf> avg;
-    avg.set_used(tris.size());
-
-    for (u32 ti = 0; ti < tris.size(); ++ti)
-    {
-      LMTri &tri = tris[ti];
-      const vector3df corners[3] = { tri.a, tri.b, tri.c };
-      for (int k = 0; k < 3; ++k)
-      {
-        int axisU, axisV, axisW;
-        GetPlaneAxes(tri.plane, axisU, axisV, axisW);
-        f32 u, v;
-        PlaneCoord(corners[k], axisU, axisV, u, v);
-        S3DVertex2TCoords &vv = tri.dst->Vertices[tri.firstVertex + k];
-        vv.TCoords2.X = (u * texelDensity - (f32)tri.uMin + (f32)tri.atlasX) / atlasF;
-        vv.TCoords2.Y = (v * texelDensity - (f32)tri.vMin + (f32)tri.atlasY) / atlasF;
-      }
-      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
-      for (int ty = tri.vMin; ty <= tri.vMax; ++ty)
-      {
-        for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
-        {
-          SColorf col =
-              ShadePoint(TexelPoint(tri, tx, ty, texelDensity), tri.normal, lights, bvh, ti, dirMaxDist, bias);
-          AddClamp(col, ambient);
-          tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))] = col;
-        }
-      }
-      avg[ti] = AverageTexels(tri);
-    }
-
-    // Progressive radiosity: reflect each surface's radiance onto every other surface.
-    for (int pass = 0; pass < bounces; ++pass)
-    {
-      for (u32 ti = 0; ti < tris.size(); ++ti)
-      {
-        LMTri &tri = tris[ti];
-        const u32 w = (u32)(tri.uMax - tri.uMin + 1);
-        for (int ty = tri.vMin; ty <= tri.vMax; ++ty)
-        {
-          for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
-          {
-            SColorf &cell = tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))];
-            AddClamp(cell,
-                     GatherBounce(TexelPoint(tri, tx, ty, texelDensity), tri.normal, ti, tris, avg, bvh, bias));
-          }
-        }
-        avg[ti] = AverageTexels(tri);
-      }
-    }
-
     for (u32 ti = 0; ti < tris.size(); ++ti)
     {
       const LMTri &tri = tris[ti];
@@ -883,9 +979,8 @@ extern "C"
       {
         for (int tx = tri.uMin; tx <= tri.uMax; ++tx)
         {
-          const SColorf &col = tri.texels[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))];
-          pixmap->setPixel(tri.atlasX + (tx - tri.uMin), tri.atlasY + (ty - tri.vMin),
-                           SColor(255, (u32)(col.r * 255.f), (u32)(col.g * 255.f), (u32)(col.b * 255.f)));
+          const SColorf &col = tri.samples[(u32)((ty - tri.vMin) * (int)w + (tx - tri.uMin))];
+          pixmap->setPixel(tri.atlasX + (tx - tri.uMin), tri.atlasY + (ty - tri.vMin), LMColor(col));
         }
       }
     }
@@ -907,8 +1002,11 @@ extern "C"
           IMeshBuffer *mb = m->getMeshBuffer(j);
           if (mb->getVertexType() == EVT_2TCOORDS)
           {
-            mb->getMaterial().MaterialType = EMT_LIGHTMAP_LIGHTING;
-            mb->getMaterial().setTexture(1, tex);
+            SMaterial &mat = mb->getMaterial();
+            SetMaterialType(&mat, MATERIAL_LIGHTMAP);
+            mat.setFlag(EMF_LIGHTING, true);
+            mat.setTexture(1, tex);
+            SetMaterialFlag(&mat, FLAG_VERTEXCOLORS, false);
           }
         }
         m->recalculateBoundingBox();
@@ -921,6 +1019,58 @@ extern "C"
     }
     DropParts(parts);
     return pixmap;
+  }
+
+  EXPORT void CALL BakeVertexLightmap(ISceneNode *root, int bounces, bool useTextureAlbedo)
+  {
+    if (bounces < 0)
+      bounces = 0;
+
+    core::array<LMNodePart> parts;
+    core::array<LMTri> tris;
+    core::array<LMLight> lights;
+    LMBvh bvh;
+    core::array<LMRef> pool;
+    u32 atlasSize = 0;
+    f32 dirMaxDist = 0.f, bias = 0.f;
+    if (!LMGather(root, 1.f, LM_VERTEX, 0, atlasSize, useTextureAlbedo,
+                  "BakeVertexLightmap", parts, tris, lights, bvh, pool, dirMaxDist, bias))
+      return;
+
+    LMRadiosity(tris, LM_VERTEX, 1.f, lights, bvh, dirMaxDist, bias, bounces);
+
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      const LMTri &tri = tris[ti];
+      for (int k = 0; k < 3; ++k)
+      {
+        const SColorf &c = tri.samples[(u32)k];
+        S3DVertex2TCoords &vv = tri.dst->Vertices[tri.firstVertex + k];
+        vv.Color = LMColor(c);
+      }
+    }
+
+    for (u32 i = 0; i < parts.size(); ++i)
+    {
+      LMNodePart &part = parts[i];
+      if (!part.lightmapped)
+        continue;
+      SMesh *m = part.newMesh;
+      for (u32 j = 0; j < m->getMeshBufferCount(); ++j)
+      {
+        IMeshBuffer *mb = m->getMeshBuffer(j);
+        if (mb->getVertexType() == EVT_2TCOORDS)
+        {
+          SMaterial &mat = mb->getMaterial();
+          SetMaterialType(&mat, MATERIAL_SOLID);
+          mat.setFlag(EMF_LIGHTING, false);
+          SetMaterialFlag(&mat, FLAG_VERTEXCOLORS, true);
+        }
+      }
+      m->recalculateBoundingBox();
+      part.node->setMesh(m, true);
+    }
+    DropParts(parts);
   }
 
 } // extern "C"

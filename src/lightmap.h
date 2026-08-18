@@ -37,6 +37,28 @@ extern "C"
   EXPORT IImage *CALL BakeLightmap(ISceneNode *root, float texelDensity, int maxAtlasSize,
                                     int bounces = 0, bool useTextureAlbedo = false);
 
+  /**
+   * Bakes direct and optionally bounced (global illumination) lighting into the vertex colors of
+   * every static mesh under the given root node.
+   *
+   * This is a faster alternative to BakeLightmap: instead of rendering per-texel radiance into an
+   * atlas texture, lighting is evaluated once per vertex, so it can be used as a real time solution.
+   * The bake shares the same direct lighting, shadow rays and progressive radiosity solver as
+   * BakeLightmap, but samples at the mesh vertices using their (Gouraud) world normals.
+   *
+   * Baked meshes keep their diffuse texture and lightmap UVs if they were baked before, and their
+   * materials are switched to solid with FLAG_VERTEXCOLORS enabled (real time lighting disabled), so
+   * the baked vertex colors multiply the diffuse texture. Call BakeLightmap afterwards on the same
+   * meshes to produce a texture lightmap, and toggle between the two by switching the material type
+   * (MATERIAL_LIGHTMAP / MATERIAL_SOLID) and FLAG_VERTEXCOLORS.
+   *
+   * @param root The scene node (entity) to bake. Pass NULL to bake the whole scene.
+   * @param bounces The number of radiosity bounces. 0 = direct lighting only.
+   * @param useTextureAlbedo If true, reflectance for bounces is the material DiffuseColor blended
+   *        with the average color of the material's diffuse texture; otherwise only DiffuseColor.
+   */
+  EXPORT void CALL BakeVertexLightmap(ISceneNode *root, int bounces = 0, bool useTextureAlbedo = false);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
