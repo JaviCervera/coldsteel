@@ -281,6 +281,38 @@ namespace
     return dir;
   }
 
+  // Removes carve faces that lie flush against a primitive face inside the
+  // primitive's footprint. Two cavities sharing a coplanar surface merge into
+  // one void, so the shared surface must vanish (e.g. a hallway opening cut
+  // through a room wall). Fragments outside the footprint are preserved.
+  void PruneFlushCarve(core::array<CSGFace> &cells, const core::array<CSGFace> &prim)
+  {
+    core::array<CSGFace> next;
+    for (u32 i = 0; i < cells.size(); ++i)
+    {
+      CSGFace &cell = cells[i];
+      if (cell.verts.empty())
+        continue;
+      vector3df centroid(0.f, 0.f, 0.f);
+      for (u32 k = 0; k < cell.verts.size(); ++k)
+        centroid += cell.verts[k];
+      centroid /= (f32)cell.verts.size();
+      bool prune = false;
+      for (u32 j = 0; j < prim.size() && !prune; ++j)
+      {
+        const CSGFace &f = prim[j];
+        const f32 dist = f.normal.dotProduct(centroid) - f.d;
+        if (fabsf(dist) > CSG_EPS)
+          continue;
+        if (PointInConvex2D(f, centroid))
+          prune = true;
+      }
+      if (!prune)
+        next.push_back(cell);
+    }
+    cells = next;
+  }
+
   // Parity test: is the point inside the closed surface set?
   bool InSetParity(const core::array<CSGFace> &set, const vector3df &p)
   {
@@ -604,6 +636,7 @@ namespace
     }
     else
     {
+      PruneFlushCarve(newCarves, prim);
       b->carves = newCarves;
       for (u32 i = 0; i < added.size(); ++i)
         b->carves.push_back(added[i]);
