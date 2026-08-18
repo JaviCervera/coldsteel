@@ -45,9 +45,9 @@ SetLightRadius(lamp, 8)
 SetLightAttenuation(lamp, 2, 0.1, 0.04)
 
 -- Bake direct lighting + one radiosity bounce into a single lightmap atlas
-local atlas = BakeLightmaps(nil, 8, 1024, 1)
+local atlas = BakeLightmap(nil, 8, 1024, 3, true)
 if atlas ~= nil then
-    --SavePixmap(atlas, "lightmap_bake.png")
+    --SavePixmap(atlas, "lightmap.png")
     LogInfo("Baked lightmap atlas " .. PixmapWidth(atlas) .. "x" .. PixmapHeight(atlas))
     FreePixmap(atlas)
 else

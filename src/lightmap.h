@@ -34,7 +34,7 @@ extern "C"
    *        with the average color of the material's diffuse texture; otherwise only DiffuseColor.
    * @return A pixmap containing the lightmap atlas, or NULL if the bake failed.
    */
-  EXPORT IImage *CALL BakeLightmaps(ISceneNode *root, float texelDensity, int maxAtlasSize,
+  EXPORT IImage *CALL BakeLightmap(ISceneNode *root, float texelDensity, int maxAtlasSize,
                                     int bounces = 0, bool useTextureAlbedo = false);
 
 #ifdef __cplusplus

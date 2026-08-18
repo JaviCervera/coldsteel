@@ -746,7 +746,7 @@ namespace
 extern "C"
 {
 
-  EXPORT IImage *CALL BakeLightmaps(ISceneNode *root, float texelDensity, int maxAtlasSize,
+  EXPORT IImage *CALL BakeLightmap(ISceneNode *root, float texelDensity, int maxAtlasSize,
                                     int bounces, bool useTextureAlbedo)
   {
     if (texelDensity <= 0.f)
@@ -761,7 +761,7 @@ extern "C"
     CollectNodes(root, parts, lights);
     if (parts.empty())
     {
-      _Device()->getLogger()->log("BakeLightmaps: no static mesh nodes found.", ELL_WARNING);
+      _Device()->getLogger()->log("BakeLightmap: no static mesh nodes found.", ELL_WARNING);
       return NULL;
     }
 
@@ -771,7 +771,7 @@ extern "C"
     if (tris.empty())
     {
       DropParts(parts);
-      _Device()->getLogger()->log("BakeLightmaps: no lightmapped geometry found.", ELL_WARNING);
+      _Device()->getLogger()->log("BakeLightmap: no lightmapped geometry found.", ELL_WARNING);
       return NULL;
     }
 
@@ -794,7 +794,7 @@ extern "C"
     {
       DropParts(parts);
       _Device()->getLogger()->log(
-          "BakeLightmaps: atlas overflow, increase maxAtlasSize or lower texelDensity.", ELL_WARNING);
+          "BakeLightmap: atlas overflow, increase maxAtlasSize or lower texelDensity.", ELL_WARNING);
       return NULL;
     }
 
@@ -917,7 +917,7 @@ extern "C"
     }
     else
     {
-      _Device()->getLogger()->log("BakeLightmaps: could not create lightmap texture.", ELL_WARNING);
+      _Device()->getLogger()->log("BakeLightmap: could not create lightmap texture.", ELL_WARNING);
     }
     DropParts(parts);
     return pixmap;
