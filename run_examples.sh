@@ -1,14 +1,15 @@
 #!/bin/sh
-_build/coldsteel run _build/examples/bake_lightmaps
 _build/coldsteel run _build/examples/box
 _build/coldsteel run _build/examples/box_lightmap
 _build/coldsteel run _build/examples/collision
+_build/coldsteel run _build/examples/csg
 _build/coldsteel run _build/examples/driver
 _build/coldsteel run _build/examples/fog
 _build/coldsteel run _build/examples/hello
 _build/coldsteel run _build/examples/joystick
 _build/coldsteel run _build/examples/lighting
 _build/coldsteel run _build/examples/lightmap
+_build/coldsteel run _build/examples/lightmap_baked
 _build/coldsteel run _build/examples/listener
 _build/coldsteel run _build/examples/particles
 _build/coldsteel run _build/examples/pixmap
