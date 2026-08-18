@@ -33,13 +33,18 @@ if atlas ~= nil then
 else
     LogInfo("CSG lightmap bake failed!")
 end
-SetAmbient(COLOR_WHITE)
+
+-- Disable lighting on all surfaces so the lightmapped geometry shows without ambient light.
+local mats = EntityNumMaterials(room)
+for i = 1, mats do
+    SetMaterialFlag(EntityMaterial(room, i), FLAG_LIGHTING, false)
+end
 
 -- Camera outside the room, looking in through the culled front wall. The white light sits
 -- between the column and the far end, so the column's shadow stretches towards the camera.
 local cam = CreateCamera()
 SetCameraClearColor(cam, COLOR_BLACK)
-SetEntityPosition(cam, 0, 1.5, 20)
+SetEntityPosition(cam, 0, 1.5, 8)
 SetEntityRotation(cam, 0, 180, 0)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
