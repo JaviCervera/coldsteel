@@ -97,7 +97,8 @@ extern "C"
   EXPORT bool_t CALL LightCastShadows(ILightSceneNode *light);
 
   /**
-   * Sets the influence radius of a light.
+   * Sets the influence radius of a light. Computes and sets the attenuation
+   * so that the light strength is negligible beyond the given radius.
    *
    * @param light The light whose radius will be set.
    * @param radius The new radius.

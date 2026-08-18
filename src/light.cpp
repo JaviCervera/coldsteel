@@ -70,7 +70,12 @@ extern "C"
 
   EXPORT void CALL SetLightRadius(ILightSceneNode *light, float radius)
   {
+    if (radius <= 0.f)
+      return;
     light->setRadius(radius);
+    const float cutoff = 0.01f; // light strength at the radius edge
+    const float quadratic = (1.f / cutoff - 1.f) / (radius * radius);
+    light->getLightData().Attenuation = vector3df(1.f, 0.f, quadratic);
   }
 
   EXPORT float CALL LightRadius(ILightSceneNode *light)
