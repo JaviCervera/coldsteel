@@ -27,6 +27,12 @@ struct CSGFace
   vector3df origin;             // a point on the plane (verts[0])
   vector3df u, v;               // orthonormal basis spanning the plane
   aabbox3df box;
+  ITexture *texture;            // surface texture (shared per primitive), NULL for default
+  f32 uoffset;                  // texture U offset in texels
+  f32 voffset;                  // texture V offset in texels
+  f32 rotation;                 // texture rotation in degrees
+  f32 uscale;                   // 1 = 1 texel per world unit
+  f32 vscale;
 };
 
 struct CSGBuilder
@@ -75,9 +81,17 @@ namespace
 
   // Welds near-coincident consecutive vertices and builds a validated face.
   // Returns a face with an empty vertex list if the polygon is degenerate.
-  CSGFace MakeFace(const core::array<vector3df> &in, const vector3df &parentNormal)
+  CSGFace MakeFace(const core::array<vector3df> &in, const vector3df &parentNormal,
+                   ITexture *texture = NULL, f32 uoffset = 0.f, f32 voffset = 0.f,
+                   f32 rotation = 0.f, f32 uscale = 1.f, f32 vscale = 1.f)
   {
     CSGFace f;
+    f.texture = texture;
+    f.uoffset = uoffset;
+    f.voffset = voffset;
+    f.rotation = rotation;
+    f.uscale = uscale;
+    f.vscale = vscale;
     core::array<vector3df> pts;
     for (u32 i = 0; i < in.size(); ++i)
     {
@@ -193,10 +207,12 @@ namespace
       }
       core::array<vector3df> front, back;
       SplitPolyByPlane(c.verts, plane.normal, plane.d, front, back);
-      CSGFace ff = MakeFace(front, c.normal);
+      CSGFace ff = MakeFace(front, c.normal, c.texture, c.uoffset, c.voffset, c.rotation,
+                            c.uscale, c.vscale);
       if (!ff.verts.empty())
         next.push_back(ff);
-      CSGFace fb = MakeFace(back, c.normal);
+      CSGFace fb = MakeFace(back, c.normal, c.texture, c.uoffset, c.voffset, c.rotation,
+                            c.uscale, c.vscale);
       if (!fb.verts.empty())
         next.push_back(fb);
     }
@@ -239,6 +255,12 @@ namespace
     r.u = f.u;
     r.v = f.v;
     r.box = f.box;
+    r.texture = f.texture;
+    r.uoffset = f.uoffset;
+    r.voffset = f.voffset;
+    r.rotation = f.rotation;
+    r.uscale = f.uscale;
+    r.vscale = f.vscale;
     return r;
   }
 
@@ -505,6 +527,44 @@ namespace
     }
   }
 
+  // Classic Quake axial projection: pick the world axis plane closest to the face,
+  // then rotate, scale and shift the (U,V) basis. Returns the two mapping vectors so
+  // u = dot(p, vecs[0]) + vecs[0][3], v = dot(p, vecs[1]) + vecs[1][3] (texels).
+  void TextureAxes(const CSGFace &f, vector3df vecs[2])
+  {
+    static const vector3df baseaxis[18] = {
+      vector3df(0.f, 0.f, 1.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, -1.f, 0.f),  // floor
+      vector3df(0.f, 0.f, -1.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, -1.f, 0.f), // ceiling
+      vector3df(1.f, 0.f, 0.f), vector3df(0.f, 1.f, 0.f), vector3df(0.f, 0.f, -1.f),  // west wall
+      vector3df(-1.f, 0.f, 0.f), vector3df(0.f, 1.f, 0.f), vector3df(0.f, 0.f, -1.f), // east wall
+      vector3df(0.f, 1.f, 0.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, 0.f, -1.f),  // south wall
+      vector3df(0.f, -1.f, 0.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, 0.f, -1.f)  // north wall
+    };
+    f32 best = -1.f;
+    int bestaxis = 0;
+    for (int i = 0; i < 6; ++i)
+    {
+      const f32 dist = f.normal.dotProduct(baseaxis[i * 3]);
+      const f32 adist = fabsf(dist);
+      if (adist > best)
+      {
+        best = adist;
+        bestaxis = i;
+      }
+    }
+    vector3df u = baseaxis[bestaxis * 3 + 1];
+    vector3df v = baseaxis[bestaxis * 3 + 2];
+    const f32 r = f.rotation * core::DEGTORAD;
+    const f32 s = sinf(r);
+    const f32 c = cosf(r);
+    vector3df tu = u * c + v * s;
+    vector3df tv = u * -s + v * c;
+    const f32 us = f.uscale != 0.f ? 1.f / f.uscale : 1.f;
+    const f32 vs = f.vscale != 0.f ? 1.f / f.vscale : 1.f;
+    vecs[0] = tu * us;
+    vecs[1] = tv * vs;
+  }
+
   matrix4 Compose(const vector3df &pre, const vector3df &scale, const vector3df &rot, const vector3df &pos)
   {
     matrix4 m;
@@ -643,8 +703,9 @@ namespace
     }
   }
 
-  void AddBox(CSGBuilder *b, int op, f32 x, f32 y, f32 z, f32 pitch, f32 yaw, f32 roll,
-              f32 w, f32 h, f32 d)
+  void AddBox(CSGBuilder *b, int op, ITexture *texture, f32 x, f32 y, f32 z,
+              f32 pitch, f32 yaw, f32 roll, f32 w, f32 h, f32 d,
+              f32 uoffset, f32 voffset, f32 rotation, f32 uscale, f32 vscale)
   {
     IMesh *mesh = _Device()->getSceneManager()->getGeometryCreator()->createCubeMesh(
         vector3df(1.f, 1.f, 1.f), ECMT_1BUF_24VTX_NP);
@@ -655,6 +716,15 @@ namespace
     mesh->drop();
     if (faces.empty())
       return;
+    for (u32 i = 0; i < faces.size(); ++i)
+    {
+      faces[i].texture = texture;
+      faces[i].uoffset = uoffset;
+      faces[i].voffset = voffset;
+      faces[i].rotation = rotation;
+      faces[i].uscale = uscale;
+      faces[i].vscale = vscale;
+    }
     matrix4 rot;
     rot.setRotationDegrees(vector3df(pitch, yaw, roll));
     matrix4 m = Compose(vector3df(0.f, 0.f, 0.f), vector3df(w, h, d), vector3df(pitch, yaw, roll),
@@ -663,8 +733,9 @@ namespace
     ApplyOp(b, faces, op);
   }
 
-  void AddCylinder(CSGBuilder *b, int op, int segments, f32 x, f32 y, f32 z,
-                   f32 pitch, f32 yaw, f32 roll, f32 radius, f32 height)
+  void AddCylinder(CSGBuilder *b, int op, ITexture *texture, int segments,
+                   f32 x, f32 y, f32 z, f32 pitch, f32 yaw, f32 roll, f32 radius, f32 height,
+                   f32 uoffset, f32 voffset, f32 rotation, f32 uscale, f32 vscale)
   {
     if (segments < 3)
       segments = 3;
@@ -677,6 +748,15 @@ namespace
     mesh->drop();
     if (faces.empty())
       return;
+    for (u32 i = 0; i < faces.size(); ++i)
+    {
+      faces[i].texture = texture;
+      faces[i].uoffset = uoffset;
+      faces[i].voffset = voffset;
+      faces[i].rotation = rotation;
+      faces[i].uscale = uscale;
+      faces[i].vscale = vscale;
+    }
     matrix4 rot;
     rot.setRotationDegrees(vector3df(pitch, yaw, roll));
     const f32 f = radius / 0.5f;
@@ -686,8 +766,9 @@ namespace
     ApplyOp(b, faces, op);
   }
 
-  void AddCone(CSGBuilder *b, int op, int segments, f32 x, f32 y, f32 z,
-               f32 pitch, f32 yaw, f32 roll, f32 radius, f32 height)
+  void AddCone(CSGBuilder *b, int op, ITexture *texture, int segments,
+               f32 x, f32 y, f32 z, f32 pitch, f32 yaw, f32 roll, f32 radius, f32 height,
+               f32 uoffset, f32 voffset, f32 rotation, f32 uscale, f32 vscale)
   {
     if (segments < 3)
       segments = 3;
@@ -700,6 +781,15 @@ namespace
     mesh->drop();
     if (faces.empty())
       return;
+    for (u32 i = 0; i < faces.size(); ++i)
+    {
+      faces[i].texture = texture;
+      faces[i].uoffset = uoffset;
+      faces[i].voffset = voffset;
+      faces[i].rotation = rotation;
+      faces[i].uscale = uscale;
+      faces[i].vscale = vscale;
+    }
     matrix4 rot;
     rot.setRotationDegrees(vector3df(pitch, yaw, roll));
     const f32 f = radius / 0.5f;
@@ -709,13 +799,23 @@ namespace
     ApplyOp(b, faces, op);
   }
 
-  void AddWedge(CSGBuilder *b, int op, f32 x, f32 y, f32 z, f32 pitch, f32 yaw, f32 roll,
-                f32 w, f32 h, f32 d)
+  void AddWedge(CSGBuilder *b, int op, ITexture *texture, f32 x, f32 y, f32 z,
+                f32 pitch, f32 yaw, f32 roll, f32 w, f32 h, f32 d,
+                f32 uoffset, f32 voffset, f32 rotation, f32 uscale, f32 vscale)
   {
     core::array<CSGFace> faces;
     BuildWedge(faces);
     if (faces.empty())
       return;
+    for (u32 i = 0; i < faces.size(); ++i)
+    {
+      faces[i].texture = texture;
+      faces[i].uoffset = uoffset;
+      faces[i].voffset = voffset;
+      faces[i].rotation = rotation;
+      faces[i].uscale = uscale;
+      faces[i].vscale = vscale;
+    }
     matrix4 rot;
     rot.setRotationDegrees(vector3df(pitch, yaw, roll));
     matrix4 m = Compose(vector3df(0.f, 0.f, 0.f), vector3df(w, h, d), vector3df(pitch, yaw, roll),
@@ -745,35 +845,48 @@ extern "C"
     csg->carves.clear();
   }
 
-  void CALL AddCsgBox(CSGBuilder *csg, int operation, float x, float y, float z,
-                      float pitch, float yaw, float roll, float width, float height, float depth)
+  void CALL AddCsgBox(CSGBuilder *csg, int operation, ITexture *texture,
+                      float x, float y, float z, float pitch, float yaw, float roll,
+                      float width, float height, float depth,
+                      float uoffset, float voffset, float tex_rotation,
+                      float uscale, float vscale)
   {
     if (csg)
-      AddBox(csg, operation, x, y, z, pitch, yaw, roll, width, height, depth);
+      AddBox(csg, operation, texture, x, y, z, pitch, yaw, roll, width, height, depth,
+             uoffset, voffset, tex_rotation, uscale, vscale);
   }
 
-  void CALL AddCsgCylinder(CSGBuilder *csg, int operation, int segments,
+  void CALL AddCsgCylinder(CSGBuilder *csg, int operation, ITexture *texture,
                            float x, float y, float z, float pitch, float yaw, float roll,
-                           float radius, float height)
+                           float radius, float height, int segments,
+                           float uoffset, float voffset, float tex_rotation,
+                           float uscale, float vscale)
   {
     if (csg)
-      AddCylinder(csg, operation, segments, x, y, z, pitch, yaw, roll, radius, height);
+      AddCylinder(csg, operation, texture, segments, x, y, z, pitch, yaw, roll,
+                  radius, height, uoffset, voffset, tex_rotation, uscale, vscale);
   }
 
-  void CALL AddCsgCone(CSGBuilder *csg, int operation, int segments,
+  void CALL AddCsgCone(CSGBuilder *csg, int operation, ITexture *texture,
                        float x, float y, float z, float pitch, float yaw, float roll,
-                       float radius, float height)
+                       float radius, float height, int segments,
+                       float uoffset, float voffset, float tex_rotation,
+                       float uscale, float vscale)
   {
     if (csg)
-      AddCone(csg, operation, segments, x, y, z, pitch, yaw, roll, radius, height);
+      AddCone(csg, operation, texture, segments, x, y, z, pitch, yaw, roll,
+              radius, height, uoffset, voffset, tex_rotation, uscale, vscale);
   }
 
-  void CALL AddCsgWedge(CSGBuilder *csg, int operation,
+  void CALL AddCsgWedge(CSGBuilder *csg, int operation, ITexture *texture,
                         float x, float y, float z, float pitch, float yaw, float roll,
-                        float width, float height, float depth)
+                        float width, float height, float depth,
+                        float uoffset, float voffset, float tex_rotation,
+                        float uscale, float vscale)
   {
     if (csg)
-      AddWedge(csg, operation, x, y, z, pitch, yaw, roll, width, height, depth);
+      AddWedge(csg, operation, texture, x, y, z, pitch, yaw, roll, width, height, depth,
+               uoffset, voffset, tex_rotation, uscale, vscale);
   }
 
   IMesh *CALL CsgMesh(CSGBuilder *csg)
@@ -782,6 +895,7 @@ extern "C"
     if (csg)
     {
       core::array<SMeshBuffer *> buffers;
+      core::array<ITexture *> bufferTextures;
       const u32 VMAX = 65000;
       for (u32 pass = 0; pass < 2; ++pass)
       {
@@ -792,15 +906,29 @@ extern "C"
           if (f.verts.empty())
             continue;
           const u32 vc = f.verts.size();
-          if (buffers.empty() || buffers.getLast()->Vertices.size() + vc > VMAX)
+          // Reuse a buffer with the same texture that still has room, else make a new one.
+          SMeshBuffer *buffer = NULL;
+          for (u32 bi = 0; bi < buffers.size(); ++bi)
           {
-            SMeshBuffer *buffer = new SMeshBuffer();
+            if (bufferTextures[bi] == f.texture && buffers[bi]->Vertices.size() + vc <= VMAX)
+            {
+              buffer = buffers[bi];
+              break;
+            }
+          }
+          if (!buffer)
+          {
+            buffer = new SMeshBuffer();
             mesh->addMeshBuffer(buffer);
             _FixMaterial(&buffer->getMaterial(), true);
+            if (f.texture)
+              buffer->getMaterial().setTexture(0, f.texture);
             buffers.push_back(buffer);
+            bufferTextures.push_back(f.texture);
           }
-          SMeshBuffer *buffer = buffers.getLast();
           const u16 base = (u16)buffer->Vertices.size();
+          vector3df vecs[2];
+          TextureAxes(f, vecs);
           for (u32 k = 0; k < vc; ++k)
           {
             const vector3df &p = f.verts[k];
@@ -808,7 +936,8 @@ extern "C"
             vtx.Pos = p;
             vtx.Normal = f.normal;
             vtx.Color = SColor(255, 255, 255, 255);
-            vtx.TCoords = vector2df(0.f, 0.f);
+            vtx.TCoords = vector2df(p.dotProduct(vecs[0]) + f.uoffset,
+                                    p.dotProduct(vecs[1]) + f.voffset);
             buffer->Vertices.push_back(vtx);
           }
           for (u32 k = 1; k + 1 < vc; ++k)
