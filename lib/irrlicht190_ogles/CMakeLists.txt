@@ -52,8 +52,58 @@ else (IRRLICHT_SHARED)
 	add_definitions(-D_IRR_STATIC_LIB_)
 endif (IRRLICHT_SHARED)
 add_definitions(-U__STRICT_ANSI__)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -ffast-math -Wno-unused-parameter")
+#Trim unused features to reduce build size (see include/IrrCompileConfig.h)
+#Mesh loaders not needed by ColdSteel (kept: OBJ, 3DS, X, MD2, B3D)
+add_definitions(
+	-DNO_IRR_COMPILE_WITH_COLLADA_LOADER_
+	-DNO_IRR_COMPILE_WITH_BSP_LOADER_
+	-DNO_IRR_COMPILE_WITH_HALFLIFE_LOADER_
+	-DNO_IRR_COMPILE_WITH_MD3_LOADER_
+	-DNO_IRR_COMPILE_WITH_MS3D_LOADER_
+	-DNO_IRR_COMPILE_WITH_OGRE_LOADER_
+	-DNO_IRR_COMPILE_WITH_LMTS_LOADER_
+	-DNO_IRR_COMPILE_WITH_LWO_LOADER_
+	-DNO_IRR_COMPILE_WITH_OCT_LOADER_
+	-DNO_IRR_COMPILE_WITH_CSM_LOADER_
+	-DNO_IRR_COMPILE_WITH_DMF_LOADER_
+	-DNO_IRR_COMPILE_WITH_SMF_LOADER_
+	-DNO_IRR_COMPILE_WITH_PLY_LOADER_
+	-DNO_IRR_COMPILE_WITH_STL_LOADER_
+	-DNO_IRR_COMPILE_WITH_IRR_MESH_LOADER_
+	-DNO_IRR_COMPILE_WITH_IRR_SCENE_LOADER_
+	-DNO_IRR_COMPILE_WITH_MY3D_LOADER_)
+#Image loaders not needed by ColdSteel (kept: BMP, JPG, PNG, TGA)
+add_definitions(
+	-DNO_IRR_COMPILE_WITH_PCX_LOADER_
+	-DNO_IRR_COMPILE_WITH_PPM_LOADER_
+	-DNO_IRR_COMPILE_WITH_PSD_LOADER_
+	-DNO_IRR_COMPILE_WITH_PVR_LOADER_
+	-DNO_IRR_COMPILE_WITH_DDS_LOADER_
+	-DNO_IRR_COMPILE_WITH_WAL_LOADER_
+	-DNO_IRR_COMPILE_WITH_LMP_LOADER_
+	-DNO_IRR_COMPILE_WITH_RGB_LOADER_)
+#Mesh and image writers not needed by ColdSteel (kept: OBJ, BMP, JPG, PNG, TGA)
+add_definitions(
+	-DNO_IRR_COMPILE_WITH_IRR_WRITER_
+	-DNO_IRR_COMPILE_WITH_COLLADA_WRITER_
+	-DNO_IRR_COMPILE_WITH_STL_WRITER_
+	-DNO_IRR_COMPILE_WITH_PLY_WRITER_
+	-DNO_IRR_COMPILE_WITH_B3D_WRITER_
+	-DNO_IRR_COMPILE_WITH_PCX_WRITER_
+	-DNO_IRR_COMPILE_WITH_PPM_WRITER_
+	-DNO_IRR_COMPILE_WITH_PSD_WRITER_)
+#Archive loaders not needed by ColdSteel (kept: ZIP + ZLIB for data.bin)
+add_definitions(
+	-DNO__IRR_COMPILE_WITH_PAK_ARCHIVE_LOADER_
+	-DNO__IRR_COMPILE_WITH_NPK_ARCHIVE_LOADER_
+	-DNO__IRR_COMPILE_WITH_TAR_ARCHIVE_LOADER_
+	-DNO__IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_
+	-DNO__IRR_COMPILE_WITH_MOUNT_ARCHIVE_LOADER_
+	-DNO_IRR_COMPILE_WITH_BZIP2_
+	-DNO_IRR_COMPILE_WITH_LZMA_
+	-DNO_IRR_COMPILE_WITH_ZIP_ENCRYPTION_)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -ffast-math -Wno-unused-parameter -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects")
 if (IRRLICHT_M32)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
@@ -75,7 +125,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Platform is macOS")
 	add_definitions(-DGL_SILENCE_DEPRECATION -DPNG_ARM_NEON_OPT=0)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++ -fno-exceptions")
 	if (IRRLICHT_SHARED)
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 		target_link_libraries(Irrlicht "-framework AppKit" "-framework Carbon" "-framework IOKit" "-framework OpenGL" ${TARGET_LINK_LIBRARIES})
@@ -84,7 +134,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message("Platform is Linux")
 	add_definitions(-DPNG_ARM_NEON_IMPLEMENTATION=0)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-exceptions")
 	if (IRRLICHT_SHARED)
 		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 		target_link_libraries(Irrlicht -lGL -lXxf86vm ${TARGET_LINK_LIBRARIES})

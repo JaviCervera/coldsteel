@@ -23,7 +23,7 @@ if not exist _CMAKE\_COLDSTEEL mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
 cd lib/irrlicht190_ogles
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make -j8
 cd ../..
@@ -44,9 +44,9 @@ if %LUAJIT%==1 (
 
 echo # Building coldsteel (Desktop) ...
 if %LUAJIT%==1 (
-  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DLUAJIT=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DLUAJIT=ON -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 ) else (
-  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
+  cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_RC_FLAGS="-F pe-i386" -B _CMAKE/_COLDSTEEL
 )
 cd _CMAKE/_COLDSTEEL
 mingw32-make -j8
@@ -56,7 +56,7 @@ move "libeditor.dll" "..\..\_build\editor.dll"
 cd ../..
 
 echo # Building fonttool ...
-g++ -m32 -march=i586 -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0 -s -static-libgcc -static-libstdc++
+g++ -m32 -march=i586 -std=c++98 -Os -D_IRR_STATIC_LIB_ -ffunction-sections -fdata-sections -flto -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -flto -Wl,--gc-sections -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0 -s -static-libgcc -static-libstdc++
 
 rem ---- Web (Emscripten) build ----
 
@@ -68,13 +68,13 @@ if %LUAJIT%==0 (
 
   echo # Building Irrlicht ^(Emscripten^) ...
   cd lib/irrlicht190_ogles
-  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
   cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
   call emmake make NDEBUG=1 -j8
   cd ../..
 
   echo # Building ColdSteel ^(Emscripten^) ...
-  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
   cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
   call emmake make NDEBUG=1 -j8
   move "coldsteel.html" "..\..\_build\coldsteel.html"
@@ -121,13 +121,13 @@ if not exist _CMAKE\_COLDSTEEL_EMSCRIPTEN mkdir _CMAKE\_COLDSTEEL_EMSCRIPTEN
 
 echo # Building Irrlicht (Emscripten) ...
 cd lib/irrlicht190_ogles
-call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
 cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
 call emmake make NDEBUG=1 -j8
 cd ../..
 
 echo # Building ColdSteel (Emscripten) ...
-call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+call emcmake cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
 cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
 call emmake make NDEBUG=1 -j8
 move "coldsteel.html" "..\..\_build\coldsteel.html"

@@ -4,10 +4,10 @@ cd `dirname $0`
 # Detect OS and set C++ compiler
 if [ "$(uname)" = "Darwin" ]; then
     CXX="clang++"
-    FONTTOOL_LIBS="-lIrrlicht -framework Cocoa -framework IOKit -framework OpenGL -lobjc -lpthread -s"
+    FONTTOOL_LIBS="-lIrrlicht -framework Cocoa -framework IOKit -framework OpenGL -lobjc -lpthread -s -flto -Wl,-dead_strip"
 else
     CXX="g++"
-    FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lEGL -lpthread -s -static-libgcc -static-libstdc++"
+    FONTTOOL_LIBS="-lIrrlicht -lGL -lX11 -lXxf86vm -lEGL -lpthread -s -static-libgcc -static-libstdc++ -flto -Wl,--gc-sections"
 fi
 
 emscripten_build() {
@@ -16,13 +16,13 @@ emscripten_build() {
 
   echo "# Building Irrlicht (Emscripten) ..."
   cd lib/irrlicht190_ogles
-  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DIRRLICHT_SHARED=OFF -DCMAKE_CXX_FLAGS="-sUSE_SDL=1" -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
+  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -DCMAKE_CXX_FLAGS="-sUSE_SDL=1" -B ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
   cd ../../_CMAKE/_IRRLICHT_EMSCRIPTEN
   emmake make NDEBUG=1 CPATH="" -j8
   cd ../..
 
   echo "# Building ColdSteel (Emscripten) ..."
-  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
+  emcmake cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -B _CMAKE/_COLDSTEEL_EMSCRIPTEN
   cd _CMAKE/_COLDSTEEL_EMSCRIPTEN
   emmake make NDEBUG=1 -j8
   mv coldsteel.html ../../_build/coldsteel.html
@@ -105,7 +105,7 @@ fi
 cd ../..
 
 echo "# Building fonttool ..."
-$CXX -std=c++98 -Os -D_IRR_STATIC_LIB_ -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool fonttool/fonttool.cpp $FONTTOOL_LIBS
+$CXX -std=c++98 -Os -D_IRR_STATIC_LIB_ -ffunction-sections -fdata-sections -flto -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool fonttool/fonttool.cpp $FONTTOOL_LIBS
 
 # ---- Web (Emscripten) build ----
 
