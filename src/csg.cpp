@@ -527,18 +527,22 @@ namespace
     }
   }
 
-  // Classic Quake axial projection: pick the world axis plane closest to the face,
-  // then rotate, scale and shift the (U,V) basis. Returns the two mapping vectors so
-  // u = dot(p, vecs[0]) + vecs[0][3], v = dot(p, vecs[1]) + vecs[1][3] (texels).
+  // Axial projection for a Y-up world: pick the world axis plane closest to the face,
+  // then rotate, scale and shift the (U,V) basis. Floors/ceilings use a top-down XY
+  // layout; walls run texture V along world down (so the texture reads upright) and U
+  // along the wall tangent, oriented right-handed with the outward normal so nothing
+  // is mirrored.
+  // Returns the two mapping vectors so u = dot(p, vecs[0]) + vecs[0][3],
+  // v = dot(p, vecs[1]) + vecs[1][3] (texels).
   void TextureAxes(const CSGFace &f, vector3df vecs[2])
   {
     static const vector3df baseaxis[18] = {
-      vector3df(0.f, 0.f, 1.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, -1.f, 0.f),  // floor
-      vector3df(0.f, 0.f, -1.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, -1.f, 0.f), // ceiling
-      vector3df(1.f, 0.f, 0.f), vector3df(0.f, 1.f, 0.f), vector3df(0.f, 0.f, -1.f),  // west wall
-      vector3df(-1.f, 0.f, 0.f), vector3df(0.f, 1.f, 0.f), vector3df(0.f, 0.f, -1.f), // east wall
-      vector3df(0.f, 1.f, 0.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, 0.f, -1.f),  // south wall
-      vector3df(0.f, -1.f, 0.f), vector3df(1.f, 0.f, 0.f), vector3df(0.f, 0.f, -1.f)  // north wall
+      vector3df(0.f, 1.f, 0.f),  vector3df(1.f, 0.f, 0.f),  vector3df(0.f, 0.f, -1.f),  // floor (+Y)
+      vector3df(0.f, -1.f, 0.f), vector3df(1.f, 0.f, 0.f),  vector3df(0.f, 0.f, -1.f),  // ceiling (-Y)
+      vector3df(1.f, 0.f, 0.f),  vector3df(0.f, 0.f, 1.f),  vector3df(0.f, -1.f, 0.f),  // +X wall
+      vector3df(-1.f, 0.f, 0.f), vector3df(0.f, 0.f, -1.f), vector3df(0.f, -1.f, 0.f),  // -X wall
+      vector3df(0.f, 0.f, 1.f),  vector3df(-1.f, 0.f, 0.f), vector3df(0.f, -1.f, 0.f),  // +Z wall
+      vector3df(0.f, 0.f, -1.f), vector3df(1.f, 0.f, 0.f),  vector3df(0.f, -1.f, 0.f)   // -Z wall
     };
     f32 best = -1.f;
     int bestaxis = 0;
@@ -552,6 +556,11 @@ namespace
         bestaxis = i;
       }
     }
+    // Re-pair to the row whose axis points along the face normal, so -X/-Z/-Y faces
+    // use their own negated basis instead of inheriting the +X/+Z/+Y one (which would
+    // mirror their textures horizontally). Rows are stored in +/- pairs, hence ^1.
+    if (baseaxis[bestaxis * 3].dotProduct(f.normal) < 0.f)
+      bestaxis ^= 1;
     vector3df u = baseaxis[bestaxis * 3 + 1];
     vector3df v = baseaxis[bestaxis * 3 + 2];
     const f32 r = f.rotation * core::DEGTORAD;
