@@ -9,6 +9,7 @@
 #include "log.h"
 #include "material.h"
 #include <ITexture.h>
+#include <IVideoDriver.h>
 
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "stb_rect_pack.h"
@@ -17,7 +18,7 @@ namespace
 {
 
   const f32 DEG2RAD = 0.017453292519943295f;
-  const f32 LM_PAD = 1.0f;    // texel padding between triangles
+  const f32 LM_PAD = 2.0f;  // texel padding between triangles
   const f32 LM_BIAS_TEXELS = 2.0f; // shadow ray offset, in texels
   const f32 LM_EPS = 0.0001f; // degenerate test
   const f32 LM_PI = 3.141592653589793f;
@@ -59,6 +60,7 @@ namespace
     video::ITexture *tex0;      // diffuse texture, may be NULL
     SColorf albedo;             // reflectance used for bounces
     core::array<SColorf> samples; // per-sample radiance (texels or 3 vertex colors)
+    core::array<u8> covered;      // texture mode: 1 if the sample is inside the triangle
   };
 
   struct LMNodePart
@@ -588,6 +590,95 @@ namespace
     return SColor(255, (u32)(r * 255.f), (u32)(g * 255.f), (u32)(b * 255.f));
   }
 
+  // Returns true if the center of atlas texel (tx, ty) lies inside the triangle's footprint
+  // when the triangle is projected onto its dominant plane. The barycentric test runs in
+  // double precision so scenes with large world coordinates do not flip texels at edges.
+  bool LMTexelCovered(const LMTri &tri, int tx, int ty, f32 density)
+  {
+    int axisU, axisV, axisW;
+    GetPlaneAxes(tri.plane, axisU, axisV, axisW);
+    f32 au, av, bu, bv, cu, cv;
+    PlaneCoord(tri.a, axisU, axisV, au, av);
+    PlaneCoord(tri.b, axisU, axisV, bu, bv);
+    PlaneCoord(tri.c, axisU, axisV, cu, cv);
+    const f64 ax = (f64)au * (f64)density, ay = (f64)av * (f64)density;
+    const f64 bx = (f64)bu * (f64)density, by = (f64)bv * (f64)density;
+    const f64 cx = (f64)cu * (f64)density, cy = (f64)cv * (f64)density;
+    const f64 px = (f64)tx + 0.5, py = (f64)ty + 0.5;
+    const f64 v0x = bx - ax, v0y = by - ay;
+    const f64 v1x = cx - ax, v1y = cy - ay;
+    const f64 v2x = px - ax, v2y = py - ay;
+    const f64 d00 = v0x * v0x + v0y * v0y;
+    const f64 d01 = v0x * v1x + v0y * v1y;
+    const f64 d11 = v1x * v1x + v1y * v1y;
+    const f64 d20 = v2x * v0x + v2y * v0y;
+    const f64 d21 = v2x * v1x + v2y * v1y;
+    const f64 denom = d00 * d11 - d01 * d01;
+    if (denom <= 0.0)
+      return false;
+    const f64 inv = 1.0 / denom;
+    const f64 v = (d11 * d20 - d01 * d21) * inv;
+    const f64 w = (d00 * d21 - d01 * d20) * inv;
+    const f64 eps = 0.05; // texel units, tolerance for float rounding
+    return v >= -eps && w >= -eps && v + w <= 1.0 + eps;
+  }
+
+  // Standard chart padding fix: the atlas texels around each triangle are never baked by the
+  // radiance solver (they are far enough from the surface to land inside neighbor geometry or
+  // shadow), so they are dilated here from the nearest baked texel. This makes bilinear
+  // filtering at chart edges sample the surface's own lighting instead of dark seams.
+  void LMDilateCharts(core::array<LMTri> &tris)
+  {
+    for (u32 ti = 0; ti < tris.size(); ++ti)
+    {
+      LMTri &tri = tris[ti];
+      const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+      const u32 h = (u32)(tri.vMax - tri.vMin + 1);
+      bool changed;
+      do
+      {
+        changed = false;
+        for (u32 y = 0; y < h; ++y)
+        {
+          for (u32 x = 0; x < w; ++x)
+          {
+            const u32 si = y * w + x;
+            if (tri.covered[si])
+              continue;
+            SColorf c;
+            bool found = false;
+            for (int dy = -1; dy <= 1 && !found; ++dy)
+            {
+              const int ny = (int)y + dy;
+              if (ny < 0 || ny >= (int)h)
+                continue;
+              for (int dx = -1; dx <= 1 && !found; ++dx)
+              {
+                if (dx == 0 && dy == 0)
+                  continue;
+                const int nx = (int)x + dx;
+                if (nx < 0 || nx >= (int)w)
+                  continue;
+                const u32 nsi = (u32)ny * w + (u32)nx;
+                if (tri.covered[nsi])
+                {
+                  c = tri.samples[nsi];
+                  found = true;
+                }
+              }
+            }
+            if (found)
+            {
+              tri.samples[si] = c;
+              tri.covered[si] = 1;
+              changed = true;
+            }
+          }
+        }
+      } while (changed);
+    }
+  }
+
   u32 LMSampleCount(const LMTri &tri, LMMode mode)
   {
     if (mode == LM_VERTEX)
@@ -618,17 +709,21 @@ namespace
     SColorf s;
     s.r = s.g = s.b = 0.f;
     const u32 n = tri.samples.size();
-    if (n)
+    u32 count = 0;
+    for (u32 i = 0; i < n; ++i)
     {
-      for (u32 i = 0; i < n; ++i)
-      {
-        s.r += tri.samples[i].r;
-        s.g += tri.samples[i].g;
-        s.b += tri.samples[i].b;
-      }
-      s.r /= (f32)n;
-      s.g /= (f32)n;
-      s.b /= (f32)n;
+      if (!tri.covered[i])
+        continue;
+      s.r += tri.samples[i].r;
+      s.g += tri.samples[i].g;
+      s.b += tri.samples[i].b;
+      ++count;
+    }
+    if (count)
+    {
+      s.r /= (f32)count;
+      s.g /= (f32)count;
+      s.b /= (f32)count;
     }
     return s;
   }
@@ -907,9 +1002,51 @@ namespace
     {
       LMTri &tri = tris[ti];
       tri.samples.set_used(LMSampleCount(tri, mode));
+      tri.covered.set_used(tri.samples.size());
       const u32 n = tri.samples.size();
+      if (mode == LM_TEXTURE)
+      {
+        // Mark texels whose centers lie inside the triangle; the remaining padding texels are
+        // dilated later from the nearest baked texel instead of being shaded in empty space.
+        bool any = false;
+        const u32 w = (u32)(tri.uMax - tri.uMin + 1);
+        u32 best = 0;
+        f64 bestD = 1e300;
+        int axisU, axisV, axisW;
+        GetPlaneAxes(tri.plane, axisU, axisV, axisW);
+        f32 cu, cv;
+        PlaneCoord(tri.centroid, axisU, axisV, cu, cv);
+        const f64 cuf = (f64)cu * (f64)density, cvf = (f64)cv * (f64)density;
+        for (u32 si = 0; si < n; ++si)
+        {
+          const int tx = tri.uMin + (int)(si % w);
+          const int ty = tri.vMin + (int)(si / w);
+          const bool cov = LMTexelCovered(tri, tx, ty, density);
+          tri.covered[si] = cov ? 1 : 0;
+          if (cov)
+            any = true;
+          const f64 ax = (f64)tx + 0.5 - cuf;
+          const f64 ay = (f64)ty + 0.5 - cvf;
+          const f64 d2 = ax * ax + ay * ay;
+          if (d2 < bestD)
+          {
+            bestD = d2;
+            best = si;
+          }
+        }
+        // Sub-texel triangle: force the texel nearest the centroid so the chart still bakes.
+        if (!any && n)
+          tri.covered[best] = 1;
+      }
+      else
+      {
+        for (u32 si = 0; si < n; ++si)
+          tri.covered[si] = 1;
+      }
       for (u32 si = 0; si < n; ++si)
       {
+        if (!tri.covered[si])
+          continue; // padding texel, filled by dilation
         vector3df p, norm;
         LMSamplePos(tri, mode, si, density, p, norm);
         SColorf col = ShadePoint(p, norm, tris[ti].normal, lights, bvh, ti, dirMaxDist, bias);
@@ -927,6 +1064,8 @@ namespace
         const u32 n = tri.samples.size();
         for (u32 si = 0; si < n; ++si)
         {
+          if (!tri.covered[si])
+            continue; // padding texel, filled by dilation
           vector3df p, norm;
           LMSamplePos(tri, mode, si, density, p, norm);
           AddClamp(tri.samples[si], GatherBounce(p, norm, tris[ti].normal, ti, tris, avg, bvh, bias));
@@ -963,6 +1102,7 @@ extern "C"
       return NULL;
 
     LMRadiosity(tris, LM_TEXTURE, texelDensity, lights, bvh, dirMaxDist, bias, bounces);
+    LMDilateCharts(tris);
     LMAssignUVs(tris, texelDensity, atlasSize);
 
     const ECOLOR_FORMAT format =
@@ -988,7 +1128,15 @@ extern "C"
     static int lmCounter = 0;
     char name[64];
     sprintf(name, "__lightmap_%d", lmCounter++);
-    ITexture *tex = _Device()->getVideoDriver()->addTexture(name, pixmap);
+    // The atlas must not get a mipmap chain: mip generation averages the whole atlas, so distant
+    // surfaces blend unrelated charts together and produce dark bleeding along edges. The renderer
+    // switches the min filter per texture (COGLES2Driver checks tmpTexture->hasMipMaps()), so
+    // disabling creation for the lightmap alone leaves the diffuse layer's mipmaps untouched.
+    IVideoDriver *driver = _Device()->getVideoDriver();
+    const bool oldMips = driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
+    driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+    ITexture *tex = driver->addTexture(name, pixmap);
+    driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, oldMips);
     if (tex)
     {
       for (u32 i = 0; i < parts.size(); ++i)
@@ -1006,6 +1154,10 @@ extern "C"
             SetMaterialType(&mat, MATERIAL_LIGHTMAP);
             mat.setFlag(EMF_LIGHTING, true);
             mat.setTexture(1, tex);
+            // Clamp instead of repeat so the filter never wraps samples from the atlas border
+            // into a neighboring chart; the chart padding is already dilated to match.
+            mat.TextureLayer[1].TextureWrapU = video::ETC_CLAMP_TO_EDGE;
+            mat.TextureLayer[1].TextureWrapV = video::ETC_CLAMP_TO_EDGE;
             SetMaterialFlag(&mat, FLAG_VERTEXCOLORS, false);
           }
         }
