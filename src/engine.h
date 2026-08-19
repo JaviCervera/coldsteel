@@ -5,6 +5,7 @@
 #include "channel.h"
 #include "color.h"
 #include "core.h"
+#include "csg.h"
 #include "dir.h"
 #include "entity.h"
 #include "font.h"

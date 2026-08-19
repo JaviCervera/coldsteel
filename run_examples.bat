@@ -1,13 +1,14 @@
-coldsteel run _build\examples\bake_lightmaps
 coldsteel run _build\examples\box
 coldsteel run _build\examples\box_lightmap
 coldsteel run _build\examples\collision
+coldsteel run _build\examples\csg
 coldsteel run _build\examples\driver
 coldsteel run _build\examples\fog
 coldsteel run _build\examples\hello
 coldsteel run _build\examples\joystick
 coldsteel run _build\examples\lighting
 coldsteel run _build\examples\lightmap
+coldsteel run _build\examples\lightmap_baked
 coldsteel run _build\examples\listener
 coldsteel run _build\examples\particles
 coldsteel run _build\examples\pixmap
