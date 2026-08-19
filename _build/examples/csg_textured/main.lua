@@ -26,8 +26,7 @@ end
 -- Camera outside the room, looking in through the culled front wall.
 local cam = CreateCamera()
 SetCameraClearColor(cam, COLOR_BLACK)
-SetEntityPosition(cam, 0, 1.5, 20)
-SetEntityRotation(cam, 0, 180, 0)
+SetEntityPosition(cam, 0, 1.5, -10)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(room, 0, 30 * DeltaTime(), 0)

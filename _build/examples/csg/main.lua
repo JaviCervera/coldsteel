@@ -44,8 +44,7 @@ end
 -- between the column and the far end, so the column's shadow stretches towards the camera.
 local cam = CreateCamera()
 SetCameraClearColor(cam, COLOR_BLACK)
-SetEntityPosition(cam, 0, 1.5, 8)
-SetEntityRotation(cam, 0, 180, 0)
+SetEntityPosition(cam, 0, 1.5, -8)
 
 while not ScreenShouldClose() and not KeyHit(KEY_ESC) do
     TurnEntity(room, 0, 30 * DeltaTime(), 0)
