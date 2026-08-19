@@ -9,12 +9,10 @@ if "%1"=="--web" goto emscripten
 
 rem ---- Desktop build ----
 
-echo # Generating Lua wrapper ...
-swig.exe -lua -c++ -o src/lua_wrapper.cc coldsteel.i
-
-echo # Generating SDK header ...
+echo # Generating SDK header and Lua wrapper ...
 swig.exe -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
 haxe -m SdkBuilder --interp
+haxe --run LuaWrapperBuilder
 del coldsteel.xml
 
 echo # Creating folders for CMake ...
@@ -108,7 +106,9 @@ rem ---- Emscripten-only build (invoked via --emscripten) ----
 
 :emscripten
 echo # Generating Lua wrapper ...
-swig.exe -lua -c++ -o src/lua_wrapper.cc coldsteel.i
+swig.exe -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
+haxe --run LuaWrapperBuilder
+del coldsteel.xml
 
 where emcmake >nul 2>nul
 if %errorlevel% neq 0 (

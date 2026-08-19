@@ -39,7 +39,9 @@ case "${1:-}" in
     ;;
   --emscripten|--web)
     echo "# Generating Lua wrapper ..."
-    swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
+    swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
+    haxe --run LuaWrapperBuilder
+    rm coldsteel.xml
     if ! command -v emcmake >/dev/null 2>&1; then
       echo "Emscripten SDK not found!" >&2
       exit 1
@@ -51,12 +53,10 @@ esac
 
 # ---- Desktop build ----
 
-echo "# Generating Lua wrapper ..."
-swig -lua -c++ -o src/lua_wrapper.cc coldsteel.i
-
-echo "# Generating SDK header ..."
+echo "# Generating SDK header and Lua wrapper ..."
 swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
 haxe -m SdkBuilder --interp
+haxe --run LuaWrapperBuilder
 rm coldsteel.xml
 
 echo "# Creating folders for CMake ..."
