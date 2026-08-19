@@ -9,9 +9,9 @@ local tex2 = LoadTexture("logo.png")
 -- UV modifiers; the room uses the default UV mapping (1 texel per world unit).
 -- A second small box reuses tex2; both tex2 primitives merge into a single surface.
 local csg = CreateCsg()
-AddCsgBox(csg, CSG_SUBTRACT, tex1, 0, 0, 0, 0, 0, 0, 20, 10, 16)
+AddCsgBox(csg, CSG_SUBTRACT, tex1, 0, 0, 0, 0, 0, 0, 20, 10, 16, 0, 0, 0, 1, 1)
 AddCsgBox(csg, CSG_ADD, tex2, 0, 0, 0, 0, 0, 0, 2, 10, 2, 0, 0, 45, 0.5, 0.5)
-AddCsgBox(csg, CSG_ADD, tex2, 6, 0, 4, 0, 0, 0, 2, 2, 2)
+AddCsgBox(csg, CSG_ADD, tex2, 6, 0, 4, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1)
 local mesh = CsgMesh(csg)
 local room = CreateModel(mesh)
 FreeMesh(mesh)

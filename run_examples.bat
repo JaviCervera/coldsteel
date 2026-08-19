@@ -2,6 +2,7 @@ coldsteel run _build\examples\box
 coldsteel run _build\examples\box_lightmap
 coldsteel run _build\examples\collision
 coldsteel run _build\examples\csg
+coldsteel run _build\examples\csg_textured
 coldsteel run _build\examples\driver
 coldsteel run _build\examples\fog
 coldsteel run _build\examples\hello

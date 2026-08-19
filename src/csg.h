@@ -71,8 +71,8 @@ extern "C"
   EXPORT void CALL AddCsgBox(CSGBuilder *csg, int operation, ITexture *texture,
                              float x, float y, float z, float pitch, float yaw, float roll,
                              float width, float height, float depth,
-                             float uoffset = 0.f, float voffset = 0.f, float tex_rotation = 0.f,
-                             float uscale = 1.f, float vscale = 1.f);
+                             float uoffset, float voffset, float tex_rotation,
+                             float uscale, float vscale);
 
   /**
     * Adds a cylinder primitive to the CSG solid.
@@ -98,8 +98,8 @@ extern "C"
   EXPORT void CALL AddCsgCylinder(CSGBuilder *csg, int operation, ITexture *texture,
                                   float x, float y, float z, float pitch, float yaw, float roll,
                                   float radius, float height, int segments,
-                                  float uoffset = 0.f, float voffset = 0.f, float tex_rotation = 0.f,
-                                  float uscale = 1.f, float vscale = 1.f);
+                                  float uoffset, float voffset, float tex_rotation,
+                                  float uscale, float vscale);
 
   /**
     * Adds a cone primitive to the CSG solid.
@@ -125,8 +125,8 @@ extern "C"
   EXPORT void CALL AddCsgCone(CSGBuilder *csg, int operation, ITexture *texture,
                               float x, float y, float z, float pitch, float yaw, float roll,
                               float radius, float height, int segments,
-                              float uoffset = 0.f, float voffset = 0.f, float tex_rotation = 0.f,
-                              float uscale = 1.f, float vscale = 1.f);
+                              float uoffset, float voffset, float tex_rotation,
+                              float uscale, float vscale);
 
   /**
     * Adds a wedge (right-triangular prism) primitive to the CSG solid.
@@ -157,8 +157,8 @@ extern "C"
   EXPORT void CALL AddCsgWedge(CSGBuilder *csg, int operation, ITexture *texture,
                                float x, float y, float z, float pitch, float yaw, float roll,
                                float width, float height, float depth,
-                               float uoffset = 0.f, float voffset = 0.f, float tex_rotation = 0.f,
-                               float uscale = 1.f, float vscale = 1.f);
+                               float uoffset, float voffset, float tex_rotation,
+                               float uscale, float vscale);
 
   /**
    * Builds the final mesh from the CSG solid.

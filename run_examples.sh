@@ -3,6 +3,7 @@ _build/coldsteel run _build/examples/box
 _build/coldsteel run _build/examples/box_lightmap
 _build/coldsteel run _build/examples/collision
 _build/coldsteel run _build/examples/csg
+_build/coldsteel run _build/examples/csg_textured
 _build/coldsteel run _build/examples/driver
 _build/coldsteel run _build/examples/fog
 _build/coldsteel run _build/examples/hello

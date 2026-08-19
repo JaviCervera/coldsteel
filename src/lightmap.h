@@ -35,7 +35,7 @@ extern "C"
    * @return A pixmap containing the lightmap atlas, or NULL if the bake failed.
    */
   EXPORT IImage *CALL BakeLightmap(ISceneNode *root, float texelDensity, int maxAtlasSize,
-                                    int bounces = 0, bool useTextureAlbedo = false);
+                                    int bounces, bool useTextureAlbedo);
 
   /**
    * Bakes direct and optionally bounced (global illumination) lighting into the vertex colors of
@@ -57,7 +57,7 @@ extern "C"
    * @param useTextureAlbedo If true, reflectance for bounces is the material DiffuseColor blended
    *        with the average color of the material's diffuse texture; otherwise only DiffuseColor.
    */
-  EXPORT void CALL BakeVertexLightmap(ISceneNode *root, int bounces = 0, bool useTextureAlbedo = false);
+  EXPORT void CALL BakeVertexLightmap(ISceneNode *root, int bounces, bool useTextureAlbedo);
 
 #ifdef __cplusplus
 } /* extern "C" */

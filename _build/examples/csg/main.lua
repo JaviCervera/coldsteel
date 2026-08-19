@@ -4,9 +4,9 @@ SetAmbient(COLOR_BLACK)
 -- Build the CSG solid: carve a rectangular room out of solid space, carve a hallway at
 -- the far end, then add a column in the middle of the room. Save the result as a model.
 local csg = CreateCsg()
-AddCsgBox(csg, CSG_SUBTRACT, nil, 0, 0, 0, 0, 0, 0, 20, 10, 16)
-AddCsgBox(csg, CSG_SUBTRACT, nil, 0, -2, -12, 0, 0, 0, 6, 6, 8)
-AddCsgBox(csg, CSG_ADD, nil, 0, 0, 0, 0, 0, 0, 2, 10, 2)
+AddCsgBox(csg, CSG_SUBTRACT, nil, 0, 0, 0, 0, 0, 0, 20, 10, 16, 0, 0, 0, 1, 1)
+AddCsgBox(csg, CSG_SUBTRACT, nil, 0, -2, -12, 0, 0, 0, 6, 6, 8, 0, 0, 0, 1, 1)
+AddCsgBox(csg, CSG_ADD, nil, 0, 0, 0, 0, 0, 0, 2, 10, 2, 0, 0, 0, 1, 1)
 local mesh = CsgMesh(csg)
 local room = CreateModel(mesh)
 FreeMesh(mesh)
@@ -26,7 +26,7 @@ SetLightRadius(blue, 14)
 
 -- Bake the lightmap: every static mesh under the root (NULL = whole scene) receives lightmap
 -- UVs and a lightmapped material. The returned atlas is a pixmap which must be freed.
-local atlas = BakeLightmap(nil, 8, 1024)
+local atlas = BakeLightmap(nil, 8, 1024, 0, false)
 if atlas ~= nil then
     LogInfo("Baked CSG lightmap atlas " .. PixmapWidth(atlas) .. "x" .. PixmapHeight(atlas))
     FreePixmap(atlas)
