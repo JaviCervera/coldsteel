@@ -94,21 +94,23 @@ private:
       const stringc fixedFilename = (Find(filename.c_str(), ".", 0) == -1)
                                         ? (filename + ".lua")
                                         : filename;
-      const stringc buffer = LoadString(fixedFilename.c_str());
-      if (buffer == "")
+      Memblock *memblock = LoadMemblock(fixedFilename.c_str());
+      if (!memblock || MemblockSize(memblock) == 0)
       {
+        if (memblock)
+          FreeMemblock(memblock);
         lua_pushstring(L, (stringc("File '") + fixedFilename + "' does not exist or is empty.").c_str());
         lua_error(L);
         return 0;
       }
-      if (luaL_loadbuffer(L, buffer.c_str(), buffer.size(), fixedFilename.c_str()) == 0)
+      if (luaL_loadbuffer(L, (const char *)memblock, MemblockSize(memblock), fixedFilename.c_str()) != 0)
       {
-        lua_pcall(L, 0, LUA_MULTRET, 0);
-      }
-      else
-      {
+        FreeMemblock(memblock);
         lua_error(L);
+        return 0;
       }
+      FreeMemblock(memblock);
+      lua_pcall(L, 0, LUA_MULTRET, 0);
     }
     else
     {

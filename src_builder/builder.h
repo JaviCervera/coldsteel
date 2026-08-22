@@ -11,6 +11,7 @@ extern "C"
 #undef __STRICT_ANSI__
 #define __DID_UNDEF__STRICT_ANSI__
 #endif
+#include <stdlib.h>
 #include "dir.hh"
 #include "file.hh"
 #include "strmanip.hh"
@@ -138,13 +139,20 @@ private:
     }
   }
 
-  static FILE *CreateCompiledFile(const irr::core::stringc &file)
+  FILE *CreateCompiledFile(const irr::core::stringc &file) const
   {
     lua_State *L = luaL_newstate();
     if (luaL_loadfile(L, file.c_str()))
     {
+      const char *err = lua_tostring(L, -1);
+      if (m_print)
+      {
+        char msg[MSG_LEN];
+        snprintf(msg, sizeof(msg), "Error precompiling '%s': %s", file.c_str(), err ? err : "unknown error");
+        m_print(msg);
+      }
       lua_close(L);
-      return NULL;
+      exit(-1);
     }
     FILE *f = tmpfile();
     lua_dump(L, writer, f);
