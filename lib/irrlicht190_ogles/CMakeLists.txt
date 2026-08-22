@@ -102,8 +102,8 @@ add_definitions(
 	-DNO_IRR_COMPILE_WITH_BZIP2_
 	-DNO_IRR_COMPILE_WITH_LZMA_
 	-DNO_IRR_COMPILE_WITH_ZIP_ENCRYPTION_)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -ffast-math -Wno-unused-parameter -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration -ffunction-sections -fdata-sections")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -ffast-math -Wno-unused-parameter -ffunction-sections -fdata-sections")
 if (IRRLICHT_M32)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")

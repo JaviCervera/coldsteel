@@ -54,7 +54,7 @@ move "libeditor.dll" "..\..\_build\editor.dll"
 cd ../..
 
 echo # Building fonttool ...
-g++ -m32 -march=i586 -std=c++98 -Os -D_IRR_STATIC_LIB_ -ffunction-sections -fdata-sections -flto -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -flto -Wl,--gc-sections -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0 -s -static-libgcc -static-libstdc++
+g++ -m32 -march=i586 -std=c++98 -Os -D_IRR_STATIC_LIB_ -ffunction-sections -fdata-sections -I lib/irrlicht190_ogles/include -L _CMAKE/_IRRLICHT -o _build/fonttool.exe fonttool/fonttool.cpp -lIrrlicht -lopengl32 -lwinmm -lgdi32 -mwindows -Wl,--gc-sections -Wl,--major-subsystem-version,4 -Wl,--minor-subsystem-version,0 -s -static-libgcc -static-libstdc++
 
 rem ---- Web (Emscripten) build ----
 
