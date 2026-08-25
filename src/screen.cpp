@@ -126,6 +126,7 @@ class EventReceiver : public IEventReceiver
 
 static EventReceiver _eventReceiver;
 static int _selectedDriver = DRIVER_OPENGL;
+static int _triedDrivers = 0;
 static int _screenFrameMsecs = 0;
 static bool_t _run = true;
 
@@ -221,6 +222,7 @@ extern "C"
     IrrlichtDevice *device = createDeviceEx(params);
     if (device)
     {
+      _triedDrivers = 0;
       _SetDevice(device, NULL);
       _Device()->setResizable((flags & SCREEN_RESIZABLE) == SCREEN_RESIZABLE);
       _Device()->getVideoDriver()->setTextureCreationFlag(ETCF_ALWAYS_32_BIT, true);
@@ -240,10 +242,20 @@ extern "C"
       _Device()->getVideoDriver()->beginScene(false, false);
       _run = true;
     }
-    else if (_selectedDriver > 0)
+    else
     {
-      _selectedDriver--;
-      OpenScreenEx(width, height, depth, flags, samples, win);
+      _triedDrivers |= (1 << _selectedDriver);
+      for (int i = 1; i <= DRIVER_DIRECT3D; ++i)
+      {
+        int driver = (_selectedDriver - i + DRIVER_DIRECT3D + 1) % (DRIVER_DIRECT3D + 1);
+        if (!(_triedDrivers & (1 << driver)))
+        {
+          _selectedDriver = driver;
+          OpenScreenEx(width, height, depth, flags, samples, win);
+          return;
+        }
+      }
+      _triedDrivers = 0;
     }
   }
 

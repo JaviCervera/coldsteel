@@ -33,23 +33,34 @@ emscripten_build() {
 }
 
 LUAJIT=0
-case "${1:-}" in
-  --luajit)
-    LUAJIT=1
-    ;;
-  --emscripten|--web)
-    echo "# Generating Lua wrapper ..."
-    swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
-    haxe --run LuaWrapperBuilder
-    rm coldsteel.xml
-    if ! command -v emcmake >/dev/null 2>&1; then
-      echo "Emscripten SDK not found!" >&2
-      exit 1
-    fi
-    emscripten_build
-    exit 0
-    ;;
-esac
+ALLDRIVERS=0
+EMSCRIPTEN_ONLY=0
+for arg in "$@"; do
+  case "$arg" in
+    --luajit)
+      LUAJIT=1
+      ;;
+    --all-drivers)
+      ALLDRIVERS=1
+      ;;
+    --emscripten|--web)
+      EMSCRIPTEN_ONLY=1
+      ;;
+  esac
+done
+
+if [ "$EMSCRIPTEN_ONLY" = "1" ]; then
+  echo "# Generating Lua wrapper ..."
+  swig -xml -xmllite -c++ -o coldsteel.xml coldsteel.i
+  haxe --run LuaWrapperBuilder
+  rm coldsteel.xml
+  if ! command -v emcmake >/dev/null 2>&1; then
+    echo "Emscripten SDK not found!" >&2
+    exit 1
+  fi
+  emscripten_build
+  exit 0
+fi
 
 # ---- Desktop build ----
 
@@ -64,8 +75,12 @@ mkdir -p _CMAKE/_COLDSTEEL
 mkdir -p _CMAKE/_IRRLICHT
 
 echo "# Building Irrlicht (Desktop) ..."
+ALLDRIVERS_FLAGS="-DIRRLICHT_ALL_DRIVERS=OFF"
+if [ "$ALLDRIVERS" = "1" ]; then
+  ALLDRIVERS_FLAGS="-DIRRLICHT_ALL_DRIVERS=ON"
+fi
 cd lib/irrlicht190_ogles
-cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_SHARED=OFF $ALLDRIVERS_FLAGS -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 make -j8
 cd ../..

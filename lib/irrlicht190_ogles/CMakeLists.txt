@@ -7,6 +7,7 @@ project(Irrlicht)
 #Options
 option(IRRLICHT_M32 "Pass the -m32 flag to the compiler to build 32 bit application" OFF)
 option(IRRLICHT_SHARED "Compile Irrlicht as a shared library" OFF)
+option(IRRLICHT_ALL_DRIVERS "Compile with all video drivers (default: OpenGL only)" OFF)
 option(SDL_ENABLED "Use SDL platform" OFF)
 set(SDL_PATH "SDL" CACHE PATH "Path to SDL folder (must contain include and lib subfolders)")
 
@@ -102,6 +103,15 @@ add_definitions(
 	-DNO_IRR_COMPILE_WITH_BZIP2_
 	-DNO_IRR_COMPILE_WITH_LZMA_
 	-DNO_IRR_COMPILE_WITH_ZIP_ENCRYPTION_)
+#Video drivers not needed by ColdSteel (kept: OpenGL on desktop, WebGL/OGLES2 on Emscripten)
+if (NOT IRRLICHT_ALL_DRIVERS AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	message("Compiling with the OpenGL driver only")
+	add_definitions(
+		-DNO_IRR_COMPILE_WITH_SOFTWARE_
+		-DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_
+		-DNO_IRR_COMPILE_WITH_OGLES2_
+		-DNO_IRR_COMPILE_WITH_WEBGL1_)
+endif()
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-implicit-function-declaration -ffunction-sections -fdata-sections")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -ffast-math -Wno-unused-parameter -ffunction-sections -fdata-sections")
 if (IRRLICHT_M32)

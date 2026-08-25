@@ -3,9 +3,15 @@
 set PATH=%~dp0TDM-GCC-32\bin;%PATH%
 
 set LUAJIT=0
-if "%1"=="--luajit" set LUAJIT=1
-if "%1"=="--emscripten" goto emscripten
-if "%1"=="--web" goto emscripten
+set ALLDRIVERS=0
+set EMSCRIPTEN_ONLY=0
+for %%a in (%*) do (
+  if /i "%%a"=="--luajit" set LUAJIT=1
+  if /i "%%a"=="--all-drivers" set ALLDRIVERS=1
+  if /i "%%a"=="--emscripten" set EMSCRIPTEN_ONLY=1
+  if /i "%%a"=="--web" set EMSCRIPTEN_ONLY=1
+)
+if %EMSCRIPTEN_ONLY%==1 goto emscripten
 
 rem ---- Desktop build ----
 
@@ -20,8 +26,10 @@ if not exist _CMAKE\_IRRLICHT mkdir _CMAKE\_IRRLICHT
 if not exist _CMAKE\_COLDSTEEL mkdir _CMAKE\_COLDSTEEL
 
 echo # Building Irrlicht (Desktop) ...
+set ALLDRIVERS_FLAGS=-DIRRLICHT_ALL_DRIVERS=OFF
+if %ALLDRIVERS%==1 set ALLDRIVERS_FLAGS=-DIRRLICHT_ALL_DRIVERS=ON
 cd lib/irrlicht190_ogles
-cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF -B ../../_CMAKE/_IRRLICHT
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=MinSizeRel -DIRRLICHT_M32=ON -DIRRLICHT_SHARED=OFF %ALLDRIVERS_FLAGS% -B ../../_CMAKE/_IRRLICHT
 cd ../../_CMAKE/_IRRLICHT
 mingw32-make -j8
 cd ../..
