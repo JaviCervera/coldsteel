@@ -176,6 +176,6 @@ private class XmlParser {
 		final parenIdx = decl.lastIndexOf(')');
 		if (parenIdx < 0) return baseType;
 		final suffix = decl.substr(parenIdx + 1);
-		return (suffix == 'p.') ? 'p.$baseType' : baseType;
+		return (suffix == '.p.') ? 'p.$baseType' : baseType;
 	}
 }
